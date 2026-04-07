@@ -1,8 +1,15 @@
-node_modules
-dist
+# Root .gitignore
+node_modules/
+dist/
 .env
 .DS_Store
-*.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+
+# Client-specific
+client/node_modules/
+client/dist/
+client/.env*
+
+# Server-specific
+server/node_modules/
+server/.env
+server/sync/venv/

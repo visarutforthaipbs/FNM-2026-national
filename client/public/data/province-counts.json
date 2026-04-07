@@ -1,0 +1,382 @@
+[
+  {
+    "name_en": "Amnat Charoen",
+    "name_th": "อำนาจเจริญ",
+    "count": 33
+  },
+  {
+    "name_en": "Ang Thong",
+    "name_th": "อ่างทอง",
+    "count": 44
+  },
+  {
+    "name_en": "Bangkok Metropolis",
+    "name_th": "กรุงเทพมหานคร",
+    "count": 6051
+  },
+  {
+    "name_en": "Buri Ram",
+    "name_th": "บุรีรัมย์",
+    "count": 83
+  },
+  {
+    "name_en": "Chachoengsao",
+    "name_th": "ฉะเชิงเทรา",
+    "count": 1346
+  },
+  {
+    "name_en": "Chai Nat",
+    "name_th": "ชัยนาท",
+    "count": 37
+  },
+  {
+    "name_en": "Chaiyaphum",
+    "name_th": "ชัยภูมิ",
+    "count": 83
+  },
+  {
+    "name_en": "Chanthaburi",
+    "name_th": "จันทบุรี",
+    "count": 320
+  },
+  {
+    "name_en": "Chiang Mai",
+    "name_th": "เชียงใหม่",
+    "count": 843
+  },
+  {
+    "name_en": "Chiang Rai",
+    "name_th": "เชียงราย",
+    "count": 494
+  },
+  {
+    "name_en": "Chon Buri",
+    "name_th": "ชลบุรี",
+    "count": 2437
+  },
+  {
+    "name_en": "Chumphon",
+    "name_th": "ชุมพร",
+    "count": 414
+  },
+  {
+    "name_en": "Kalasin",
+    "name_th": "กาฬสินธุ์",
+    "count": 269
+  },
+  {
+    "name_en": "Kamphaeng Phet",
+    "name_th": "กำแพงเพชร",
+    "count": 235
+  },
+  {
+    "name_en": "Kanchanaburi",
+    "name_th": "กาญจนบุรี",
+    "count": 242
+  },
+  {
+    "name_en": "Khon Kaen",
+    "name_th": "ขอนแก่น",
+    "count": 485
+  },
+  {
+    "name_en": "Krabi",
+    "name_th": "กระบี่",
+    "count": 242
+  },
+  {
+    "name_en": "Lampang",
+    "name_th": "ลำปาง",
+    "count": 397
+  },
+  {
+    "name_en": "Lamphun",
+    "name_th": "ลำพูน",
+    "count": 272
+  },
+  {
+    "name_en": "Loei",
+    "name_th": "เลย",
+    "count": 207
+  },
+  {
+    "name_en": "Lop Buri",
+    "name_th": "ลพบุรี",
+    "count": 131
+  },
+  {
+    "name_en": "Mae Hong Son",
+    "name_th": "แม่ฮ่องสอน",
+    "count": 42
+  },
+  {
+    "name_en": "Maha Sarakham",
+    "name_th": "มหาสารคาม",
+    "count": 129
+  },
+  {
+    "name_en": "Mukdahan",
+    "name_th": "มุกดาหาร",
+    "count": 100
+  },
+  {
+    "name_en": "Nakhon Nayok",
+    "name_th": "นครนายก",
+    "count": 36
+  },
+  {
+    "name_en": "Nakhon Pathom",
+    "name_th": "นครปฐม",
+    "count": 1657
+  },
+  {
+    "name_en": "Nakhon Phanom",
+    "name_th": "นครพนม",
+    "count": 169
+  },
+  {
+    "name_en": "Nakhon Ratchasima",
+    "name_th": "นครราชสีมา",
+    "count": 329
+  },
+  {
+    "name_en": "Nakhon Sawan",
+    "name_th": "นครสวรรค์",
+    "count": 501
+  },
+  {
+    "name_en": "Nakhon Si Thammarat",
+    "name_th": "นครศรีธรรมราช",
+    "count": 445
+  },
+  {
+    "name_en": "Nan",
+    "name_th": "น่าน",
+    "count": 128
+  },
+  {
+    "name_en": "Narathiwat",
+    "name_th": "นราธิวาส",
+    "count": 138
+  },
+  {
+    "name_en": "Nong Bua Lam Phu",
+    "name_th": "หนองบัวลำภู",
+    "count": 33
+  },
+  {
+    "name_en": "Nong Khai",
+    "name_th": "หนองคาย",
+    "count": 152
+  },
+  {
+    "name_en": "Nonthaburi",
+    "name_th": "นนทบุรี",
+    "count": 491
+  },
+  {
+    "name_en": "Pathum Thani",
+    "name_th": "ปทุมธานี",
+    "count": 1009
+  },
+  {
+    "name_en": "Pattani",
+    "name_th": "ปัตตานี",
+    "count": 35
+  },
+  {
+    "name_en": "Phangnga",
+    "name_th": "พังงา",
+    "count": 251
+  },
+  {
+    "name_en": "Phatthalung",
+    "name_th": "พัทลุง",
+    "count": 304
+  },
+  {
+    "name_en": "Phayao",
+    "name_th": "พะเยา",
+    "count": 61
+  },
+  {
+    "name_en": "Phetchabun",
+    "name_th": "เพชรบูรณ์",
+    "count": 76
+  },
+  {
+    "name_en": "Phetchaburi",
+    "name_th": "เพชรบุรี",
+    "count": 529
+  },
+  {
+    "name_en": "Phichit",
+    "name_th": "พิจิตร",
+    "count": 196
+  },
+  {
+    "name_en": "Phitsanulok",
+    "name_th": "พิษณุโลก",
+    "count": 345
+  },
+  {
+    "name_en": "Phra Nakhon Si Ayutthaya",
+    "name_th": "พระนครศรีอยุธยา",
+    "count": 416
+  },
+  {
+    "name_en": "Phrae",
+    "name_th": "แพร่",
+    "count": 103
+  },
+  {
+    "name_en": "Phuket",
+    "name_th": "ภูเก็ต",
+    "count": 247
+  },
+  {
+    "name_en": "Prachin Buri",
+    "name_th": "ปราจีนบุรี",
+    "count": 334
+  },
+  {
+    "name_en": "Prachuap Khiri Khan",
+    "name_th": "ประจวบคีรีขันธ์",
+    "count": 466
+  },
+  {
+    "name_en": "Ranong",
+    "name_th": "ระนอง",
+    "count": 180
+  },
+  {
+    "name_en": "Ratchaburi",
+    "name_th": "ราชบุรี",
+    "count": 700
+  },
+  {
+    "name_en": "Rayong",
+    "name_th": "ระยอง",
+    "count": 1361
+  },
+  {
+    "name_en": "Roi Et",
+    "name_th": "ร้อยเอ็ด",
+    "count": 177
+  },
+  {
+    "name_en": "Sa Kaeo",
+    "name_th": "สระแก้ว",
+    "count": 156
+  },
+  {
+    "name_en": "Sakon Nakhon",
+    "name_th": "สกลนคร",
+    "count": 269
+  },
+  {
+    "name_en": "Samut Prakan",
+    "name_th": "สมุทรปราการ",
+    "count": 4824
+  },
+  {
+    "name_en": "Samut Sakhon",
+    "name_th": "สมุทรสาคร",
+    "count": 3700
+  },
+  {
+    "name_en": "Samut Songkhram",
+    "name_th": "สมุทรสงคราม",
+    "count": 253
+  },
+  {
+    "name_en": "Saraburi",
+    "name_th": "สระบุรี",
+    "count": 387
+  },
+  {
+    "name_en": "Satun",
+    "name_th": "สตูล",
+    "count": 110
+  },
+  {
+    "name_en": "Si Sa Ket",
+    "name_th": "ศรีสะเกษ",
+    "count": 48
+  },
+  {
+    "name_en": "Sing Buri",
+    "name_th": "สิงห์บุรี",
+    "count": 44
+  },
+  {
+    "name_en": "Songkhla",
+    "name_th": "สงขลา",
+    "count": 814
+  },
+  {
+    "name_en": "Sukhothai",
+    "name_th": "สุโขทัย",
+    "count": 244
+  },
+  {
+    "name_en": "Suphan Buri",
+    "name_th": "สุพรรณบุรี",
+    "count": 142
+  },
+  {
+    "name_en": "Surat Thani",
+    "name_th": "สุราษฎร์ธานี",
+    "count": 593
+  },
+  {
+    "name_en": "Surin",
+    "name_th": "สุรินทร์",
+    "count": 82
+  },
+  {
+    "name_en": "Tak",
+    "name_th": "ตาก",
+    "count": 379
+  },
+  {
+    "name_en": "Trang",
+    "name_th": "ตรัง",
+    "count": 352
+  },
+  {
+    "name_en": "Trat",
+    "name_th": "ตราด",
+    "count": 137
+  },
+  {
+    "name_en": "Ubon Ratchathani",
+    "name_th": "อุบลราชธานี",
+    "count": 50
+  },
+  {
+    "name_en": "Udon Thani",
+    "name_th": "อุดรธานี",
+    "count": 427
+  },
+  {
+    "name_en": "Uthai Thani",
+    "name_th": "อุทัยธานี",
+    "count": 66
+  },
+  {
+    "name_en": "Uttaradit",
+    "name_th": "อุตรดิตถ์",
+    "count": 180
+  },
+  {
+    "name_en": "Yala",
+    "name_th": "ยะลา",
+    "count": 169
+  },
+  {
+    "name_en": "Yasothon",
+    "name_th": "ยโสธร",
+    "count": 24
+  }
+]
