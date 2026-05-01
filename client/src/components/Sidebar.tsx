@@ -371,9 +371,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* LAYER 3: Conscious Deep-Dive — Factory detail or list */}
       <Box flex="1" overflowY="auto" py={2} pb={20}>
-        {/* Selected Factory Detail Panel */}
+        {/* SIGNAL 39: Selected Factory Detail — Progressive Disclosure */}
         {selectedFactory ? (
           <Box px={5} py={4}>
+            {/* LAYER 1: Back navigation — minimal visual weight */}
             <Flex align="center" mb={4}>
               <IconButton
                 aria-label="Back to list"
@@ -392,13 +393,33 @@ const Sidebar: React.FC<SidebarProps> = ({
               <Text fontSize="xs" color="slate.400">กลับไปรายการ</Text>
             </Flex>
 
-            <Text fontWeight="700" color="slate.900" fontSize="lg" lineHeight="1.3" mb={3}>
-              {selectedFactory.properties.ชื่อโรงงาน}
-            </Text>
+            {/* LAYER 2: Primary info — factory name + risk signal */}
+            <Flex align="flex-start" gap={3} mb={3}>
+              {/* Risk indicator dot */}
+              <Box
+                w="10px"
+                h="10px"
+                borderRadius="full"
+                bg={HIGH_RISK_FACTORY_TYPES.includes(selectedFactory.properties.ประเภท) ? "red.500" : "green.500"}
+                mt={1.5}
+                flexShrink={0}
+              />
+              <Text fontWeight="700" color="slate.900" fontSize="lg" lineHeight="1.3" flex="1">
+                {selectedFactory.properties.ชื่อโรงงาน}
+              </Text>
+            </Flex>
 
+            {/* LAYER 2: Location badges — geographic context */}
             <Flex wrap="wrap" gap={2} mb={5}>
-              <Badge colorScheme="blue" variant="subtle" borderRadius="full" px={3} fontSize="xs">
-                ประเภท {selectedFactory.properties.ประเภท}
+              <Badge 
+                bg={HIGH_RISK_FACTORY_TYPES.includes(selectedFactory.properties.ประเภท) ? "red.50" : "green.50"}
+                color={HIGH_RISK_FACTORY_TYPES.includes(selectedFactory.properties.ประเภท) ? "red.700" : "green.700"}
+                borderRadius="full" 
+                px={3} 
+                fontSize="xs"
+                fontWeight="600"
+              >
+                จำพวก {selectedFactory.properties.ประเภท}
               </Badge>
               {selectedFactory.properties.อำเภอ && (
                 <Badge colorScheme="gray" variant="subtle" borderRadius="full" px={3} fontSize="xs">
@@ -406,7 +427,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </Badge>
               )}
               {selectedFactory.properties.จังหวัด && (
-                <Badge colorScheme="purple" variant="subtle" borderRadius="full" px={3} fontSize="xs">
+                <Badge bg="primary.50" color="primary.700" borderRadius="full" px={3} fontSize="xs">
                   {selectedFactory.properties.จังหวัด}
                 </Badge>
               )}
@@ -523,52 +544,93 @@ const Sidebar: React.FC<SidebarProps> = ({
           </VStack>
         ) : (
           <Flex direction="column" align="center" justify="center" h="200px" p={8} textAlign="center">
-            <Text color="slate.500" fontSize="sm">
-              ไม่พบข้อมูล — ลองปรับตัวกรอง
+            {/* LAYER 1: Visual hook — empty state icon */}
+            <Box
+              w="56px"
+              h="56px"
+              borderRadius="full"
+              bg="slate.100"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              mb={3}
+            >
+              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" boxSize={7} color="slate.400">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </Icon>
+            </Box>
+            {/* LAYER 2: Actionable message — clear next step */}
+            <Text color="slate.600" fontSize="sm" fontWeight="500">
+              ไม่พบข้อมูล
+            </Text>
+            <Text color="slate.400" fontSize="xs" mt={1}>
+              ลองปรับตัวกรองหรือเปลี่ยนจังหวัด
             </Text>
           </Flex>
         )}
       </Box>
 
-      {/* Manual Location Modal */}
+      {/* SIGNAL 39: Manual Location Modal — Minimal Cognitive Tax */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="slideInBottom">
         <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.300" />
-        <ModalContent borderRadius="2xl" boxShadow="xl">
-          <ModalHeader color="slate.800">
-            <Flex align="center" gap={2}>
-              <Icon viewBox="0 0 24 24" fill="currentColor" color="primary.500" boxSize={5}>
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-              </Icon>
-              กำหนดตำแหน่งเอง
+        <ModalContent borderRadius="2xl" boxShadow="xl" p={2}>
+          <ModalHeader color="slate.800" pb={2}>
+            <Flex align="center" gap={2.5}>
+              {/* LAYER 1: Icon hook — location marker */}
+              <Box
+                w="36px"
+                h="36px"
+                borderRadius="lg"
+                bg="primary.50"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Icon viewBox="0 0 24 24" fill="currentColor" color="primary.600" boxSize={5}>
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </Icon>
+              </Box>
+              <Text fontSize="lg" fontWeight="bold">กำหนดตำแหน่ง</Text>
             </Flex>
           </ModalHeader>
-          <ModalBody>
-            <Text fontSize="sm" color="slate.500" mb={4}>
-              ระบุพิกัด Latitude/Longitude ที่ต้องการให้เป็นจุดศูนย์กลาง
-            </Text>
-
-            <VStack spacing={4}>
+          <ModalBody pt={0} pb={4}>
+            {/* LAYER 2: Chunked form — 2 inputs max, clear labels */}
+            <VStack spacing={3}>
               <FormControl>
-                <FormLabel fontSize="sm" color="slate.700">Latitude</FormLabel>
+                <FormLabel fontSize="sm" fontWeight="600" color="slate.700" mb={1}>Latitude</FormLabel>
                 <Input
                   value={manualLat}
                   onChange={(e) => setManualLat(e.target.value)}
                   placeholder="14.0504"
+                  size="lg"
+                  bg="slate.50"
+                  border="none"
+                  _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(26, 54, 93, 0.15)" }}
+                  fontFamily="'Inter', monospace"
                 />
               </FormControl>
               <FormControl>
-                <FormLabel fontSize="sm" color="slate.700">Longitude</FormLabel>
+                <FormLabel fontSize="sm" fontWeight="600" color="slate.700" mb={1}>Longitude</FormLabel>
                 <Input
                   value={manualLng}
                   onChange={(e) => setManualLng(e.target.value)}
                   placeholder="101.3678"
+                  size="lg"
+                  bg="slate.50"
+                  border="none"
+                  _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(26, 54, 93, 0.15)" }}
+                  fontFamily="'Inter', monospace"
                 />
               </FormControl>
             </VStack>
           </ModalBody>
-          <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={onClose} color="slate.500">ยกเลิก</Button>
-            <Button colorScheme="primary" onClick={handleManualLocationSubmit}>
+          <ModalFooter pt={0}>
+            {/* LAYER 3: Secondary vs primary action — clear hierarchy */}
+            <Button variant="ghost" mr={2} onClick={onClose} color="slate.400" size="md">
+              ยกเลิก
+            </Button>
+            <Button bg="primary.600" color="white" onClick={handleManualLocationSubmit} size="md" _hover={{ bg: "primary.700" }}>
               บันทึก
             </Button>
           </ModalFooter>

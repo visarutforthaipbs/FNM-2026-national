@@ -234,36 +234,63 @@ const DashboardPage = () => {
   );
 };
 
-// Subcomponents
+// SIGNAL 39 Layer 2: MetricCard component — Chunked semantic units
+// Icon (Layer 1) → Big number (Layer 2) → Context (Layer 3)
 const MetricCard = ({ title, value, subtitle, icon: IconCmp, color }: any) => (
   <Box bg="white" p={6} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200">
-    <Flex justify="space-between" align="start" mb={4}>
-      <Text fontSize="sm" fontWeight="semibold" color="slate.500">{title}</Text>
-      <Box p={2} bg={`${color}.50`} borderRadius="lg" color={`${color}.500`}>
-        <IconCmp boxSize={5} />
+    {/* Layer 1: Semantic color icon (pre-attentive processing) */}
+    <Flex align="center" gap={3} mb={3}>
+      <Box
+        p={3}
+        bg={`${color}.50`}
+        borderRadius="lg"
+      >
+        <IconCmp boxSize={6} color={`${color}.600`} />
       </Box>
     </Flex>
-    <Text fontSize="3xl" fontWeight="900" color="slate.800" letterSpacing="tight">{value}</Text>
-    <Text fontSize="sm" color="slate.400" mt={1}>{subtitle}</Text>
+    
+    {/* Layer 2: Big number — primary insight */}
+    <Text fontSize="3xl" fontWeight="bold" color="slate.800">
+      {value}
+    </Text>
+    
+    {/* Layer 3: Context — supporting details */}
+    <Text fontSize="sm" fontWeight="medium" color="slate.600" mt={1}>
+      {title}
+    </Text>
+    <Text fontSize="xs" color="slate.400">
+      {subtitle}
+    </Text>
   </Box>
 );
 
-const TypeStatCard = ({ name, count, total, color, bg }: any) => {
+// SIGNAL 39 Layer 2: TypeStatCard — Risk-coded factory type breakdown
+const TypeStatCard = ({ name, count, total, color, bg, type }: any) => {
   const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
   return (
-    <Box>
-      <Flex justify="space-between" mb={2}>
-        <Text fontSize="sm" fontWeight="semibold" color="slate.700">
-          {name}
-        </Text>
-        <Badge bg={bg} color={color} px={2} borderRadius="full">
-          {percentage}%
-        </Badge>
+    <Box p={4} bg={bg} borderRadius="lg" border="1px solid" borderColor={`${color.split('.')[0]}.100`}>
+      {/* Layer 1: Color indicator bar */}
+      <Flex align="center" gap={3} mb={2}>
+        <Box w="4px" h="32px" bg={color} borderRadius="full" flexShrink={0} />
+        <Box flex="1">
+          <Flex justify="space-between" align="start" mb={1}>
+            <Text fontSize="sm" fontWeight="semibold" color="slate.700" flex="1">
+              {name}
+            </Text>
+            <Badge bg="white" color={color} px={2} py={0.5} borderRadius="full" fontSize="xs" fontWeight="bold">
+              {percentage}%
+            </Badge>
+          </Flex>
+          
+          {/* Layer 2: Big number */}
+          <Text fontSize="2xl" fontWeight="bold" color="slate.800">
+            {count.toLocaleString()}
+          </Text>
+        </Box>
       </Flex>
-      <Text fontSize="xl" fontWeight="bold" color="slate.800" mb={1}>
-        {count.toLocaleString()} <Text as="span" fontSize="sm" color="slate.400" fontWeight="normal">โรงงาน</Text>
-      </Text>
-      <Progress value={parseFloat(percentage as string)} colorScheme={color.split(".")[0]} size="xs" borderRadius="full" />
+      
+      {/* Layer 3: Progress bar for comparison */}
+      <Progress value={parseFloat(percentage as string)} colorScheme={color.split(".")[0]} size="sm" borderRadius="full" bg="white" />
     </Box>
   )
 }

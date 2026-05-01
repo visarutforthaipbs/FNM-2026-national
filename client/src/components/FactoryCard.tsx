@@ -76,7 +76,17 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
           {props.ชื่อโรงงาน}
         </Text>
         {distance !== null && (
-          <Text fontSize="xs" fontWeight="500" color="slate.400" fontFamily="'Inter', sans-serif" flexShrink={0}>
+          <Text 
+            fontSize="xs" 
+            fontWeight={distance < 1 ? "600" : "500"}
+            color={distance < 1 ? "primary.600" : "slate.400"}
+            fontFamily="'Inter', sans-serif" 
+            flexShrink={0}
+            bg={distance < 1 ? "primary.50" : "transparent"}
+            px={distance < 1 ? 2 : 0}
+            py={distance < 1 ? 0.5 : 0}
+            borderRadius={distance < 1 ? "md" : "none"}
+          >
             {distance < 1
               ? `${(distance * 1000).toFixed(0)} ม.`
               : `${distance.toFixed(1)} กม.`}
@@ -179,7 +189,16 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
         </Flex>
 
         {distance !== null && (
-          <Text fontSize="xs" fontWeight="500" color="slate.400" fontFamily="'Inter', sans-serif">
+          <Text 
+            fontSize="xs" 
+            fontWeight={distance < 1 ? "600" : "500"}
+            color={distance < 1 ? "primary.600" : "slate.400"}
+            fontFamily="'Inter', sans-serif"
+            bg={distance < 1 ? "primary.50" : "transparent"}
+            px={distance < 1 ? 2 : 0}
+            py={distance < 1 ? 0.5 : 0}
+            borderRadius={distance < 1 ? "md" : "none"}
+          >
             {distance < 1
               ? `${(distance * 1000).toFixed(0)} ม.`
               : `${distance.toFixed(1)} กม.`}

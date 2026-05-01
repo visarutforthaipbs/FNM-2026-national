@@ -20,6 +20,7 @@ import type {
   FilterState,
   UserLocation,
 } from "../types/factory";
+import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 
 const TILE_URLS = {
@@ -64,42 +65,49 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// Factory markers
-const factoryIcon = L.divIcon({
-  html: `
-    <div style="width: 24px; height: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" fill="#1A365D" stroke="white" stroke-width="2"/>
-        <path d="M9 16V10H15V16" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M8 7H16" stroke="white" stroke-linecap="round"/>
-        <path d="M12 7V10" stroke="white" stroke-linecap="round"/>
-      </svg>
-    </div>
-  `,
-  className: "custom-factory-marker",
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
-  popupAnchor: [0, -12],
-});
+// SIGNAL 39 Layer 1: Semantic color coding for factory markers
+// Red = high-risk (requires license), Green = safe (no license)
+// User can identify risk status without reading text (pre-attentive processing)
 
-const selectedFactoryIcon = L.divIcon({
-  html: `
-    <div style="width: 32px; height: 32px; position: relative;">
-      <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(26,54,93,0.4); animation: pulse 1.5s infinite;"></div>
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: relative; z-index: 2;">
-        <circle cx="12" cy="12" r="11" fill="#1A365D" stroke="white" stroke-width="2"/>
-        <path d="M9 16V10H15V16" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M8 7H16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M12 7V10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <style>@keyframes pulse { 0% { transform: scale(1); opacity: 0.6; } 70% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(1.5); opacity: 0; } }</style>
-    </div>
-  `,
-  className: "custom-factory-marker selected",
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-  popupAnchor: [0, -16],
-});
+const createFactoryIcon = (isHighRisk: boolean, isSelected: boolean) => {
+  const size = isSelected ? 32 : 24;
+  const color = isHighRisk ? "#EF4444" : "#10B981"; // Red or Green
+  const pulseColor = isHighRisk ? "239, 68, 68" : "16, 185, 129";
+  
+  return L.divIcon({
+    html: `
+      <div style="width: ${size}px; height: ${size}px; position: relative;">
+        ${isSelected ? `
+          <div style="
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(${pulseColor}, 0.4);
+            animation: pulse 1.5s infinite;
+          "></div>
+          <style>
+            @keyframes pulse {
+              0% { transform: scale(1); opacity: 0.6; }
+              70% { transform: scale(1.5); opacity: 0; }
+              100% { transform: scale(1.5); opacity: 0; }
+            }
+          </style>
+        ` : ''}
+        <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+          <circle cx="12" cy="12" r="10" fill="${color}" stroke="white" stroke-width="2"/>
+          <path d="M9 16V10H15V16" stroke="white" stroke-width="${isSelected ? '1.5' : '1'}" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 7H16" stroke="white" stroke-width="${isSelected ? '1.5' : '1'}" stroke-linecap="round"/>
+          <path d="M12 7V10" stroke="white" stroke-width="${isSelected ? '1.5' : '1'}" stroke-linecap="round"/>
+        </svg>
+      </div>
+    `,
+    className: `custom-factory-marker ${isSelected ? 'selected' : ''} ${isHighRisk ? 'high-risk' : 'safe'}`,
+    iconSize: [size, size],
+    iconAnchor: [size/2, size/2],
+    popupAnchor: [0, -size/2],
+  });
+};
 
 const userLocationIcon = L.divIcon({
   html: `
@@ -407,6 +415,37 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
           </Flex>
         )}
 
+        {/* Legend (province detail mode) - SIGNAL 39 Layer 1 color key */}
+        {isProvinceMode && (
+          <Box
+            position="absolute"
+            bottom={4}
+            left={isMobile ? 3 : 4}
+            zIndex="1000"
+            bg="white"
+            borderRadius="xl"
+            boxShadow="lg"
+            p={3}
+            border="1px solid"
+            borderColor="slate.100"
+            fontSize="xs"
+          >
+            <Text fontWeight="600" color="slate.700" mb={2}>
+              ระดับความเสี่ยง
+            </Text>
+            <Flex direction="column" gap={2}>
+              <Flex align="center" gap={2}>
+                <Box w="16px" h="16px" borderRadius="full" bg="#EF4444" border="2px solid white" />
+                <Text color="slate.600">จำพวก 3 (เสี่ยงสูง)</Text>
+              </Flex>
+              <Flex align="center" gap={2}>
+                <Box w="16px" h="16px" borderRadius="full" bg="#10B981" border="2px solid white" />
+                <Text color="slate.600">จำพวก 1-2 (ปลอดภัย)</Text>
+              </Flex>
+            </Flex>
+          </Box>
+        )}
+
         {/* Legend (overview mode) */}
         {!isProvinceMode && (
           <Box
@@ -528,6 +567,9 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                 const isSelected =
                   selectedFactory?.properties.เลขทะเบียน ===
                   factory.properties.เลขทะเบียน;
+                
+                // SIGNAL 39 Layer 1: Determine risk status for color coding
+                const isHighRisk = HIGH_RISK_FACTORY_TYPES.includes(factory.properties.ประเภท);
 
                 const lng = factory.geometry.coordinates[0];
                 const lat = factory.geometry.coordinates[1];
@@ -537,7 +579,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                   <Marker
                     key={`factory-${factory.properties.เลขทะเบียน}-${index}`}
                     position={[lat, lng]}
-                    icon={isSelected ? selectedFactoryIcon : factoryIcon}
+                    icon={createFactoryIcon(isHighRisk, isSelected)}
                     eventHandlers={{ click: () => onFactorySelect(factory) }}
                   />
                 );

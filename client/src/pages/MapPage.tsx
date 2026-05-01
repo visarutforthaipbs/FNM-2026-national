@@ -213,7 +213,7 @@ const MapPage: React.FC<MapPageProps> = ({
         </Box>
       </Flex>
 
-      {/* Welcome Popup */}
+      {/* SIGNAL 39: Welcome Modal — High-Surprisal First, Minimal Cognitive Tax */}
       {showWelcome && (
         <Box
           position="fixed"
@@ -232,24 +232,24 @@ const MapPage: React.FC<MapPageProps> = ({
           <VStack
             bg="white"
             borderRadius="2xl"
-            p={isMobile ? 6 : 10}
-            maxW="440px"
+            p={isMobile ? 8 : 12}
+            maxW="420px"
             w="full"
-            spacing={5}
+            spacing={6}
             boxShadow="2xl"
             textAlign="center"
           >
-            {/* Icon */}
+            {/* LAYER 1: Visual hook — icon communicates purpose (map/location) */}
             <Box
-              w="72px"
-              h="72px"
+              w="64px"
+              h="64px"
               borderRadius="full"
               bg="primary.50"
               display="flex"
               alignItems="center"
               justifyContent="center"
             >
-              <Icon viewBox="0 0 24 24" w={8} h={8} color="primary.500">
+              <Icon viewBox="0 0 24 24" w={8} h={8} color="primary.600">
                 <path
                   fill="currentColor"
                   d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
@@ -257,53 +257,50 @@ const MapPage: React.FC<MapPageProps> = ({
               </Icon>
             </Box>
 
+            {/* LAYER 2: One-sentence value prop — 8 words max */}
             <VStack spacing={2}>
-              <Text fontSize="xl" fontWeight="700" color="slate.800">
-                ค้นหาโรงงานใกล้คุณ
+              <Text fontSize="2xl" fontWeight="bold" color="slate.800" lineHeight="short">
+                ค้นหาโรงงานใกล้บ้านคุณ
               </Text>
-              <Text fontSize="sm" color="slate.500" lineHeight="tall">
-                ค้นหาโรงงานอุตสาหกรรมในรัศมี 10 กม. จากตำแหน่งของคุณ
-                <br />
-                ครอบคลุมข้อมูลโรงงานทั่วประเทศกว่า 39,000 แห่ง
+              <Text fontSize="sm" color="slate.500" fontWeight="medium">
+                63,790+ โรงงานทั่วประเทศไทย
               </Text>
             </VStack>
 
-            <VStack spacing={3} w="full" pt={2}>
-              <Button
-                w="full"
-                size="lg"
-                bg="primary.500"
-                color="white"
-                fontWeight="600"
-                borderRadius="xl"
-                _hover={{ bg: "primary.600" }}
-                _active={{ bg: "primary.700" }}
-                onClick={handleFindNearMe}
-                isLoading={isLocating}
-                loadingText="กำลังค้นหาตำแหน่ง..."
-                leftIcon={
-                  <Icon viewBox="0 0 24 24" w={5} h={5}>
-                    <path
-                      fill="currentColor"
-                      d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
-                    />
-                  </Icon>
-                }
-              >
-                ค้นหาโรงงานใกล้ฉัน
-              </Button>
-              <Button
-                w="full"
-                size="md"
-                variant="ghost"
-                color="slate.400"
-                fontWeight="400"
-                _hover={{ color: "slate.600", bg: "slate.50" }}
-                onClick={handleSkipWelcome}
-              >
-                ดูภาพรวมทั้งประเทศ
-              </Button>
-            </VStack>
+            {/* LAYER 2: Single primary CTA — clear action, no competition */}
+            <Button
+              w="full"
+              size="lg"
+              bg="primary.600"
+              color="white"
+              fontWeight="600"
+              borderRadius="xl"
+              py={6}
+              _hover={{ bg: "primary.700" }}
+              _active={{ bg: "primary.800" }}
+              onClick={handleFindNearMe}
+              isLoading={isLocating}
+              loadingText="ระบุตำแหน่ง..."
+              leftIcon={
+                <Icon viewBox="0 0 24 24" w={5} h={5} fill="currentColor">
+                  <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" />
+                </Icon>
+              }
+            >
+              ค้นหาโรงงานใกล้ฉัน
+            </Button>
+
+            {/* LAYER 3: Secondary action — minimal visual weight, low cognitive tax */}
+            <Button
+              size="sm"
+              variant="ghost"
+              color="slate.400"
+              fontWeight="normal"
+              _hover={{ color: "slate.600" }}
+              onClick={handleSkipWelcome}
+            >
+              ดูภาพรวมทั้งประเทศ
+            </Button>
           </VStack>
         </Box>
       )}

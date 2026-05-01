@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a React + TypeScript + Vite application that displays factories in Prachinburi province, Thailand on an interactive map. The application helps users find nearby factories with filtering capabilities.
+This is a React + TypeScript + Vite civic tech application that displays **63,790+ operating factories across Thailand** on an interactive map. The application helps citizens find nearby factories with filtering capabilities, promoting industrial transparency for communities.
+
+**Tagline**: "เปิดข้อมูลโรงงาน เพื่อชุมชนที่น่าอยู่" (Opening factory data for a livable community)
+
+**Data Source**: Thai government OpenAPI endpoints (Department of Industrial Works)
 
 ## Development Commands
 
@@ -62,6 +66,40 @@ This is a React + TypeScript + Vite application that displays factories in Prach
 - Custom colors defined in `src/theme/index.ts`
 - Thai font family: 'Noto Sans Thai'
 - Main logo integrated in sidebar and favicon
+
+## Design System
+
+This project follows the **Signal 39 Cognitive Design Framework** — a systematic approach to minimizing cognitive load and maximizing information value.
+
+### Core Principles
+- **39 bps conscious bandwidth**: Users process conscious meaning at 39 bits per second
+- **184 KB daily budget**: Respect users' finite cognitive capacity
+- **3-Layer Architecture**: Every UI component must work across three layers:
+  1. **Subconscious Hook (Layer 1)**: Color, spatial grouping, motion — zero conscious tax
+  2. **Chunked Gateway (Layer 2)**: Max 3 primary options, semantic grouping — low tax
+  3. **Deep Dive (Layer 3)**: Progressive disclosure, high-surprisal insights only — high tax
+
+### When Designing or Reviewing UI
+Use the **signal39-design** skill (`.agents/skills/signal39-design/SKILL.md`) when:
+- Creating new components or features
+- Reviewing PRs for "too complex" or "too busy"
+- Optimizing for mobile or low-bandwidth users
+- Making UX decisions about layout, color, or typography
+- User reports "can't find X" (indicates failed Layer 1/2)
+
+### Quick Design Checklist
+Before any UI change:
+1. ✅ **Blur Test**: Can users identify priority/status when text is blurred?
+2. ✅ **Rule of Three**: Are choices grouped into max 3 categories?
+3. ✅ **Surprisal ROI**: Does this element deliver non-obvious value?
+4. ✅ **5-Second Test**: Can new users grasp purpose in 5 seconds?
+
+### Applied to Factory Near Me
+- **Layer 1**: Risk color dots (green/red), choropleth density, selected factory pulse
+- **Layer 2**: Max 3 filters (Province, High-Risk, Radius), distance labels
+- **Layer 3**: Factory owner, capital investment (progressive disclosure)
+
+See [design_system.md](design_system.md) and [39design.md](client/39design.md) for detailed guidelines.
 
 ## Important Notes
 
