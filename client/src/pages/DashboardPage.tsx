@@ -265,7 +265,7 @@ const MetricCard = ({ title, value, subtitle, icon: IconCmp, color }: any) => (
 );
 
 // SIGNAL 39 Layer 2: TypeStatCard — Risk-coded factory type breakdown
-const TypeStatCard = ({ name, count, total, color, bg, type }: any) => {
+const TypeStatCard = ({ name, count, total, color, bg }: any) => {
   const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
   return (
     <Box p={4} bg={bg} borderRadius="lg" border="1px solid" borderColor={`${color.split('.')[0]}.100`}>
