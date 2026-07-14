@@ -60,11 +60,9 @@ export type FilterState = {
   selectedProvince: string; // "" means all provinces
 };
 
-// High-risk factory type codes based on impact criteria
-// New dataset uses FACTYPE: "1" (low), "2" (medium), "3" (high risk)
-export const HIGH_RISK_FACTORY_TYPES = [
-  "3", // High-risk factories (ประเภท 3)
-];
+// Risk classification now lives in src/utils/hazard.ts — a 3-tier level
+// derived from the DIW industry code (ลำดับที่ 1–107) in the registration
+// number, since ~90% of factories are จำพวก 3 and that split said little.
 
 // High-risk factory classification criteria (Thai)
 export const HIGH_RISK_CRITERIA =

@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 import type { FactoryFeature, UserLocation } from "../types/factory";
-import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
 import { haversineKm, formatDistanceTh } from "../utils/geo";
+import { getHazardLevel, HAZARD_COLORS } from "../utils/hazard";
 
 interface FactoryCardProps {
   factory: FactoryFeature;
@@ -18,9 +18,11 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
   userLocation,
 }) => {
   const props = factory.properties;
-  const isHighRisk = HIGH_RISK_FACTORY_TYPES.includes(props.ประเภท);
-  const riskColor = isHighRisk ? "#EF4444" : "#10B981";
-  const riskDetailColor = isHighRisk ? "#B91C1C" : "#087F5B";
+  const hazardLevel = getHazardLevel(props.เลขทะเบียน, props.ประเภท);
+  const isHighRisk = hazardLevel === "hazard";
+  const riskColor = HAZARD_COLORS[hazardLevel];
+  const riskDetailColor =
+    hazardLevel === "hazard" ? "#B91C1C" : hazardLevel === "type3" ? "#B45309" : "#087F5B";
 
   const distance = userLocation
     ? haversineKm(
@@ -80,7 +82,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
           w="42px"
           h="42px"
           borderRadius="xl"
-          bg={isHighRisk ? "red.50" : "green.50"}
+          bg={isHighRisk ? "red.50" : hazardLevel === "type3" ? "orange.50" : "green.50"}
           align="center"
           justify="center"
           flexShrink={0}

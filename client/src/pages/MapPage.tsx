@@ -48,8 +48,11 @@ const MapPage: React.FC<MapPageProps> = ({
   // Total mappable factories (drives the welcome popup headline)
   const totalFactories = provinceCounts.reduce((sum, p) => sum + p.count, 0);
 
-  // Welcome popup state
+  // Welcome popup state — skipped for shared links (?province= / ?factory=)
+  // so the recipient lands directly on the shared view
   const [showWelcome, setShowWelcome] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("province") || params.has("factory")) return false;
     return !localStorage.getItem("factory-nearme-visited");
   });
   const [isLocating, setIsLocating] = useState(false);

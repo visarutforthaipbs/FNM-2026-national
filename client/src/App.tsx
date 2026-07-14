@@ -14,6 +14,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 
+// Shareable URLs: read ?province=, ?factory= and ?type= once at startup
+const initialParams = new URLSearchParams(window.location.search);
+const initialProvince = initialParams.get("province") ?? "";
+const initialFactoryId = initialParams.get("factory") ?? "";
+// ?type= is a comma-separated list of DIW industry codes (ลำดับที่ 1-107)
+const initialFactoryTypes = (initialParams.get("type") ?? "")
+  .split(",")
+  .filter((t) => /^\d{1,3}$/.test(t));
+
 function App() {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
@@ -21,14 +30,16 @@ function App() {
   const [selectedFactory, setSelectedFactory] = useState<FactoryFeature | null>(
     null
   );
+  // Factory id from a shared link, selected once its province's markers load
+  const [pendingFactoryId, setPendingFactoryId] = useState(initialFactoryId);
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
-    factoryTypes: [],
+    factoryTypes: initialFactoryTypes,
     districts: [],
     showOnlyInRadius: false,
     showHighRisk: false,
-    selectedProvince: "",
+    selectedProvince: initialProvince,
   });
 
   // Fetch factories — lazy loads markers only when province selected
@@ -77,6 +88,31 @@ function App() {
       });
     }
   }, []);
+
+  // Select the factory from a shared link once its markers are available
+  useEffect(() => {
+    if (!pendingFactoryId || apiFactories.length === 0) return;
+    const match = apiFactories.find(
+      (f) => f.properties.เลขทะเบียน === pendingFactoryId
+    );
+    setPendingFactoryId("");
+    if (match) handleFactorySelect(match);
+  }, [pendingFactoryId, apiFactories, handleFactorySelect]);
+
+  // Keep the URL shareable: reflect province + factory as query params
+  useEffect(() => {
+    if (window.location.pathname !== "/") return;
+    const params = new URLSearchParams();
+    if (filters.selectedProvince) params.set("province", filters.selectedProvince);
+    if (filters.factoryTypes.length > 0) params.set("type", filters.factoryTypes.join(","));
+    const factoryId = selectedFactory?.properties.เลขทะเบียน;
+    if (factoryId) params.set("factory", factoryId);
+    const query = params.toString();
+    const url = query ? `/?${query}` : "/";
+    if (url !== window.location.pathname + window.location.search) {
+      window.history.replaceState(null, "", url);
+    }
+  }, [filters.selectedProvince, filters.factoryTypes, selectedFactory]);
 
   // Mobile responsive state
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);

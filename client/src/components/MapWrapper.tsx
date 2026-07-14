@@ -20,7 +20,8 @@ import type {
   FilterState,
   UserLocation,
 } from "../types/factory";
-import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
+import { getHazardLevel, HAZARD_COLORS } from "../utils/hazard";
+import type { HazardLevel } from "../utils/hazard";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 
 const TILE_URLS = {
@@ -66,7 +67,8 @@ L.Icon.Default.mergeOptions({
 });
 
 // SIGNAL 39 Layer 1: Semantic color coding for factory markers
-// Red = high-risk (requires license), Green = safe (no license)
+// Red = hazardous industry (chemicals/petroleum/metals/power/waste),
+// Amber = จำพวก 3 general, Green = จำพวก 1-2 / small operations.
 // User can identify risk status without reading text (pre-attentive processing)
 
 // Inject the pulse keyframes once (instead of a <style> tag per selected marker)
@@ -83,12 +85,16 @@ if (typeof document !== "undefined" && !document.getElementById("factory-marker-
   document.head.appendChild(style);
 }
 
-const buildFactoryIcon = (isHighRisk: boolean, isSelected: boolean) => {
+const MARKER_STYLE: Record<HazardLevel, { color: string; detail: string; pulse: string }> = {
+  hazard: { color: HAZARD_COLORS.hazard, detail: "#B91C1C", pulse: "239, 68, 68" },
+  type3: { color: HAZARD_COLORS.type3, detail: "#B45309", pulse: "245, 158, 11" },
+  general: { color: HAZARD_COLORS.general, detail: "#087F5B", pulse: "16, 185, 129" },
+};
+
+const buildFactoryIcon = (level: HazardLevel, isSelected: boolean) => {
   const width = isSelected ? 38 : 30;
   const height = isSelected ? 46 : 38;
-  const color = isHighRisk ? "#EF4444" : "#10B981"; // Red or Green
-  const detailColor = isHighRisk ? "#B91C1C" : "#087F5B";
-  const pulseColor = isHighRisk ? "239, 68, 68" : "16, 185, 129";
+  const { color, detail: detailColor, pulse: pulseColor } = MARKER_STYLE[level];
 
   return L.divIcon({
     html: `
@@ -112,27 +118,28 @@ const buildFactoryIcon = (isHighRisk: boolean, isSelected: boolean) => {
         </svg>
       </div>
     `,
-    className: `custom-factory-marker ${isSelected ? 'selected' : ''} ${isHighRisk ? 'high-risk' : 'safe'}`,
+    className: `custom-factory-marker ${isSelected ? 'selected' : ''} ${level}`,
     iconSize: [width, height],
     iconAnchor: [width / 2, height],
     popupAnchor: [0, -height],
   });
 };
 
-// Pre-created icon instances — only 4 combinations exist, so never rebuild per marker
+// Pre-created icon instances — only 6 combinations exist, so never rebuild per marker
 const FACTORY_ICONS = {
-  "risk-selected": buildFactoryIcon(true, true),
-  "risk-normal": buildFactoryIcon(true, false),
-  "safe-selected": buildFactoryIcon(false, true),
-  "safe-normal": buildFactoryIcon(false, false),
+  "hazard-selected": buildFactoryIcon("hazard", true),
+  "hazard-normal": buildFactoryIcon("hazard", false),
+  "type3-selected": buildFactoryIcon("type3", true),
+  "type3-normal": buildFactoryIcon("type3", false),
+  "general-selected": buildFactoryIcon("general", true),
+  "general-normal": buildFactoryIcon("general", false),
 };
 
-const getFactoryIcon = (isHighRisk: boolean, isSelected: boolean) =>
-  FACTORY_ICONS[`${isHighRisk ? "risk" : "safe"}-${isSelected ? "selected" : "normal"}`];
+const getFactoryIcon = (level: HazardLevel, isSelected: boolean) =>
+  FACTORY_ICONS[`${level}-${isSelected ? "selected" : "normal"}`];
 
-const FactoryLegendMarker: React.FC<{ isHighRisk: boolean }> = ({ isHighRisk }) => {
-  const color = isHighRisk ? "#EF4444" : "#10B981";
-  const detailColor = isHighRisk ? "#B91C1C" : "#087F5B";
+const FactoryLegendMarker: React.FC<{ level: HazardLevel }> = ({ level }) => {
+  const { color, detail: detailColor } = MARKER_STYLE[level];
 
   return (
     <svg
@@ -497,12 +504,18 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             </Text>
             <Flex direction="column" gap={2}>
               <Flex align="center" gap={2.5} minH="30px">
-                <FactoryLegendMarker isHighRisk />
-                <Text color="slate.600">จำพวก 3 (เสี่ยงสูง)</Text>
+                <FactoryLegendMarker level="hazard" />
+                <Text color="slate.600">
+                  {isMobile ? "อุตสาหกรรมเสี่ยงสูง" : "อุตสาหกรรมเสี่ยงสูง (เคมี/ของเสีย/โลหะ/พลังงาน)"}
+                </Text>
               </Flex>
               <Flex align="center" gap={2.5} minH="30px">
-                <FactoryLegendMarker isHighRisk={false} />
-                <Text color="slate.600">จำพวก 1–2 (ทั่วไป)</Text>
+                <FactoryLegendMarker level="type3" />
+                <Text color="slate.600">จำพวก 3 ทั่วไป</Text>
+              </Flex>
+              <Flex align="center" gap={2.5} minH="30px">
+                <FactoryLegendMarker level="general" />
+                <Text color="slate.600">จำพวก 1–2 / ขนาดเล็ก</Text>
               </Flex>
             </Flex>
           </Box>
@@ -526,22 +539,36 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             <Text fontWeight="600" color="slate.700" mb={2}>
               ความหนาแน่นโรงงาน
             </Text>
-            <Flex direction="column" gap={1}>
-              {[
-                { color: "#0B3558", label: "3,000+" },
-                { color: "#2F6987", label: "1,000–3,000" },
-                { color: "#5D91A8", label: "500–1,000" },
-                { color: "#8FB9C9", label: "200–500" },
-                { color: "#B9D2DA", label: "50–200" },
-                { color: "#D5E5EA", label: "10–50" },
-                { color: "#E8F1F4", label: "< 10" },
-              ].map((item) => (
-                <Flex key={item.label} align="center" gap={2}>
-                  <Box w="14px" h="10px" borderRadius="2px" bg={item.color} />
-                  <Text color="slate.500">{item.label}</Text>
+            {isMobile ? (
+              <Box>
+                <Flex gap={0}>
+                  {["#E8F1F4", "#D5E5EA", "#B9D2DA", "#8FB9C9", "#5D91A8", "#2F6987", "#0B3558"].map((c, i) => (
+                    <Box key={c} w="18px" h="10px" bg={c} borderLeftRadius={i === 0 ? "2px" : 0} borderRightRadius={i === 6 ? "2px" : 0} />
+                  ))}
                 </Flex>
-              ))}
-            </Flex>
+                <Flex justify="space-between" mt={0.5}>
+                  <Text color="slate.500" fontSize="2xs">&lt; 10</Text>
+                  <Text color="slate.500" fontSize="2xs">3,000+</Text>
+                </Flex>
+              </Box>
+            ) : (
+              <Flex direction="column" gap={1}>
+                {[
+                  { color: "#0B3558", label: "3,000+" },
+                  { color: "#2F6987", label: "1,000–3,000" },
+                  { color: "#5D91A8", label: "500–1,000" },
+                  { color: "#8FB9C9", label: "200–500" },
+                  { color: "#B9D2DA", label: "50–200" },
+                  { color: "#D5E5EA", label: "10–50" },
+                  { color: "#E8F1F4", label: "< 10" },
+                ].map((item) => (
+                  <Flex key={item.label} align="center" gap={2}>
+                    <Box w="14px" h="10px" borderRadius="2px" bg={item.color} />
+                    <Text color="slate.500">{item.label}</Text>
+                  </Flex>
+                ))}
+              </Flex>
+            )}
             <Text mt={2} color="slate.400" fontSize="2xs">
               คลิกจังหวัดเพื่อดูโรงงาน
             </Text>
@@ -633,8 +660,11 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                   selectedFactory?.properties.เลขทะเบียน ===
                   factory.properties.เลขทะเบียน;
                 
-                // SIGNAL 39 Layer 1: Determine risk status for color coding
-                const isHighRisk = HIGH_RISK_FACTORY_TYPES.includes(factory.properties.ประเภท);
+                // SIGNAL 39 Layer 1: 3-tier hazard color from DIW industry code
+                const level = getHazardLevel(
+                  factory.properties.เลขทะเบียน,
+                  factory.properties.ประเภท
+                );
 
                 const lng = factory.geometry.coordinates[0];
                 const lat = factory.geometry.coordinates[1];
@@ -644,7 +674,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                   <Marker
                     key={`factory-${factory.properties.เลขทะเบียน}-${index}`}
                     position={[lat, lng]}
-                    icon={getFactoryIcon(isHighRisk, isSelected)}
+                    icon={getFactoryIcon(level, isSelected)}
                     eventHandlers={{ click: () => onFactorySelect(factory) }}
                   />
                 );

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import type { FactoryFeature, FactoryProperties, FilterState, UserLocation } from "../types/factory";
-import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
 import { haversineKm } from "../utils/geo";
+import { getHazardLevel, parseFactoryTypeCode } from "../utils/hazard";
 
 // ── Province counts type ──
 export interface ProvinceCount {
@@ -86,17 +86,25 @@ export async function fetchFactoryDetail(factoryId: string): Promise<Partial<Fac
     }
 }
 
-// ── Cache ──
-let cachedMarkers: FactoryFeature[] | null = null;
+// ── Per-province marker loading ──
+// Markers are split into /data/markers/{slug}.json (one file per province,
+// ~50–500 KB each) so selecting a province downloads only what it needs
+// instead of the full 7 MB nationwide file.
 
-async function loadMarkers(): Promise<FactoryFeature[]> {
-    if (cachedMarkers) return cachedMarkers;
+/** URL slug for a province's marker file, from its English name. */
+export function provinceSlug(nameEn: string): string {
+    return nameEn.toLowerCase().replace(/\s+/g, "-");
+}
 
-    console.time("⏱️ Load all markers");
-    const res = await fetch("/data/markers.json");
-    if (!res.ok) throw new Error(`Failed to load markers (HTTP ${res.status})`);
+const markerCache = new Map<string, FactoryFeature[]>();
+
+async function loadProvinceMarkers(slug: string): Promise<FactoryFeature[]> {
+    const cached = markerCache.get(slug);
+    if (cached) return cached;
+
+    const res = await fetch(`/data/markers/${slug}.json`);
+    if (!res.ok) throw new Error(`Failed to load markers for ${slug} (HTTP ${res.status})`);
     const raw = await res.json();
-    console.timeEnd("⏱️ Load all markers");
 
     type RawMarker = { i?: string; n?: string; p?: string; t?: string; a: [number, number] };
     const features: FactoryFeature[] = (raw as RawMarker[]).map((m) => ({
@@ -122,8 +130,7 @@ async function loadMarkers(): Promise<FactoryFeature[]> {
         }
     }));
 
-    console.log(`📍 ${features.length} factory markers ready`);
-    cachedMarkers = features;
+    markerCache.set(slug, features);
     return features;
 }
 
@@ -164,31 +171,46 @@ export const useFactoriesApi = ({
             return;
         }
 
+        // Need province counts to map Thai name → file slug
+        const pc = provinceCounts.find((p) => p.name_th === filters.selectedProvince);
+        if (!pc) return; // counts not loaded yet — effect reruns when they arrive
+
+        let cancelled = false;
         setIsLoading(true);
         setError(null);
-        loadMarkers()
-            .then((all) => {
-                // Filter to selected province immediately
-                const provinceFactories = all.filter(
-                    (f) => f.properties.จังหวัด === filters.selectedProvince
-                );
-                setAllFactories(provinceFactories);
+        loadProvinceMarkers(provinceSlug(pc.name_en))
+            .then((provinceFactories) => {
+                if (!cancelled) setAllFactories(provinceFactories);
             })
             .catch((err) => {
                 console.error("❌", err);
-                setError(err.message);
+                if (!cancelled) setError(err.message);
             })
-            .finally(() => setIsLoading(false));
-    }, [filters.selectedProvince]);
+            .finally(() => {
+                if (!cancelled) setIsLoading(false);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [filters.selectedProvince, provinceCounts]);
 
     // Apply remaining filters (search, high-risk, radius)
     const factories = useMemo(() => {
         let result = allFactories;
 
         if (filters.showHighRisk) {
-            result = result.filter((f) =>
-                HIGH_RISK_FACTORY_TYPES.includes(f.properties.ประเภท)
+            // "เสี่ยงสูง" = hazardous industry (chemicals/petroleum/metals/
+            // power/waste) by DIW type code, not just จำพวก 3 (~90% of factories)
+            result = result.filter(
+                (f) => getHazardLevel(f.properties.เลขทะเบียน, f.properties.ประเภท) === "hazard"
             );
+        }
+        if (filters.factoryTypes.length > 0) {
+            // Filter by DIW industry code (ลำดับที่ 1-107, e.g. from the dashboard)
+            result = result.filter((f) => {
+                const code = parseFactoryTypeCode(f.properties.เลขทะเบียน);
+                return code !== null && filters.factoryTypes.includes(String(code));
+            });
         }
         if (filters.searchTerm) {
             const term = filters.searchTerm.toLowerCase();
@@ -208,7 +230,7 @@ export const useFactoriesApi = ({
         }
 
         return result.length > MAX_RENDER ? result.slice(0, MAX_RENDER) : result;
-    }, [allFactories, filters.showHighRisk, filters.searchTerm, filters.showOnlyInRadius, userLocation]);
+    }, [allFactories, filters.showHighRisk, filters.searchTerm, filters.showOnlyInRadius, filters.factoryTypes, userLocation]);
 
     const total = provinceCounts.reduce((sum, p) => sum + p.count, 0);
 

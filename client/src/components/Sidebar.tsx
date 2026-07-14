@@ -31,7 +31,8 @@ import type {
   FilterState,
   UserLocation,
 } from "../types/factory";
-import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
+import { getHazardLevel, getHazardGroup, HAZARD_COLORS, HAZARD_LABELS } from "../utils/hazard";
+import { factoryTypeName } from "../utils/factoryTypes";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 import { haversineKm } from "../utils/geo";
 import FactoryCard from "./FactoryCard";
@@ -92,8 +93,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (!hasReliableLocation || !userLocation) {
       return [...filteredFactories]
         .sort((a, b) => {
-          const riskDelta = Number(HIGH_RISK_FACTORY_TYPES.includes(b.properties.ประเภท)) -
-            Number(HIGH_RISK_FACTORY_TYPES.includes(a.properties.ประเภท));
+          const riskDelta =
+            Number(getHazardLevel(b.properties.เลขทะเบียน, b.properties.ประเภท) === "hazard") -
+            Number(getHazardLevel(a.properties.เลขทะเบียน, a.properties.ประเภท) === "hazard");
           if (riskDelta !== 0) return riskDelta;
           return a.properties.ชื่อโรงงาน.localeCompare(b.properties.ชื่อโรงงาน, "th");
         })
@@ -113,10 +115,32 @@ const Sidebar: React.FC<SidebarProps> = ({
   const totalCount = filteredFactories.length;
   const displayedCount = displayedFactories.length;
   const highRiskCount = useMemo(
-    () => filteredFactories.filter((factory) => HIGH_RISK_FACTORY_TYPES.includes(factory.properties.ประเภท)).length,
+    () =>
+      filteredFactories.filter(
+        (factory) => getHazardLevel(factory.properties.เลขทะเบียน, factory.properties.ประเภท) === "hazard"
+      ).length,
     [filteredFactories]
   );
   const generalCount = totalCount - highRiskCount;
+
+  // Share the current factory as a URL (?province=…&factory=… is kept in
+  // sync by App, so the current address bar URL IS the shareable link)
+  const [shareCopied, setShareCopied] = useState(false);
+  const handleShareFactory = async () => {
+    const url = window.location.href;
+    const title = selectedFactory?.properties.ชื่อโรงงาน || "Factory Near Me";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }
+    } catch {
+      // user cancelled the share sheet — nothing to do
+    }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFiltersChange({
@@ -164,7 +188,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     filters.searchTerm ||
     filters.showOnlyInRadius ||
     filters.showHighRisk ||
-    filters.selectedProvince;
+    filters.selectedProvince ||
+    filters.factoryTypes.length > 0;
 
   return (
     <Box
@@ -281,6 +306,34 @@ const Sidebar: React.FC<SidebarProps> = ({
             </Button>
           )}
 
+          {/* Industry-type filter chip (set from the dashboard / ?type= URL) */}
+          {filters.factoryTypes.map((code) => (
+            <Button
+              key={code}
+              size="sm"
+              borderRadius="full"
+              variant="ghost"
+              bg="primary.50"
+              color="primary.700"
+              fontWeight="600"
+              flexShrink={0}
+              onClick={() =>
+                onFiltersChange({
+                  ...filters,
+                  factoryTypes: filters.factoryTypes.filter((c) => c !== code),
+                })
+              }
+              rightIcon={
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" boxSize={2.5}>
+                  <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                </Icon>
+              }
+              _hover={{ bg: "primary.100" }}
+            >
+              {factoryTypeName(parseInt(code, 10))}
+            </Button>
+          ))}
+
           {hasActiveFilters && (
             <Button
               size="sm"
@@ -368,16 +421,33 @@ const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onFactorySelect(null)}
               />
               <Text fontSize="xs" color="slate.400">กลับไปรายการ</Text>
+              <Button
+                size="xs"
+                variant="ghost"
+                ml="auto"
+                color={shareCopied ? "green.600" : "slate.500"}
+                fontWeight="600"
+                onClick={handleShareFactory}
+                leftIcon={
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                    {shareCopied
+                      ? <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                      : <><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></>}
+                  </Icon>
+                }
+              >
+                {shareCopied ? "คัดลอกแล้ว" : "แชร์"}
+              </Button>
             </Flex>
 
             {/* LAYER 2: Primary info — factory name + risk signal */}
             <Flex align="flex-start" gap={3} mb={3}>
-              {/* Risk indicator dot */}
+              {/* Risk indicator dot — 3-tier hazard color */}
               <Box
                 w="10px"
                 h="10px"
                 borderRadius="full"
-                bg={HIGH_RISK_FACTORY_TYPES.includes(selectedFactory.properties.ประเภท) ? "red.500" : "green.500"}
+                bg={HAZARD_COLORS[getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท)]}
                 mt={1.5}
                 flexShrink={0}
               />
@@ -388,16 +458,27 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             {/* LAYER 2: Location badges — geographic context */}
             <Flex wrap="wrap" gap={2} mb={5}>
-              <Badge 
-                bg={HIGH_RISK_FACTORY_TYPES.includes(selectedFactory.properties.ประเภท) ? "red.50" : "green.50"}
-                color={HIGH_RISK_FACTORY_TYPES.includes(selectedFactory.properties.ประเภท) ? "red.700" : "green.700"}
-                borderRadius="full" 
-                px={3} 
-                fontSize="xs"
-                fontWeight="600"
-              >
-                จำพวก {selectedFactory.properties.ประเภท}
-              </Badge>
+              {(() => {
+                const level = getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท);
+                const group = getHazardGroup(selectedFactory.properties.เลขทะเบียน);
+                const scheme = level === "hazard"
+                  ? { bg: "red.50", color: "red.700" }
+                  : level === "type3"
+                    ? { bg: "orange.50", color: "orange.700" }
+                    : { bg: "green.50", color: "green.700" };
+                return (
+                  <Badge
+                    bg={scheme.bg}
+                    color={scheme.color}
+                    borderRadius="full"
+                    px={3}
+                    fontSize="xs"
+                    fontWeight="600"
+                  >
+                    {group ?? HAZARD_LABELS[level]}
+                  </Badge>
+                );
+              })()}
               {selectedFactory.properties.อำเภอ && (
                 <Badge colorScheme="gray" variant="subtle" borderRadius="full" px={3} fontSize="xs">
                   {selectedFactory.properties.อำเภอ}

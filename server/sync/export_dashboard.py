@@ -19,6 +19,39 @@ SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+import re
+import time
+
+def execute_with_retry(query, attempts=4):
+    """Retry on Supabase statement timeouts (first page often hits a cold cache)."""
+    for attempt in range(attempts):
+        try:
+            return query.execute()
+        except Exception as e:
+            if attempt == attempts - 1 or "57014" not in str(e):
+                raise
+            wait = 2 ** attempt
+            print(f"  ⏳ statement timeout, retrying in {wait}s...")
+            time.sleep(wait)
+
+def parse_industry_code(reg_id):
+    """DIW industry code (ลำดับที่ 1-107) from a registration number.
+    Same logic as client/src/utils/hazard.ts — keep the two in sync."""
+    if not reg_id:
+        return None
+    segments = reg_id.split("-")
+    if len(segments) < 2:
+        return None
+    # Standard format: code in second segment, e.g. "จ3-52(3)-54/58ยล"
+    m = re.match(r"^(\d{1,3})(?:\(\d+\))?$", segments[1])
+    # Industrial-estate format: code in first segment, e.g. "น.10(1)-1/2548-ญนช."
+    if not m:
+        m = re.match(r"^[^\d]*(\d{1,3})(?:\(\d+\))?$", segments[0])
+    if not m:
+        return None
+    code = int(m.group(1))
+    return code if 1 <= code <= 107 else None
+
 def export_dashboard_stats():
     print("📊 Fetching all active factories for dashboard stats...")
     
@@ -34,6 +67,7 @@ def export_dashboard_stats():
     total_workers = 0
     count_by_type = {}
     count_by_province = {}
+    count_by_industry = {}  # DIW ลำดับที่ 1-107, parsed from the registration id
 
     while True:
         # Note: We omit .not_.is_("lat", "null") to include ALL active factories
@@ -45,7 +79,7 @@ def export_dashboard_stats():
             .limit(batch_size)
         if last_id is not None:
             query = query.gt("id", last_id)
-        response = query.execute()
+        response = execute_with_retry(query)
 
         batch = response.data
         if not batch:
@@ -65,6 +99,11 @@ def export_dashboard_stats():
                 
             # Province counts
             count_by_province[f_prov] = count_by_province.get(f_prov, 0) + 1
+
+            # Industry type counts (ลำดับที่)
+            code = parse_industry_code(item.get("id") or "")
+            key = str(code) if code is not None else "unknown"
+            count_by_industry[key] = count_by_industry.get(key, 0) + 1
             
             # Capital and Workers
             try:
@@ -93,7 +132,8 @@ def export_dashboard_stats():
         "totalCapital": total_capital,
         "totalWorkers": total_workers,
         "countByType": count_by_type,
-        "countByProvince": count_by_province
+        "countByProvince": count_by_province,
+        "countByIndustry": count_by_industry
     }
     
     # Write to client/public

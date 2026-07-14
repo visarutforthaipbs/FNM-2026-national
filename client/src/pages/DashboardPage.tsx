@@ -31,6 +31,8 @@ import {
   ModalCloseButton
 } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
+import { factoryTypeName } from '../utils/factoryTypes';
+import { parseFactoryTypeCode } from '../utils/hazard';
 
 interface FactoryExplorerItem {
   id: string;
@@ -63,6 +65,7 @@ const DashboardPage = () => {
   const [explorerSearch, setExplorerSearch] = useState("");
   const [explorerDistrict, setExplorerDistrict] = useState("");
   const [explorerType, setExplorerType] = useState("");
+  const [explorerIndustry, setExplorerIndustry] = useState("");
 
   // Sorting & Pagination States
   const [sortField, setSortField] = useState<keyof FactoryExplorerItem | "">("");
@@ -124,30 +127,61 @@ const DashboardPage = () => {
     setExplorerSearch("");
     setExplorerDistrict("");
     setExplorerType("");
+    setExplorerIndustry("");
     setCurrentPage(1);
     setSortField("");
 
-    const url = `${supabaseUrl}/rest/v1/factories?province=eq.${encodeURIComponent(selectedProvince)}&is_active=eq.true&select=id,name,factory_type,district,capital_investment,total_workers,horsepower,address_full,status,businesses(legal_name,objective)`;
+    // PostgREST caps every request at 1,000 rows, so paginate with a keyset
+    // (order by id, then id=gt.<last>) until a page comes back short —
+    // otherwise every large province appears to have exactly 1,000 factories.
+    // status=eq.ดำเนินการ keeps this consistent with the rest of the app
+    // (the metric card says "โรงงานที่เปิดดำเนินการ").
+    const baseUrl =
+      `${supabaseUrl}/rest/v1/factories` +
+      `?province=eq.${encodeURIComponent(selectedProvince)}` +
+      `&is_active=eq.true&status=eq.${encodeURIComponent("ดำเนินการ")}` +
+      `&select=id,name,factory_type,district,capital_investment,total_workers,horsepower,address_full,status,businesses(legal_name,objective)` +
+      `&order=id.asc&limit=1000`;
+    const headers = {
+      "apikey": supabaseKey,
+      "Authorization": `Bearer ${supabaseKey}`,
+    };
 
-    fetch(url, {
-      headers: {
-        "apikey": supabaseKey,
-        "Authorization": `Bearer ${supabaseKey}`
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data: FactoryExplorerItem[]) => {
-        setProvinceFactories(data || []);
-        setIsProvinceLoading(false);
-      })
-      .catch(err => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const all: FactoryExplorerItem[] = [];
+        let lastId: string | null = null;
+
+        for (;;) {
+          const url = lastId
+            ? `${baseUrl}&id=gt.${encodeURIComponent(lastId)}`
+            : baseUrl;
+          const res = await fetch(url, { headers });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const page: FactoryExplorerItem[] = await res.json();
+          all.push(...page);
+          if (page.length < 1000) break;
+          lastId = page[page.length - 1].id;
+        }
+
+        if (!cancelled) {
+          setProvinceFactories(all);
+          setIsProvinceLoading(false);
+        }
+      } catch (err) {
         console.error("Error fetching province factories:", err);
-        setProvinceError("ไม่สามารถดึงข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
-        setIsProvinceLoading(false);
-      });
+        if (!cancelled) {
+          setProvinceError("ไม่สามารถดึงข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
+          setIsProvinceLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedProvince]);
 
   // Extract sorted provinces list from data
@@ -163,6 +197,16 @@ const DashboardPage = () => {
       if (f.district) set.add(f.district.trim());
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'th'));
+  }, [provinceFactories]);
+
+  // Industry types (DIW ลำดับที่) present in the province, with counts
+  const industryOptions = useMemo(() => {
+    const counts = new Map<number, number>();
+    provinceFactories.forEach(f => {
+      const code = parseFactoryTypeCode(f.id);
+      if (code !== null) counts.set(code, (counts.get(code) || 0) + 1);
+    });
+    return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
   }, [provinceFactories]);
 
   // Apply search query, filters, and sorting client-side
@@ -186,6 +230,11 @@ const DashboardPage = () => {
       result = result.filter(f => f.factory_type === explorerType);
     }
 
+    if (explorerIndustry) {
+      const code = parseInt(explorerIndustry, 10);
+      result = result.filter(f => parseFactoryTypeCode(f.id) === code);
+    }
+
     if (sortField) {
       result = [...result].sort((a, b) => {
         const valA = a[sortField];
@@ -206,7 +255,7 @@ const DashboardPage = () => {
     }
 
     return result;
-  }, [provinceFactories, explorerSearch, explorerDistrict, explorerType, sortField, sortOrder]);
+  }, [provinceFactories, explorerSearch, explorerDistrict, explorerType, explorerIndustry, sortField, sortOrder]);
 
   // Dynamically compute stats depending on active selections
   const displayStats = useMemo(() => {
@@ -261,7 +310,7 @@ const DashboardPage = () => {
 
   if (isLoading) {
     return (
-      <Box h="100vh" w="100vw" bg="slate.50">
+      <Box h="100vh" w="full" bg="slate.50">
         <Navbar />
         <Flex h="calc(100vh - 64px)" align="center" justify="center" direction="column" gap={4}>
           <Spinner size="xl" color="primary.500" thickness="4px" />
@@ -274,17 +323,17 @@ const DashboardPage = () => {
   if (!stats) return null;
 
   return (
-    <Box minH="100vh" w="100vw" bg="slate.50">
+    <Box minH="100vh" w="full" bg="slate.50">
       <Navbar />
       
-      <Box maxW="1200px" mx="auto" p={6}>
+      <Box maxW="1200px" mx="auto" p={{ base: 4, md: 6 }}>
         {/* Header Section with Dropdown Selector */}
         <Flex justify="space-between" align={{ base: "start", md: "center" }} direction={{ base: "column", md: "row" }} gap={4} mb={8}>
           <Box>
-            <Text fontSize="3xl" fontWeight="800" color="primary.700" letterSpacing="tight">
+            <Text fontSize={{ base: "xl", md: "3xl" }} fontWeight="800" color="primary.700" letterSpacing="tight" lineHeight="1.25">
               {selectedProvince ? `ข้อมูลอุตสาหกรรม จังหวัด${selectedProvince}` : "ภาพรวมโรงงานอุตสาหกรรมในประเทศไทย"}
             </Text>
-            <Text color="slate.500" fontSize="md">
+            <Text color="slate.500" fontSize={{ base: "sm", md: "md" }} mt={1}>
               {selectedProvince ? `สำรวจข้อมูลโรงงานที่กรองแล้วในพื้นที่จังหวัด${selectedProvince}` : "ข้อมูลเชิงลึกและการกระจายตัวของโรงงานที่เปิดดำเนินการในปัจจุบัน"}
             </Text>
           </Box>
@@ -313,7 +362,7 @@ const DashboardPage = () => {
         </Flex>
 
         {/* Top Key Metrics */}
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} mb={8}>
+        <SimpleGrid columns={{ base: 2, lg: 4 }} spacing={{ base: 3, md: 6 }} mb={8}>
           <MetricCard 
             title="จำนวนโรงงานทั้งหมด" 
             value={displayStats.total.toLocaleString()} 
@@ -365,13 +414,13 @@ const DashboardPage = () => {
           </Box>
         )}
 
-        <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={8}>
+        <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={{ base: 5, lg: 8 }}>
           {/* Main Content Area */}
           {selectedProvince ? (
             /* Left side: Interactive Data Grid */
-            <Box bg="white" p={6} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200" gridColumn={{ lg: "span 2" }}>
+            <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200" gridColumn={{ lg: "span 2" }}>
               <Box mb={6}>
-                <Text fontSize="xl" fontWeight="bold" color="slate.800">
+                <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="slate.800">
                   เครื่องมือสืบค้นและสำรวจข้อมูลโรงงาน
                 </Text>
                 <Text fontSize="xs" color="slate.400" mt={1}>
@@ -380,7 +429,7 @@ const DashboardPage = () => {
               </Box>
 
               {/* Grid Filter controls */}
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4} mb={6}>
+              <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={4} mb={6}>
                 <Box>
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>สืบค้นข้อความ</Text>
                   <InputGroup size="sm">
@@ -436,6 +485,26 @@ const DashboardPage = () => {
                     <option value="3">จำพวก 3 (ความเสี่ยงสูง)</option>
                   </Select>
                 </Box>
+
+                <Box>
+                  <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>ประเภทอุตสาหกรรม (ลำดับที่)</Text>
+                  <Select
+                    placeholder="ทุกประเภท"
+                    size="sm"
+                    value={explorerIndustry}
+                    onChange={e => { setExplorerIndustry(e.target.value); setCurrentPage(1); }}
+                    borderRadius="lg"
+                    bg="slate.50"
+                    border="none"
+                    _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)" }}
+                  >
+                    {industryOptions.map(([code, count]) => (
+                      <option key={code} value={code}>
+                        {code} · {factoryTypeName(code)} ({count.toLocaleString()})
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
               </SimpleGrid>
 
               {/* Data Table */}
@@ -462,13 +531,13 @@ const DashboardPage = () => {
                           <Th cursor="pointer" onClick={() => handleSort('name')} w="38%">
                             ชื่อโรงงาน <SortIndicator field="name" />
                           </Th>
-                          <Th cursor="pointer" onClick={() => handleSort('district')} w="15%">
+                          <Th cursor="pointer" onClick={() => handleSort('district')} w="15%" display={{ base: "none", md: "table-cell" }}>
                             อำเภอ <SortIndicator field="district" />
                           </Th>
                           <Th cursor="pointer" onClick={() => handleSort('factory_type')} w="12%">
                             จำพวก <SortIndicator field="factory_type" />
                           </Th>
-                          <Th cursor="pointer" onClick={() => handleSort('capital_investment')} isNumeric w="20%">
+                          <Th cursor="pointer" onClick={() => handleSort('capital_investment')} isNumeric w="20%" display={{ base: "none", sm: "table-cell" }}>
                             เงินลงทุน (บาท) <SortIndicator field="capital_investment" />
                           </Th>
                           <Th cursor="pointer" onClick={() => handleSort('total_workers')} isNumeric w="15%">
@@ -486,10 +555,24 @@ const DashboardPage = () => {
                               onDetailsOpen();
                             }}
                           >
-                            <Td fontWeight="semibold" color="slate.800" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" maxW="200px">
-                              {factory.name || "—"}
+                            <Td overflow="hidden" maxW="200px">
+                              <Text fontWeight="semibold" color="slate.800" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                                {factory.name || "—"}
+                              </Text>
+                              {(() => {
+                                const code = parseFactoryTypeCode(factory.id);
+                                const industry = code !== null ? `${code} · ${factoryTypeName(code)}` : "";
+                                return (
+                                  <Text fontSize="2xs" color="slate.400" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                                    {industry}
+                                    <Text as="span" display={{ base: "inline", md: "none" }}>
+                                      {industry && factory.district ? " · " : ""}{factory.district ? `อ.${factory.district}` : ""}
+                                    </Text>
+                                  </Text>
+                                );
+                              })()}
                             </Td>
-                            <Td color="slate.600">{factory.district || "—"}</Td>
+                            <Td color="slate.600" display={{ base: "none", md: "table-cell" }}>{factory.district || "—"}</Td>
                             <Td>
                               <Badge 
                                 bg={factory.factory_type === "3" ? "red.50" : "green.50"} 
@@ -502,7 +585,7 @@ const DashboardPage = () => {
                                 จำพวก {factory.factory_type || "—"}
                               </Badge>
                             </Td>
-                            <Td isNumeric fontWeight="semibold" color="slate.700">
+                            <Td isNumeric fontWeight="semibold" color="slate.700" display={{ base: "none", sm: "table-cell" }}>
                               {factory.capital_investment ? factory.capital_investment.toLocaleString() : "0"}
                             </Td>
                             <Td isNumeric fontWeight="semibold" color="slate.700">
@@ -565,8 +648,8 @@ const DashboardPage = () => {
             </Box>
           ) : (
             /* Left side (National view): original Top 15 Provinces progress list */
-            <Box bg="white" p={6} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200" gridColumn={{ lg: "span 2" }}>
-              <Text fontSize="xl" fontWeight="bold" color="slate.800" mb={6}>
+            <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200" gridColumn={{ lg: "span 2" }}>
+              <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="slate.800" mb={6}>
                 15 จังหวัดที่มีปริมาณโรงงานสูงสุด
               </Text>
               
@@ -602,8 +685,8 @@ const DashboardPage = () => {
           <VStack spacing={8} align="stretch">
             
             {/* Factory Risk Types proportion (dynamically adapts) */}
-            <Box bg="white" p={6} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200">
-              <Text fontSize="xl" fontWeight="bold" color="slate.800" mb={6}>
+            <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200">
+              <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="slate.800" mb={6}>
                 สัดส่วนตามจำพวกโรงงาน
               </Text>
               
@@ -688,11 +771,16 @@ const DashboardPage = () => {
             )}
           </VStack>
         </SimpleGrid>
+
+        {/* National view: industry-type ranking (DIW ลำดับที่ 1-107) */}
+        {!selectedProvince && stats.countByIndustry && (
+          <IndustryRanking countByIndustry={stats.countByIndustry} total={stats.total} />
+        )}
       </Box>
 
       {/* Row Details Modal — Progressive Disclosure (Signal 39 Layer 3) */}
       {selectedExplorerFactory && (
-        <Modal isOpen={isDetailsOpen} onClose={onDetailsClose} isCentered size="md" motionPreset="slideInBottom">
+        <Modal isOpen={isDetailsOpen} onClose={onDetailsClose} isCentered size="md" motionPreset="slideInBottom" scrollBehavior="inside">
           <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.300" />
           <ModalContent borderRadius="2xl" boxShadow="xl" p={2}>
             <ModalHeader color="slate.800" pb={1}>
@@ -730,6 +818,18 @@ const DashboardPage = () => {
                     </Badge>
                   </Box>
                 </SimpleGrid>
+
+                {(() => {
+                  const code = parseFactoryTypeCode(selectedExplorerFactory.id);
+                  return code !== null ? (
+                    <Box>
+                      <Text fontSize="2xs" color="slate.400" fontWeight="600" mb={0.5}>ประเภทอุตสาหกรรม</Text>
+                      <Text fontSize="sm" color="slate.700" fontWeight="semibold">
+                        ลำดับที่ {code} · {factoryTypeName(code)}
+                      </Text>
+                    </Box>
+                  ) : null;
+                })()}
 
                 <Box>
                   <Text fontSize="2xs" color="slate.400" fontWeight="600" mb={0.5}>ผู้ประกอบการ</Text>
@@ -783,25 +883,25 @@ const DashboardPage = () => {
 
 // MetricCard component — Chunked semantic units
 const MetricCard = ({ title, value, subtitle, icon: IconCmp, color }: any) => (
-  <Box bg="white" p={6} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200">
+  <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200">
     <Flex align="center" gap={3} mb={3}>
       <Box
-        p={3}
+        p={{ base: 2, md: 3 }}
         bg={`${color}.50`}
         borderRadius="lg"
       >
-        <IconCmp boxSize={6} color={`${color}.600`} />
+        <IconCmp boxSize={{ base: 5, md: 6 }} color={`${color}.600`} />
       </Box>
     </Flex>
-    
-    <Text fontSize="3xl" fontWeight="bold" color="slate.800">
+
+    <Text fontSize={{ base: "xl", md: "3xl" }} fontWeight="bold" color="slate.800">
       {value}
     </Text>
     
-    <Text fontSize="sm" fontWeight="medium" color="slate.600" mt={1}>
+    <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="medium" color="slate.600" mt={1}>
       {title}
     </Text>
-    <Text fontSize="xs" color="slate.400">
+    <Text fontSize="xs" color="slate.400" display={{ base: "none", sm: "block" }}>
       {subtitle}
     </Text>
   </Box>
@@ -834,6 +934,107 @@ const TypeStatCard = ({ name, count, total, color, bg }: any) => {
     </Box>
   )
 }
+
+// SIGNAL 39 Layer 3: IndustryRanking — deep-dive into DIW industry types
+// (ลำดับที่ 1-107). Each row links to the map filtered to that industry.
+const IndustryRanking = ({
+  countByIndustry,
+  total,
+}: {
+  countByIndustry: Record<string, number>;
+  total: number;
+}) => {
+  const [showAll, setShowAll] = useState(false);
+
+  const ranked = useMemo(
+    () =>
+      Object.entries(countByIndustry)
+        .filter(([code]) => code !== "unknown")
+        .map(([code, count]) => ({ code: parseInt(code, 10), count }))
+        .sort((a, b) => b.count - a.count),
+    [countByIndustry]
+  );
+
+  const rows = showAll ? ranked : ranked.slice(0, 15);
+  const max = ranked[0]?.count || 1;
+
+  return (
+    <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200" mt={8}>
+      <Flex justify="space-between" align="flex-start" mb={1} wrap="wrap" gap={2}>
+        <Box>
+          <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="slate.800">
+            ประเภทอุตสาหกรรม (ลำดับที่ 1–107)
+          </Text>
+          <Text fontSize="xs" color="slate.400" mt={1}>
+            ตามบัญชีประเภทโรงงานของกรมโรงงานอุตสาหกรรม — คลิกเพื่อดูโรงงานประเภทนั้นบนแผนที่
+          </Text>
+        </Box>
+        <Badge bg="slate.50" color="slate.500" borderRadius="full" px={3} py={1} fontSize="xs">
+          {ranked.length} ประเภท
+        </Badge>
+      </Flex>
+
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacingX={{ md: 6, lg: 10 }} spacingY={3} mt={5}>
+        {rows.map(({ code, count }, idx) => (
+          <Flex
+            key={code}
+            as="a"
+            href={`/?type=${code}`}
+            align="center"
+            gap={3}
+            p={2}
+            mx={-2}
+            borderRadius="lg"
+            _hover={{ bg: "slate.50", textDecoration: "none" }}
+            title={`ดูโรงงาน${factoryTypeName(code)}บนแผนที่`}
+          >
+            <Text fontSize="xs" color="slate.300" fontWeight="600" w="24px" textAlign="right" flexShrink={0}>
+              {idx + 1}
+            </Text>
+            <Badge
+              bg="primary.50"
+              color="primary.700"
+              borderRadius="md"
+              px={1.5}
+              fontSize="2xs"
+              fontWeight="700"
+              flexShrink={0}
+              minW="30px"
+              textAlign="center"
+            >
+              {code}
+            </Badge>
+            <Box flex="1" minW={0}>
+              <Flex justify="space-between" align="center" mb={0.5} gap={2}>
+                <Text fontSize="sm" fontWeight="500" color="slate.700" noOfLines={1}>
+                  {factoryTypeName(code)}
+                </Text>
+                <Text fontSize="xs" fontWeight="700" color="primary.600" flexShrink={0}>
+                  {count.toLocaleString()}
+                </Text>
+              </Flex>
+              <Progress
+                value={(count / max) * 100}
+                colorScheme="primary"
+                size="xs"
+                borderRadius="full"
+                bg="slate.100"
+              />
+            </Box>
+          </Flex>
+        ))}
+      </SimpleGrid>
+
+      {ranked.length > 15 && (
+        <Flex justify="center" mt={4}>
+          <Button size="sm" variant="ghost" color="slate.500" onClick={() => setShowAll((s) => !s)}>
+            {showAll ? "แสดงเฉพาะ 15 อันดับแรก" : `แสดงทั้งหมด ${ranked.length} ประเภท (${(total - rows.reduce((s, r) => s + r.count, 0)).toLocaleString()} โรงงานที่เหลือ)`}
+          </Button>
+        </Flex>
+      )}
+    </Box>
+  );
+};
 
 // Icons
 const BuildingIcon = (props: any) => (
