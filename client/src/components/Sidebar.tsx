@@ -70,6 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onFiltersChange,
   onFactorySelect,
   userLocation,
+  locationError,
   isLocationLoading,
   onManualLocationSet,
   isMobile = false,
@@ -80,6 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [manualLat, setManualLat] = useState<string>("13.7563");
   const [manualLng, setManualLng] = useState<string>("100.5018");
+  const hasReliableLocation = Boolean(userLocation && !locationError);
 
   // Filtering (province/search/high-risk/radius) happens in useFactoriesApi —
   // the features received here are already filtered
@@ -87,7 +89,16 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Sort by distance (nearest first) then limit for performance
   const displayedFactories = useMemo(() => {
-    if (!userLocation) return filteredFactories.slice(0, 200);
+    if (!hasReliableLocation || !userLocation) {
+      return [...filteredFactories]
+        .sort((a, b) => {
+          const riskDelta = Number(HIGH_RISK_FACTORY_TYPES.includes(b.properties.ประเภท)) -
+            Number(HIGH_RISK_FACTORY_TYPES.includes(a.properties.ประเภท));
+          if (riskDelta !== 0) return riskDelta;
+          return a.properties.ชื่อโรงงาน.localeCompare(b.properties.ชื่อโรงงาน, "th");
+        })
+        .slice(0, 200);
+    }
 
     const { lat, lng } = userLocation;
     return [...filteredFactories]
@@ -97,10 +108,15 @@ const Sidebar: React.FC<SidebarProps> = ({
         return dA - dB;
       })
       .slice(0, 200);
-  }, [filteredFactories, userLocation]);
+  }, [filteredFactories, hasReliableLocation, userLocation]);
 
   const totalCount = filteredFactories.length;
   const displayedCount = displayedFactories.length;
+  const highRiskCount = useMemo(
+    () => filteredFactories.filter((factory) => HIGH_RISK_FACTORY_TYPES.includes(factory.properties.ประเภท)).length,
+    [filteredFactories]
+  );
+  const generalCount = totalCount - highRiskCount;
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFiltersChange({
@@ -249,7 +265,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             {filters.showHighRisk && "●  "}เสี่ยงสูง
           </Button>
 
-          {userLocation && (
+          {hasReliableLocation && (
             <Button
               size="sm"
               borderRadius="full"
@@ -295,13 +311,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Location indicator — pre-attentive color dot */}
         <Flex align="center" gap={2}>
-          <Box w="6px" h="6px" borderRadius="full" bg={userLocation ? "accent.green" : "slate.300"} />
+          <Box w="6px" h="6px" borderRadius="full" bg={hasReliableLocation ? "accent.green" : "slate.300"} />
           {isLocationLoading ? (
             <Text fontSize="xs" color="slate.400">ระบุตำแหน่ง...</Text>
-          ) : userLocation ? (
+          ) : hasReliableLocation && userLocation ? (
             <Text fontSize="xs" color="slate.400" fontFamily="'Inter', monospace">
               {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
             </Text>
+          ) : locationError ? (
+            <Text fontSize="xs" color="slate.400">ยังไม่ใช้ตำแหน่งของคุณ</Text>
           ) : (
             <Text fontSize="xs" color="slate.400">ไม่พบตำแหน่ง</Text>
           )}
@@ -490,17 +508,63 @@ const Sidebar: React.FC<SidebarProps> = ({
             </VStack>
           </Box>
         ) : displayedFactories.length > 0 ? (
-          <VStack spacing={0} align="stretch" px={3}>
-            {displayedFactories.map((factory, index) => (
-              <FactoryCard
-                key={`${factory.properties.เลขทะเบียน}-${index}`}
-                factory={factory}
-                isSelected={false}
-                onClick={() => onFactorySelect(factory)}
-                userLocation={userLocation}
-              />
-            ))}
-          </VStack>
+          <>
+            <Box px={4} pt={3} pb={3}>
+              <Box
+                bg="#E8F1F4"
+                border="1px solid"
+                borderColor="#D5E5EA"
+                borderRadius="2xl"
+                p={4}
+              >
+                <Text fontSize="10px" color="slate.500" fontWeight="700" letterSpacing=".08em">
+                  พื้นที่ที่เลือก
+                </Text>
+                <Flex justify="space-between" align="baseline" gap={3} mt={1}>
+                  <Text fontSize="lg" fontWeight="800" color="#0B3558" noOfLines={1}>
+                    {filters.selectedProvince || "ผลการค้นหา"}
+                  </Text>
+                  <Text fontSize="xs" fontWeight="700" color="slate.600" flexShrink={0}>
+                    {totalCount.toLocaleString()} แห่ง
+                  </Text>
+                </Flex>
+
+                <Flex mt={3} gap={2} wrap="wrap">
+                  <Badge bg="red.50" color="red.700" borderRadius="full" px={2.5} py={1} fontSize="10px">
+                    เสี่ยงสูง {highRiskCount.toLocaleString()}
+                  </Badge>
+                  <Badge bg="whiteAlpha.800" color="green.700" borderRadius="full" px={2.5} py={1} fontSize="10px">
+                    ทั่วไป {generalCount.toLocaleString()}
+                  </Badge>
+                </Flex>
+
+                <Flex align="center" gap={1.5} mt={3} color="slate.500">
+                  <Icon viewBox="0 0 20 20" boxSize={3.5} fill="none" stroke="currentColor" strokeWidth="1.7">
+                    {hasReliableLocation ? (
+                      <><circle cx="10" cy="10" r="3" /><circle cx="10" cy="10" r="7" /></>
+                    ) : (
+                      <><path d="M4 6h12M4 10h9M4 14h6" /><path d="m14 12 2 2 3-4" /></>
+                    )}
+                  </Icon>
+                  <Text fontSize="10px">
+                    {hasReliableLocation ? "เรียงจากโรงงานที่ใกล้คุณ" : "เรียงโรงงานเสี่ยงสูงก่อน"}
+                  </Text>
+                </Flex>
+              </Box>
+            </Box>
+
+            <VStack spacing={0} align="stretch" px={3}>
+              {displayedFactories.map((factory, index) => (
+                <FactoryCard
+                  key={`${factory.properties.เลขทะเบียน}-${index}`}
+                  factory={factory}
+                  isSelected={false}
+                  onClick={() => onFactorySelect(factory)}
+                  userLocation={hasReliableLocation ? userLocation : null}
+                />
+              ))}
+            </VStack>
+          </>
         ) : (
           <Flex direction="column" align="center" justify="center" h="200px" p={8} textAlign="center">
             {/* LAYER 1: Visual hook — branded search/map state */}

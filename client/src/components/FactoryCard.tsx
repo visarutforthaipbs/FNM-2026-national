@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text, Flex } from "@chakra-ui/react";
+import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 import type { FactoryFeature, UserLocation } from "../types/factory";
 import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
 import { haversineKm, formatDistanceTh } from "../utils/geo";
@@ -19,14 +19,10 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
 }) => {
   const props = factory.properties;
   const isHighRisk = HIGH_RISK_FACTORY_TYPES.includes(props.ประเภท);
+  const riskColor = isHighRisk ? "#EF4444" : "#10B981";
+  const riskDetailColor = isHighRisk ? "#B91C1C" : "#087F5B";
 
-  // Check if we have detail info beyond just name
-  const hasOperator = props.ผู้ประกอบก && props.ผู้ประกอบก !== "—";
-  const hasBusinessType = props.ประกอบกิจก && props.ประกอบกิจก !== "—";
-  const hasDetails = hasOperator || hasBusinessType;
-
-  // Calculate distance
-  const distance: number | null = userLocation
+  const distance = userLocation
     ? haversineKm(
         userLocation.lat,
         userLocation.lng,
@@ -35,165 +31,124 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
       )
     : null;
 
-  // Compact mode: only name + distance when no extra info
-  if (!hasDetails) {
-    return (
-      <Flex
-        py={2}
-        px={4}
-        mx={1}
-        align="center"
-        gap={2}
-        bg={isSelected ? "white" : "transparent"}
-        borderRadius="lg"
-        border="1px solid"
-        borderColor={isSelected ? "slate.200" : "transparent"}
-        cursor="pointer"
-        transition="all 0.15s ease"
-        _hover={{ bg: "white", borderColor: "slate.100" }}
-        onClick={onClick}
-      >
-        <Box
-          w="6px"
-          h="6px"
-          borderRadius="full"
-          bg={isHighRisk ? "#EF4444" : "#10B981"}
-          flexShrink={0}
-        />
-        <Text
-          flex="1"
-          fontWeight="500"
-          color="slate.700"
-          fontSize="sm"
-          noOfLines={1}
-        >
-          {props.ชื่อโรงงาน}
-        </Text>
-        {distance !== null && (
-          <Text 
-            fontSize="xs" 
-            fontWeight={distance < 1 ? "600" : "500"}
-            color={distance < 1 ? "primary.600" : "slate.400"}
-            fontFamily="'Inter', sans-serif" 
-            flexShrink={0}
-            bg={distance < 1 ? "primary.50" : "transparent"}
-            px={distance < 1 ? 2 : 0}
-            py={distance < 1 ? 0.5 : 0}
-            borderRadius={distance < 1 ? "md" : "none"}
-          >
-            {formatDistanceTh(distance)}
-          </Text>
-        )}
-      </Flex>
-    );
-  }
+  const contextLine =
+    props.ประกอบกิจก?.trim() ||
+    [props.อำเภอ, props.จังหวัด].filter(Boolean).join(" · ") ||
+    `โรงงานจำพวก ${props.ประเภท}`;
 
   return (
     <Box
-      py={4}
-      px={4}
-      mx={1}
-      bg={isSelected ? "white" : "transparent"}
-      borderRadius="xl"
+      as="button"
+      type="button"
+      w="full"
+      p={4}
+      mb={2.5}
+      bg="white"
+      borderRadius="2xl"
       border="1px solid"
-      borderColor={isSelected ? "slate.200" : "transparent"}
+      borderColor={isSelected ? "primary.200" : "slate.100"}
+      boxShadow={isSelected ? "0 8px 24px rgba(11, 53, 88, 0.12)" : "sm"}
       cursor="pointer"
-      transition="all 0.15s ease"
+      textAlign="left"
+      position="relative"
+      overflow="hidden"
+      transition="transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease"
       _hover={{
-        bg: "white",
-        borderColor: "slate.100",
+        transform: "translateY(-1px)",
+        borderColor: isHighRisk ? "red.200" : "#B9D2DA",
+        boxShadow: "0 8px 24px rgba(11, 53, 88, 0.1)",
+      }}
+      _focusVisible={{
+        outline: "none",
+        boxShadow: "0 0 0 3px rgba(240, 82, 35, 0.2)",
       }}
       onClick={onClick}
-      position="relative"
+      aria-label={`ดูรายละเอียด ${props.ชื่อโรงงาน}`}
     >
-      {/* LAYER 1: Subconscious Hook — risk color bar (no reading needed) */}
-      {isSelected && (
-        <Box
-          position="absolute"
-          left={0}
-          top="12px"
-          bottom="12px"
-          w="3px"
-          bg={isHighRisk ? "accent.crimson" : "primary.400"}
-          borderRadius="full"
-        />
-      )}
+      <Box
+        position="absolute"
+        left={0}
+        top={3}
+        bottom={3}
+        w="4px"
+        bg={riskColor}
+        borderRightRadius="full"
+      />
 
-      {/* Header: Name + Status dot */}
-      <Flex justify="space-between" align="start" gap={3}>
-        <Box flex="1">
-          <Text
-            fontWeight="600"
-            color="slate.800"
-            fontSize="sm"
-            lineHeight="1.4"
-            noOfLines={2}
-          >
-            {props.ชื่อโรงงาน}
+      <Flex align="flex-start" gap={3}>
+        <Flex
+          w="42px"
+          h="42px"
+          borderRadius="xl"
+          bg={isHighRisk ? "red.50" : "green.50"}
+          align="center"
+          justify="center"
+          flexShrink={0}
+        >
+          <Icon viewBox="0 0 32 32" boxSize="25px" aria-hidden="true">
+            <path d="M4 26V12l7 4V10l7 4V7l10 5.5V26H4Z" fill={riskColor} />
+            <path d="M9 23v-4m5 4v-4m5 4v-4" stroke="white" strokeWidth="2" strokeLinecap="round" />
+          </Icon>
+        </Flex>
+
+        <Box flex="1" minW={0}>
+          <Flex align="flex-start" justify="space-between" gap={3}>
+            <Text
+              flex="1"
+              fontWeight="700"
+              color="slate.800"
+              fontSize="sm"
+              lineHeight="1.45"
+              noOfLines={2}
+            >
+              {props.ชื่อโรงงาน || "ไม่ระบุชื่อโรงงาน"}
+            </Text>
+            {distance !== null && (
+              <Text
+                fontSize="xs"
+                fontWeight="700"
+                color={distance < 1 ? "primary.600" : "slate.600"}
+                fontFamily="'Inter', sans-serif"
+                flexShrink={0}
+              >
+                {formatDistanceTh(distance)}
+              </Text>
+            )}
+          </Flex>
+
+          <Text fontSize="xs" color="slate.500" mt={1} noOfLines={1}>
+            {contextLine}
           </Text>
         </Box>
-        {/* Layer 1: Pre-attentive risk dot */}
-        <Box
-          w="8px"
-          h="8px"
-          borderRadius="full"
-          bg={isHighRisk ? "#EF4444" : "#10B981"}
-          flexShrink={0}
-          mt={1}
-        />
       </Flex>
 
-      {/* LAYER 2: Chunked details — max 2 lines of context */}
-      <Text
-        fontSize="xs"
-        color="slate.500"
-        mt={1.5}
-        noOfLines={1}
+      <Flex
+        mt={3}
+        pt={3}
+        borderTop="1px solid"
+        borderColor="slate.100"
+        align="center"
+        justify="space-between"
+        gap={3}
       >
-        {props.ผู้ประกอบก || "—"}
-      </Text>
-      <Text
-        fontSize="xs"
-        color="slate.400"
-        mt={0.5}
-        noOfLines={1}
-      >
-        {props.ประกอบกิจก || "—"}
-      </Text>
-
-      {/* Footer: Type + District + Distance — 3 chunks max */}
-      <Flex justify="space-between" align="center" mt={3}>
-        <Flex gap={2} align="center">
+        <Flex align="center" gap={1.5} minW={0}>
+          <Box w="5px" h="5px" borderRadius="full" bg={riskDetailColor} flexShrink={0} />
           <Text
-            fontSize="xs"
-            fontWeight="500"
-            color={isHighRisk ? "red.600" : "slate.500"}
-            bg={isHighRisk ? "red.50" : "slate.50"}
-            px={2}
-            py={0.5}
-            borderRadius="md"
+            fontSize="10px"
+            color="slate.400"
+            fontFamily="'Inter', 'IBM Plex Sans Thai', sans-serif"
+            noOfLines={1}
           >
-            {props.ประเภท}
-          </Text>
-          <Text fontSize="xs" color="slate.400">
-            {props.อำเภอ}
+            ทะเบียน {props.เลขทะเบียน || "ไม่ระบุ"}
           </Text>
         </Flex>
 
-        {distance !== null && (
-          <Text 
-            fontSize="xs" 
-            fontWeight={distance < 1 ? "600" : "500"}
-            color={distance < 1 ? "primary.600" : "slate.400"}
-            fontFamily="'Inter', sans-serif"
-            bg={distance < 1 ? "primary.50" : "transparent"}
-            px={distance < 1 ? 2 : 0}
-            py={distance < 1 ? 0.5 : 0}
-            borderRadius={distance < 1 ? "md" : "none"}
-          >
-            {formatDistanceTh(distance)}
-          </Text>
-        )}
+        <Flex align="center" gap={1} color="primary.600" flexShrink={0}>
+          <Text fontSize="xs" fontWeight="600">ดูข้อมูล</Text>
+          <Icon viewBox="0 0 20 20" boxSize={3.5} fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="m7 4 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </Icon>
+        </Flex>
       </Flex>
     </Box>
   );

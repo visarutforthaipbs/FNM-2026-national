@@ -20,11 +20,11 @@
     },
     {
       "src": "/[^.]*$",
-      "dest": "/index.html"
+      "dest": "client/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "client/$1"
     }
   ]
 }
