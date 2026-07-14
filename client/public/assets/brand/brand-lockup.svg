@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 128" role="img" aria-labelledby="title desc">
+  <title id="title">โรงงานใกล้ฉัน</title>
+  <desc id="desc">ตราสัญลักษณ์และชื่อโครงการโรงงานใกล้ฉัน</desc>
+  <rect width="128" height="128" rx="30" fill="#0B3558"/>
+  <path d="M20 96V59l23 12V56l24 13V48l25 14v34H20Z" fill="#F8FAFC"/>
+  <path d="M28 96h72" stroke="#8FB9C9" stroke-width="6" stroke-linecap="round"/>
+  <path d="M43 86v-8m18 8v-8" stroke="#0B3558" stroke-width="6" stroke-linecap="round"/>
+  <path d="M96 18C82.2 18 71 29 71 42.6c0 17.2 25 36.2 25 36.2s25-19 25-36.2C121 29 109.8 18 96 18Z" fill="#F05223" stroke="#0B3558" stroke-width="6"/>
+  <circle cx="96" cy="43" r="9" fill="#FFF7ED"/>
+  <text x="160" y="60" fill="#0F2940" font-family="IBM Plex Sans Thai, Noto Sans Thai, sans-serif" font-size="38" font-weight="700">โรงงานใกล้ฉัน</text>
+  <text x="162" y="91" fill="#587487" font-family="IBM Plex Sans Thai, Noto Sans Thai, sans-serif" font-size="17" font-weight="500">เปิดข้อมูลโรงงาน เพื่อชุมชนที่น่าอยู่</text>
+  <rect x="162" y="105" width="62" height="4" rx="2" fill="#F05223"/>
+  <text x="236" y="111" fill="#0B3558" font-family="IBM Plex Sans Thai, Inter, sans-serif" font-size="12" font-weight="700" letter-spacing="1.8">FACTORY NEAR ME</text>
+</svg>

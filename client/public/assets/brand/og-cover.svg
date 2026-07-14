@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">โรงงานใกล้ฉัน</title><desc id="desc">ภาพสำหรับแชร์โครงการแผนที่ข้อมูลโรงงาน</desc>
+  <rect width="1200" height="630" fill="#F7FAFB"/><rect width="28" height="630" fill="#F05223"/>
+  <g fill="none" stroke="#B9CDD6" stroke-width="3" opacity=".55"><path d="M690-20c-72 68-53 136 10 179s72 111 10 171-45 136 24 184 80 103 24 156"/><path d="M792-17c-64 62-46 124 13 163s67 103 8 159-42 126 21 171 71 96 18 149"/><path d="M900-24c-60 57-43 113 10 150s63 96 8 148-38 118 19 159 65 91 16 140"/><path d="M1013-20c-56 52-39 105 11 139s58 88 7 137-35 109 18 147 59 84 15 129"/></g>
+  <g opacity=".12" fill="#0B3558"><path d="M732 508v-83l50 27v-34l53 29v-46l56 30v77H732Z"/><path d="M939 281v-63l38 20v-26l40 22v-35l43 23v59H939Z"/></g>
+  <g fill="#F05223"><circle cx="840" cy="207" r="11"/><circle cx="1051" cy="389" r="9"/><circle cx="752" cy="369" r="8"/></g>
+  <g transform="translate(92 78)"><rect width="112" height="112" rx="28" fill="#0B3558"/><path d="M17 84V52l20 10V49l21 11V42l22 12v30H17Z" fill="#F8FAFC"/><path d="M24 84h63" stroke="#8FB9C9" stroke-width="5" stroke-linecap="round"/><path d="M84 15C72.4 15 63 24.2 63 35.6 63 50 84 66 84 66s21-16 21-30.4C105 24.2 95.6 15 84 15Z" fill="#F05223" stroke="#0B3558" stroke-width="5"/><circle cx="84" cy="36" r="7.5" fill="#FFF7ED"/></g>
+  <text x="92" y="276" fill="#0F2940" font-family="IBM Plex Sans Thai, Noto Sans Thai, sans-serif" font-size="80" font-weight="700">โรงงานใกล้ฉัน</text>
+  <text x="96" y="340" fill="#587487" font-family="IBM Plex Sans Thai, Noto Sans Thai, sans-serif" font-size="31" font-weight="500">เปิดข้อมูลโรงงาน เพื่อชุมชนที่น่าอยู่</text>
+  <rect x="96" y="393" width="370" height="58" rx="29" fill="#0B3558"/><circle cx="131" cy="422" r="9" fill="#F05223"/>
+  <text x="156" y="432" fill="#F8FAFC" font-family="IBM Plex Sans Thai, Noto Sans Thai, sans-serif" font-size="24" font-weight="600">ค้นหา · ตรวจสอบ · เข้าใจพื้นที่</text>
+  <text x="96" y="540" fill="#78909D" font-family="IBM Plex Sans Thai, Inter, sans-serif" font-size="18" font-weight="600" letter-spacing="1.5">PUBLIC FACTORY DATA MAP · THAILAND</text>
+</svg>

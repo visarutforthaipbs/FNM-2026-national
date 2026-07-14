@@ -45,7 +45,8 @@ body {
 }
 
 .custom-marker,
-.custom-factory-marker {
+.custom-factory-marker,
+.custom-user-location-marker {
   background: transparent !important;
   border: none !important;
   cursor: pointer;
@@ -59,6 +60,14 @@ body {
 
 .custom-factory-marker.selected {
   z-index: 1001 !important;
+}
+
+.custom-user-location-marker {
+  z-index: 1002 !important;
+}
+
+.custom-user-location-marker:hover {
+  transform: translateY(-2px) scale(1.04);
 }
 
 /* Mobile responsive improvements */
@@ -110,14 +119,25 @@ body {
 
 /* Province Tooltip */
 .province-tooltip {
-  background: rgba(255, 255, 255, 0.8) !important;
-  border: none !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 8px !important;
-  backdrop-filter: blur(4px);
-  padding: 8px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid rgba(143, 185, 201, 0.38) !important;
+  box-shadow: 0 10px 30px -10px rgba(11, 53, 88, 0.3) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(8px);
+  padding: 9px 10px !important;
 }
 
 .province-tooltip::before {
   display: none;
+}
+
+/* Civic-atlas province treatment: soft seams, stable geometry, gentle focus. */
+.province-shape {
+  vector-effect: non-scaling-stroke;
+  transition: fill-opacity 180ms ease, stroke 180ms ease, stroke-width 180ms ease;
+}
+
+.selected-province-boundary {
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 2px 4px rgba(11, 53, 88, 0.18));
 }

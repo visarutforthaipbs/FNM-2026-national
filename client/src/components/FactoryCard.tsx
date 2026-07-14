@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Text, Flex } from "@chakra-ui/react";
 import type { FactoryFeature, UserLocation } from "../types/factory";
 import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
+import { haversineKm, formatDistanceTh } from "../utils/geo";
 
 interface FactoryCardProps {
   factory: FactoryFeature;
@@ -25,21 +26,14 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
   const hasDetails = hasOperator || hasBusinessType;
 
   // Calculate distance
-  let distance: number | null = null;
-  if (userLocation) {
-    const R = 6371;
-    const factoryLat = factory.geometry.coordinates[1];
-    const factoryLng = factory.geometry.coordinates[0];
-    const dLat = ((factoryLat - userLocation.lat) * Math.PI) / 180;
-    const dLng = ((factoryLng - userLocation.lng) * Math.PI) / 180;
-    const lat1 = (userLocation.lat * Math.PI) / 180;
-    const lat2 = (factoryLat * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    distance = R * c;
-  }
+  const distance: number | null = userLocation
+    ? haversineKm(
+        userLocation.lat,
+        userLocation.lng,
+        factory.geometry.coordinates[1],
+        factory.geometry.coordinates[0]
+      )
+    : null;
 
   // Compact mode: only name + distance when no extra info
   if (!hasDetails) {
@@ -87,9 +81,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
             py={distance < 1 ? 0.5 : 0}
             borderRadius={distance < 1 ? "md" : "none"}
           >
-            {distance < 1
-              ? `${(distance * 1000).toFixed(0)} ม.`
-              : `${distance.toFixed(1)} กม.`}
+            {formatDistanceTh(distance)}
           </Text>
         )}
       </Flex>
@@ -199,9 +191,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
             py={distance < 1 ? 0.5 : 0}
             borderRadius={distance < 1 ? "md" : "none"}
           >
-            {distance < 1
-              ? `${(distance * 1000).toFixed(0)} ม.`
-              : `${distance.toFixed(1)} กม.`}
+            {formatDistanceTh(distance)}
           </Text>
         )}
       </Flex>

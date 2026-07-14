@@ -22,7 +22,9 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
+  Image,
 } from "@chakra-ui/react";
+import type { IconProps } from "@chakra-ui/react";
 import type {
   FactoryGeoJSON,
   FactoryFeature,
@@ -31,10 +33,11 @@ import type {
 } from "../types/factory";
 import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
+import { haversineKm } from "../utils/geo";
 import FactoryCard from "./FactoryCard";
 
 // Inline Icons
-const SearchIcon = (props: any) => (
+const SearchIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <circle cx="11" cy="11" r="8" />
     <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -78,53 +81,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [manualLat, setManualLat] = useState<string>("13.7563");
   const [manualLng, setManualLng] = useState<string>("100.5018");
 
-  // Removed client-side province computation in favor of API data passed via props
-
-
-  // Filter factories logic
-  const filteredFactories = useMemo(() => {
-    if (!factories) return [];
-
-    return factories.features.filter((factory) => {
-      const props = factory.properties;
-
-      // Province filter
-      if (filters.selectedProvince && props.จังหวัด !== filters.selectedProvince) {
-        return false;
-      }
-
-      // Search term filter
-      if (filters.searchTerm) {
-        const searchLower = filters.searchTerm.toLowerCase();
-        const matchesSearch =
-          props.ชื่อโรงงาน.toLowerCase().includes(searchLower) ||
-          props.ผู้ประกอบก.toLowerCase().includes(searchLower) ||
-          props.ประกอบกิจก.toLowerCase().includes(searchLower);
-
-        if (!matchesSearch) return false;
-      }
-
-      // High-risk filter
-      if (filters.showHighRisk) {
-        if (!HIGH_RISK_FACTORY_TYPES.includes(props.ประเภท)) return false;
-      }
-
-      // Radius filter
-      if (filters.showOnlyInRadius && userLocation) {
-        const factoryLat = factory.geometry.coordinates[1];
-        const factoryLng = factory.geometry.coordinates[0];
-        const distance =
-          Math.sqrt(
-            Math.pow(factoryLat - userLocation.lat, 2) +
-            Math.pow(factoryLng - userLocation.lng, 2)
-          ) * 111;
-
-        if (distance > 10) return false;
-      }
-
-      return true;
-    });
-  }, [factories, filters, userLocation]);
+  // Filtering (province/search/high-risk/radius) happens in useFactoriesApi —
+  // the features received here are already filtered
+  const filteredFactories = useMemo(() => factories?.features ?? [], [factories]);
 
   // Sort by distance (nearest first) then limit for performance
   const displayedFactories = useMemo(() => {
@@ -133,8 +92,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     const { lat, lng } = userLocation;
     return [...filteredFactories]
       .sort((a, b) => {
-        const dA = Math.pow(a.geometry.coordinates[1] - lat, 2) + Math.pow(a.geometry.coordinates[0] - lng, 2);
-        const dB = Math.pow(b.geometry.coordinates[1] - lat, 2) + Math.pow(b.geometry.coordinates[0] - lng, 2);
+        const dA = haversineKm(lat, lng, a.geometry.coordinates[1], a.geometry.coordinates[0]);
+        const dB = haversineKm(lat, lng, b.geometry.coordinates[1], b.geometry.coordinates[0]);
         return dA - dB;
       })
       .slice(0, 200);
@@ -179,7 +138,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const lat = parseFloat(manualLat);
     const lng = parseFloat(manualLng);
 
-    if (!isNaN(lat) && !isNaN(lng)) {
+    if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
       onManualLocationSet(lat, lng);
       onClose();
     }
@@ -237,7 +196,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             border="none"
             _focus={{
               bg: "white",
-              boxShadow: "0 0 0 2px rgba(26, 54, 93, 0.15)",
+              boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)",
             }}
             fontSize="md"
             borderRadius="xl"
@@ -258,14 +217,14 @@ const Sidebar: React.FC<SidebarProps> = ({
           border="none"
           _focus={{
             bg: "white",
-            boxShadow: "0 0 0 2px rgba(26, 54, 93, 0.15)",
+            boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)",
           }}
           borderRadius="xl"
           fontWeight="medium"
           color={filters.selectedProvince ? "slate.800" : "slate.400"}
         >
           <option value="">ทุกจังหวัด ({provinceCounts.reduce((s, p) => s + p.count, 0).toLocaleString()})</option>
-          {provinceCounts
+          {[...provinceCounts]
             .sort((a, b) => b.count - a.count)
             .map((pc) => (
               <option key={pc.name_th} value={pc.name_th}>
@@ -544,22 +503,16 @@ const Sidebar: React.FC<SidebarProps> = ({
           </VStack>
         ) : (
           <Flex direction="column" align="center" justify="center" h="200px" p={8} textAlign="center">
-            {/* LAYER 1: Visual hook — empty state icon */}
-            <Box
-              w="56px"
-              h="56px"
-              borderRadius="full"
-              bg="slate.100"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              mb={3}
-            >
-              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" boxSize={7} color="slate.400">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </Icon>
-            </Box>
+            {/* LAYER 1: Visual hook — branded search/map state */}
+            <Image
+              src="/assets/brand/empty-search.svg"
+              alt=""
+              aria-hidden="true"
+              w="148px"
+              h="84px"
+              objectFit="contain"
+              mb={2}
+            />
             {/* LAYER 2: Actionable message — clear next step */}
             <Text color="slate.600" fontSize="sm" fontWeight="500">
               ไม่พบข้อมูล
@@ -606,7 +559,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   size="lg"
                   bg="slate.50"
                   border="none"
-                  _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(26, 54, 93, 0.15)" }}
+                  _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)" }}
                   fontFamily="'Inter', monospace"
                 />
               </FormControl>
@@ -619,7 +572,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   size="lg"
                   bg="slate.50"
                   border="none"
-                  _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(26, 54, 93, 0.15)" }}
+                  _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)" }}
                   fontFamily="'Inter', monospace"
                 />
               </FormControl>

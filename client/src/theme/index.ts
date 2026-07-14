@@ -3,18 +3,18 @@ import { extendTheme } from "@chakra-ui/react";
 // Design System 2026 - "Industrial-Eco" Palette
 // Brand Persona: "The Honest Inspector" - Reliable, objective, clear
 export const colors = {
-  // PRIMARY: Industrial Blue - Deep, professional for headers and trust
+  // PRIMARY: Thai PBS Orange - Dawn of hope and public connection
   primary: {
-    50: "#e8eef5",
-    100: "#c5d4e6",
-    200: "#9fb8d5",
-    300: "#7a9cc4",
-    400: "#5d86b7",
-    500: "#1A365D", // Main Brand - Industrial Blue
-    600: "#162d4e",
-    700: "#12243f",
-    800: "#0e1b30",
-    900: "#0a1221",
+    50: "#FFF0EB",
+    100: "#FFD1C4",
+    200: "#FFAEA2",
+    300: "#FF8876",
+    400: "#FF614E",
+    500: "#F05223", // Main brand - Thai PBS Orange
+    600: "#D23F15",
+    700: "#B2300D",
+    800: "#932207",
+    900: "#741703",
   },
   // NEUTRAL: Slate grays for UI
   slate: {
@@ -32,15 +32,15 @@ export const colors = {
   // ACCENT COLORS per Design System
   accent: {
     green: "#10B981",   // Eco Green - "Green Industry" ratings, clean records
-    orange: "#F59E0B",  // Safety Orange - Action items, Search buttons, Warning icons
+    orange: "#F05223",  // Thai PBS Orange (updated from safety orange)
     crimson: "#EF4444", // Alert Crimson - High-risk pollution, closed factories ONLY
   },
   // Legacy mappings for backward compatibility
-  navy: "#1A365D",    // primary.500
+  navy: "#F05223",    // primary.500
   beige: "#f8fafc",   // slate.50
-  orange: "#F59E0B",  // accent.orange
+  orange: "#F05223",  // accent.orange
   gray: "#94a3b8",    // slate.400
-  sky: "#1A365D",     // primary.500 (updated from old blue)
+  sky: "#F05223",     // primary.500 (updated from old blue)
   steel: "#64748b",   // slate.500
 };
 

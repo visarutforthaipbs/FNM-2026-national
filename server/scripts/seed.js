@@ -12,7 +12,7 @@ const pool = new Pool({
  * Parses factory GeoJSON and imports into PostgreSQL
  */
 async function seedDatabase() {
-    const filePath = path.join(__dirname, '../../client/public/data/factories.geojson');
+    const filePath = path.join(__dirname, '../data/factories.geojson');
 
     if (!process.env.DATABASE_URL) {
         console.error('❌ DATABASE_URL is not set in .env');

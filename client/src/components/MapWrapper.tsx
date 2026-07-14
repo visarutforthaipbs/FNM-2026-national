@@ -69,70 +69,124 @@ L.Icon.Default.mergeOptions({
 // Red = high-risk (requires license), Green = safe (no license)
 // User can identify risk status without reading text (pre-attentive processing)
 
-const createFactoryIcon = (isHighRisk: boolean, isSelected: boolean) => {
-  const size = isSelected ? 32 : 24;
+// Inject the pulse keyframes once (instead of a <style> tag per selected marker)
+if (typeof document !== "undefined" && !document.getElementById("factory-marker-pulse")) {
+  const style = document.createElement("style");
+  style.id = "factory-marker-pulse";
+  style.textContent = `
+    @keyframes factory-marker-pulse {
+      0% { transform: scale(1); opacity: 0.6; }
+      70% { transform: scale(1.5); opacity: 0; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+const buildFactoryIcon = (isHighRisk: boolean, isSelected: boolean) => {
+  const width = isSelected ? 38 : 30;
+  const height = isSelected ? 46 : 38;
   const color = isHighRisk ? "#EF4444" : "#10B981"; // Red or Green
+  const detailColor = isHighRisk ? "#B91C1C" : "#087F5B";
   const pulseColor = isHighRisk ? "239, 68, 68" : "16, 185, 129";
-  
+
   return L.divIcon({
     html: `
-      <div style="width: ${size}px; height: ${size}px; position: relative;">
+      <div style="width: ${width}px; height: ${height}px; position: relative;">
         ${isSelected ? `
           <div style="
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: ${width - 4}px;
+            height: ${width - 4}px;
+            left: 2px;
+            top: 2px;
             border-radius: 50%;
             background: rgba(${pulseColor}, 0.4);
-            animation: pulse 1.5s infinite;
+            animation: factory-marker-pulse 1.5s infinite;
           "></div>
-          <style>
-            @keyframes pulse {
-              0% { transform: scale(1); opacity: 0.6; }
-              70% { transform: scale(1.5); opacity: 0; }
-              100% { transform: scale(1.5); opacity: 0; }
-            }
-          </style>
         ` : ''}
-        <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-          <circle cx="12" cy="12" r="10" fill="${color}" stroke="white" stroke-width="2"/>
-          <path d="M9 16V10H15V16" stroke="white" stroke-width="${isSelected ? '1.5' : '1'}" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M8 7H16" stroke="white" stroke-width="${isSelected ? '1.5' : '1'}" stroke-linecap="round"/>
-          <path d="M12 7V10" stroke="white" stroke-width="${isSelected ? '1.5' : '1'}" stroke-linecap="round"/>
+        <svg width="${width}" height="${height}" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: relative; z-index: 2; filter: drop-shadow(0 3px 5px rgba(11,53,88,0.28));">
+          <path d="M16 1C7.7 1 1 7.5 1 15.6C1 25.7 16 39 16 39S31 25.7 31 15.6C31 7.5 24.3 1 16 1Z" fill="${color}" stroke="white" stroke-width="2"/>
+          <path d="M7.5 24.5V14L12.5 16.8V12.5L17.7 15.5V10.5L24 14.1V24.5H7.5Z" fill="white"/>
+          <path d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5" stroke="${detailColor}" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
     `,
     className: `custom-factory-marker ${isSelected ? 'selected' : ''} ${isHighRisk ? 'high-risk' : 'safe'}`,
-    iconSize: [size, size],
-    iconAnchor: [size/2, size/2],
-    popupAnchor: [0, -size/2],
+    iconSize: [width, height],
+    iconAnchor: [width / 2, height],
+    popupAnchor: [0, -height],
   });
+};
+
+// Pre-created icon instances — only 4 combinations exist, so never rebuild per marker
+const FACTORY_ICONS = {
+  "risk-selected": buildFactoryIcon(true, true),
+  "risk-normal": buildFactoryIcon(true, false),
+  "safe-selected": buildFactoryIcon(false, true),
+  "safe-normal": buildFactoryIcon(false, false),
+};
+
+const getFactoryIcon = (isHighRisk: boolean, isSelected: boolean) =>
+  FACTORY_ICONS[`${isHighRisk ? "risk" : "safe"}-${isSelected ? "selected" : "normal"}`];
+
+const FactoryLegendMarker: React.FC<{ isHighRisk: boolean }> = ({ isHighRisk }) => {
+  const color = isHighRisk ? "#EF4444" : "#10B981";
+  const detailColor = isHighRisk ? "#B91C1C" : "#087F5B";
+
+  return (
+    <svg
+      width="24"
+      height="30"
+      viewBox="0 0 32 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      style={{ flex: "0 0 auto", filter: "drop-shadow(0 2px 3px rgba(11,53,88,0.18))" }}
+    >
+      <path
+        d="M16 1C7.7 1 1 7.5 1 15.6C1 25.7 16 39 16 39S31 25.7 31 15.6C31 7.5 24.3 1 16 1Z"
+        fill={color}
+        stroke="white"
+        strokeWidth="2"
+      />
+      <path d="M7.5 24.5V14L12.5 16.8V12.5L17.7 15.5V10.5L24 14.1V24.5H7.5Z" fill="white" />
+      <path
+        d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5"
+        stroke={detailColor}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 };
 
 const userLocationIcon = L.divIcon({
   html: `
-    <div style="width: 28px; height: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-         <circle cx="12" cy="12" r="10" fill="#f59e0b" stroke="white" stroke-width="2"/>
-         <circle cx="12" cy="12" r="4" fill="white"/>
+    <div style="width: 40px; height: 48px; filter: drop-shadow(0 3px 6px rgba(11,53,88,0.3));">
+      <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="19" r="19" fill="#F05223" opacity="0.2"/>
+        <path d="M20 2C10.6 2 3 9.5 3 18.7C3 30.1 20 46 20 46S37 30.1 37 18.7C37 9.5 29.4 2 20 2Z" fill="#0B3558" stroke="white" stroke-width="2.5"/>
+        <path d="M11.5 19L20 12L28.5 19V28.2H22.5V22.2H17.5V28.2H11.5V19Z" fill="#F8FAFC"/>
+        <path d="M9.5 19L20 10.3L30.5 19" stroke="#F05223" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
   `,
   className: "custom-user-location-marker",
-  iconSize: [28, 28],
-  iconAnchor: [14, 14],
-  popupAnchor: [0, -14],
+  iconSize: [40, 48],
+  iconAnchor: [20, 46],
+  popupAnchor: [0, -46],
 });
 
 // ── Choropleth color scale ──
 function getDensityColor(count: number): string {
-  if (count >= 3000) return "#1A365D";
-  if (count >= 1000) return "#2B6CB0";
-  if (count >= 500)  return "#3182CE";
-  if (count >= 200)  return "#63B3ED";
-  if (count >= 50)   return "#90CDF4";
-  if (count >= 10)   return "#BEE3F8";
-  return "#EBF8FF";
+  if (count >= 3000) return "#0B3558";
+  if (count >= 1000) return "#2F6987";
+  if (count >= 500)  return "#5D91A8";
+  if (count >= 200)  return "#8FB9C9";
+  if (count >= 50)   return "#B9D2DA";
+  if (count >= 10)   return "#D5E5EA";
+  return "#E8F1F4";
 }
 
 // ── Zoom to province bounds ──
@@ -157,7 +211,7 @@ const FlyToProvince: React.FC<{
     );
     if (!feature) return;
 
-    const geoLayer = L.geoJSON(feature as any);
+    const geoLayer = L.geoJSON(feature);
     const bounds = geoLayer.getBounds();
     if (bounds.isValid()) {
       map.flyToBounds(bounds, { padding: [40, 40], duration: 0.8 });
@@ -272,10 +326,13 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         const count = pc?.count || 0;
         return {
           fillColor: getDensityColor(count),
-          fillOpacity: count > 0 ? 0.7 : 0.15,
-          color: "#1A365D",
-          weight: 1,
-          opacity: 0.4,
+          fillOpacity: count > 0 ? 0.66 : 0.24,
+          color: "#F8FAFC",
+          weight: 1.5,
+          opacity: 0.92,
+          lineCap: "round",
+          lineJoin: "round",
+          className: "province-shape",
         };
       },
       [countsMap]
@@ -290,9 +347,12 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         const count = pc?.count || 0;
 
         layer.bindTooltip(
-          `<div style="font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif; text-align: center; padding: 4px 8px;">
-            <strong style="color: #1A365D; font-size: 14px;">${thaiName}</strong>
-            <div style="color: #64748b; font-size: 12px; margin-top: 2px;">
+          `<div style="font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif; text-align: left; padding: 3px 5px; min-width: 104px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <span style="width: 7px; height: 7px; border-radius: 999px; background: #F05223; flex: none;"></span>
+              <strong style="color: #0B3558; font-size: 14px;">${thaiName}</strong>
+            </div>
+            <div style="color: #64748b; font-size: 12px; margin-top: 4px; padding-left: 14px;">
               ${count > 0 ? `${count.toLocaleString()} โรงงาน` : "ไม่มีข้อมูล"}
             </div>
           </div>`,
@@ -302,10 +362,12 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         const pathLayer = layer as L.Path;
         layer.on({
           mouseover: () => {
+            pathLayer.bringToFront();
             pathLayer.setStyle({
-              fillOpacity: 0.85,
-              weight: 2,
-              opacity: 0.8,
+              fillOpacity: 0.8,
+              color: "#0B3558",
+              weight: 2.5,
+              opacity: 0.68,
             });
           },
           mouseout: () => {
@@ -434,13 +496,13 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               ระดับความเสี่ยง
             </Text>
             <Flex direction="column" gap={2}>
-              <Flex align="center" gap={2}>
-                <Box w="16px" h="16px" borderRadius="full" bg="#EF4444" border="2px solid white" />
+              <Flex align="center" gap={2.5} minH="30px">
+                <FactoryLegendMarker isHighRisk />
                 <Text color="slate.600">จำพวก 3 (เสี่ยงสูง)</Text>
               </Flex>
-              <Flex align="center" gap={2}>
-                <Box w="16px" h="16px" borderRadius="full" bg="#10B981" border="2px solid white" />
-                <Text color="slate.600">จำพวก 1-2 (ปลอดภัย)</Text>
+              <Flex align="center" gap={2.5} minH="30px">
+                <FactoryLegendMarker isHighRisk={false} />
+                <Text color="slate.600">จำพวก 1–2 (ทั่วไป)</Text>
               </Flex>
             </Flex>
           </Box>
@@ -466,13 +528,13 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             </Text>
             <Flex direction="column" gap={1}>
               {[
-                { color: "#1A365D", label: "3,000+" },
-                { color: "#2B6CB0", label: "1,000–3,000" },
-                { color: "#3182CE", label: "500–1,000" },
-                { color: "#63B3ED", label: "200–500" },
-                { color: "#90CDF4", label: "50–200" },
-                { color: "#BEE3F8", label: "10–50" },
-                { color: "#EBF8FF", label: "< 10" },
+                { color: "#0B3558", label: "3,000+" },
+                { color: "#2F6987", label: "1,000–3,000" },
+                { color: "#5D91A8", label: "500–1,000" },
+                { color: "#8FB9C9", label: "200–500" },
+                { color: "#B9D2DA", label: "50–200" },
+                { color: "#D5E5EA", label: "10–50" },
+                { color: "#E8F1F4", label: "< 10" },
               ].map((item) => (
                 <Flex key={item.label} align="center" gap={2}>
                   <Box w="14px" h="10px" borderRadius="2px" bg={item.color} />
@@ -513,11 +575,14 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               key={`boundary-${filters.selectedProvince}`}
               data={selectedProvinceBoundary}
               style={{
-                color: "#1A365D",
-                weight: 2,
-                opacity: 0.6,
-                fillOpacity: 0,
-                dashArray: "6 4",
+                color: "#F05223",
+                weight: 3,
+                opacity: 0.82,
+                fillColor: "#0B3558",
+                fillOpacity: 0.045,
+                lineCap: "round",
+                lineJoin: "round",
+                className: "selected-province-boundary",
               }}
               interactive={false}
             />
@@ -541,7 +606,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               spiderfyOnMaxZoom={true}
               showCoverageOnHover={false}
               disableClusteringAtZoom={14}
-              iconCreateFunction={(cluster: any) => {
+              iconCreateFunction={(cluster: { getChildCount: () => number }) => {
                 const count = cluster.getChildCount();
                 let sizeClass = 40;
                 let fontSize = "13px";
@@ -552,7 +617,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                   html: `<div style="
                     width: ${sizeClass}px; height: ${sizeClass}px;
                     display: flex; align-items: center; justify-content: center;
-                    background: rgba(26, 54, 93, 0.85);
+                    background: rgba(240, 82, 35, 0.85);
                     border-radius: 50%; color: white; font-weight: bold;
                     font-size: ${fontSize};
                     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
@@ -579,7 +644,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                   <Marker
                     key={`factory-${factory.properties.เลขทะเบียน}-${index}`}
                     position={[lat, lng]}
-                    icon={createFactoryIcon(isHighRisk, isSelected)}
+                    icon={getFactoryIcon(isHighRisk, isSelected)}
                     eventHandlers={{ click: () => onFactorySelect(factory) }}
                   />
                 );
@@ -592,7 +657,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               <Marker position={[userLocation.lat, userLocation.lng]} icon={userLocationIcon}>
                 <Popup>
                   <div style={{ fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "4px" }}>
-                    <strong style={{ color: "#f59e0b" }}>ตำแหน่งของคุณ</strong>
+                    <strong style={{ color: "#0B3558" }}>บ้าน / ตำแหน่งของคุณ</strong>
                     <div style={{ fontSize: "12px", color: "#64748b" }}>
                       {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
                     </div>

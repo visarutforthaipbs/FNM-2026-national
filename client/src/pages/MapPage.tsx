@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Box, Flex, IconButton, Icon, Text, Button, VStack, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Icon, Text, Button, VStack, Image, useBreakpointValue } from "@chakra-ui/react";
 import { booleanPointInPolygon, point } from "@turf/turf";
 import type { FactoryGeoJSON, UserLocation, FactoryFeature, FilterState } from "../types/factory";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
@@ -240,22 +240,13 @@ const MapPage: React.FC<MapPageProps> = ({
             textAlign="center"
           >
             {/* LAYER 1: Visual hook — icon communicates purpose (map/location) */}
-            <Box
-              w="64px"
-              h="64px"
-              borderRadius="full"
-              bg="primary.50"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Icon viewBox="0 0 24 24" w={8} h={8} color="primary.600">
-                <path
-                  fill="currentColor"
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                />
-              </Icon>
-            </Box>
+            <Image
+              src="/assets/brand/brand-symbol.svg"
+              alt="โรงงานใกล้ฉัน"
+              boxSize="72px"
+              borderRadius="18px"
+              boxShadow="0 10px 30px rgba(11, 53, 88, 0.18)"
+            />
 
             {/* LAYER 2: One-sentence value prop — 8 words max */}
             <VStack spacing={2}>

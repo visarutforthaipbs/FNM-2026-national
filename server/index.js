@@ -75,6 +75,10 @@ app.get('/api/factories', async (req, res) => {
             parseFloat(maxLat)
         ];
 
+        if (values.some((v) => !Number.isFinite(v))) {
+            return res.status(400).json({ error: 'Bounding box parameters must be valid numbers' });
+        }
+
         let paramIndex = 5;
 
         // Optional: Filter by Province
@@ -97,9 +101,13 @@ app.get('/api/factories', async (req, res) => {
             paramIndex++;
         }
 
-        // Limit results
+        // Limit results (clamp to 1–5000; fall back to 500 on bad input)
+        const parsedLimit = parseInt(limit, 10);
+        const safeLimit = Number.isFinite(parsedLimit)
+            ? Math.min(Math.max(parsedLimit, 1), 5000)
+            : 500;
         query += ` LIMIT $${paramIndex}`;
-        values.push(parseInt(limit));
+        values.push(safeLimit);
 
         const result = await pool.query(query, values);
 
@@ -146,6 +154,10 @@ app.get('/api/provinces', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
-import type { FactoryFeature, FactoryProperties, FilterState } from "../types/factory";
+import type { FactoryFeature, FactoryProperties, FilterState, UserLocation } from "../types/factory";
+import { HIGH_RISK_FACTORY_TYPES } from "../types/factory";
+import { haversineKm } from "../utils/geo";
 
 // ── Province counts type ──
 export interface ProvinceCount {
@@ -10,7 +12,11 @@ export interface ProvinceCount {
 
 interface UseFactoriesApiProps {
     filters: FilterState;
+    userLocation?: UserLocation | null;
 }
+
+// Radius used by the "10 กม." filter
+export const RADIUS_KM = 10;
 
 interface UseFactoriesApiResult {
     factories: FactoryFeature[];
@@ -25,9 +31,9 @@ interface UseFactoriesApiResult {
 const MAX_RENDER = 2000;
 
 // ── Fetch full factory details from Supabase ──
-export async function fetchFactoryDetail(factoryId: string): Promise<FactoryProperties | null> {
-    const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL;
-    const supabaseKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY;
+export async function fetchFactoryDetail(factoryId: string): Promise<Partial<FactoryProperties> | null> {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
         console.warn("Missing Supabase credentials, cannot fetch detail");
@@ -51,23 +57,29 @@ export async function fetchFactoryDetail(factoryId: string): Promise<FactoryProp
 
         const biz = row.businesses;
 
-        return {
+        // Only include fields that actually have data, so spreading this over
+        // the marker properties never erases known values with ""/0
+        const detail: Partial<FactoryProperties> = {
             เลขทะเบียน: row.id || factoryId,
-            ชื่อโรงงาน: row.name || "",
-            ผู้ประกอบก: biz?.legal_name || "",
-            ประกอบกิจก: biz?.objective || "",
-            ละติจูด: row.lat || 0,
-            ลองติจูด: row.lng || 0,
+            ชื่อโรงงาน: row.name || undefined,
+            ผู้ประกอบก: biz?.legal_name || undefined,
+            ประกอบกิจก: biz?.objective || undefined,
+            ละติจูด: row.lat ?? undefined,
+            ลองติจูด: row.lng ?? undefined,
             โทรศัพท์: row.phone || undefined,
-            อำเภอ: row.district || "",
-            จังหวัด: row.province || "",
+            อำเภอ: row.district || undefined,
+            จังหวัด: row.province || undefined,
             ที่อยู่: row.address_full || undefined,
-            เงินลงทุน: row.capital_investment || undefined,
-            แรงม้า: row.horsepower || undefined,
-            คนงานชาย: row.workers_male || row.total_workers || undefined,
-            คนงานหญิง: row.workers_female || undefined,
-            ประเภท: row.factory_type || "",
+            เงินลงทุน: row.capital_investment ?? undefined,
+            แรงม้า: row.horsepower ?? undefined,
+            คนงานชาย: row.workers_male ?? row.total_workers ?? undefined,
+            คนงานหญิง: row.workers_female ?? undefined,
+            ประเภท: row.factory_type || undefined,
         };
+        for (const key of Object.keys(detail) as (keyof FactoryProperties)[]) {
+            if (detail[key] === undefined) delete detail[key];
+        }
+        return detail;
     } catch (err) {
         console.error("❌ fetchFactoryDetail error:", err);
         return null;
@@ -82,10 +94,12 @@ async function loadMarkers(): Promise<FactoryFeature[]> {
 
     console.time("⏱️ Load all markers");
     const res = await fetch("/data/markers.json");
+    if (!res.ok) throw new Error(`Failed to load markers (HTTP ${res.status})`);
     const raw = await res.json();
     console.timeEnd("⏱️ Load all markers");
 
-    const features: FactoryFeature[] = raw.map((m: any) => ({
+    type RawMarker = { i?: string; n?: string; p?: string; t?: string; a: [number, number] };
+    const features: FactoryFeature[] = (raw as RawMarker[]).map((m) => ({
         type: "Feature",
         properties: {
             เลขทะเบียน: m.i || "",
@@ -116,6 +130,7 @@ async function loadMarkers(): Promise<FactoryFeature[]> {
 // ── Hook ──
 export const useFactoriesApi = ({
     filters,
+    userLocation = null,
 }: UseFactoriesApiProps): UseFactoriesApiResult => {
     const [allFactories, setAllFactories] = useState<FactoryFeature[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -126,7 +141,10 @@ export const useFactoriesApi = ({
     // Load lightweight province counts on mount (tiny file, instant)
     useEffect(() => {
         fetch("/data/province-counts.json")
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
             .then((data: ProvinceCount[]) => {
                 setProvinceCounts(data);
                 setProvinceCountsLoading(false);
@@ -147,6 +165,7 @@ export const useFactoriesApi = ({
         }
 
         setIsLoading(true);
+        setError(null);
         loadMarkers()
             .then((all) => {
                 // Filter to selected province immediately
@@ -162,12 +181,14 @@ export const useFactoriesApi = ({
             .finally(() => setIsLoading(false));
     }, [filters.selectedProvince]);
 
-    // Apply remaining filters (search, high-risk, etc.)
+    // Apply remaining filters (search, high-risk, radius)
     const factories = useMemo(() => {
         let result = allFactories;
 
         if (filters.showHighRisk) {
-            result = result.filter((f) => f.properties.ประเภท === "3");
+            result = result.filter((f) =>
+                HIGH_RISK_FACTORY_TYPES.includes(f.properties.ประเภท)
+            );
         }
         if (filters.searchTerm) {
             const term = filters.searchTerm.toLowerCase();
@@ -179,9 +200,15 @@ export const useFactoriesApi = ({
                     .includes(term);
             });
         }
+        if (filters.showOnlyInRadius && userLocation) {
+            result = result.filter((f) => {
+                const [lng, lat] = f.geometry.coordinates;
+                return haversineKm(userLocation.lat, userLocation.lng, lat, lng) <= RADIUS_KM;
+            });
+        }
 
         return result.length > MAX_RENDER ? result.slice(0, MAX_RENDER) : result;
-    }, [allFactories, filters.showHighRisk, filters.searchTerm]);
+    }, [allFactories, filters.showHighRisk, filters.searchTerm, filters.showOnlyInRadius, userLocation]);
 
     const total = provinceCounts.reduce((sum, p) => sum + p.count, 0);
 

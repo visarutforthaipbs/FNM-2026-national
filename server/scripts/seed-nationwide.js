@@ -12,7 +12,7 @@ const pool = new Pool({
  * Parses factory JSON (nationwide) and imports into PostgreSQL
  */
 async function seedDatabase() {
-    const filePath = path.join(__dirname, '../../client/dist/data/factories_loc.json');
+    const filePath = path.join(__dirname, '../data/factories_loc.json');
 
     if (!process.env.DATABASE_URL) {
         console.error('❌ DATABASE_URL is not set in .env');

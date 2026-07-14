@@ -1,5 +1,4 @@
 {
-  "dependencies": {
-    "react-router-dom": "^6.30.3"
-  }
+  "name": "factory-nearme-demo",
+  "private": true
 }

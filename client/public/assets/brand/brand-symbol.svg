@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">โรงงานใกล้ฉัน</title>
+  <desc id="desc">สัญลักษณ์โรงงานและหมุดแผนที่</desc>
+  <rect width="64" height="64" rx="16" fill="#0B3558"/>
+  <path d="M10 48V29.5l11.5 6.1V28l12 6.4V23.7l12.5 6.8V48H10Z" fill="#F8FAFC"/>
+  <path d="M14 48h36" stroke="#8FB9C9" stroke-width="3" stroke-linecap="round"/>
+  <path d="M21.5 43v-4m9 4v-4" stroke="#0B3558" stroke-width="3" stroke-linecap="round"/>
+  <path d="M48.5 10C41.6 10 36 15.5 36 22.3c0 8.6 12.5 18.1 12.5 18.1S61 30.9 61 22.3C61 15.5 55.4 10 48.5 10Z" fill="#F05223" stroke="#0B3558" stroke-width="3"/>
+  <circle cx="48.5" cy="22.5" r="4.5" fill="#FFF7ED"/>
+</svg>

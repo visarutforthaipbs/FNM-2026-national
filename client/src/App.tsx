@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Analytics } from "@vercel/analytics/react";
 import type {
@@ -10,8 +10,9 @@ import type {
 import { useFactoriesApi, fetchFactoryDetail } from "./hooks/useFactoriesApi";
 import { theme } from "./theme";
 import MapPage from "./pages/MapPage";
-import DashboardPage from "./pages/DashboardPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 
 function App() {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
@@ -33,13 +34,17 @@ function App() {
   // Fetch factories — lazy loads markers only when province selected
   const { factories: apiFactories, isLoading: isApiLoading, provinceCounts } = useFactoriesApi({
     filters,
+    userLocation,
   });
 
-  // Construct GeoJSON from API results
-  const factoriesGeoJSON: FactoryGeoJSON = {
-    type: "FeatureCollection",
-    features: apiFactories,
-  };
+  // Construct GeoJSON from API results (memoized so MapWrapper's React.memo works)
+  const factoriesGeoJSON: FactoryGeoJSON = useMemo(
+    () => ({
+      type: "FeatureCollection",
+      features: apiFactories,
+    }),
+    [apiFactories]
+  );
 
   // Province select handler (from map choropleth click)
   const handleProvinceSelect = useCallback((provinceTh: string) => {
@@ -61,12 +66,14 @@ function App() {
     const factoryId = factory.properties.เลขทะเบียน;
     if (factoryId) {
       fetchFactoryDetail(factoryId).then((detail) => {
-        if (detail) {
-          setSelectedFactory({
-            ...factory,
-            properties: { ...factory.properties, ...detail },
-          });
-        }
+        if (!detail) return;
+        // Only apply if this factory is still the selected one (avoids a
+        // slow response overwriting a newer selection)
+        setSelectedFactory((current) =>
+          current?.properties.เลขทะเบียน === factoryId
+            ? { ...current, properties: { ...current.properties, ...detail } }
+            : current
+        );
       });
     }
   }, []);
@@ -187,7 +194,14 @@ function App() {
               />
             } 
           />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <Suspense fallback={null}>
+                <DashboardPage />
+              </Suspense>
+            }
+          />
         </Routes>
       </Router>
       <Analytics />

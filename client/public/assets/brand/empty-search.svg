@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
+  <title id="title">ไม่พบโรงงาน</title>
+  <desc id="desc">ภาพแผนที่แบบเรียบง่ายพร้อมสัญลักษณ์ค้นหา</desc>
+  <rect x="12" y="12" width="296" height="156" rx="24" fill="#F5F8FA"/>
+  <g fill="none" stroke="#DCE7EC" stroke-width="2"><path d="M12 66c50-30 82-22 112 8s67 35 102 8 58-19 82-3"/><path d="M12 117c44-23 78-16 110 12s65 31 98 7 61-17 88-2"/><path d="M73 12c-8 39-2 68 20 90s25 42 17 66M226 12c-12 33-5 63 15 85s25 45 18 71"/></g>
+  <g transform="translate(113 39)"><circle cx="48" cy="48" r="40" fill="#fff" stroke="#B9CDD6" stroke-width="5"/><path d="m77 77 27 27" stroke="#0B3558" stroke-width="9" stroke-linecap="round"/><path d="M27 67V47l13 7v-8l13 7V41l14 8v18H27Z" fill="#0B3558"/><circle cx="69" cy="36" r="8" fill="#F05223"/></g>
+</svg>
