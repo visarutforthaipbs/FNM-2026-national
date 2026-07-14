@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a React + TypeScript + Vite civic tech application that displays **63,790+ operating factories across Thailand** on an interactive map. The application helps citizens find nearby factories with filtering capabilities, promoting industrial transparency for communities.
+This is a React + TypeScript + Vite civic tech application that displays **63,800+ operating factories across Thailand** (~39,000 with map coordinates) on an interactive map. The application helps citizens find nearby factories with filtering capabilities, promoting industrial transparency for communities.
 
 **Tagline**: "เปิดข้อมูลโรงงาน เพื่อชุมชนที่น่าอยู่" (Opening factory data for a livable community)
 

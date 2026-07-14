@@ -22,30 +22,36 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 def export_dashboard_stats():
     print("📊 Fetching all active factories for dashboard stats...")
     
-    # Paginate through all records
-    offset = 0
+    # Keyset pagination (id > last, ordered by id). Unordered .range() paging
+    # previously let Postgres return overlapping/missing rows across pages,
+    # inflating the totals by ~57%.
     batch_size = 1000
-    
+    last_id = None
+
     total = 0
     high_risk_count = 0
     total_capital = 0.0
     total_workers = 0
     count_by_type = {}
     count_by_province = {}
-    
+
     while True:
         # Note: We omit .not_.is_("lat", "null") to include ALL active factories
-        response = supabase.table("factories") \
-            .select("factory_type,province,capital_investment,total_workers") \
+        query = supabase.table("factories") \
+            .select("id,factory_type,province,capital_investment,total_workers") \
             .eq("is_active", True) \
             .eq("status", "ดำเนินการ") \
-            .range(offset, offset + batch_size - 1) \
-            .execute()
-        
+            .order("id") \
+            .limit(batch_size)
+        if last_id is not None:
+            query = query.gt("id", last_id)
+        response = query.execute()
+
         batch = response.data
         if not batch:
             break
-            
+
+        last_id = batch[-1]["id"]
         total += len(batch)
         
         for item in batch:
@@ -75,7 +81,6 @@ def export_dashboard_stats():
             except (ValueError, TypeError):
                 pass
             
-        offset += batch_size
         print(f"  ... processed {total} so far")
     
     print(f"✅ Total Active Factories (incl. no coords): {total}")

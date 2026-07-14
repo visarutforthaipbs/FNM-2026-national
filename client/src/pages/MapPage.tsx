@@ -45,6 +45,9 @@ const MapPage: React.FC<MapPageProps> = ({
   const isTablet =
     useBreakpointValue({ base: false, md: true, lg: false }) ?? false;
 
+  // Total mappable factories (drives the welcome popup headline)
+  const totalFactories = provinceCounts.reduce((sum, p) => sum + p.count, 0);
+
   // Welcome popup state
   const [showWelcome, setShowWelcome] = useState(() => {
     return !localStorage.getItem("factory-nearme-visited");
@@ -254,7 +257,9 @@ const MapPage: React.FC<MapPageProps> = ({
                 ค้นหาโรงงานใกล้บ้านคุณ
               </Text>
               <Text fontSize="sm" color="slate.500" fontWeight="medium">
-                63,790+ โรงงานทั่วประเทศไทย
+                {totalFactories > 0
+                  ? `${totalFactories.toLocaleString()} โรงงานทั่วประเทศไทย`
+                  : "โรงงานทั่วประเทศไทย"}
               </Text>
             </VStack>
 
