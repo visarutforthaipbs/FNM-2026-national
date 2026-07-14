@@ -19,3 +19,4 @@ all_factories_export.csv
 active_factories_for_dbd_match.csv
 missing_coordinates.csv
 enriched_factories_sample.csv
+.vercel
