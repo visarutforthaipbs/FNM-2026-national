@@ -13,6 +13,7 @@ import MapPage from "./pages/MapPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const WasteMonitorPage = lazy(() => import("./pages/WasteMonitorPage"));
 
 // Shareable URLs: read ?province=, ?factory= and ?type= once at startup
 const initialParams = new URLSearchParams(window.location.search);
@@ -235,6 +236,14 @@ function App() {
             element={
               <Suspense fallback={null}>
                 <DashboardPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/waste-monitor"
+            element={
+              <Suspense fallback={null}>
+                <WasteMonitorPage />
               </Suspense>
             }
           />

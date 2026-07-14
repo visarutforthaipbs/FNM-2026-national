@@ -68,11 +68,12 @@ def export_dashboard_stats():
     count_by_type = {}
     count_by_province = {}
     count_by_industry = {}  # DIW ลำดับที่ 1-107, parsed from the registration id
+    waste_by_province = {}  # Province counts for waste-related types 101, 105, 106 with coords
 
     while True:
         # Note: We omit .not_.is_("lat", "null") to include ALL active factories
         query = supabase.table("factories") \
-            .select("id,factory_type,province,capital_investment,total_workers") \
+            .select("id,factory_type,province,capital_investment,total_workers,lat,lng") \
             .eq("is_active", True) \
             .eq("status", "ดำเนินการ") \
             .order("id") \
@@ -91,6 +92,9 @@ def export_dashboard_stats():
         for item in batch:
             f_type = item.get("factory_type") or "-"
             f_prov = item.get("province") or "ไม่ระบุ"
+            lat = item.get("lat")
+            lng = item.get("lng")
+            has_coords = lat is not None and lng is not None
             
             # Type counts
             count_by_type[f_type] = count_by_type.get(f_type, 0) + 1
@@ -104,6 +108,12 @@ def export_dashboard_stats():
             code = parse_industry_code(item.get("id") or "")
             key = str(code) if code is not None else "unknown"
             count_by_industry[key] = count_by_industry.get(key, 0) + 1
+            
+            # Count waste-related industry codes (101, 105, 106) with coords for the monitor page
+            if code in (101, 105, 106) and has_coords:
+                if f_prov not in waste_by_province:
+                    waste_by_province[f_prov] = {"101": 0, "105": 0, "106": 0}
+                waste_by_province[f_prov][key] += 1
             
             # Capital and Workers
             try:
@@ -133,7 +143,8 @@ def export_dashboard_stats():
         "totalWorkers": total_workers,
         "countByType": count_by_type,
         "countByProvince": count_by_province,
-        "countByIndustry": count_by_industry
+        "countByIndustry": count_by_industry,
+        "wasteByProvince": waste_by_province
     }
     
     # Write to client/public

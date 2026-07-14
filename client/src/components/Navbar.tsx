@@ -25,7 +25,7 @@ const Navbar = () => {
     const Links = [
         { name: 'แผนที่', path: '/' },
         { name: 'ภาพรวม', path: '/dashboard' },
-        { name: 'แจ้งเบาะแส', path: '#' },
+        { name: 'เฝ้าระวังกากฯ', path: '/waste-monitor' },
     ];
 
     return (
