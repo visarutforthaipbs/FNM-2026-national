@@ -36,6 +36,9 @@ import { factoryTypeName } from "../utils/factoryTypes";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 import { haversineKm } from "../utils/geo";
 import FactoryCard from "./FactoryCard";
+import ReportSection from "./ReportSection";
+import LocationCorrectionModal from "./LocationCorrectionModal";
+import { useReportCounts } from "../hooks/useReports";
 
 // Inline Icons
 const SearchIcon = (props: IconProps) => (
@@ -80,6 +83,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   onProvinceSelect,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isCorrectionOpen,
+    onOpen: onCorrectionOpen,
+    onClose: onCorrectionClose,
+  } = useDisclosure();
+  const reportCounts = useReportCounts();
   const [manualLat, setManualLat] = useState<string>("13.7563");
   const [manualLng, setManualLng] = useState<string>("100.5018");
   const hasReliableLocation = Boolean(userLocation && !locationError);
@@ -491,6 +500,14 @@ const Sidebar: React.FC<SidebarProps> = ({
               )}
             </Flex>
 
+            {/* Citizen impact reports — counts + submission CTA */}
+            <Box mb={5}>
+              <ReportSection
+                factory={selectedFactory}
+                counts={reportCounts.get(selectedFactory.properties.เลขทะเบียน)}
+              />
+            </Box>
+
             <VStack spacing={4} align="stretch">
               {/* Operator */}
               <Box>
@@ -579,14 +596,48 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </Button>
               )}
 
-              {/* Coordinates */}
+              {/* Coordinates — with provenance so approximate positions are
+                  never mistaken for surveyed ones */}
               <Box pt={2} borderTop="1px solid" borderColor="slate.100">
                 <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>พิกัด</Text>
                 <Text fontSize="xs" color="slate.500" fontFamily="'Inter', monospace">
                   {selectedFactory.geometry.coordinates[1].toFixed(6)}, {selectedFactory.geometry.coordinates[0].toFixed(6)}
                 </Text>
+                {selectedFactory.properties.coordQuality && (
+                  <Badge
+                    mt={1.5}
+                    bg="orange.50"
+                    color="orange.700"
+                    borderRadius="full"
+                    px={2.5}
+                    fontSize="10px"
+                    fontWeight="600"
+                  >
+                    {selectedFactory.properties.coordQuality === "centroid"
+                      ? "ตำแหน่งโดยประมาณ (ระดับตำบล)"
+                      : "ตำแหน่งโดยประมาณ (จากที่อยู่)"}
+                  </Badge>
+                )}
+                <Button
+                  mt={2}
+                  size="xs"
+                  variant="ghost"
+                  color="slate.400"
+                  fontWeight="500"
+                  px={1}
+                  _hover={{ color: "primary.600" }}
+                  onClick={onCorrectionOpen}
+                >
+                  ตำแหน่งไม่ถูกต้อง? ปักหมุดตำแหน่งจริง
+                </Button>
               </Box>
             </VStack>
+
+            <LocationCorrectionModal
+              isOpen={isCorrectionOpen}
+              onClose={onCorrectionClose}
+              factory={selectedFactory}
+            />
           </Box>
         ) : displayedFactories.length > 0 ? (
           <>
@@ -642,6 +693,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   isSelected={false}
                   onClick={() => onFactorySelect(factory)}
                   userLocation={hasReliableLocation ? userLocation : null}
+                  reportCount={reportCounts.get(factory.properties.เลขทะเบียน)?.total}
                 />
               ))}
             </VStack>

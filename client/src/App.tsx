@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const WasteMonitorPage = lazy(() => import("./pages/WasteMonitorPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
 
 // Shareable URLs: read ?province=, ?factory= and ?type= once at startup
 const initialParams = new URLSearchParams(window.location.search);
@@ -244,6 +245,14 @@ function App() {
             element={
               <Suspense fallback={null}>
                 <WasteMonitorPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <Suspense fallback={null}>
+                <AdminPage />
               </Suspense>
             }
           />

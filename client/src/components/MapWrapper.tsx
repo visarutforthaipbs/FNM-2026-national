@@ -91,14 +91,14 @@ const MARKER_STYLE: Record<HazardLevel, { color: string; detail: string; pulse: 
   general: { color: HAZARD_COLORS.general, detail: "#087F5B", pulse: "16, 185, 129" },
 };
 
-const buildFactoryIcon = (level: HazardLevel, isSelected: boolean) => {
+const buildFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = false) => {
   const width = isSelected ? 38 : 30;
   const height = isSelected ? 46 : 38;
   const { color, detail: detailColor, pulse: pulseColor } = MARKER_STYLE[level];
 
   return L.divIcon({
     html: `
-      <div style="width: ${width}px; height: ${height}px; position: relative;">
+      <div style="width: ${width}px; height: ${height}px; position: relative;${isApprox ? " opacity: 0.55; filter: saturate(0.75);" : ""}">
         ${isSelected ? `
           <div style="
             position: absolute;
@@ -125,7 +125,9 @@ const buildFactoryIcon = (level: HazardLevel, isSelected: boolean) => {
   });
 };
 
-// Pre-created icon instances — only 6 combinations exist, so never rebuild per marker
+// Pre-created icon instances — only 12 combinations exist, so never rebuild
+// per marker. "approx" = tambon-centroid position, rendered faded so an
+// approximate pin is never mistaken for a surveyed one.
 const FACTORY_ICONS = {
   "hazard-selected": buildFactoryIcon("hazard", true),
   "hazard-normal": buildFactoryIcon("hazard", false),
@@ -133,10 +135,18 @@ const FACTORY_ICONS = {
   "type3-normal": buildFactoryIcon("type3", false),
   "general-selected": buildFactoryIcon("general", true),
   "general-normal": buildFactoryIcon("general", false),
+  "hazard-selected-approx": buildFactoryIcon("hazard", true, true),
+  "hazard-normal-approx": buildFactoryIcon("hazard", false, true),
+  "type3-selected-approx": buildFactoryIcon("type3", true, true),
+  "type3-normal-approx": buildFactoryIcon("type3", false, true),
+  "general-selected-approx": buildFactoryIcon("general", true, true),
+  "general-normal-approx": buildFactoryIcon("general", false, true),
 };
 
-const getFactoryIcon = (level: HazardLevel, isSelected: boolean) =>
-  FACTORY_ICONS[`${level}-${isSelected ? "selected" : "normal"}`];
+const getFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = false) =>
+  FACTORY_ICONS[
+    `${level}-${isSelected ? "selected" : "normal"}${isApprox ? "-approx" : ""}`
+  ];
 
 const FactoryLegendMarker: React.FC<{ level: HazardLevel }> = ({ level }) => {
   const { color, detail: detailColor } = MARKER_STYLE[level];
@@ -572,6 +582,11 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             <Text mt={2} color="slate.400" fontSize="2xs">
               คลิกจังหวัดเพื่อดูโรงงาน
             </Text>
+            {/* Honest-counting caption: the choropleth shows mapped factories
+                only (~61% of operating factories have coordinates) */}
+            <Text mt={1} color="slate.400" fontSize="2xs" maxW="170px">
+              แสดงเฉพาะโรงงานที่มีพิกัดแผนที่ (~61% ของโรงงานที่เปิดดำเนินการ)
+            </Text>
           </Box>
         )}
 
@@ -674,7 +689,11 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                   <Marker
                     key={`factory-${factory.properties.เลขทะเบียน}-${index}`}
                     position={[lat, lng]}
-                    icon={getFactoryIcon(level, isSelected)}
+                    icon={getFactoryIcon(
+                      level,
+                      isSelected,
+                      factory.properties.coordQuality === "centroid"
+                    )}
                     eventHandlers={{ click: () => onFactorySelect(factory) }}
                   />
                 );

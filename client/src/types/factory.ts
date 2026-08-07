@@ -30,6 +30,13 @@ export type FactoryProperties = {
   คนงานชาย?: number;
   คนงานหญิง?: number;
   ประเภท: string;
+  /**
+   * Position provenance: "geocoded" (from address, street-level) or
+   * "centroid" (tambon centroid, ±2–5 km). Absent = exact position.
+   * Approximate positions must be visually distinguished (faded marker,
+   * "ตำแหน่งโดยประมาณ" label) — never presented as surveyed.
+   */
+  coordQuality?: "geocoded" | "centroid";
 };
 
 export type FactoryFeature = {

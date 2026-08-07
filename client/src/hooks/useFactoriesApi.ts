@@ -106,12 +106,14 @@ async function loadProvinceMarkers(slug: string): Promise<FactoryFeature[]> {
     if (!res.ok) throw new Error(`Failed to load markers for ${slug} (HTTP ${res.status})`);
     const raw = await res.json();
 
-    type RawMarker = { i?: string; n?: string; p?: string; t?: string; a: [number, number] };
+    type RawMarker = { i?: string; n?: string; p?: string; t?: string; q?: string; a: [number, number] };
     const features: FactoryFeature[] = (raw as RawMarker[]).map((m) => ({
         type: "Feature",
         properties: {
             เลขทะเบียน: m.i || "",
             ชื่อโรงงาน: m.n || "",
+            // 'g'/'c' = approximate position (geocoded / tambon centroid)
+            coordQuality: m.q === "g" ? "geocoded" : m.q === "c" ? "centroid" : undefined,
             ผู้ประกอบก: "",
             ประกอบกิจก: "",
             ละติจูด: m.a[1],

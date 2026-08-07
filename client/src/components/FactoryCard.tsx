@@ -9,6 +9,8 @@ interface FactoryCardProps {
   isSelected: boolean;
   onClick: () => void;
   userLocation: UserLocation | null;
+  /** Approved citizen impact reports for this factory */
+  reportCount?: number;
 }
 
 const FactoryCard: React.FC<FactoryCardProps> = ({
@@ -16,6 +18,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
   isSelected,
   onClick,
   userLocation,
+  reportCount,
 }) => {
   const props = factory.properties;
   const hazardLevel = getHazardLevel(props.เลขทะเบียน, props.ประเภท);
@@ -143,6 +146,26 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
           >
             ทะเบียน {props.เลขทะเบียน || "ไม่ระบุ"}
           </Text>
+          {reportCount ? (
+            <Flex
+              align="center"
+              gap={1}
+              px={1.5}
+              py={0.5}
+              bg="primary.50"
+              borderRadius="full"
+              flexShrink={0}
+              title={`รายงานผลกระทบจากประชาชน ${reportCount} รายการ`}
+            >
+              <Icon viewBox="0 0 24 24" boxSize={2.5} fill="none" stroke="#D23F15" strokeWidth="2">
+                <path d="M3 11v3a1 1 0 0 0 1 1h2l3.5 4a1 1 0 0 0 1.5-.9V6.9a1 1 0 0 0-1.5-.9L6 10H4a1 1 0 0 0-1 1Z" strokeLinejoin="round" />
+                <path d="M14 8.5a4 4 0 0 1 0 7" strokeLinecap="round" />
+              </Icon>
+              <Text fontSize="10px" fontWeight="700" color="primary.700" fontFamily="'Inter', sans-serif">
+                {reportCount}
+              </Text>
+            </Flex>
+          ) : null}
         </Flex>
 
         <Flex align="center" gap={1} color="primary.600" flexShrink={0}>

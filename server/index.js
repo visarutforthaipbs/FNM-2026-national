@@ -153,6 +153,160 @@ app.get('/api/provinces', async (req, res) => {
     }
 });
 
+/**
+ * ── Admin API ──────────────────────────────────────────────────────────────
+ * Moderation of citizen reports and location corrections.
+ * Auth: static bearer token (ADMIN_TOKEN env var). The pg pool connects as
+ * the table owner, so RLS on reports/location_corrections doesn't apply here.
+ */
+const requireAdmin = (req, res, next) => {
+    const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+    if (!process.env.ADMIN_TOKEN) {
+        return res.status(503).json({ error: 'Admin API not configured (ADMIN_TOKEN missing)' });
+    }
+    if (token !== process.env.ADMIN_TOKEN) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+};
+
+const MODERATION_STATUSES = ['pending', 'approved', 'rejected'];
+
+/**
+ * GET /api/admin/reports?status=pending
+ * Pending citizen impact reports, joined with factory name for context.
+ * Includes reporter_contact — admin-only data, never expose elsewhere.
+ */
+app.get('/api/admin/reports', requireAdmin, async (req, res) => {
+    const status = MODERATION_STATUSES.includes(req.query.status) ? req.query.status : 'pending';
+    try {
+        const result = await pool.query(`
+      SELECT r.id, r.factory_id, f.name AS factory_name, f.province,
+             r.impact_types, r.frequency, r.distance_band, r.description,
+             r.incident_date, r.reporter_contact, r.status, r.reject_reason,
+             r.created_at, r.moderated_at
+      FROM reports r
+      LEFT JOIN factories f ON f.id = r.factory_id
+      WHERE r.status = $1
+      ORDER BY r.created_at ASC
+      LIMIT 200
+    `, [status]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error listing reports:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * POST /api/admin/reports/:id  { action: 'approve' | 'reject', reject_reason? }
+ */
+app.post('/api/admin/reports/:id', requireAdmin, async (req, res) => {
+    const { action, reject_reason } = req.body || {};
+    if (!['approve', 'reject'].includes(action)) {
+        return res.status(400).json({ error: "action must be 'approve' or 'reject'" });
+    }
+    try {
+        const result = await pool.query(`
+      UPDATE reports
+      SET status = $1, moderated_at = now(), reject_reason = $2
+      WHERE id = $3 AND status = 'pending'
+      RETURNING id, status
+    `, [action === 'approve' ? 'approved' : 'rejected', reject_reason || null, req.params.id]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Report not found or already moderated' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Error moderating report:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/admin/corrections?status=pending
+ * Citizen location corrections with the factory's current position for
+ * side-by-side comparison.
+ */
+app.get('/api/admin/corrections', requireAdmin, async (req, res) => {
+    const status = MODERATION_STATUSES.includes(req.query.status) ? req.query.status : 'pending';
+    try {
+        const result = await pool.query(`
+      SELECT c.id, c.factory_id, c.factory_name, c.lat, c.lng, c.note,
+             c.status, c.reject_reason, c.created_at, c.moderated_at,
+             f.name AS current_name, f.province, f.district,
+             f.lat AS current_lat, f.lng AS current_lng,
+             f.coord_source AS current_coord_source
+      FROM location_corrections c
+      LEFT JOIN factories f ON f.id = c.factory_id
+      WHERE c.status = $1
+      ORDER BY c.created_at ASC
+      LIMIT 200
+    `, [status]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error listing corrections:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * POST /api/admin/corrections/:id  { action: 'approve' | 'reject', reject_reason? }
+ * Approving applies the position to the factory (lat/lng + PostGIS geom,
+ * coord_source = 'community') and marks the correction, atomically.
+ */
+app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
+    const { action, reject_reason } = req.body || {};
+    if (!['approve', 'reject'].includes(action)) {
+        return res.status(400).json({ error: "action must be 'approve' or 'reject'" });
+    }
+
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const corr = await client.query(
+            `SELECT * FROM location_corrections WHERE id = $1 AND status = 'pending' FOR UPDATE`,
+            [req.params.id]
+        );
+        if (corr.rowCount === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Correction not found or already moderated' });
+        }
+
+        if (action === 'approve') {
+            const { factory_id, lat, lng } = corr.rows[0];
+            const updated = await client.query(`
+        UPDATE factories
+        SET lat = $1, lng = $2,
+            coord_source = 'community', coord_precision = 'exact',
+            geom = ST_SetSRID(ST_MakePoint($2, $1), 4326)
+        WHERE id = $3
+        RETURNING id
+      `, [lat, lng, factory_id]);
+            if (updated.rowCount === 0) {
+                await client.query('ROLLBACK');
+                return res.status(409).json({ error: `Factory ${factory_id} not found` });
+            }
+        }
+
+        const result = await client.query(`
+      UPDATE location_corrections
+      SET status = $1, moderated_at = now(), reject_reason = $2
+      WHERE id = $3
+      RETURNING id, status
+    `, [action === 'approve' ? 'approved' : 'rejected', reject_reason || null, req.params.id]);
+
+        await client.query('COMMIT');
+        res.json(result.rows[0]);
+    } catch (err) {
+        await client.query('ROLLBACK').catch(() => {});
+        console.error('Error moderating correction:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        client.release();
+    }
+});
+
 // Start server
 if (require.main === module) {
     app.listen(PORT, () => {

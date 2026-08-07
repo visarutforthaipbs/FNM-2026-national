@@ -47,7 +47,7 @@ def export_markers():
 
     while True:
         query = supabase.table("factories") \
-            .select("id,name,lat,lng,factory_type,province") \
+            .select("id,name,lat,lng,factory_type,province,coord_source") \
             .eq("is_active", True) \
             .eq("status", "ดำเนินการ") \
             .not_.is_("lat", "null") \
@@ -80,15 +80,23 @@ def export_markers():
     print(f"✅ Total: {len(all_markers)} operating factories with coordinates")
 
     # Compact format: minimize JSON size
+    # "q" flags approximate positions so the UI can render them honestly:
+    #   'g' = geocoded from address (street-level), 'c' = tambon centroid.
+    # Absent means an exact position (gov feed / repaired / community-verified).
+    QUALITY_FLAGS = {"geocoded": "g", "centroid": "c"}
     compact = []
     for m in all_markers:
-        compact.append({
+        entry = {
             "i": m["id"],                          # id
             "n": (m["name"] or "")[:80],           # name (truncated)
             "a": [m["lng"], m["lat"]],              # coordinates [lng, lat]
             "t": m.get("factory_type") or "",       # type
             "p": m.get("province") or "",           # province
-        })
+        }
+        q = QUALITY_FLAGS.get(m.get("coord_source") or "")
+        if q:
+            entry["q"] = q
+        compact.append(entry)
     
     output_dir = os.path.join(os.path.dirname(__file__), "..", "..", "client", "public", "data")
     os.makedirs(output_dir, exist_ok=True)
