@@ -301,7 +301,13 @@ def transform_factory_data(df: pd.DataFrame) -> tuple[list[dict], list[dict], li
             "horsepower": parse_float(row_dict.get("HP", "")),
             "in_estate": in_estate,
             "estate_name": row_dict.get("ESTATE_NAME_TH", "").strip() or None,
-            "status": row_dict.get("FFLAG", "").strip() or None,
+            # NOT writing "status" here: FFLAG is a small numeric code (0-3),
+            # not the 'ดำเนินการ'/'หยุดดำเนินการ' text the rest of the app
+            # filters on, and its decode is unverified — see 2026-08-08
+            # incident (this + Business_Location's STATUS field together
+            # corrupted `status` for ~90% of the table in one sync run).
+            # `status` is currently untouched by the pipeline entirely until
+            # a trustworthy source/decode is confirmed.
             "is_active": True,
         }
 
@@ -323,6 +329,12 @@ def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict
     This endpoint lacks FACREG, so we use DISPFACREG as a fallback key.
     Returns (businesses, factories, coordinates) — see transform_factory_data
     for why coordinates are split out.
+
+    factory dicts never carry "status": this endpoint's STATUS column uses a
+    different vocabulary than Factory_Data's FFLAG ('จำหน่าย' is its most
+    common value on ~84% of rows, not a real closure signal) and would
+    silently overwrite the correct operating status set by Factory_Data,
+    which runs first and is genuinely the source of truth for this field.
     """
     businesses = {}
     factories = []
@@ -372,7 +384,6 @@ def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict
             "province": row_dict.get("FPROVNAME", "").strip() or None,
             "district": row_dict.get("FAMPNAME", "").strip() or None,
             "sub_district": row_dict.get("FTUMNAME", "").strip() or None,
-            "status": row_dict.get("STATUS", "").strip() or None,
             "is_active": True,
         }
 
