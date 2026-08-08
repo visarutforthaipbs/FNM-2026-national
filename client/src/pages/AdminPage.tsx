@@ -13,6 +13,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
+import AdminSetPositionModal from "../components/AdminSetPositionModal";
 import type { ImpactType } from "../types/report";
 import { IMPACT_TYPE_META, FREQUENCY_META, DISTANCE_META } from "../types/report";
 import type { DistanceBand, ReportFrequency } from "../types/report";
@@ -51,7 +52,18 @@ interface AdminCorrection {
   created_at: string;
 }
 
-type Tab = "reports" | "corrections";
+interface UnmappedFactory {
+  id: string;
+  name: string | null;
+  address_full: string | null;
+  province: string | null;
+  district: string | null;
+  sub_district: string | null;
+  factory_type: string | null;
+  capital_investment: number | null;
+}
+
+type Tab = "reports" | "corrections" | "unmapped";
 
 const TOKEN_KEY = "factory-nearme-admin-token";
 
@@ -66,6 +78,15 @@ const AdminPage = () => {
   // Per-item rejection reason drafts
   const [rejectDrafts, setRejectDrafts] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
+
+  // Unmapped-factories queue
+  const [unmapped, setUnmapped] = useState<UnmappedFactory[]>([]);
+  const [unmappedTotal, setUnmappedTotal] = useState(0);
+  const [unmappedOffset, setUnmappedOffset] = useState(0);
+  const [unmappedSearch, setUnmappedSearch] = useState("");
+  const [unmappedLoading, setUnmappedLoading] = useState(false);
+  const [positionTarget, setPositionTarget] = useState<UnmappedFactory | null>(null);
+  const UNMAPPED_PAGE_SIZE = 30;
 
   const authFetch = useCallback(
     async (path: string, init?: RequestInit) => {
@@ -111,6 +132,37 @@ const AdminPage = () => {
   useEffect(() => {
     if (token) loadQueues();
   }, [token, loadQueues]);
+
+  const loadUnmapped = useCallback(
+    async (offset: number, search: string) => {
+      setUnmappedLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams({
+          limit: String(UNMAPPED_PAGE_SIZE),
+          offset: String(offset),
+        });
+        if (search.trim()) params.set("search", search.trim());
+        const data = await authFetch(`/api/admin/unmapped-factories?${params}`);
+        const { rows, total } = data as { rows: UnmappedFactory[]; total: number };
+        setUnmapped(rows);
+        setUnmappedTotal(total);
+        setUnmappedOffset(offset);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "โหลดข้อมูลไม่สำเร็จ");
+      } finally {
+        setUnmappedLoading(false);
+      }
+    },
+    [authFetch]
+  );
+
+  useEffect(() => {
+    if (token && tab === "unmapped" && unmapped.length === 0 && !unmappedLoading) {
+      loadUnmapped(0, "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, tab]);
 
   const moderate = async (
     kind: Tab,
@@ -214,7 +266,22 @@ const AdminPage = () => {
             >
               แก้ไขตำแหน่ง ({corrections.length})
             </Button>
-            <Button size="sm" variant="ghost" color="slate.400" onClick={loadQueues}>
+            <Button
+              size="sm"
+              borderRadius="full"
+              bg={tab === "unmapped" ? "primary.600" : "white"}
+              color={tab === "unmapped" ? "white" : "slate.600"}
+              _hover={{ bg: tab === "unmapped" ? "primary.700" : "slate.100" }}
+              onClick={() => setTab("unmapped")}
+            >
+              ยังไม่มีพิกัด ({unmappedTotal.toLocaleString()})
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              color="slate.400"
+              onClick={() => (tab === "unmapped" ? loadUnmapped(unmappedOffset, unmappedSearch) : loadQueues())}
+            >
               รีเฟรช
             </Button>
           </HStack>
@@ -398,7 +465,114 @@ const AdminPage = () => {
             ))}
           </VStack>
         )}
+
+        {/* ── Unmapped factories queue ── */}
+        {tab === "unmapped" && (
+          <Box>
+            <Flex gap={2} mb={4}>
+              <Input
+                placeholder="ค้นหาชื่อ / เลขทะเบียน / ที่อยู่..."
+                size="sm"
+                bg="white"
+                borderRadius="lg"
+                value={unmappedSearch}
+                onChange={(e) => setUnmappedSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") loadUnmapped(0, unmappedSearch);
+                }}
+              />
+              <Button size="sm" onClick={() => loadUnmapped(0, unmappedSearch)}>
+                ค้นหา
+              </Button>
+            </Flex>
+
+            {unmappedLoading && <Spinner color="primary.500" mb={4} />}
+            {!unmappedLoading && unmapped.length === 0 && (
+              <Text color="slate.400" fontSize="sm">
+                ไม่พบโรงงานที่ไม่มีพิกัด
+              </Text>
+            )}
+
+            <VStack align="stretch" spacing={3}>
+              {unmapped.map((f) => (
+                <Flex
+                  key={f.id}
+                  bg="white"
+                  borderRadius="xl"
+                  p={4}
+                  boxShadow="sm"
+                  align="center"
+                  justify="space-between"
+                  gap={3}
+                  wrap="wrap"
+                >
+                  <Box minW="0" flex="1">
+                    <Text fontWeight="700" color="slate.800" fontSize="sm" noOfLines={1}>
+                      {f.name || f.id}
+                    </Text>
+                    <Text fontSize="xs" color="slate.400" noOfLines={1}>
+                      {[f.sub_district, f.district, f.province].filter(Boolean).join(" · ") || "?"}
+                      {" · "}ทะเบียน {f.id}
+                    </Text>
+                    {f.address_full && (
+                      <Text fontSize="xs" color="slate.500" noOfLines={1} mt={0.5}>
+                        {f.address_full}
+                      </Text>
+                    )}
+                  </Box>
+                  <Button
+                    size="sm"
+                    bg="primary.600"
+                    color="white"
+                    borderRadius="lg"
+                    flexShrink={0}
+                    _hover={{ bg: "primary.700" }}
+                    onClick={() => setPositionTarget(f)}
+                  >
+                    ตั้งพิกัด
+                  </Button>
+                </Flex>
+              ))}
+            </VStack>
+
+            {unmappedTotal > UNMAPPED_PAGE_SIZE && (
+              <Flex mt={5} justify="center" align="center" gap={3}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  isDisabled={unmappedOffset === 0 || unmappedLoading}
+                  onClick={() => loadUnmapped(Math.max(0, unmappedOffset - UNMAPPED_PAGE_SIZE), unmappedSearch)}
+                >
+                  ก่อนหน้า
+                </Button>
+                <Text fontSize="xs" color="slate.500">
+                  {unmappedOffset + 1}–{Math.min(unmappedOffset + UNMAPPED_PAGE_SIZE, unmappedTotal)} จาก{" "}
+                  {unmappedTotal.toLocaleString()}
+                </Text>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  isDisabled={unmappedOffset + UNMAPPED_PAGE_SIZE >= unmappedTotal || unmappedLoading}
+                  onClick={() => loadUnmapped(unmappedOffset + UNMAPPED_PAGE_SIZE, unmappedSearch)}
+                >
+                  ถัดไป
+                </Button>
+              </Flex>
+            )}
+          </Box>
+        )}
       </Box>
+
+      <AdminSetPositionModal
+        isOpen={positionTarget !== null}
+        onClose={() => setPositionTarget(null)}
+        factory={positionTarget}
+        authFetch={authFetch}
+        onSaved={(id) => {
+          setUnmapped((prev) => prev.filter((f) => f.id !== id));
+          setUnmappedTotal((prev) => Math.max(0, prev - 1));
+        }}
+      />
     </Box>
   );
 };

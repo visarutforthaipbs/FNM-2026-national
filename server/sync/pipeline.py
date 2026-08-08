@@ -473,29 +473,31 @@ def upsert_batch(table: str, records: list[dict], on_conflict: str = "id") -> in
 def apply_gov_coordinates(coordinates: list[dict]) -> int:
     """
     Upsert lat/lng for factories the gov CSV has real coordinates for.
-    Skips rows whose current coord_source is 'community' — a citizen-verified
-    pin should not be silently overwritten by the next daily sync.
+    Skips rows whose current coord_source is 'community' or 'admin' — a
+    human-verified pin should not be silently overwritten by the next
+    daily sync.
     """
     if not coordinates:
         return 0
 
+    PROTECTED = ("community", "admin")
     ids = [c["id"] for c in coordinates]
-    community_ids: set[str] = set()
+    protected_ids: set[str] = set()
     for i in range(0, len(ids), 500):  # keep IN(...) filters small
         chunk = ids[i : i + 500]
         rows = (
             supabase.table("factories")
             .select("id")
             .in_("id", chunk)
-            .eq("coord_source", "community")
+            .in_("coord_source", list(PROTECTED))
             .execute()
             .data
         )
-        community_ids.update(r["id"] for r in rows)
+        protected_ids.update(r["id"] for r in rows)
 
-    to_apply = [c for c in coordinates if c["id"] not in community_ids]
-    if community_ids:
-        logger.info(f"🛡️  Skipping {len(community_ids)} community-verified positions")
+    to_apply = [c for c in coordinates if c["id"] not in protected_ids]
+    if protected_ids:
+        logger.info(f"🛡️  Skipping {len(protected_ids)} human-verified positions")
 
     applied = upsert_batch("factories", to_apply, on_conflict="id")
     logger.info(f"📍 Applied gov coordinates for {applied} factories")

@@ -307,6 +307,82 @@ app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
     }
 });
 
+const TH_LAT_RANGE = [5.3, 20.6];
+const TH_LNG_RANGE = [97.2, 105.7];
+
+/**
+ * GET /api/admin/unmapped-factories?limit=50&offset=0&province=&search=
+ * Operating factories with no coordinates at all — for manual verification.
+ * Ordered by province/district so an admin can work through one area at a time.
+ */
+app.get('/api/admin/unmapped-factories', requireAdmin, async (req, res) => {
+    const limit = Math.min(parseInt(req.query.limit, 10) || 50, 200);
+    const offset = parseInt(req.query.offset, 10) || 0;
+    const { province, search } = req.query;
+
+    const where = ["is_active = true", "status = 'ดำเนินการ'", "lat IS NULL"];
+    const values = [];
+    if (province) {
+        values.push(province);
+        where.push(`province = $${values.length}`);
+    }
+    if (search) {
+        values.push(`%${search}%`);
+        where.push(`(name ILIKE $${values.length} OR id ILIKE $${values.length} OR address_full ILIKE $${values.length})`);
+    }
+    const whereClause = where.join(' AND ');
+
+    try {
+        const [rows, count] = await Promise.all([
+            pool.query(`
+        SELECT id, name, address_full, province, district, sub_district,
+               factory_type, capital_investment
+        FROM factories
+        WHERE ${whereClause}
+        ORDER BY province, district, name
+        LIMIT $${values.length + 1} OFFSET $${values.length + 2}
+      `, [...values, limit, offset]),
+            pool.query(`SELECT count(*) FROM factories WHERE ${whereClause}`, values),
+        ]);
+        res.json({ rows: rows.rows, total: parseInt(count.rows[0].count, 10) });
+    } catch (err) {
+        console.error('Error listing unmapped factories:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * POST /api/admin/unmapped-factories/:id  { lat, lng }
+ * Sets a manually-verified position. Only succeeds while the factory still
+ * has no coordinates — an already-mapped factory goes through the citizen
+ * location_corrections review flow instead, not this one.
+ */
+app.post('/api/admin/unmapped-factories/:id', requireAdmin, async (req, res) => {
+    const { lat, lng } = req.body || {};
+    if (typeof lat !== 'number' || typeof lng !== 'number' ||
+        lat < TH_LAT_RANGE[0] || lat > TH_LAT_RANGE[1] ||
+        lng < TH_LNG_RANGE[0] || lng > TH_LNG_RANGE[1]) {
+        return res.status(400).json({ error: 'lat/lng must be numbers within Thailand' });
+    }
+    try {
+        const result = await pool.query(`
+      UPDATE factories
+      SET lat = $1, lng = $2,
+          coord_source = 'admin', coord_precision = 'exact',
+          geom = ST_SetSRID(ST_MakePoint($2, $1), 4326)
+      WHERE id = $3 AND lat IS NULL
+      RETURNING id, lat, lng
+    `, [lat, lng, req.params.id]);
+        if (result.rowCount === 0) {
+            return res.status(409).json({ error: 'Factory not found or already has coordinates' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Error setting factory position:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Start server
 if (require.main === module) {
     app.listen(PORT, () => {
