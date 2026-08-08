@@ -47,7 +47,7 @@
  {
   "name_en": "Chiang Mai",
   "name_th": "เชียงใหม่",
-  "count": 1006
+  "count": 1005
  },
  {
   "name_en": "Chiang Rai",
@@ -77,12 +77,12 @@
  {
   "name_en": "Kanchanaburi",
   "name_th": "กาญจนบุรี",
-  "count": 856
+  "count": 844
  },
  {
   "name_en": "Khon Kaen",
   "name_th": "ขอนแก่น",
-  "count": 851
+  "count": 850
  },
  {
   "name_en": "Krabi",
@@ -177,12 +177,12 @@
  {
   "name_en": "Nonthaburi",
   "name_th": "นนทบุรี",
-  "count": 1521
+  "count": 1518
  },
  {
   "name_en": "Pathum Thani",
   "name_th": "ปทุมธานี",
-  "count": 3292
+  "count": 3291
  },
  {
   "name_en": "Pattani",
@@ -227,7 +227,7 @@
  {
   "name_en": "Phra Nakhon Si Ayutthaya",
   "name_th": "พระนครศรีอยุธยา",
-  "count": 1743
+  "count": 1736
  },
  {
   "name_en": "Phrae",
@@ -257,12 +257,12 @@
  {
   "name_en": "Ratchaburi",
   "name_th": "ราชบุรี",
-  "count": 1170
+  "count": 1167
  },
  {
   "name_en": "Rayong",
   "name_th": "ระยอง",
-  "count": 2348
+  "count": 2347
  },
  {
   "name_en": "Roi Et",
