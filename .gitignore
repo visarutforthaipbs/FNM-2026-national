@@ -13,6 +13,9 @@ client/.env*
 server/node_modules/
 server/.env
 server/sync/venv/
+server/sync/__pycache__/
+__pycache__/
+*.pyc
 
 # Large data exports (exceed GitHub 100MB limit)
 all_factories_export.csv
