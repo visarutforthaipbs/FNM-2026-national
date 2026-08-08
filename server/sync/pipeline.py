@@ -21,6 +21,7 @@ import logging
 import argparse
 from io import StringIO
 from datetime import datetime
+from urllib.parse import quote
 
 import pandas as pd
 import requests
@@ -500,8 +501,7 @@ def apply_gov_coordinates(coordinates: list[dict]) -> int:
     PROTECTED = ("community", "admin")
     ids = [c["id"] for c in coordinates]
     protected_ids: set[str] = set()
-    for i in range(0, len(ids), 500):  # keep IN(...) filters small
-        chunk = ids[i : i + 500]
+    for chunk in chunks_for_uri(ids):
         rows = (
             supabase.table("factories")
             .select("id")
@@ -519,6 +519,31 @@ def apply_gov_coordinates(coordinates: list[dict]) -> int:
     applied = upsert_batch("factories", to_apply, on_conflict="id")
     logger.info(f"📍 Applied gov coordinates for {applied} factories")
     return applied
+
+
+def chunks_for_uri(ids: list[str], max_chars: int = 3500):
+    """
+    Yield ID chunks small enough to survive as a PostgREST `in.(...)` filter.
+
+    These filters travel in the URL, not the request body, and factory IDs are
+    Thai: every non-ASCII byte becomes three percent-encoded characters, so a
+    22-character id reaches ~90 characters on the wire. Chunking by item count
+    (the previous flat 500) produced ~30 KB URLs — Supabase cloud accepted
+    them, self-hosted Kong rejects them with HTTP 414 and the whole endpoint
+    sync fails. Budget by encoded length instead, so this holds no matter how
+    long the ids are.
+    """
+    batch: list[str] = []
+    size = 0
+    for value in ids:
+        encoded = len(quote(str(value), safe="")) + 1  # +1 for the separating comma
+        if batch and size + encoded > max_chars:
+            yield batch
+            batch, size = [], 0
+        batch.append(value)
+        size += encoded
+    if batch:
+        yield batch
 
 
 def insert_batch(table: str, records: list[dict]) -> int:
@@ -585,11 +610,14 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
             )
             return 0
 
-        # Deactivate in batches
+        # Deactivate in batches. These are `in.(...)` URL filters, not request
+        # bodies, so they are chunked by encoded length rather than by
+        # UPSERT_BATCH_SIZE — 2000 Thai ids exceed the gateway's URI limit and
+        # the resulting 414 was swallowed by the except below, silently
+        # skipping deactivation altogether.
         missing_list = list(missing_ids)
         deactivated = 0
-        for i in range(0, len(missing_list), UPSERT_BATCH_SIZE):
-            batch = missing_list[i : i + UPSERT_BATCH_SIZE]
+        for batch in chunks_for_uri(missing_list):
             supabase.table("factories").update({"is_active": False}).in_("id", batch).execute()
             deactivated += len(batch)
 
