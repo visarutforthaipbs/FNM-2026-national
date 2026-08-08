@@ -582,10 +582,10 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             <Text mt={2} color="slate.400" fontSize="2xs">
               คลิกจังหวัดเพื่อดูโรงงาน
             </Text>
-            {/* Honest-counting caption: the choropleth shows mapped factories
-                only (~61% of operating factories have coordinates) */}
+            {/* Honest-counting caption: ~98% of operating factories are mapped;
+                ~1/3 of positions are approximate (tambon centroid / geocoded) */}
             <Text mt={1} color="slate.400" fontSize="2xs" maxW="170px">
-              แสดงเฉพาะโรงงานที่มีพิกัดแผนที่ (~61% ของโรงงานที่เปิดดำเนินการ)
+              ครอบคลุม ~98% ของโรงงานที่เปิดดำเนินการ (บางส่วนเป็นตำแหน่งโดยประมาณ)
             </Text>
           </Box>
         )}

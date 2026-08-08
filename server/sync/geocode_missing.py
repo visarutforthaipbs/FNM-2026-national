@@ -38,7 +38,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 import requests
 from shapely.geometry import Point, shape
 
-from pipeline import supabase
+from pipeline import supabase, SUPABASE_URL, SUPABASE_KEY
+from supabase import create_client
 
 CLIENT_DATA = os.path.join(os.path.dirname(__file__), "..", "..", "client", "public", "data")
 CACHE_PATH = os.path.join(os.path.dirname(__file__), "geocode_cache.json")
@@ -117,12 +118,23 @@ def apply_updates(rows: list[dict], source: str, precision: str, dry_run: bool):
               "Re-run with --apply to write.")
         return
     print(f"\n✍️  Applying {len(rows)} updates (coord_source='{source}')...")
+    # Supabase terminates the HTTP/2 connection after ~20k streams; recreate
+    # the client and retry when that (or any transient error) happens.
+    global supabase
     for i, r in enumerate(rows):
-        supabase.table("factories").update(
-            {"lat": r["lat"], "lng": r["lng"], "coord_source": source, "coord_precision": precision}
-        ).eq("id", r["id"]).execute()
+        payload = {"lat": r["lat"], "lng": r["lng"], "coord_source": source, "coord_precision": precision}
+        for attempt in range(3):
+            try:
+                supabase.table("factories").update(payload).eq("id", r["id"]).execute()
+                break
+            except Exception as e:  # noqa: BLE001
+                if attempt == 2:
+                    raise
+                print(f"   ♻️  reconnecting after: {type(e).__name__}")
+                time.sleep(2)
+                supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
         if (i + 1) % 200 == 0:
-            print(f"   ... {i + 1}/{len(rows)}")
+            print(f"   ... {i + 1}/{len(rows)}", flush=True)
     print("✅ Done.")
 
 

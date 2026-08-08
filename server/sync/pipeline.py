@@ -228,13 +228,20 @@ def clean_facreg(facreg: str) -> str:
     return cleaned
 
 
-def transform_factory_data(df: pd.DataFrame) -> tuple[list[dict], list[dict]]:
+def transform_factory_data(df: pd.DataFrame) -> tuple[list[dict], list[dict], list[dict]]:
     """
     Transform Factory_Data CSV into businesses and factories records.
-    Returns: (businesses_records, factories_records)
+    Returns: (businesses_records, factories_records, coordinate_records)
+
+    coordinate_records only contains rows where the gov CSV has a real
+    lat/lng — factories records NEVER carry a "lat"/"lng" key, so the main
+    upsert can't null out coordinates we repaired/geocoded/centroid-filled
+    for factories the government feed still has no coordinates for. See
+    repair_coordinates.py / geocode_missing.py.
     """
     businesses = {}
     factories = []
+    coordinates = []
 
     for _, row in df.iterrows():
         row_dict = row.to_dict()
@@ -284,8 +291,6 @@ def transform_factory_data(df: pd.DataFrame) -> tuple[list[dict], list[dict]]:
             "business_id": biz_id,
             "name": row_dict.get("FNAME", "").strip() or None,
             "factory_type": row_dict.get("FACTYPE", "").strip() or None,
-            "lat": lat,
-            "lng": lng,
             "address_full": address or None,
             "province": row_dict.get("FPROVNAME", "").strip() or None,
             "district": row_dict.get("FAMPNAME", "").strip() or None,
@@ -301,18 +306,27 @@ def transform_factory_data(df: pd.DataFrame) -> tuple[list[dict], list[dict]]:
         }
 
         factories.append(factory)
+        if lat is not None and lng is not None:
+            coordinates.append({
+                "id": factory_id, "lat": lat, "lng": lng,
+                "coord_source": "gov", "coord_precision": "exact",
+            })
 
-    logger.info(f"🏢 Extracted {len(businesses)} unique businesses, {len(factories)} factories")
-    return list(businesses.values()), factories
+    logger.info(f"🏢 Extracted {len(businesses)} unique businesses, {len(factories)} factories "
+                f"({len(coordinates)} with gov coordinates)")
+    return list(businesses.values()), factories, coordinates
 
 
-def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict]]:
+def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict], list[dict]]:
     """
     Transform Business_Location CSV into businesses and factories records.
     This endpoint lacks FACREG, so we use DISPFACREG as a fallback key.
+    Returns (businesses, factories, coordinates) — see transform_factory_data
+    for why coordinates are split out.
     """
     businesses = {}
     factories = []
+    coordinates = []
 
     for _, row in df.iterrows():
         row_dict = row.to_dict()
@@ -354,8 +368,6 @@ def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict
             "registration_display": disp_facreg or None,
             "business_id": biz_id,
             "name": row_dict.get("FNAME", "").strip() or None,
-            "lat": lat,
-            "lng": lng,
             "address_full": address or None,
             "province": row_dict.get("FPROVNAME", "").strip() or None,
             "district": row_dict.get("FAMPNAME", "").strip() or None,
@@ -365,9 +377,15 @@ def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict
         }
 
         factories.append(factory)
+        if lat is not None and lng is not None:
+            coordinates.append({
+                "id": factory_id, "lat": lat, "lng": lng,
+                "coord_source": "gov", "coord_precision": "exact",
+            })
 
-    logger.info(f"🏢 Extracted {len(businesses)} businesses, {len(factories)} factories from Business_Location")
-    return list(businesses.values()), factories
+    logger.info(f"🏢 Extracted {len(businesses)} businesses, {len(factories)} factories from Business_Location "
+                f"({len(coordinates)} with gov coordinates)")
+    return list(businesses.values()), factories, coordinates
 
 
 def transform_permits(df: pd.DataFrame) -> list[dict]:
@@ -450,6 +468,38 @@ def upsert_batch(table: str, records: list[dict], on_conflict: str = "id") -> in
 
     logger.info(f"✅ Upserted {total}/{len(records)} records into {table}")
     return total
+
+
+def apply_gov_coordinates(coordinates: list[dict]) -> int:
+    """
+    Upsert lat/lng for factories the gov CSV has real coordinates for.
+    Skips rows whose current coord_source is 'community' — a citizen-verified
+    pin should not be silently overwritten by the next daily sync.
+    """
+    if not coordinates:
+        return 0
+
+    ids = [c["id"] for c in coordinates]
+    community_ids: set[str] = set()
+    for i in range(0, len(ids), 500):  # keep IN(...) filters small
+        chunk = ids[i : i + 500]
+        rows = (
+            supabase.table("factories")
+            .select("id")
+            .in_("id", chunk)
+            .eq("coord_source", "community")
+            .execute()
+            .data
+        )
+        community_ids.update(r["id"] for r in rows)
+
+    to_apply = [c for c in coordinates if c["id"] not in community_ids]
+    if community_ids:
+        logger.info(f"🛡️  Skipping {len(community_ids)} community-verified positions")
+
+    applied = upsert_batch("factories", to_apply, on_conflict="id")
+    logger.info(f"📍 Applied gov coordinates for {applied} factories")
+    return applied
 
 
 def insert_batch(table: str, records: list[dict]) -> int:
@@ -581,13 +631,19 @@ def sync_factory_data() -> dict:
         log_sync(endpoint_key, 0, 0, 0, "ERROR", "Failed to fetch CSV", time.time() - start)
         return {"status": "ERROR", "fetched": 0, "upserted": 0}
 
-    businesses, factories = transform_factory_data(df)
+    businesses, factories, coordinates = transform_factory_data(df)
 
     # Upsert businesses FIRST (FK dependency)
     biz_count = upsert_batch("businesses", businesses, on_conflict="id")
 
-    # Upsert factories
+    # Upsert factories — no lat/lng/coord_source columns here, so factories
+    # the gov CSV still has no coordinates for keep whatever we
+    # repaired/geocoded/centroid-filled (see transform_factory_data)
     fac_count = upsert_batch("factories", factories, on_conflict="id")
+
+    # Coordinates: separate upsert, only rows with a real gov value, and never
+    # downgrades a citizen-verified ('community') position
+    apply_gov_coordinates(coordinates)
 
     # Soft delete
     fetched_ids = {f["id"] for f in factories}
@@ -619,10 +675,11 @@ def sync_business_location() -> dict:
         log_sync(endpoint_key, 0, 0, 0, "ERROR", "Failed to fetch CSV", time.time() - start)
         return {"status": "ERROR", "fetched": 0, "upserted": 0}
 
-    businesses, factories = transform_business_location(df)
+    businesses, factories, coordinates = transform_business_location(df)
 
     biz_count = upsert_batch("businesses", businesses, on_conflict="id")
     fac_count = upsert_batch("factories", factories, on_conflict="id")
+    apply_gov_coordinates(coordinates)
 
     duration = time.time() - start
     log_sync(endpoint_key, len(df), biz_count + fac_count, 0, "SUCCESS", None, duration)
