@@ -117,5 +117,5 @@ SUM_TO_STATISTICS = {
 # =============================================================================
 # Batch sizes for upsert operations
 # =============================================================================
-UPSERT_BATCH_SIZE = 500  # Records per batch for Supabase upsert
+UPSERT_BATCH_SIZE = 2000  # Records per batch for Supabase upsert
 FETCH_TIMEOUT = 300      # Seconds to wait for CSV download

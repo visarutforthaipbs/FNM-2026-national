@@ -9,7 +9,10 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Full pipeline (5 endpoints + 2 exports) never completed in 30min — every
+    # run for weeks was cancelled mid-sync, before it ever reached the export
+    # / git-commit steps. See commit history around 2026-08-08 for the postmortem.
+    timeout-minutes: 120
 
     steps:
       - name: Checkout repository

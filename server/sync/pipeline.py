@@ -554,6 +554,20 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
             logger.info("✅ No factories to deactivate")
             return 0
 
+        # Circuit breaker: a healthy daily sync deactivates a handful of
+        # factories (closures), not a large fraction of the table. If the
+        # gov CSV fetch was truncated/incomplete for any reason, fetched_ids
+        # would look artificially small and this would otherwise mass-
+        # deactivate the database. Abort instead of guessing.
+        max_deactivation_ratio = 0.05
+        if existing_ids and len(missing_ids) > len(existing_ids) * max_deactivation_ratio:
+            logger.error(
+                f"❌ Refusing to deactivate {len(missing_ids)}/{len(existing_ids)} factories "
+                f"({len(missing_ids) / len(existing_ids):.0%} — over the {max_deactivation_ratio:.0%} safety "
+                "threshold). This usually means the source CSV fetch was incomplete. Investigate manually."
+            )
+            return 0
+
         # Deactivate in batches
         missing_list = list(missing_ids)
         deactivated = 0
@@ -647,9 +661,11 @@ def sync_factory_data() -> dict:
     # downgrades a citizen-verified ('community') position
     apply_gov_coordinates(coordinates)
 
-    # Soft delete
+    # Soft delete — skipped in test mode: fetched_ids would only be ~TEST_LIMIT
+    # rows, and soft_delete_missing would otherwise try to deactivate nearly
+    # the entire table (see safety threshold inside soft_delete_missing too)
     fetched_ids = {f["id"] for f in factories}
-    deactivated = soft_delete_missing(fetched_ids)
+    deactivated = 0 if TEST_MODE else soft_delete_missing(fetched_ids)
 
     duration = time.time() - start
     log_sync(endpoint_key, len(df), biz_count + fac_count, deactivated, "SUCCESS", None, duration)
