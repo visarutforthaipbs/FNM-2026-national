@@ -54,6 +54,12 @@ SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 TEST_MODE = os.getenv("SYNC_TEST_MODE", "false").lower() == "true"
 TEST_LIMIT = int(os.getenv("SYNC_TEST_LIMIT", "100"))
 
+# sync_permits() clears the whole table before reinserting, so a short fetch
+# would silently empty it. The endpoint returned 241,588 rows on 2026-08-08;
+# anything under this floor means a truncated or degraded response, not a real
+# drop in permits, and the refresh is skipped instead.
+MIN_EXPECTED_PERMITS = 100_000
+
 if not SUPABASE_URL or not SUPABASE_KEY:
     logger.error("❌ SUPABASE_URL and SUPABASE_SERVICE_KEY must be set in .env")
     sys.exit(1)
@@ -734,10 +740,33 @@ def sync_permits() -> dict:
 
     permits = transform_permits(df)
 
-    # For permits, we do a fresh insert (clear old data first to avoid duplicates)
+    # Permits are a full refresh: the endpoint returns the complete current set,
+    # and clearing first is what collapses duplicates from previous runs (the
+    # table had grown to 814k rows for ~243k distinct permits).
+    #
+    # But "clear everything, then insert what we fetched" destroys the table
+    # whenever the fetch comes back short, so it is guarded twice:
+    #   1. Test mode fetches only SYNC_TEST_LIMIT rows. On 2026-08-08 a test run
+    #      cleared 814,588 permits and inserted 100. Test mode now touches nothing.
+    #   2. A degraded or truncated CSV would do the same thing silently, so refuse
+    #      to clear when the fetch is implausibly small.
+    if TEST_MODE:
+        logger.warning(
+            f"🧪 Test mode: skipping permits clear+insert entirely "
+            f"({len(permits)} rows fetched; clearing would wipe the table)"
+        )
+        return {"status": "SKIPPED", "fetched": len(df), "upserted": 0, "duration": round(time.time() - start, 2)}
+
+    if len(permits) < MIN_EXPECTED_PERMITS:
+        msg = (
+            f"Refusing to refresh permits: only {len(permits)} rows fetched, "
+            f"expected at least {MIN_EXPECTED_PERMITS}. Table left untouched."
+        )
+        logger.error(f"🛑 {msg}")
+        log_sync(endpoint_key, len(df), 0, 0, "ERROR", msg, time.time() - start)
+        return {"status": "ABORTED", "fetched": len(df), "upserted": 0}
+
     try:
-        # Delete existing permits before reinserting
-        # This is safe because permits are fully refreshed from the API
         supabase.table("permits").delete().neq("id", "00000000-0000-0000-0000-000000000000").execute()
         logger.info("🗑️ Cleared existing permits for fresh sync")
     except Exception as e:
@@ -761,6 +790,15 @@ def sync_statistics(endpoint_key: str) -> dict:
         return {"status": "ERROR", "fetched": 0, "upserted": 0}
 
     stats = transform_statistics(df, source=endpoint_key)
+
+    # Same delete-then-insert shape as sync_permits, same hazard: a test run
+    # cleared 1,621,380 statistics rows and inserted 200. Test mode does nothing.
+    if TEST_MODE:
+        logger.warning(
+            f"🧪 Test mode: skipping {endpoint_key} statistics clear+insert "
+            f"({len(stats)} rows fetched; clearing would wipe this source)"
+        )
+        return {"status": "SKIPPED", "fetched": len(df), "upserted": 0, "duration": round(time.time() - start, 2)}
 
     # Clear existing stats for this source and reinsert
     try:
@@ -834,7 +872,9 @@ def run_pipeline(target_endpoint: str | None = None) -> None:
     logger.info("📊 Pipeline Summary")
     logger.info(f"{'=' * 60}")
     for name, result in results.items():
-        status_icon = "✅" if result.get("status") == "SUCCESS" else "❌"
+        # SKIPPED is a deliberate no-op (test mode), not a failure — showing it
+        # as ❌ made a correctly-guarded run look broken.
+        status_icon = {"SUCCESS": "✅", "SKIPPED": "⏭️", "ABORTED": "🛑"}.get(result.get("status"), "❌")
         logger.info(f"  {status_icon} {name}: {result}")
     logger.info(f"  ⏱️ Total duration: {total_duration:.1f}s")
     logger.info(f"{'=' * 60}")

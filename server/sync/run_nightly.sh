@@ -7,13 +7,10 @@
 # This script snapshots the operating-factory count before and after and
 # REFUSES to publish if it drops more than 5%.
 #
-# !!! DO NOT SCHEDULE THIS YET (as of 2026-08-08) !!!
-# pipeline.py clears the entire permits table (DELETE ?id=neq.0000...) and
-# re-inserts only what it fetched, ignoring SYNC_TEST_MODE. A test run cut
-# 814,588 permits to 100. factory_statistics has the same shape. A full
-# production run would still shrink permits to ~241,588 (all the DIW endpoint
-# returns). factory-sync.timer is intentionally left disabled until that is
-# fixed. The 5% guard below only blocks PUBLISHING — it cannot undo a bad write.
+# The pipeline's delete-then-insert steps (permits, factory_statistics) are
+# guarded as of 2026-08-08: they no-op in test mode, and permits refuses to
+# clear on an implausibly small fetch. The 5% guard below is a second layer —
+# note it only blocks PUBLISHING bad exports, it cannot undo a bad DB write.
 
 set -uo pipefail
 
