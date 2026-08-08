@@ -1,10 +1,16 @@
 name: Daily Factory Data Sync
 
 on:
-  schedule:
-    # Run daily at 02:00 UTC (09:00 Bangkok time, ICT = UTC+7)
-    - cron: '0 2 * * *'
-  workflow_dispatch: # Allow manual trigger from GitHub UI
+  # Schedule disabled 2026-08-08: the backend moved off Supabase cloud to the
+  # self-hosted instance on lsev01, and the nightly sync now runs there via the
+  # systemd timer `factory-sync.timer` (server/sync/run_nightly.sh), talking to
+  # the database over loopback instead of the public internet.
+  #
+  # Leaving this scheduled would point a second pipeline at the now-unused cloud
+  # project and race the on-prem one for the same client/public/data/ files.
+  # Re-enabling requires repointing the SUPABASE_URL / SUPABASE_SERVICE_KEY
+  # secrets at the new backend first.
+  workflow_dispatch: # Manual trigger only
 
 jobs:
   sync:

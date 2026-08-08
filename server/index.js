@@ -384,9 +384,12 @@ app.post('/api/admin/unmapped-factories/:id', requireAdmin, async (req, res) => 
 });
 
 // Start server
+// HOST defaults to all interfaces; self-hosted deployments set it to 127.0.0.1
+// so only the local reverse proxy (Tailscale) can reach the admin routes.
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
+    const HOST = process.env.HOST || '0.0.0.0';
+    app.listen(PORT, HOST, () => {
+        console.log(`🚀 Server running on http://${HOST}:${PORT}`);
     });
 }
 
