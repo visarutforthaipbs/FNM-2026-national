@@ -109,6 +109,12 @@ DEFAULT_WORKERS = 3
 # a wall — a 401/502 burst usually means the WAF is already unhappy.
 BACKOFF_AFTER_ERRORS = 5
 
+# Recovery: after this many clean requests, nudge the rate back up by one
+# step toward the ceiling. Slow enough not to re-trigger the WAF, fast
+# enough that a single bad minute does not define the whole run.
+RECOVER_AFTER_OK = 40
+RECOVER_STEP = 0.15
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -130,9 +136,11 @@ class RateLimiter:
     def __init__(self, rate: float):
         self.min_interval = 1.0 / rate
         self.rate = rate
+        self.ceiling = rate
         self._next = 0.0
         self._lock = threading.Lock()
         self._consecutive_errors = 0
+        self._consecutive_ok = 0
 
     def acquire(self) -> None:
         with self._lock:
@@ -143,8 +151,23 @@ class RateLimiter:
             time.sleep(wait)
 
     def ok(self) -> None:
+        """
+        Recover after a quiet spell.
+
+        Halving without recovery meant one burst of 429s crippled the whole run:
+        the rate fell to the 0.25 floor and stayed there, turning a ~13 hour job
+        into a ~42 hour one. Additive increase against multiplicative decrease
+        lets the crawl find the rate the service will actually tolerate, instead
+        of being permanently punished for the worst moment of the run.
+        """
         with self._lock:
             self._consecutive_errors = 0
+            self._consecutive_ok += 1
+            if self._consecutive_ok >= RECOVER_AFTER_OK and self.rate < self.ceiling:
+                self._consecutive_ok = 0
+                self.rate = min(self.ceiling, self.rate + RECOVER_STEP)
+                self.min_interval = 1.0 / self.rate
+                logger.info(f"↗️  {RECOVER_AFTER_OK} clean requests — easing back to {self.rate:.2f} req/s")
 
     def penalise(self, hard: bool = False) -> None:
         """
@@ -155,6 +178,7 @@ class RateLimiter:
         0.58 req/s produced almost none.
         """
         with self._lock:
+            self._consecutive_ok = 0
             self._consecutive_errors += 1
             if hard or self._consecutive_errors >= BACKOFF_AFTER_ERRORS:
                 self._consecutive_errors = 0
