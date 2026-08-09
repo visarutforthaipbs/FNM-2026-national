@@ -103,6 +103,21 @@ def person_name(rec: dict) -> str:
     return " ".join(p.strip() for p in parts if p and p.strip())
 
 
+# Fields carrying personal data about individual directors and shareholders.
+# `cmtNo` is a 13-digit Thai national ID number — DBD returns it, but a public
+# factory map has no business republishing it, and it is exactly the kind of
+# identifier that turns an ownership record into an identity-theft resource.
+# Names are kept: who directs a company is genuinely public record, and it is
+# the whole point of this dataset. Everything below is dropped before storage
+# rather than filtered at read time, so it cannot leak through a later view,
+# an export, or a debugging query against `raw`.
+PII_FIELDS = ("cmtNo", "address", "phoneNo", "zipCode", "tumbonCode", "ampurCode", "pvCode")
+
+
+def redact(rec: dict) -> dict:
+    return {k: v for k, v in rec.items() if k not in PII_FIELDS}
+
+
 def num(value):
     """DBD mixes numbers and formatted strings; keep only what is really numeric."""
     if value is None or isinstance(value, bool):
@@ -185,8 +200,8 @@ def main() -> int:
                 on conflict (jp_no, seq) do update set
                   full_name = excluded.full_name, title = excluded.title,
                   raw = excluded.raw, fetched_at = now()
-            """, [(jp_no, c.get("cmtSeq") or n, person_name(c), c.get("titleName"),
-                   json.dumps(c, ensure_ascii=False))
+            """, [(jp_no, c.get("cmtSeq") or n, person_name(c), c.get("cmtTypeCode"),
+                   json.dumps(redact(c), ensure_ascii=False))
                   for n, c in enumerate(committees, 1)])
             stats["committees"] += len(committees)
 
@@ -199,7 +214,7 @@ def main() -> int:
                   holder_name = excluded.holder_name, nationality = excluded.nationality,
                   share_amount = excluded.share_amount, raw = excluded.raw, fetched_at = now()
             """, [(jp_no, p.get("cmtSeq") or n, person_name(p) or p.get("jpName"),
-                   p.get("ntCode"), num(p.get("investAmt")), json.dumps(p, ensure_ascii=False))
+                   p.get("ntCode"), num(p.get("investAmt")), json.dumps(redact(p), ensure_ascii=False))
                   for n, p in enumerate(partners, 1)])
             stats["partners"] += len(partners)
 
