@@ -27,6 +27,13 @@ from cryptography.hazmat.primitives import hashes
 
 class DBDClient:
     BASE = "https://datawarehouse.dbd.go.th"
+
+    # requests waits forever by default. Without this the crawler does not
+    # crash when a connection goes unanswered — it hangs, which is worse:
+    # systemd still reports the service active while every worker thread sits
+    # blocked on a socket. That cost 5h24m of silent nothing on 2026-08-09.
+    # (connect timeout, read timeout)
+    REQUEST_TIMEOUT = (10, 30)
     UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
     def __init__(self):
@@ -48,7 +55,7 @@ class DBDClient:
         return base64.urlsafe_b64decode(s)
 
     def _refresh_token(self):
-        r = self.session.post(f"{self.BASE}/api/refresh")
+        r = self.session.post(f"{self.BASE}/api/refresh", timeout=self.REQUEST_TIMEOUT)
         r.raise_for_status()
         data = r.json()
         self.token = data["idToken"]
@@ -79,6 +86,7 @@ class DBDClient:
 
     def _request(self, method: str, path: str, **kwargs) -> dict:
         self._ensure_token()
+        kwargs.setdefault("timeout", self.REQUEST_TIMEOUT)
         r = self.session.request(method, f"{self.BASE}{path}", **kwargs)
         r.raise_for_status()
         obj = r.json()
