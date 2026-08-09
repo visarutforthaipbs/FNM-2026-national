@@ -45,6 +45,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import gzip
 import hashlib
 import json
@@ -52,6 +53,7 @@ import logging
 import os
 import random
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -86,14 +88,96 @@ LEGAL_FORMS: list[tuple[str, str]] = [
 # querying 146,792 individuals would be a pointless load on a government service.
 INDIVIDUAL_PREFIXES = ("นางสาว", "นาย", "นาง", "ด.ช.", "ด.ญ.")
 
-# Politeness. The API answers in ~0.04s, so the crawl is bounded by this delay,
-# not by DBD. ~0.6s average keeps a 40k-name run near seven hours of gentle
-# traffic rather than hammering the service flat out.
-DELAY_RANGE = (0.4, 0.8)
+# Politeness, expressed as a request rate rather than a sleep.
+#
+# DBD answers in ~0.04s, so the crawl is bounded entirely by how often we choose
+# to ask: a single-threaded 0.6s sleep measured 0.58 requests/sec, which is the
+# sleep and nothing else. Spreading the work over more machines would not help —
+# every node on this tailnet shares one home connection, so DBD would see the
+# same source address making N times the requests, which is exactly the pattern
+# its Imperva WAF exists to block.
+#
+# So the rate is a single number, enforced centrally by one limiter that every
+# worker passes through. Concurrency then only decides how much of that rate is
+# actually used, and can never exceed it.
+# Measured against the live service: 4 req/s drew 44 HTTP 429s in 200 operators,
+# 0.58 req/s drew almost none. 1.5 is the compromise actually tested below.
+DEFAULT_RATE = 1.5     # requests/sec across all workers
+DEFAULT_WORKERS = 3
+
+# On repeated failures the limiter halves its own rate rather than retrying into
+# a wall — a 401/502 burst usually means the WAF is already unhappy.
+BACKOFF_AFTER_ERRORS = 5
 
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+class RateLimiter:
+    """
+    One gate every request passes through, so total load is a chosen number.
+
+    Deliberately not a per-worker sleep: with N workers each sleeping D seconds
+    the real rate is N/D, which drifts as workers are added and is easy to get
+    wrong by a factor of six. Here the rate is stated once and the workers
+    contend for it.
+
+    `penalise()` halves the rate after a run of failures, on the assumption that
+    errors mean the far end wants less traffic, not the same traffic retried.
+    """
+
+    def __init__(self, rate: float):
+        self.min_interval = 1.0 / rate
+        self.rate = rate
+        self._next = 0.0
+        self._lock = threading.Lock()
+        self._consecutive_errors = 0
+
+    def acquire(self) -> None:
+        with self._lock:
+            now = time.monotonic()
+            wait = max(0.0, self._next - now)
+            self._next = max(now, self._next) + self.min_interval
+        if wait > 0:
+            time.sleep(wait)
+
+    def ok(self) -> None:
+        with self._lock:
+            self._consecutive_errors = 0
+
+    def penalise(self, hard: bool = False) -> None:
+        """
+        Slow down. `hard` is for HTTP 429, where the server has stated outright
+        that we are asking too often — that needs no corroboration from a run of
+        five failures, and waiting for one just means five more rejected
+        requests. Measured: 4 req/s produced 44 429s in 200 operators, while
+        0.58 req/s produced almost none.
+        """
+        with self._lock:
+            self._consecutive_errors += 1
+            if hard or self._consecutive_errors >= BACKOFF_AFTER_ERRORS:
+                self._consecutive_errors = 0
+                self.rate = max(0.25, self.rate / 2)
+                self.min_interval = 1.0 / self.rate
+                why = "429 Too Many Requests" if hard else "repeated failures"
+                logger.warning(f"⚠️  {why} — backing off to {self.rate:.2f} req/s")
+
+
+_local = threading.local()
+
+
+def client_for_thread() -> DBDClient:
+    """
+    One client per worker thread.
+
+    DBDClient holds a requests.Session and a JWT it refreshes on expiry; sharing
+    one across threads would race on that refresh and produce spurious 401s that
+    look like rate limiting.
+    """
+    if not hasattr(_local, "client"):
+        _local.client = DBDClient()
+    return _local.client
 
 
 def normalize_name(value: str) -> str:
@@ -215,103 +299,139 @@ def score(candidates: list[dict], expected_form: str, core: str, province: str) 
     return best[1], "exact" if best[0] >= 15 else "probable", scored
 
 
-def resolve(rows: list[tuple[str, str, int]], limit: int | None, refresh: bool) -> None:
+def resolve_one(oname: str, province: str, count: int, limiter: RateLimiter) -> dict:
+    """
+    Resolve a single operator. Runs on a worker thread; touches no shared state
+    except the limiter and the archive, which is content-addressed by query and
+    therefore safe to write concurrently.
+    """
+    form, core = split_legal_form(oname)
+    if form is None:
+        return {"oname": oname, "province": province, "factories": count,
+                "outcome": "not_juristic", "resolved_at": utc_now()}
+
+    # Try the name as written, then known spelling variants. Each query is
+    # archived under its own key so a later rule change can replay them without
+    # touching DBD again.
+    payload, used_query, cached = None, core, True
+    last_error = None
+    for variant in name_variants(core):
+        archived = load_archived(variant)
+        if archived is not None:
+            payload = archived
+        else:
+            # One retry after a rate-limit rejection: the limiter has already
+            # halved itself by then, so the second attempt goes out at a rate
+            # the server has not refused.
+            payload = None
+            for attempt in (1, 2):
+                limiter.acquire()
+                try:
+                    payload = client_for_thread().search(variant)
+                    archive_response(variant, payload)
+                    cached = False
+                    limiter.ok()
+                    break
+                except Exception as exc:
+                    last_error = exc
+                    throttled = "429" in str(exc)
+                    limiter.penalise(hard=throttled)
+                    payload = None
+                    if not throttled or attempt == 2:
+                        break
+                    time.sleep(2.0)
+            if payload is None:
+                continue
+        if (payload or {}).get("contents"):
+            used_query = variant
+            break
+
+    if payload is None:
+        return {"oname": oname, "core": core, "province": province, "factories": count,
+                "outcome": "error", "error": str(last_error), "resolved_at": utc_now()}
+
+    contents = payload.get("contents") or []
+    match, outcome, _ = score(contents, form, core, province)
+    rec = {
+        "oname": oname, "core": core, "expected_form": form,
+        "province": province, "factories": count,
+        "outcome": outcome, "candidates": len(contents), "matched_query": used_query,
+        "from_cache": cached, "resolved_at": utc_now(),
+    }
+    if match:
+        rec.update({
+            "jp_no": match.get("jpNo"),
+            "jp_name": (match.get("jpName") or "").strip(),
+            "jp_type": ((match.get("jpType") or {}).get("jpTypeDesc") or "").strip(),
+            "jp_status": ((match.get("jpStatus") or {}).get("jpStatDesc") or "").strip(),
+            "dbd_province": ((match.get("locationProvince") or {}).get("pvDesc") or "").strip(),
+            "capital": match.get("capAmt"),
+            "setup_obj_code": match.get("setupObjCode"),
+        })
+    return rec
+
+
+def resolve(rows: list[tuple[str, str, int]], limit: int | None, refresh: bool,
+            rate: float, workers: int) -> None:
     ARCHIVE.mkdir(parents=True, exist_ok=True)
-    done = set()
+    # Only *settled* outcomes count as done. An "error" row means the request
+    # failed, not that the operator has no match — treating it as complete would
+    # bake a transient 429 into the dataset as a permanent gap.
+    done, errored = set(), set()
     if MATCHES.exists() and not refresh:
         for line in MATCHES.read_text(encoding="utf-8").splitlines():
             try:
-                done.add(json.loads(line)["oname"])
+                rec = json.loads(line)
             except Exception:
-                pass
-        logger.info(f"resuming — {len(done):,} operators already resolved")
+                continue
+            if rec.get("outcome") == "error":
+                errored.add(rec["oname"])
+            else:
+                done.add(rec["oname"])
+        errored -= done
+        logger.info(f"resuming — {len(done):,} settled, {len(errored):,} to retry after earlier errors")
 
-    client = None
+    # Retry earlier failures first — they are the known gaps.
+    todo = [r for r in rows if r[0] in errored] + [r for r in rows if r[0] not in done and r[0] not in errored]
+    if limit is not None:
+        todo = todo[:limit]
+    if not todo:
+        logger.info("nothing left to resolve")
+        return
+
+    limiter = RateLimiter(rate)
     stats: dict[str, int] = {}
-    processed = 0
+    started = time.monotonic()
+    logger.info(f"resolving {len(todo):,} operators · {workers} workers · {rate:.1f} req/s ceiling")
 
+    # Results are written by this thread only, so the append-only matches file
+    # stays consistent without a second lock.
     with MATCHES.open("a", encoding="utf-8") as out:
-        for oname, province, count in rows:
-            if oname in done:
-                continue
-            if limit is not None and processed >= limit:
-                break
-
-            form, core = split_legal_form(oname)
-            if form is None:
-                rec = {"oname": oname, "province": province, "factories": count,
-                       "outcome": "not_juristic", "resolved_at": utc_now()}
-                out.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                stats["not_juristic"] = stats.get("not_juristic", 0) + 1
-                continue
-
-            # Try the name as written, then known spelling variants. Each query
-            # is archived under its own key so a later rule change can replay
-            # them without touching DBD again.
-            payload, used_query, cached = None, core, True
-            for variant in name_variants(core):
-                payload = load_archived(variant)
-                if payload is None:
-                    if client is None:
-                        client = DBDClient()
-                    try:
-                        payload = client.search(variant)
-                        archive_response(variant, payload)
-                        cached = False
-                    except Exception as exc:
-                        payload = None
-                        break
-                    time.sleep(random.uniform(*DELAY_RANGE))
-                if (payload or {}).get("contents"):
-                    used_query = variant
-                    break
-
-            if payload is None:
-                if client is None:
-                    client = DBDClient()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {pool.submit(resolve_one, o, p, c, limiter): o for o, p, c in todo}
+            for n, fut in enumerate(concurrent.futures.as_completed(futures), 1):
                 try:
-                    payload = client.search(core)
-                    archive_response(core, payload)
+                    rec = fut.result()
                 except Exception as exc:
-                    logger.warning(f"search failed for {core!r}: {exc}")
-                    rec = {"oname": oname, "core": core, "province": province, "factories": count,
-                           "outcome": "error", "error": str(exc), "resolved_at": utc_now()}
-                    out.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                    logger.warning(f"worker failed for {futures[fut]!r}: {exc}")
                     stats["error"] = stats.get("error", 0) + 1
-                    time.sleep(random.uniform(*DELAY_RANGE) * 4)
                     continue
-                time.sleep(random.uniform(*DELAY_RANGE))
+                out.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                out.flush()
+                stats[rec["outcome"]] = stats.get(rec["outcome"], 0) + 1
+                if n % 100 == 0:
+                    elapsed = time.monotonic() - started
+                    eta = (len(todo) - n) / max(n / elapsed, 1e-9) / 60
+                    logger.info(
+                        f"  {n:,}/{len(todo):,} — {n/elapsed:.1f}/s, ETA {eta:.0f} min — "
+                        + ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))
+                    )
 
-            contents = (payload or {}).get("contents") or []
-            match, outcome, scored = score(contents, form, core, province)
-            rec = {
-                "oname": oname, "core": core, "expected_form": form,
-                "province": province, "factories": count,
-                "outcome": outcome, "candidates": len(contents), "matched_query": used_query,
-                "from_cache": cached, "resolved_at": utc_now(),
-            }
-            if match:
-                rec.update({
-                    "jp_no": match.get("jpNo"),
-                    "jp_name": (match.get("jpName") or "").strip(),
-                    "jp_type": ((match.get("jpType") or {}).get("jpTypeDesc") or "").strip(),
-                    "jp_status": ((match.get("jpStatus") or {}).get("jpStatDesc") or "").strip(),
-                    "dbd_province": ((match.get("locationProvince") or {}).get("pvDesc") or "").strip(),
-                    "capital": match.get("capAmt"),
-                    "setup_obj_code": match.get("setupObjCode"),
-                })
-            out.write(json.dumps(rec, ensure_ascii=False) + "\n")
-            out.flush()
-
-            stats[outcome] = stats.get(outcome, 0) + 1
-            processed += 1
-            if processed % 25 == 0:
-                logger.info(f"  {processed:,} resolved — " + ", ".join(f"{k}={v}" for k, v in sorted(stats.items())))
-
+    elapsed = time.monotonic() - started
     logger.info("=" * 60)
     for k, v in sorted(stats.items(), key=lambda kv: -kv[1]):
         logger.info(f"  {k:<16} {v:>8,}")
-    logger.info(f"  {'processed':<16} {processed:>8,}")
+    logger.info(f"  {'elapsed':<16} {elapsed/60:>7.1f} min at {len(todo)/max(elapsed,1e-9):.1f}/s")
 
 
 def report() -> None:
@@ -345,6 +465,10 @@ def main() -> int:
     ap.add_argument("--input", help="TSV: name <TAB> province <TAB> factory_count")
     ap.add_argument("--limit", type=int, help="Resolve at most N operators (pilot runs)")
     ap.add_argument("--refresh", action="store_true", help="Re-resolve names already in matches.jsonl")
+    ap.add_argument("--rate", type=float, default=DEFAULT_RATE,
+                    help=f"Total requests/sec across all workers (default {DEFAULT_RATE})")
+    ap.add_argument("--workers", type=int, default=DEFAULT_WORKERS,
+                    help=f"Concurrent workers, capped by --rate (default {DEFAULT_WORKERS})")
     ap.add_argument("--report", action="store_true", help="Summarise what has been resolved")
     args = ap.parse_args()
 
@@ -372,7 +496,7 @@ def main() -> int:
     # are the ones explaining the most of the map.
     rows.sort(key=lambda r: -r[2])
     logger.info(f"📋 {len(rows):,} operators to consider · archive {ARCHIVE}")
-    resolve(rows, args.limit, args.refresh)
+    resolve(rows, args.limit, args.refresh, args.rate, args.workers)
     return 0
 
 
