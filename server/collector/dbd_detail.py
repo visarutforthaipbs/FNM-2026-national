@@ -50,6 +50,7 @@ import psycopg2.extras
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dbd_client import DBDClient  # noqa: E402
+from dbd_resolve import RateLimiter  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")
@@ -57,7 +58,7 @@ logger = logging.getLogger("dbd-detail")
 
 ARCHIVE = Path(os.getenv("DBD_ARCHIVE_ROOT", Path.home() / "dbd-archive"))
 DETAIL_RAW = ARCHIVE / "detail"
-DELAY_RANGE = (0.4, 0.8)
+# Rate is enforced by the shared RateLimiter (see --rate), not by a fixed sleep.
 
 
 def utc_now() -> str:
@@ -137,6 +138,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Fetch DBD directors, shareholders and financials.")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--refresh", action="store_true", help="Re-fetch companies already stored")
+    ap.add_argument("--rate", type=float, default=1.0,
+                    help="Requests/sec ceiling; backs off on 429 and eases back up")
     ap.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
     args = ap.parse_args()
 
@@ -166,6 +169,7 @@ def main() -> int:
     logger.info(f"{len(targets):,} companies to fetch")
 
     client = DBDClient()
+    limiter = RateLimiter(args.rate)
     stats = {"profile": 0, "committees": 0, "partners": 0, "financials": 0, "errors": 0, "cached": 0}
 
     for i, (jp_no, jp_type, factories) in enumerate(targets, 1):
@@ -178,15 +182,27 @@ def main() -> int:
                 payloads[kind] = cached
                 stats["cached"] += 1
                 continue
-            try:
-                payloads[kind] = fn(jp_type, jp_no)
-                archive(jp_no, kind, payloads[kind])
-                time.sleep(random.uniform(*DELAY_RANGE))
-            except Exception as exc:
-                logger.warning(f"{jp_no} {kind}: {exc}")
-                payloads[kind] = None
-                stats["errors"] += 1
-                time.sleep(random.uniform(*DELAY_RANGE) * 3)
+            # Same adaptive limiter the resolver uses. This crawl is three calls
+            # per company over tens of thousands of companies, so a fixed sleep
+            # with no retry would quietly shed a large share of it the first
+            # time DBD throttles: 429s here are not fatal, they just leave gaps
+            # that look like companies with no directors.
+            payloads[kind] = None
+            for attempt in (1, 2):
+                limiter.acquire()
+                try:
+                    payloads[kind] = fn(jp_type, jp_no)
+                    archive(jp_no, kind, payloads[kind])
+                    limiter.ok()
+                    break
+                except Exception as exc:
+                    throttled = "429" in str(exc)
+                    limiter.penalise(hard=throttled)
+                    if attempt == 2 or not throttled:
+                        logger.warning(f"{jp_no} {kind}: {exc}")
+                        stats["errors"] += 1
+                        break
+                    time.sleep(2.0)
 
         profile = payloads.get("profile") or {}
         if profile:
