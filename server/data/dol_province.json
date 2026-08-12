@@ -1,0 +1,402 @@
+{
+  "status": 200,
+  "result": [
+    {
+      "pvcode": "00",
+      "pvnamethai": "กรุณาเลือกจังหวัด",
+      "pvnameeng": "Select Province"
+    },
+    {
+      "pvcode": "81",
+      "pvnamethai": "กระบี่",
+      "pvnameeng": "Krabi"
+    },
+    {
+      "pvcode": "10",
+      "pvnamethai": "กรุงเทพมหานคร",
+      "pvnameeng": "Bangkok"
+    },
+    {
+      "pvcode": "71",
+      "pvnamethai": "กาญจนบุรี",
+      "pvnameeng": "Kanchanaburi"
+    },
+    {
+      "pvcode": "46",
+      "pvnamethai": "กาฬสินธุ์",
+      "pvnameeng": "Kalasin"
+    },
+    {
+      "pvcode": "62",
+      "pvnamethai": "กำแพงเพชร",
+      "pvnameeng": "Kamphaeng Phet"
+    },
+    {
+      "pvcode": "40",
+      "pvnamethai": "ขอนแก่น",
+      "pvnameeng": "Khon Kaen"
+    },
+    {
+      "pvcode": "22",
+      "pvnamethai": "จันทบุรี",
+      "pvnameeng": "Chanthaburi"
+    },
+    {
+      "pvcode": "24",
+      "pvnamethai": "ฉะเชิงเทรา",
+      "pvnameeng": "Chachoengsao"
+    },
+    {
+      "pvcode": "20",
+      "pvnamethai": "ชลบุรี",
+      "pvnameeng": "Chon Buri"
+    },
+    {
+      "pvcode": "18",
+      "pvnamethai": "ชัยนาท",
+      "pvnameeng": "Chai Nat"
+    },
+    {
+      "pvcode": "36",
+      "pvnamethai": "ชัยภูมิ",
+      "pvnameeng": "Chaiyaphum"
+    },
+    {
+      "pvcode": "86",
+      "pvnamethai": "ชุมพร",
+      "pvnameeng": "Chum Phon"
+    },
+    {
+      "pvcode": "57",
+      "pvnamethai": "เชียงราย",
+      "pvnameeng": "Chiang Rai"
+    },
+    {
+      "pvcode": "50",
+      "pvnamethai": "เชียงใหม่",
+      "pvnameeng": "Chiang Mai"
+    },
+    {
+      "pvcode": "92",
+      "pvnamethai": "ตรัง",
+      "pvnameeng": "Trang"
+    },
+    {
+      "pvcode": "23",
+      "pvnamethai": "ตราด",
+      "pvnameeng": "Trat"
+    },
+    {
+      "pvcode": "63",
+      "pvnamethai": "ตาก",
+      "pvnameeng": "Tak"
+    },
+    {
+      "pvcode": "26",
+      "pvnamethai": "นครนายก",
+      "pvnameeng": "Nakhon Nayok"
+    },
+    {
+      "pvcode": "73",
+      "pvnamethai": "นครปฐม",
+      "pvnameeng": "Nakhon Pathom"
+    },
+    {
+      "pvcode": "48",
+      "pvnamethai": "นครพนม",
+      "pvnameeng": "Nakhon Phanom"
+    },
+    {
+      "pvcode": "30",
+      "pvnamethai": "นครราชสีมา",
+      "pvnameeng": "Nakhon Ratchasima"
+    },
+    {
+      "pvcode": "80",
+      "pvnamethai": "นครศรีธรรมราช",
+      "pvnameeng": "NaKhonsithammarat"
+    },
+    {
+      "pvcode": "60",
+      "pvnamethai": "นครสวรรค์",
+      "pvnameeng": "NaKhon Sawan"
+    },
+    {
+      "pvcode": "12",
+      "pvnamethai": "นนทบุรี",
+      "pvnameeng": "Nonthaburi"
+    },
+    {
+      "pvcode": "96",
+      "pvnamethai": "นราธิวาส",
+      "pvnameeng": "Narathiwat"
+    },
+    {
+      "pvcode": "55",
+      "pvnamethai": "น่าน",
+      "pvnameeng": "NAN"
+    },
+    {
+      "pvcode": "38",
+      "pvnamethai": "บึงกาฬ",
+      "pvnameeng": "Bueng Kan"
+    },
+    {
+      "pvcode": "31",
+      "pvnamethai": "บุรีรัมย์",
+      "pvnameeng": "Buri Ram"
+    },
+    {
+      "pvcode": "13",
+      "pvnamethai": "ปทุมธานี",
+      "pvnameeng": "Pathum Thani"
+    },
+    {
+      "pvcode": "77",
+      "pvnamethai": "ประจวบคีรีขันธ์",
+      "pvnameeng": "prachuap Khiri Khan"
+    },
+    {
+      "pvcode": "25",
+      "pvnamethai": "ปราจีนบุรี",
+      "pvnameeng": "Prachinburi"
+    },
+    {
+      "pvcode": "94",
+      "pvnamethai": "ปัตตานี",
+      "pvnameeng": "Pattani"
+    },
+    {
+      "pvcode": "14",
+      "pvnamethai": "พระนครศรีอยุธยา",
+      "pvnameeng": "Phranakhonsi Ayutthaya"
+    },
+    {
+      "pvcode": "56",
+      "pvnamethai": "พะเยา",
+      "pvnameeng": "Pha Yao"
+    },
+    {
+      "pvcode": "82",
+      "pvnamethai": "พังงา",
+      "pvnameeng": "Phangnga"
+    },
+    {
+      "pvcode": "93",
+      "pvnamethai": "พัทลุง",
+      "pvnameeng": "Phatthalung"
+    },
+    {
+      "pvcode": "66",
+      "pvnamethai": "พิจิตร",
+      "pvnameeng": "Phichit"
+    },
+    {
+      "pvcode": "65",
+      "pvnamethai": "พิษณุโลก",
+      "pvnameeng": "Pisanulok"
+    },
+    {
+      "pvcode": "76",
+      "pvnamethai": "เพชรบุรี",
+      "pvnameeng": "Phechaburi"
+    },
+    {
+      "pvcode": "67",
+      "pvnamethai": "เพชรบูรณ์",
+      "pvnameeng": "Phetchabun"
+    },
+    {
+      "pvcode": "54",
+      "pvnamethai": "แพร่",
+      "pvnameeng": "Phrae"
+    },
+    {
+      "pvcode": "83",
+      "pvnamethai": "ภูเก็ต",
+      "pvnameeng": "Phuket"
+    },
+    {
+      "pvcode": "44",
+      "pvnamethai": "มหาสารคาม",
+      "pvnameeng": "Maha Sarakham"
+    },
+    {
+      "pvcode": "49",
+      "pvnamethai": "มุกดาหาร",
+      "pvnameeng": "Mukdahan"
+    },
+    {
+      "pvcode": "58",
+      "pvnamethai": "แม่ฮ่องสอน",
+      "pvnameeng": "Mae Hong Son"
+    },
+    {
+      "pvcode": "35",
+      "pvnamethai": "ยโสธร",
+      "pvnameeng": "Yasothon"
+    },
+    {
+      "pvcode": "95",
+      "pvnamethai": "ยะลา",
+      "pvnameeng": "Yala"
+    },
+    {
+      "pvcode": "45",
+      "pvnamethai": "ร้อยเอ็ด",
+      "pvnameeng": "Roi Et"
+    },
+    {
+      "pvcode": "85",
+      "pvnamethai": "ระนอง",
+      "pvnameeng": "Ranong"
+    },
+    {
+      "pvcode": "21",
+      "pvnamethai": "ระยอง",
+      "pvnameeng": "Rayong"
+    },
+    {
+      "pvcode": "70",
+      "pvnamethai": "ราชบุรี",
+      "pvnameeng": "Ratchaburi"
+    },
+    {
+      "pvcode": "16",
+      "pvnamethai": "ลพบุรี",
+      "pvnameeng": "Lop Buri"
+    },
+    {
+      "pvcode": "52",
+      "pvnamethai": "ลำปาง",
+      "pvnameeng": "LumPang"
+    },
+    {
+      "pvcode": "51",
+      "pvnamethai": "ลำพูน",
+      "pvnameeng": "LumPhun"
+    },
+    {
+      "pvcode": "42",
+      "pvnamethai": "เลย",
+      "pvnameeng": "Loei"
+    },
+    {
+      "pvcode": "33",
+      "pvnamethai": "ศรีสะเกษ",
+      "pvnameeng": "Si Sa Ket"
+    },
+    {
+      "pvcode": "47",
+      "pvnamethai": "สกลนคร",
+      "pvnameeng": "SaKon Nakhon"
+    },
+    {
+      "pvcode": "90",
+      "pvnamethai": "สงขลา",
+      "pvnameeng": "SongKhla"
+    },
+    {
+      "pvcode": "91",
+      "pvnamethai": "สตูล",
+      "pvnameeng": "Satun"
+    },
+    {
+      "pvcode": "11",
+      "pvnamethai": "สมุทรปราการ",
+      "pvnameeng": "Samut Prakan"
+    },
+    {
+      "pvcode": "75",
+      "pvnamethai": "สมุทรสงคราม",
+      "pvnameeng": "Samut Song khram"
+    },
+    {
+      "pvcode": "74",
+      "pvnamethai": "สมุทรสาคร",
+      "pvnameeng": "Samut Sakhon"
+    },
+    {
+      "pvcode": "27",
+      "pvnamethai": "สระแก้ว",
+      "pvnameeng": "Sa Kaeo"
+    },
+    {
+      "pvcode": "19",
+      "pvnamethai": "สระบุรี",
+      "pvnameeng": "Saraburi"
+    },
+    {
+      "pvcode": "17",
+      "pvnamethai": "สิงห์บุรี",
+      "pvnameeng": "Sing Buri"
+    },
+    {
+      "pvcode": "64",
+      "pvnamethai": "สุโขทัย",
+      "pvnameeng": "SuKhothai"
+    },
+    {
+      "pvcode": "72",
+      "pvnamethai": "สุพรรณบุรี",
+      "pvnameeng": "Suphan Buri"
+    },
+    {
+      "pvcode": "84",
+      "pvnamethai": "สุราษฎร์ธานี",
+      "pvnameeng": "Surat Thani"
+    },
+    {
+      "pvcode": "32",
+      "pvnamethai": "สุรินทร์",
+      "pvnameeng": "Surin"
+    },
+    {
+      "pvcode": "43",
+      "pvnamethai": "หนองคาย",
+      "pvnameeng": "Nong Khai"
+    },
+    {
+      "pvcode": "39",
+      "pvnamethai": "หนองบัวลำภู",
+      "pvnameeng": "Nong Bua Lam Phu"
+    },
+    {
+      "pvcode": "15",
+      "pvnamethai": "อ่างทอง",
+      "pvnameeng": "Ang Thong"
+    },
+    {
+      "pvcode": "37",
+      "pvnamethai": "อำนาจเจริญ",
+      "pvnameeng": "Amnat Charoen"
+    },
+    {
+      "pvcode": "41",
+      "pvnamethai": "อุดรธานี",
+      "pvnameeng": "Udon Thani"
+    },
+    {
+      "pvcode": "53",
+      "pvnamethai": "อุตรดิตถ์",
+      "pvnameeng": "Utaradit"
+    },
+    {
+      "pvcode": "61",
+      "pvnamethai": "อุทัยธานี",
+      "pvnameeng": "Utai ThaNi"
+    },
+    {
+      "pvcode": "34",
+      "pvnamethai": "อุบลราชธานี",
+      "pvnameeng": "Ubon Ratchathani"
+    }
+  ],
+  "message": "",
+  "error": false,
+  "actived": false,
+  "expired_otp": false,
+  "invalid_otp": false,
+  "invalid_user": false,
+  "access_token": null
+}
