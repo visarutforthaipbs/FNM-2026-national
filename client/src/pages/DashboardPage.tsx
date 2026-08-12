@@ -82,7 +82,25 @@ interface FactoryExplorerItem {
   };
 }
 
+interface ZoningSummary {
+  factories_tested: number;
+  inside_a_dpt_zone: number;
+  no_dpt_plan_data: number;
+  by_family: Record<string, number>;
+  provinces_without_dpt_coverage: string[];
+}
+
 const DashboardPage = () => {
+  // Counted zoning figures. Loaded separately so a missing file simply hides
+  // the panel rather than showing numbers we cannot stand behind.
+  const [zoningSummary, setZoningSummary] = useState<ZoningSummary | null>(null);
+  useEffect(() => {
+    fetch("/data/zoning_summary.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setZoningSummary(d))
+      .catch(() => setZoningSummary(null));
+  }, []);
+
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -424,6 +442,79 @@ const DashboardPage = () => {
           />
         </SimpleGrid>
 
+        {/* Town-planning coverage, counted rather than assumed.
+            This grid previously multiplied whatever total was on screen by
+            fixed national ratios (8.3 / 18.9 / 64.7 / 8.1), so every province
+            displayed invented counts — and three of the four categories were
+            never produced by the spatial audit at all. These four numbers come
+            from zoning_summary.json, written by the same point-in-polygon pass
+            that fills the per-factory cards. */}
+        {zoningSummary && (
+          <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="slate.200" mb={8}>
+            <Flex align="center" justify="space-between" mb={1} wrap="wrap" gap={2}>
+              <Flex align="center" gap={2}>
+                <Box w="10px" h="10px" borderRadius="full" bg="purple.500" />
+                <Text fontSize="lg" fontWeight="bold" color="slate.800">
+                  ผังเมืองรวมกับที่ตั้งโรงงาน (DPT)
+                </Text>
+              </Flex>
+              <Badge colorScheme="gray" p={2} borderRadius="lg" fontSize="xs">
+                ตรวจสอบพิกัดกับแปลงผังเมือง 42,219 แปลง
+              </Badge>
+            </Flex>
+            <Text fontSize="xs" color="slate.500" mb={4} lineHeight="1.7">
+              ตัวเลขนี้บอกว่าโรงงานตั้งอยู่ในเขตผังเมืองประเภทใด ไม่ได้ชี้ว่าโรงงานใดถูกหรือผิดกฎหมาย —
+              การพิจารณาต้องดูจำพวกโรงงาน ขนาดเครื่องจักร บัญชีแนบท้ายกฎกระทรวงของผังนั้น
+              และวันที่ได้รับใบอนุญาตเทียบกับวันประกาศใช้ผัง
+            </Text>
+
+            <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4}>
+              <Box bg="slate.50" p={4} borderRadius="xl" border="1px solid" borderColor="slate.200">
+                <Text fontSize="xs" color="slate.600" fontWeight="600">โรงงานที่ตรวจสอบ</Text>
+                <Text fontSize="xl" fontWeight="bold" color="slate.900">
+                  {zoningSummary.factories_tested.toLocaleString()}
+                </Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>โรงงานที่มีพิกัดบนแผนที่</Text>
+              </Box>
+
+              <Box bg="purple.50" p={4} borderRadius="xl" border="1px solid" borderColor="purple.200">
+                <Text fontSize="xs" color="purple.700" fontWeight="600">อยู่ในผังเมืองสีม่วง</Text>
+                <Text fontSize="xl" fontWeight="bold" color="purple.900">
+                  {(zoningSummary.by_family.industrial ?? 0).toLocaleString()}
+                </Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>เขตอุตสาหกรรมและคลังสินค้า</Text>
+              </Box>
+
+              <Box bg="yellow.50" p={4} borderRadius="xl" border="1px solid" borderColor="yellow.200">
+                <Text fontSize="xs" color="yellow.800" fontWeight="600">อยู่ในเขตที่อยู่อาศัย</Text>
+                <Text fontSize="xl" fontWeight="bold" color="yellow.900">
+                  {(zoningSummary.by_family.residential ?? 0).toLocaleString()}
+                </Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>ผังเมืองสีเหลือง/ส้ม</Text>
+              </Box>
+
+              <Box bg="slate.50" p={4} borderRadius="xl" border="1px solid" borderColor="slate.200">
+                <Text fontSize="xs" color="slate.600" fontWeight="600">ไม่มีข้อมูลผังเมือง</Text>
+                <Text fontSize="xl" fontWeight="bold" color="slate.900">
+                  {zoningSummary.no_dpt_plan_data.toLocaleString()}
+                  <Text as="span" fontSize="sm" fontWeight="600" color="slate.500">
+                    {" "}({Math.round((zoningSummary.no_dpt_plan_data / Math.max(zoningSummary.factories_tested, 1)) * 100)}%)
+                  </Text>
+                </Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>
+                  ไม่มีแปลงผังเมืองของ DPT ครอบคลุมจุดที่ตั้ง
+                </Text>
+              </Box>
+            </SimpleGrid>
+
+            <Text fontSize="2xs" color="slate.500" mt={3} lineHeight="1.7">
+              ที่มา: แปลงผังเมืองรวม กรมโยธาธิการและผังเมือง (PLLU_ALL) ·
+              ผังเมืองบางพื้นที่ออกโดยหน่วยงานอื่น เช่น ผังเมืองรวมกรุงเทพมหานคร และผังการใช้ประโยชน์ที่ดิน EEC
+              จึงไม่ปรากฏในชุดข้อมูลนี้
+            </Text>
+          </Box>
+        )}
+
         {/* Callout to select province when view is national overview */}
         {!selectedProvince && (
           <Box 
@@ -465,7 +556,7 @@ const DashboardPage = () => {
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>สืบค้นข้อความ</Text>
                   <InputGroup size="sm">
                     <InputLeftElement pointerEvents="none" color="slate.300">
-                      <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
+                      <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
                         <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                       </Icon>
                     </InputLeftElement>

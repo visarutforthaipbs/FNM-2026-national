@@ -48,6 +48,22 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python export_markers.py
 
+      # Zoning is a function of position, so it must be rebuilt whenever the
+      # markers move — including after an admin repositions a factory in
+      # /admin. Skipping this leaves a moved factory showing the zone of where
+      # it used to be. Needs dpt_geodatabase.db, which is gitignored for size,
+      # so this is a no-op on a runner that does not have it.
+      - name: Export DPT zoning JSON
+        working-directory: server/sync
+        run: |
+          if [ -f ../data/dpt_geodatabase.db ]; then
+            python export_zoning.py
+          else
+            echo "dpt_geodatabase.db not present — skipping zoning export"
+            python export_zoning.py --check || \
+              echo "::warning::zoning data is stale relative to markers; re-run export_zoning.py locally"
+          fi
+
       - name: Export dashboard stats JSON
         working-directory: server/sync
         env:
