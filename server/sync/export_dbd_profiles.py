@@ -46,6 +46,13 @@ def load_slug_map() -> dict[str, str]:
     return {r["name_th"]: province_slug(r["name_en"]) for r in rows}
 
 
+# Split into two files per province, because half the payload is content the
+# sidebar keeps behind a disclosure. Directors and financial statements are 50%
+# of the bytes and are only rendered when someone taps
+# "ดูกรรมการ ผู้ถือหุ้น และงบการเงิน" — so they load then, not on every province.
+# Headline fields (name, status, capital, and the nationality split, which is
+# shown unexpanded) stay in the file the map already loads.
+#
 # Abbreviated keys, as with markers: this file is downloaded by phones on mobile
 # data, and the long-form key names cost more than the values.
 def compact(row: dict) -> dict:
@@ -63,6 +70,32 @@ def compact(row: dict) -> dict:
         out["p"] = row["registered_province"]
     if row.get("human_verified"):
         out["v"] = 1
+    # `hd` tells the client a detail record exists without it having to guess.
+    if (row.get("directors") or row.get("owners") or row.get("financial_year")):
+        out["hd"] = 1
+    # Aggregate shareholder nationality, carried by the view straight from
+    # dbd.company_nations. This is the only source that answers for a limited
+    # company, and it answers with real percentages — so it is exported as the
+    # summary it is, never expanded into shareholders DBD did not name.
+    split = row.get("nationalities")
+    if split:
+        entries = []
+        for item in split:
+            if not item.get("code"):
+                continue
+            entry = {"c": item["code"]}
+            if item.get("percent") is not None:
+                entry["p"] = float(item["percent"])
+            if item.get("holders"):
+                entry["h"] = item["holders"]
+            entries.append(entry)
+        out["nat"] = entries
+    return out
+
+
+def compact_detail(row: dict) -> dict | None:
+    """Directors, named shareholders and financials — fetched on disclosure."""
+    out: dict = {}
     directors = [d.get("name") for d in (row.get("directors") or []) if d.get("name")]
     if directors:
         out["d"] = directors
@@ -82,23 +115,6 @@ def compact(row: dict) -> dict:
         owners.append(entry)
     if owners:
         out["o"] = owners
-    # Aggregate shareholder nationality, carried by the view straight from
-    # dbd.company_nations. This is the only source that answers for a limited
-    # company, and it answers with real percentages — so it is exported as the
-    # summary it is, never expanded into shareholders DBD did not name.
-    split = row.get("nationalities")
-    if split:
-        entries = []
-        for item in split:
-            if not item.get("code"):
-                continue
-            entry = {"c": item["code"]}
-            if item.get("percent") is not None:
-                entry["p"] = float(item["percent"])
-            if item.get("holders"):
-                entry["h"] = item["holders"]
-            entries.append(entry)
-        out["nat"] = entries
     if row.get("financial_year"):
         out["f"] = {
             "y": row["financial_year"],
@@ -106,7 +122,7 @@ def compact(row: dict) -> dict:
             "p": _num(row.get("net_profit")),
             "a": _num(row.get("total_assets")),
         }
-    return out
+    return out or None
 
 
 def _num(value):
@@ -139,6 +155,7 @@ def main() -> int:
     conn.close()
 
     by_province: dict[str, dict[str, dict]] = defaultdict(dict)
+    detail_by_province: dict[str, dict[str, dict]] = defaultdict(dict)
     unknown_province = 0
     for row in rows:
         slug = slug_map.get((row.get("factory_province") or "").strip())
@@ -146,6 +163,9 @@ def main() -> int:
             unknown_province += 1
             continue
         by_province[slug][row["factory_id"]] = compact(row)
+        detail = compact_detail(row)
+        if detail:
+            detail_by_province[slug][row["factory_id"]] = detail
 
     args.out.mkdir(parents=True, exist_ok=True)
     # Remove stale files so a province that lost all its links does not keep
@@ -163,10 +183,16 @@ def main() -> int:
         path.write_text(json.dumps(entries, ensure_ascii=False, separators=(",", ":")),
                         encoding="utf-8")
         total += len(entries)
+    for slug, entries in sorted(detail_by_province.items()):
+        (args.out / f"{slug}.detail.json").write_text(
+            json.dumps(entries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
-    size = sum(p.stat().st_size for p in args.out.glob("*.json"))
-    print(f"✅ {total:,} factory profiles across {len(by_province)} provinces "
-          f"-> {args.out} ({size / 1024 / 1024:.1f} MB uncompressed)")
+    head_size = sum(p.stat().st_size for p in args.out.glob("*.json")
+                    if not p.name.endswith(".detail.json"))
+    detail_size = sum(p.stat().st_size for p in args.out.glob("*.detail.json"))
+    print(f"✅ {total:,} factory profiles across {len(by_province)} provinces -> {args.out}")
+    print(f"   headline {head_size / 1024 / 1024:.1f} MB (loaded per province) · "
+          f"detail {detail_size / 1024 / 1024:.1f} MB (loaded on disclosure)")
     if unknown_province:
         print(f"⚠️  {unknown_province:,} rows skipped — province not in province-counts.json")
     return 0

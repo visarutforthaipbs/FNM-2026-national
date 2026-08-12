@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type {
-  DbdDirector,
+  DbdFactoryDetail,
   DbdFactoryProfile,
   DbdNationality,
-  DbdOwner,
 } from "../types/dbd";
 import { provinceSlug } from "./useFactoriesApi";
 
@@ -28,9 +27,13 @@ type RawProfile = {
   c?: number;                    // registered capital
   p?: string;                    // registered province
   v?: number;                    // human-verified
+  nat?: RawNationality[];        // aggregate nationality split
+  hd?: number;                   // a detail record exists
+};
+
+type RawDetail = {
   d?: string[];                  // directors
   o?: RawOwner[];                // named shareholders (partnerships only)
-  nat?: RawNationality[];        // aggregate nationality split
   f?: { y: string; r: number | null; p: number | null; a: number | null };
 };
 
@@ -74,18 +77,6 @@ async function loadProvince(slug: string): Promise<Record<string, RawProfile>> {
 }
 
 function normalize(factoryId: string, raw: RawProfile): DbdFactoryProfile {
-  const directors: DbdDirector[] = (raw.d ?? []).map((name) => ({
-    name,
-    role: "กรรมการ",
-  }));
-
-  const owners: DbdOwner[] = (raw.o ?? []).map((o) => ({
-    name: o.n,
-    nationality: o.c ?? null,
-    shareAmount: o.a ?? null,
-    sharePercent: o.p ?? null,
-  }));
-
   const nationalities: DbdNationality[] = (raw.nat ?? []).map((n) => ({
     code: n.c,
     percent: n.p ?? null,
@@ -104,19 +95,8 @@ function normalize(factoryId: string, raw: RawProfile): DbdFactoryProfile {
     // present here is publishable; `v` distinguishes which of the two.
     matchOutcome: "exact",
     humanVerified: raw.v === 1,
-    directors,
-    owners,
     nationalities,
-    financial: raw.f
-      ? {
-          year: raw.f.y,
-          totalAssets: raw.f.a,
-          totalLiabilities: null,
-          totalEquity: null,
-          totalRevenue: raw.f.r,
-          netProfit: raw.f.p,
-        }
-      : null,
+    hasDetail: raw.hd === 1,
   };
 }
 
@@ -191,4 +171,108 @@ export function useDbdProfile(
   }, [provinceEn]);
 
   return { profile, isLoading, hasLoaded, error, retry };
+}
+
+// ── Detail, loaded on disclosure ────────────────────────────────────────────
+// Directors, named shareholders and financial statements are half the exported
+// bytes and render only when a reader taps through, so they sit in a second
+// per-province file. Splitting them cut the heaviest province's first load
+// from 567 KB to 198 KB gzipped.
+
+const detailCache = new Map<string, Record<string, RawDetail>>();
+const detailInFlight = new Map<string, Promise<Record<string, RawDetail>>>();
+
+async function loadProvinceDetail(slug: string): Promise<Record<string, RawDetail>> {
+  const cached = detailCache.get(slug);
+  if (cached) return cached;
+  const pending = detailInFlight.get(slug);
+  if (pending) return pending;
+
+  const request = (async () => {
+    const res = await fetch(`/data/dbd/${slug}.detail.json`);
+    if (res.status === 404) return {};
+    if (!res.ok) throw new Error(`http_${res.status}`);
+    return (await res.json()) as Record<string, RawDetail>;
+  })();
+
+  detailInFlight.set(slug, request);
+  try {
+    const data = await request;
+    detailCache.set(slug, data);
+    return data;
+  } finally {
+    detailInFlight.delete(slug);
+  }
+}
+
+function normalizeDetail(raw: RawDetail): DbdFactoryDetail {
+  return {
+    directors: (raw.d ?? []).map((name) => ({ name, role: "กรรมการ" })),
+    owners: (raw.o ?? []).map((o) => ({
+      name: o.n,
+      nationality: o.c ?? null,
+      shareAmount: o.a ?? null,
+      sharePercent: o.p ?? null,
+    })),
+    financial: raw.f
+      ? {
+          year: raw.f.y,
+          totalAssets: raw.f.a,
+          totalLiabilities: null,
+          totalEquity: null,
+          totalRevenue: raw.f.r,
+          netProfit: raw.f.p,
+        }
+      : null,
+  };
+}
+
+/**
+ * @param enabled fetch only once the reader has asked to see it
+ */
+export function useDbdDetail(
+  factoryId: string,
+  provinceEn: string | null,
+  enabled: boolean
+): { detail: DbdFactoryDetail | null; isLoading: boolean } {
+  const [detail, setDetail] = useState<DbdFactoryDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!enabled || !factoryId || !provinceEn) {
+      setDetail(null);
+      setIsLoading(false);
+      return;
+    }
+    const slug = provinceSlug(provinceEn);
+    let cancelled = false;
+
+    const cached = detailCache.get(slug);
+    if (cached) {
+      const raw = cached[factoryId];
+      setDetail(raw ? normalizeDetail(raw) : null);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    loadProvinceDetail(slug)
+      .then((data) => {
+        if (cancelled) return;
+        const raw = data[factoryId];
+        setDetail(raw ? normalizeDetail(raw) : null);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) console.error("Failed to load DBD detail", err);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [factoryId, provinceEn, enabled]);
+
+  return { detail, isLoading };
 }
