@@ -33,11 +33,122 @@ import {
 import { submitReport } from "../hooks/useReports";
 
 const MegaphoneIcon = (props: React.ComponentProps<typeof Icon>) => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
-    <path d="M3 11v3a1 1 0 0 0 1 1h2l3.5 4a1 1 0 0 0 1.5-.9V6.9a1 1 0 0 0-1.5-.9L6 10H4a1 1 0 0 0-1 1Z" strokeLinejoin="round" />
-    <path d="M14 8.5a4 4 0 0 1 0 7M17 6a8 8 0 0 1 0 12" strokeLinecap="round" />
+  <Icon
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M3 11v3a1 1 0 0 0 1 1h2l3.5 4a1 1 0 0 0 1.5-.9V6.9a1 1 0 0 0-1.5-.9L6 10H4a1 1 0 0 0-1 1Z" />
+    <path d="M14 8.5a4 4 0 0 1 0 7M17 6a8 8 0 0 1 0 12" />
   </Icon>
 );
+
+const ImpactTypeIcon: React.FC<{
+  type: ImpactType;
+  boxSize?: number | string;
+}> = ({ type, boxSize = 3.5 }) => {
+  if (type === "smell") {
+    return (
+      <Icon
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        boxSize={boxSize}
+      >
+        <path d="M7 16c0-1.6 1.4-2.2 1.4-3.8S7 10.1 7 8.6" />
+        <path d="M12 17c0-1.6 1.4-2.2 1.4-3.8S12 11.1 12 9.6" />
+        <path d="M17 16c0-1.6 1.4-2.2 1.4-3.8S17 10.1 17 8.6" />
+      </Icon>
+    );
+  }
+  if (type === "noise") {
+    return (
+      <Icon
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        boxSize={boxSize}
+      >
+        <path d="M4 10v4h3l4 3V7l-4 3H4Z" />
+        <path d="M15 9a4.5 4.5 0 0 1 0 6M18 7a7.5 7.5 0 0 1 0 10" />
+      </Icon>
+    );
+  }
+  if (type === "water") {
+    return (
+      <Icon
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        boxSize={boxSize}
+      >
+        <path d="M12 4c3 4 5 6.1 5 9a5 5 0 0 1-10 0c0-2.9 2-5 5-9Z" />
+      </Icon>
+    );
+  }
+  if (type === "dust") {
+    return (
+      <Icon
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        boxSize={boxSize}
+      >
+        <path d="M4 14.5c1.1-1.3 2.3-1.7 3.8-1.7 1.1 0 2 .3 2.8.9.7-.6 1.7-.9 2.8-.9 1.6 0 3 .5 4.2 1.9" />
+        <circle cx="6" cy="8" r="1" />
+        <circle cx="12" cy="7" r="1" />
+        <circle cx="18" cy="9" r="1" />
+      </Icon>
+    );
+  }
+  if (type === "vibration") {
+    return (
+      <Icon
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        boxSize={boxSize}
+      >
+        <path d="M6 7v10M18 7v10" />
+        <path d="m9.5 10 2.5 2-2.5 2" />
+        <path d="m14.5 10-2.5 2 2.5 2" />
+      </Icon>
+    );
+  }
+  return (
+    <Icon
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      boxSize={boxSize}
+    >
+      <path d="M12 4 3.8 19h16.4L12 4Z" />
+      <path d="M12 9v4.5M12 16.5h.01" />
+    </Icon>
+  );
+};
 
 // Selectable chip — the single interaction primitive of the whole form
 const Chip: React.FC<{
@@ -178,7 +289,11 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                 py={0.5}
                 fontSize="11px"
                 fontWeight="600"
+                display="inline-flex"
+                alignItems="center"
+                gap={1}
               >
+                <ImpactTypeIcon type={type} boxSize={3} />
                 {IMPACT_TYPE_META[type].label} × {n}
               </Badge>
             ))}
@@ -225,8 +340,8 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                 align="center"
                 justify="center"
               >
-                <Icon viewBox="0 0 24 24" boxSize={7} fill="none" stroke="#10B981" strokeWidth="2.5">
-                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                <Icon viewBox="0 0 24 24" boxSize={7} fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5" />
                 </Icon>
               </Flex>
               <Text fontWeight="700" color="slate.800" fontSize="lg">
@@ -283,7 +398,10 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                     <Flex wrap="wrap" gap={2} mt={2}>
                       {(Object.keys(IMPACT_TYPE_META) as ImpactType[]).map((t) => (
                         <Chip key={t} active={impactTypes.includes(t)} onClick={() => toggleImpact(t)}>
-                          {IMPACT_TYPE_META[t].emoji} {IMPACT_TYPE_META[t].label}
+                          <Flex as="span" align="center" gap={1.5}>
+                            <ImpactTypeIcon type={t} boxSize={3.5} />
+                            <Text as="span">{IMPACT_TYPE_META[t].label}</Text>
+                          </Flex>
                         </Chip>
                       ))}
                     </Flex>

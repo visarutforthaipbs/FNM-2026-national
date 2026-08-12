@@ -157,9 +157,9 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
               flexShrink={0}
               title={`รายงานผลกระทบจากประชาชน ${reportCount} รายการ`}
             >
-              <Icon viewBox="0 0 24 24" boxSize={2.5} fill="none" stroke="#D23F15" strokeWidth="2">
-                <path d="M3 11v3a1 1 0 0 0 1 1h2l3.5 4a1 1 0 0 0 1.5-.9V6.9a1 1 0 0 0-1.5-.9L6 10H4a1 1 0 0 0-1 1Z" strokeLinejoin="round" />
-                <path d="M14 8.5a4 4 0 0 1 0 7" strokeLinecap="round" />
+              <Icon viewBox="0 0 24 24" boxSize={2.5} fill="none" stroke="#D23F15" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 11v3a1 1 0 0 0 1 1h2l3.5 4a1 1 0 0 0 1.5-.9V6.9a1 1 0 0 0-1.5-.9L6 10H4a1 1 0 0 0-1 1Z" />
+                <path d="M14 8.5a4 4 0 0 1 0 7" />
               </Icon>
               <Text fontSize="10px" fontWeight="700" color="primary.700" fontFamily="'Inter', sans-serif">
                 {reportCount}
@@ -170,8 +170,8 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
 
         <Flex align="center" gap={1} color="primary.600" flexShrink={0}>
           <Text fontSize="xs" fontWeight="600">ดูข้อมูล</Text>
-          <Icon viewBox="0 0 20 20" boxSize={3.5} fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="m7 4 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+          <Icon viewBox="0 0 20 20" boxSize={3.5} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m7 4 6 6-6 6" />
           </Icon>
         </Flex>
       </Flex>

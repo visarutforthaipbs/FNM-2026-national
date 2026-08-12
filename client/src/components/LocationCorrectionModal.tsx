@@ -103,8 +103,8 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
         {isSubmitted ? (
           <ModalBody py={10} textAlign="center">
             <Flex w="56px" h="56px" mx="auto" mb={4} borderRadius="full" bg="green.50" align="center" justify="center">
-              <Icon viewBox="0 0 24 24" boxSize={7} fill="none" stroke="#10B981" strokeWidth="2.5">
-                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+              <Icon viewBox="0 0 24 24" boxSize={7} fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 6L9 17l-5-5" />
               </Icon>
             </Flex>
             <Text fontWeight="700" color="slate.800" fontSize="lg">
