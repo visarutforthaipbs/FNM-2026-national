@@ -354,3 +354,91 @@ In this session, we integrated official Department of Public Works and Town & Co
 * Created [`server/sync/harvest_landsmaps_geodatabase.py`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/sync/harvest_landsmaps_geodatabase.py):
   * **Local GeoDatabase**: Initializes SQLite GeoDatabase [`server/data/dol_parcels_geodatabase.db`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/data/dol_parcels_geodatabase.db) storing `lat`, `lng`, `parcel_no`, `land_no`, `survey_no`, `utmmap`, `area_rai`, `area_ngan`, `area_wa`, `appraisal_price`, and full raw JSON payloads.
   * **WAF Bridge & Resumable Loop**: Uses Playwright stealth session bridge to harvest parcels in batch chunks with automatic deduplication and SQLite transaction safety.
+
+---
+
+## 8. Open security exposure — `/api` is on the public internet behind one static token
+
+**Status: unresolved. Nothing here is a breach; it is a thin margin.** Recorded
+2026-08-13, verified against the live host the same day.
+
+### What is actually exposed
+
+`tailscale funnel status` on `lighthouse-sev01`:
+
+```
+https://lighthouse-sev01.tail83945e.ts.net (Funnel on)
+|-- /api      proxy http://127.0.0.1:3001/api     ← Express, server/index.js
+|-- /rest/v1  proxy http://127.0.0.1:8000/rest/v1 ← PostgREST
+https://lighthouse-sev01.tail83945e.ts.net:8443 (Funnel on)
+|-- /         proxy http://127.0.0.1:8787
+```
+
+Funnel means the public internet, not the tailnet. That hostname resolves and
+answers for anyone, with no Tailscale client and no account.
+
+Of the 15 routes in `server/index.js`, **12 are `/api/admin/*` behind
+`requireAdmin`** and three are public. Probed anonymously from outside the
+tailnet, the auth does hold: `/api/admin/reports` → 401, `/rest/v1/...` →
+401 `"No API key found in request"`.
+
+### Why it still matters
+
+The pg pool connects **as the table owner, so RLS does not apply to it**. Every
+protection on the citizen-report data — anon may only INSERT, public reads go
+through `approved_reports` which never exposes reporter contact — is bypassed
+inside this process by design. So the admin API is the one place on the internet
+where **reporter contact details for unmoderated impact reports** are readable,
+and the token is the only thing in the way. These are people reporting a
+neighbouring factory, which is exactly the population for whom exposure is not
+an abstract harm. That is the asset, not the factory data.
+
+The token also **writes**: `POST /api/admin/*/:id` sets coordinates on
+`factories` with `coord_source='admin'`, and `POST /api/admin/dbd-matches/:id`
+is what *publishes* an ownership link. Someone holding it can attach the wrong
+company to a factory and have it ship to the public site.
+
+### What is and is not the weakness
+
+Not the token's strength: it is 64 characters, so guessing it is not the
+threat. The weaknesses are these, in the order they are likely to bite:
+
+1. **No rate limiting anywhere.** 20 unauthenticated requests in a row all
+   returned 401 identically with no throttle, no backoff, no lockout. There is
+   no `express-rate-limit` and no `helmet` in `server/package.json`. Credential
+   stuffing, scraping and plain load all arrive unimpeded.
+2. **The token never expires and never rotates.** It is one string, shared by
+   every reviewer, held in `sessionStorage` in each of their browsers, and typed
+   into a field on a page. Nothing distinguishes two reviewers, so there is no
+   audit trail of who approved what and no way to revoke one person.
+3. **No request logging on the admin routes.** If the token did leak, there is
+   currently no way to establish what was read.
+4. `token !== process.env.ADMIN_TOKEN` is not a constant-time comparison. Real,
+   but bottom of the list — remote timing against a 64-char secret over the
+   public internet is not the practical route in.
+
+### Recommendation, cheapest first
+
+The first two are small, and together they remove most of the risk:
+
+1. **Take `/api` off Funnel.** This is the single biggest reduction and costs
+   nothing. `tailscale serve` instead of `tailscale funnel` keeps the admin API
+   reachable from the tailnet only. Reviewers already have Tailscale; the public
+   site does **not** call `/api/*` at all — the client is static JSON plus
+   Supabase — so nothing user-facing breaks. Do this one first even if nothing
+   else on this list gets done.
+2. **Rate-limit and log.** `express-rate-limit` on `/api/admin/*` (say 30/min
+   per IP), plus a line per admin request with IP, route and outcome. Cheap, and
+   it converts a silent compromise into a visible one.
+3. **Constant-time compare.** `crypto.timingSafeEqual` over equal-length
+   buffers; `crypto` is already required at line 5.
+4. **Per-reviewer credentials, when there is more than one reviewer.** A row per
+   admin with an expiring session, so approvals are attributable and one person
+   can be revoked without re-issuing to everybody. Only worth building when the
+   review load justifies it — until then, rotating the shared token on a
+   schedule is the honest stopgap.
+
+Also noticed while probing, unrelated to auth: **`GET /api/factories` returns
+500** on the live host. It is legacy — the client never calls it (see
+`CLAUDE.md`) — but it is publicly reachable and broken, so either fix it or
+remove it rather than leaving a 500 on the internet.
