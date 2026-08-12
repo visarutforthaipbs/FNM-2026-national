@@ -489,6 +489,122 @@ app.post('/api/admin/approximate-factories/:id', requireAdmin, async (req, res) 
 });
 
 /**
+ * GET /api/admin/province-mismatch?limit=50&offset=0&search=
+ *
+ * Factories plotted outside the province they are tagged with — the pin and the
+ * badge disagree. This is wrong in both directions at once: the factory is
+ * missing from the province a neighbour would look in, and present in one it
+ * has nothing to do with.
+ *
+ * The list comes from server/sync/audit_province_mismatch.py, which does the
+ * point-in-polygon offline against the same boundaries the map ships. 217 of
+ * the 221 are `gov` coordinates — this is the government feed, not our
+ * geocoding tiers, which is why the fix has to be manual.
+ *
+ * Rows already dealt with drop out: a coordinate an admin or a citizen has set
+ * is authoritative, and so is one that has moved since the audit ran.
+ */
+const MISMATCH_REPORT = path.join(__dirname, 'data', 'province_mismatch_report.json');
+
+function loadMismatchReport() {
+    try {
+        // Required here rather than relying on the `fs` binding declared further
+        // down this file — this function must not depend on evaluation order.
+        return JSON.parse(require('fs').readFileSync(MISMATCH_REPORT, 'utf8')).rows || [];
+    } catch (err) {
+        console.warn('province mismatch report unavailable:', err.message);
+        return [];
+    }
+}
+
+app.get('/api/admin/province-mismatch', requireAdmin, async (req, res) => {
+    const limit = Math.min(parseInt(req.query.limit, 10) || 50, 200);
+    const offset = parseInt(req.query.offset, 10) || 0;
+    const search = (req.query.search || '').trim();
+
+    const rows = loadMismatchReport();
+    if (!rows.length) return res.json({ rows: [], total: 0 });
+
+    try {
+        const current = await pool.query(`
+      SELECT id, name, province, lat, lng, coord_source, address_full, district
+      FROM factories WHERE id = ANY($1)
+    `, [rows.map(r => r.id)]);
+        const byId = new Map(current.rows.map(r => [r.id, r]));
+
+        const open = rows.filter(r => {
+            const f = byId.get(r.id);
+            if (!f || f.lat === null) return false;
+            // Already reviewed by a human, or moved since the audit.
+            if (['admin', 'community'].includes(f.coord_source)) return false;
+            const moved = Math.abs(Number(f.lat) - r.lat) > 1e-6 ||
+                          Math.abs(Number(f.lng) - r.lng) > 1e-6;
+            return !moved;
+        }).map(r => {
+            const f = byId.get(r.id);
+            return {
+                ...r,
+                name: f.name || r.name,
+                district: f.district,
+                address_full: f.address_full,
+                coord_source: f.coord_source,
+            };
+        }).filter(r => !search ||
+            (r.name || '').includes(search) || r.id.includes(search) ||
+            (r.tagged || '').includes(search) || (r.actual || '').includes(search));
+
+        // Worst first: distance is the best proxy for how obviously wrong it is.
+        open.sort((a, b) => b.km_outside - a.km_outside);
+        res.json({ rows: open.slice(offset, offset + limit), total: open.length });
+    } catch (err) {
+        console.error('Error listing province mismatches:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * POST /api/admin/province-mismatch/:id  { lat, lng }
+ *
+ * Only ids the audit flagged may be corrected here, and only while the position
+ * is still the one it flagged — so this cannot become a general write path over
+ * authoritative coordinates. Writes coord_source='admin', which the nightly gov
+ * sync is already built to leave alone.
+ */
+app.post('/api/admin/province-mismatch/:id', requireAdmin, async (req, res) => {
+    const { lat, lng } = req.body || {};
+    if (typeof lat !== 'number' || typeof lng !== 'number' ||
+        lat < TH_LAT_RANGE[0] || lat > TH_LAT_RANGE[1] ||
+        lng < TH_LNG_RANGE[0] || lng > TH_LNG_RANGE[1]) {
+        return res.status(400).json({ error: 'lat/lng must be numbers within Thailand' });
+    }
+    const flagged = loadMismatchReport().find(r => r.id === req.params.id);
+    if (!flagged) {
+        return res.status(404).json({ error: 'Not a factory flagged by the province audit' });
+    }
+    try {
+        const result = await pool.query(`
+      UPDATE factories
+      SET lat = $1, lng = $2,
+          coord_source = 'admin', coord_precision = 'exact',
+          geom = ST_SetSRID(ST_MakePoint($2, $1), 4326)
+      WHERE id = $3
+        AND coord_source NOT IN ('admin', 'community')
+        AND abs(lat - $4) < 1e-6 AND abs(lng - $5) < 1e-6
+      RETURNING id, lat, lng, coord_source
+    `, [lat, lng, req.params.id, flagged.lat, flagged.lng]);
+        if (result.rowCount === 0) {
+            return res.status(409).json({
+                error: 'Position already corrected or changed since the audit ran',
+            });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Error correcting province mismatch:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
  * GET /api/admin/dbd-matches?queue=pending&limit=50&offset=0&search=
  *
  * The human review queue for DIW operator -> DBD company links.

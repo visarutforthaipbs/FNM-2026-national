@@ -16,6 +16,7 @@ import Navbar from "../components/Navbar";
 import AdminSetPositionModal from "../components/AdminSetPositionModal";
 import AdminDbdMatchQueue from "../components/AdminDbdMatchQueue";
 import AdminApproximateQueue from "../components/AdminApproximateQueue";
+import AdminProvinceMismatchQueue from "../components/AdminProvinceMismatchQueue";
 import type { ImpactType } from "../types/report";
 import { IMPACT_TYPE_META, FREQUENCY_META, DISTANCE_META } from "../types/report";
 import type { DistanceBand, ReportFrequency } from "../types/report";
@@ -65,7 +66,7 @@ interface UnmappedFactory {
   capital_investment: number | null;
 }
 
-type Tab = "reports" | "corrections" | "unmapped" | "approx" | "dbd";
+type Tab = "reports" | "corrections" | "unmapped" | "approx" | "mismatch" | "dbd";
 
 const TOKEN_KEY = "factory-nearme-admin-token";
 
@@ -97,6 +98,7 @@ const AdminPage = () => {
   // Factories already on the map, but at a derived position rather than a real
   // one. Distinct from `unmapped`, which is only those with no position at all.
   const [approxTotal, setApproxTotal] = useState<number | null>(null);
+  const [mismatchTotal, setMismatchTotal] = useState<number | null>(null);
 
   const authFetch = useCallback(
     async (path: string, init?: RequestInit) => {
@@ -299,6 +301,16 @@ const AdminPage = () => {
             <Button
               size="sm"
               borderRadius="full"
+              bg={tab === "mismatch" ? "primary.600" : "white"}
+              color={tab === "mismatch" ? "white" : "slate.600"}
+              _hover={{ bg: tab === "mismatch" ? "primary.700" : "slate.100" }}
+              onClick={() => setTab("mismatch")}
+            >
+              พิกัดผิดจังหวัด{mismatchTotal === null ? "" : ` (${mismatchTotal.toLocaleString()})`}
+            </Button>
+            <Button
+              size="sm"
+              borderRadius="full"
               bg={tab === "dbd" ? "primary.600" : "white"}
               color={tab === "dbd" ? "white" : "slate.600"}
               _hover={{ bg: tab === "dbd" ? "primary.700" : "slate.100" }}
@@ -310,7 +322,7 @@ const AdminPage = () => {
               size="sm"
               variant="ghost"
               color="slate.400"
-              isDisabled={tab === "dbd" || tab === "approx"}
+              isDisabled={tab === "dbd" || tab === "approx" || tab === "mismatch"}
               onClick={() => (tab === "unmapped" ? loadUnmapped(unmappedOffset, unmappedSearch) : loadQueues())}
             >
               รีเฟรช
@@ -623,6 +635,13 @@ const AdminPage = () => {
             On the map already, but derived rather than surveyed. */}
         {tab === "approx" && (
           <AdminApproximateQueue authFetch={authFetch} onTotalChange={setApproxTotal} />
+        )}
+
+        {/* ── Province tag vs coordinates ──
+            On the map, but in the wrong province: missing from where a
+            neighbour would look, present where it does not belong. */}
+        {tab === "mismatch" && (
+          <AdminProvinceMismatchQueue authFetch={authFetch} onTotalChange={setMismatchTotal} />
         )}
 
         {/* ── DBD ownership match review ──
