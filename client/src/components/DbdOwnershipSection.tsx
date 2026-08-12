@@ -63,20 +63,20 @@ function undisclosedReason(juristicType: string | null): string {
 }
 
 const BuildingIcon = () => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={4}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={4}>
     <path d="M4 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M16 9h3a1 1 0 0 1 1 1v11M2 21h20" />
     <path d="M8 7h4M8 11h4M8 15h4M8 19h4" />
   </Icon>
 );
 
 const PeopleIcon = () => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={3.5}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
   </Icon>
 );
 
 const GlobeIcon = () => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={3.5}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
     <circle cx="12" cy="12" r="9" />
     <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" />
   </Icon>

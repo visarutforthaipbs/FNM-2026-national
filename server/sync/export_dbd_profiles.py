@@ -48,7 +48,7 @@ def load_slug_map() -> dict[str, str]:
 
 # Abbreviated keys, as with markers: this file is downloaded by phones on mobile
 # data, and the long-form key names cost more than the values.
-def compact(row: dict, nations: dict[str, list[dict]]) -> dict:
+def compact(row: dict) -> dict:
     out: dict = {
         "j": row["jp_no"],
         "n": row["jp_name"],
@@ -82,17 +82,19 @@ def compact(row: dict, nations: dict[str, list[dict]]) -> dict:
         owners.append(entry)
     if owners:
         out["o"] = owners
-    # Aggregate shareholder nationality from DBD's /nations endpoint. This is
-    # the only source that answers for a limited company, and it answers with
-    # real percentages — so it is exported as the summary it is, never expanded
-    # into shareholders DBD did not name.
-    split = nations.get(row["jp_no"])
+    # Aggregate shareholder nationality, carried by the view straight from
+    # dbd.company_nations. This is the only source that answers for a limited
+    # company, and it answers with real percentages — so it is exported as the
+    # summary it is, never expanded into shareholders DBD did not name.
+    split = row.get("nationalities")
     if split:
         entries = []
         for item in split:
+            if not item.get("code"):
+                continue
             entry = {"c": item["code"]}
             if item.get("percent") is not None:
-                entry["p"] = item["percent"]
+                entry["p"] = float(item["percent"])
             if item.get("holders"):
                 entry["h"] = item["holders"]
             entries.append(entry)
@@ -115,21 +117,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Export DBD profiles to per-province JSON.")
     ap.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    ap.add_argument("--nations", type=Path,
-                    default=REPO / "server" / "data" / "dbd_nations.json",
-                    help="Aggregate nationality per juristic id, from dbd_nations.py")
     args = ap.parse_args()
     if not args.dsn:
         print("DATABASE_URL is required", file=sys.stderr)
         return 2
 
     slug_map = load_slug_map()
-    nations: dict[str, list[dict]] = {}
-    if args.nations and args.nations.exists():
-        nations = {k: v for k, v in json.loads(args.nations.read_text(encoding="utf-8")).items() if v}
-        print(f"🌏 nationality splits for {len(nations):,} companies")
-    else:
-        print(f"⚠️  no nationality file at {args.nations} — exporting without it")
 
     conn = psycopg2.connect(args.dsn)
     with conn, conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
@@ -152,7 +145,7 @@ def main() -> int:
         if not slug:
             unknown_province += 1
             continue
-        by_province[slug][row["factory_id"]] = compact(row, nations)
+        by_province[slug][row["factory_id"]] = compact(row)
 
     args.out.mkdir(parents=True, exist_ok=True)
     # Remove stale files so a province that lost all its links does not keep
@@ -160,6 +153,9 @@ def main() -> int:
     for existing in args.out.glob("*.json"):
         if existing.stem not in by_province:
             existing.unlink()
+
+    with_nat = sum(1 for r in rows if r.get("nationalities"))
+    print(f"🌏 {with_nat:,} of {len(rows):,} factory rows carry a nationality split")
 
     total = 0
     for slug, entries in sorted(by_province.items()):

@@ -32,6 +32,7 @@ import type {
   UserLocation,
 } from "../types/factory";
 import { getHazardLevel, getHazardGroup, HAZARD_COLORS, HAZARD_LABELS } from "../utils/hazard";
+import ZoningSection from "./ZoningSection";
 import { factoryTypeName } from "../utils/factoryTypes";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 import { haversineKm } from "../utils/geo";
@@ -43,7 +44,7 @@ import { useReportCounts } from "../hooks/useReports";
 
 // Inline Icons
 const SearchIcon = (props: IconProps) => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <circle cx="11" cy="11" r="8" />
     <line x1="21" y1="21" x2="16.65" y2="16.65" />
   </Icon>
@@ -334,8 +335,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 })
               }
               rightIcon={
-                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" boxSize={2.5}>
-                  <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={2.5}>
+                  <path d="M18 6L6 18M6 6l12 12" />
                 </Icon>
               }
               _hover={{ bg: "primary.100" }}
@@ -508,7 +509,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   be able to tell which agency said what. */}
               <Box as="section" aria-label="ข้อมูลโรงงานจากกรมโรงงานอุตสาหกรรม">
                 <Flex align="center" gap={2} mb={3} color="slate.500">
-                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={4}>
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={4}>
                     <path d="M2 20h20M4 20V10l5 3V10l5 3V7l5 3v10" />
                   </Icon>
                   <Text fontSize="10px" fontWeight="800" letterSpacing=".06em" lineHeight="1.4">
@@ -642,13 +643,29 @@ const Sidebar: React.FC<SidebarProps> = ({
                 }
               />
 
+              {/* SOURCE GROUP 2.5 — town planning, as DPT publishes it.
+                  This card states which zone the factory's coordinates fall in
+                  and stops there. Whether a given factory may lawfully operate
+                  in that zone turns on its จำพวก, its machinery, the annex
+                  schedules of the specific ministerial regulation and whether
+                  it predates the plan — so the card describes and does not
+                  adjudicate. */}
+              <ZoningSection
+                factoryId={selectedFactory.properties.เลขทะเบียน}
+                provinceTh={selectedFactory.properties.จังหวัด}
+                provinceEn={
+                  provinceCounts.find((p) => p.name_th === selectedFactory.properties.จังหวัด)
+                    ?.name_en ?? null
+                }
+              />
+
               {/* SOURCE GROUP 3 — citizen participation: community impact reports
                   and crowd-sourced location corrections. Kept last and under its
                   own header so it reads as the public's contribution, distinct
                   from the two government registries above. */}
               <Box as="section" aria-label="ข้อมูลจากภาคประชาชน" pt={2} borderTop="1px solid" borderColor="slate.100">
                 <Flex align="center" gap={2} mb={3} color="slate.500">
-                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={4}>
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={4}>
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                   </Icon>
                   <Text fontSize="10px" fontWeight="800" letterSpacing=".06em" lineHeight="1.4">
@@ -718,7 +735,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </Flex>
 
                 <Flex align="center" gap={1.5} mt={3} color="slate.500">
-                  <Icon viewBox="0 0 20 20" boxSize={3.5} fill="none" stroke="currentColor" strokeWidth="1.7">
+                  <Icon viewBox="0 0 20 20" boxSize={3.5} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     {hasReliableLocation ? (
                       <><circle cx="10" cy="10" r="3" /><circle cx="10" cy="10" r="7" /></>
                     ) : (
