@@ -14,6 +14,8 @@ import {
 } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 import AdminSetPositionModal from "../components/AdminSetPositionModal";
+import AdminDbdMatchQueue from "../components/AdminDbdMatchQueue";
+import AdminApproximateQueue from "../components/AdminApproximateQueue";
 import type { ImpactType } from "../types/report";
 import { IMPACT_TYPE_META, FREQUENCY_META, DISTANCE_META } from "../types/report";
 import type { DistanceBand, ReportFrequency } from "../types/report";
@@ -63,7 +65,7 @@ interface UnmappedFactory {
   capital_investment: number | null;
 }
 
-type Tab = "reports" | "corrections" | "unmapped";
+type Tab = "reports" | "corrections" | "unmapped" | "approx" | "dbd";
 
 const TOKEN_KEY = "factory-nearme-admin-token";
 
@@ -87,6 +89,14 @@ const AdminPage = () => {
   const [unmappedLoading, setUnmappedLoading] = useState(false);
   const [positionTarget, setPositionTarget] = useState<UnmappedFactory | null>(null);
   const UNMAPPED_PAGE_SIZE = 30;
+
+  // DBD ownership links awaiting a human decision. The queue owns its own
+  // loading; this is only the count shown on the tab.
+  const [dbdPending, setDbdPending] = useState<number | null>(null);
+
+  // Factories already on the map, but at a derived position rather than a real
+  // one. Distinct from `unmapped`, which is only those with no position at all.
+  const [approxTotal, setApproxTotal] = useState<number | null>(null);
 
   const authFetch = useCallback(
     async (path: string, init?: RequestInit) => {
@@ -165,7 +175,7 @@ const AdminPage = () => {
   }, [token, tab]);
 
   const moderate = async (
-    kind: Tab,
+    kind: "reports" | "corrections",
     id: string,
     action: "approve" | "reject"
   ) => {
@@ -278,8 +288,29 @@ const AdminPage = () => {
             </Button>
             <Button
               size="sm"
+              borderRadius="full"
+              bg={tab === "approx" ? "primary.600" : "white"}
+              color={tab === "approx" ? "white" : "slate.600"}
+              _hover={{ bg: tab === "approx" ? "primary.700" : "slate.100" }}
+              onClick={() => setTab("approx")}
+            >
+              ตำแหน่งโดยประมาณ{approxTotal === null ? "" : ` (${approxTotal.toLocaleString()})`}
+            </Button>
+            <Button
+              size="sm"
+              borderRadius="full"
+              bg={tab === "dbd" ? "primary.600" : "white"}
+              color={tab === "dbd" ? "white" : "slate.600"}
+              _hover={{ bg: tab === "dbd" ? "primary.700" : "slate.100" }}
+              onClick={() => setTab("dbd")}
+            >
+              เจ้าของ (DBD){dbdPending === null ? "" : ` (${dbdPending.toLocaleString()})`}
+            </Button>
+            <Button
+              size="sm"
               variant="ghost"
               color="slate.400"
+              isDisabled={tab === "dbd" || tab === "approx"}
               onClick={() => (tab === "unmapped" ? loadUnmapped(unmappedOffset, unmappedSearch) : loadQueues())}
             >
               รีเฟรช
@@ -560,6 +591,18 @@ const AdminPage = () => {
               </Flex>
             )}
           </Box>
+        )}
+
+        {/* ── Approximate positions ──
+            On the map already, but derived rather than surveyed. */}
+        {tab === "approx" && (
+          <AdminApproximateQueue authFetch={authFetch} onTotalChange={setApproxTotal} />
+        )}
+
+        {/* ── DBD ownership match review ──
+            Nothing here is public yet; confirming is what publishes it. */}
+        {tab === "dbd" && (
+          <AdminDbdMatchQueue authFetch={authFetch} onPendingTotal={setDbdPending} />
         )}
       </Box>
 

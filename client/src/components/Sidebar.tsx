@@ -38,6 +38,7 @@ import { haversineKm } from "../utils/geo";
 import FactoryCard from "./FactoryCard";
 import ReportSection from "./ReportSection";
 import LocationCorrectionModal from "./LocationCorrectionModal";
+import DbdOwnershipSection from "./DbdOwnershipSection";
 import { useReportCounts } from "../hooks/useReports";
 
 // Inline Icons
@@ -500,136 +501,182 @@ const Sidebar: React.FC<SidebarProps> = ({
               )}
             </Flex>
 
-            {/* Citizen impact reports — counts + submission CTA */}
-            <Box mb={5}>
-              <ReportSection
-                factory={selectedFactory}
-                counts={reportCounts.get(selectedFactory.properties.เลขทะเบียน)}
-              />
-            </Box>
-
-            <VStack spacing={4} align="stretch">
-              {/* Operator */}
-              <Box>
-                <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ผู้ประกอบการ</Text>
-                <Text fontSize="sm" color="slate.700" fontWeight="medium">
-                  {selectedFactory.properties.ผู้ประกอบก || (
-                    <Text as="span" color="slate.300">กำลังโหลด...</Text>
-                  )}
-                </Text>
-              </Box>
-
-              {/* Business type */}
-              <Box>
-                <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ประเภทกิจการ</Text>
-                <Text fontSize="sm" color="slate.700" fontWeight="medium">
-                  {selectedFactory.properties.ประกอบกิจก || (
-                    <Text as="span" color="slate.300">กำลังโหลด...</Text>
-                  )}
-                </Text>
-              </Box>
-
-              {/* Registration */}
-              <Box>
-                <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>เลขทะเบียน</Text>
-                <Text fontSize="sm" color="slate.700" fontFamily="'Inter', monospace">
-                  {selectedFactory.properties.เลขทะเบียน}
-                </Text>
-              </Box>
-
-              {/* Address */}
-              {selectedFactory.properties.ที่อยู่ && (
-                <Box>
-                  <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ที่อยู่</Text>
-                  <Text fontSize="sm" color="slate.700">
-                    {selectedFactory.properties.ที่อยู่}
+            <VStack spacing={5} align="stretch">
+              {/* SOURCE GROUP 1 — the DIW factory licence record. Grouped under
+                  its own agency label because the DBD company record below makes
+                  different claims from a different registry; a reader must always
+                  be able to tell which agency said what. */}
+              <Box as="section" aria-label="ข้อมูลโรงงานจากกรมโรงงานอุตสาหกรรม">
+                <Flex align="center" gap={2} mb={3} color="slate.500">
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={4}>
+                    <path d="M2 20h20M4 20V10l5 3V10l5 3V7l5 3v10" />
+                  </Icon>
+                  <Text fontSize="10px" fontWeight="800" letterSpacing=".06em" lineHeight="1.4">
+                    ข้อมูลโรงงาน · กรมโรงงานอุตสาหกรรม (DIW)
                   </Text>
-                </Box>
-              )}
-
-              {/* Stats */}
-              {(selectedFactory.properties.เงินลงทุน || selectedFactory.properties.แรงม้า || selectedFactory.properties.คนงานชาย || selectedFactory.properties.คนงานหญิง) && (
-                <Flex wrap="wrap" gap={4} pt={3} borderTop="1px solid" borderColor="slate.100">
-                  {selectedFactory.properties.เงินลงทุน ? (
-                    <Box>
-                      <Text fontSize="xs" color="slate.400">เงินลงทุน</Text>
-                      <Text fontSize="sm" fontWeight="bold" color="green.600">
-                        {selectedFactory.properties.เงินลงทุน.toLocaleString()} บาท
-                      </Text>
-                    </Box>
-                  ) : null}
-                  {selectedFactory.properties.แรงม้า ? (
-                    <Box>
-                      <Text fontSize="xs" color="slate.400">เครื่องจักร</Text>
-                      <Text fontSize="sm" fontWeight="bold" color="orange.600">
-                        {selectedFactory.properties.แรงม้า.toLocaleString()} HP
-                      </Text>
-                    </Box>
-                  ) : null}
-                  {(selectedFactory.properties.คนงานชาย || selectedFactory.properties.คนงานหญิง) ? (
-                    <Box>
-                      <Text fontSize="xs" color="slate.400">คนงาน</Text>
-                      <Text fontSize="sm" fontWeight="bold" color="blue.600">
-                        {((selectedFactory.properties.คนงานชาย || 0) + (selectedFactory.properties.คนงานหญิง || 0)).toLocaleString()} คน
-                      </Text>
-                    </Box>
-                  ) : null}
                 </Flex>
-              )}
 
-              {/* Phone */}
-              {selectedFactory.properties.โทรศัพท์ && (
-                <Button
-                  size="sm"
-                  width="full"
-                  colorScheme="green"
-                  variant="solid"
-                  mt={2}
-                  onClick={() => window.open(`tel:${selectedFactory.properties.โทรศัพท์}`)}
-                  leftIcon={
-                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </Icon>
-                  }
-                >
-                  โทร {selectedFactory.properties.โทรศัพท์}
-                </Button>
-              )}
+                <VStack spacing={4} align="stretch">
+                  {/* Operator */}
+                  <Box>
+                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ผู้ประกอบการ</Text>
+                    <Text fontSize="sm" color="slate.700" fontWeight="medium">
+                      {selectedFactory.properties.ผู้ประกอบก || (
+                        <Text as="span" color="slate.300">กำลังโหลด...</Text>
+                      )}
+                    </Text>
+                  </Box>
 
-              {/* Coordinates — with provenance so approximate positions are
-                  never mistaken for surveyed ones */}
-              <Box pt={2} borderTop="1px solid" borderColor="slate.100">
-                <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>พิกัด</Text>
-                <Text fontSize="xs" color="slate.500" fontFamily="'Inter', monospace">
-                  {selectedFactory.geometry.coordinates[1].toFixed(6)}, {selectedFactory.geometry.coordinates[0].toFixed(6)}
-                </Text>
-                {selectedFactory.properties.coordQuality && (
-                  <Badge
-                    mt={1.5}
-                    bg="orange.50"
-                    color="orange.700"
-                    borderRadius="full"
-                    px={2.5}
-                    fontSize="10px"
-                    fontWeight="600"
+                  {/* Business type */}
+                  <Box>
+                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ประเภทกิจการ</Text>
+                    <Text fontSize="sm" color="slate.700" fontWeight="medium">
+                      {selectedFactory.properties.ประกอบกิจก || (
+                        <Text as="span" color="slate.300">กำลังโหลด...</Text>
+                      )}
+                    </Text>
+                  </Box>
+
+                  {/* Registration */}
+                  <Box>
+                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>เลขทะเบียน</Text>
+                    <Text fontSize="sm" color="slate.700" fontFamily="'Inter', monospace">
+                      {selectedFactory.properties.เลขทะเบียน}
+                    </Text>
+                  </Box>
+
+                  {/* Address */}
+                  {selectedFactory.properties.ที่อยู่ && (
+                    <Box>
+                      <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ที่อยู่</Text>
+                      <Text fontSize="sm" color="slate.700">
+                        {selectedFactory.properties.ที่อยู่}
+                      </Text>
+                    </Box>
+                  )}
+
+                  {/* Stats */}
+                  {(selectedFactory.properties.เงินลงทุน || selectedFactory.properties.แรงม้า || selectedFactory.properties.คนงานชาย || selectedFactory.properties.คนงานหญิง) && (
+                    <Flex wrap="wrap" gap={4} pt={3} borderTop="1px solid" borderColor="slate.100">
+                      {selectedFactory.properties.เงินลงทุน ? (
+                        <Box>
+                          <Text fontSize="xs" color="slate.400">เงินลงทุน</Text>
+                          <Text fontSize="sm" fontWeight="bold" color="green.600">
+                            {selectedFactory.properties.เงินลงทุน.toLocaleString()} บาท
+                          </Text>
+                        </Box>
+                      ) : null}
+                      {selectedFactory.properties.แรงม้า ? (
+                        <Box>
+                          <Text fontSize="xs" color="slate.400">เครื่องจักร</Text>
+                          <Text fontSize="sm" fontWeight="bold" color="orange.600">
+                            {selectedFactory.properties.แรงม้า.toLocaleString()} HP
+                          </Text>
+                        </Box>
+                      ) : null}
+                      {(selectedFactory.properties.คนงานชาย || selectedFactory.properties.คนงานหญิง) ? (
+                        <Box>
+                          <Text fontSize="xs" color="slate.400">คนงาน</Text>
+                          <Text fontSize="sm" fontWeight="bold" color="blue.600">
+                            {((selectedFactory.properties.คนงานชาย || 0) + (selectedFactory.properties.คนงานหญิง || 0)).toLocaleString()} คน
+                          </Text>
+                        </Box>
+                      ) : null}
+                    </Flex>
+                  )}
+
+                  {/* Phone */}
+                  {selectedFactory.properties.โทรศัพท์ && (
+                    <Button
+                      size="sm"
+                      width="full"
+                      colorScheme="green"
+                      variant="solid"
+                      mt={2}
+                      onClick={() => window.open(`tel:${selectedFactory.properties.โทรศัพท์}`)}
+                      leftIcon={
+                        <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </Icon>
+                      }
+                    >
+                      โทร {selectedFactory.properties.โทรศัพท์}
+                    </Button>
+                  )}
+
+                  {/* Coordinates — with provenance so approximate positions are
+                      never mistaken for surveyed ones */}
+                  <Box pt={3} borderTop="1px solid" borderColor="slate.100">
+                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>พิกัด</Text>
+                    <Text fontSize="xs" color="slate.500" fontFamily="'Inter', monospace">
+                      {selectedFactory.geometry.coordinates[1].toFixed(6)}, {selectedFactory.geometry.coordinates[0].toFixed(6)}
+                    </Text>
+                    {selectedFactory.properties.coordQuality && (
+                      <Badge
+                        mt={1.5}
+                        bg="orange.50"
+                        color="orange.700"
+                        borderRadius="full"
+                        px={2.5}
+                        fontSize="10px"
+                        fontWeight="600"
+                      >
+                        {selectedFactory.properties.coordQuality === "centroid"
+                          ? "ตำแหน่งโดยประมาณ (ระดับตำบล)"
+                          : "ตำแหน่งโดยประมาณ (จากที่อยู่)"}
+                      </Badge>
+                    )}
+                  </Box>
+                </VStack>
+              </Box>
+
+              {/* SOURCE GROUP 2 — the DBD company record: who legally owns this
+                  factory, and the nationality of the shareholders DBD lists.
+                  Placed directly after ผู้ประกอบการ's group so the DIW operator
+                  name and the DBD juristic entity can be read against each other. */}
+              <DbdOwnershipSection
+                factoryId={selectedFactory.properties.เลขทะเบียน}
+                provinceEn={
+                  provinceCounts.find((p) => p.name_th === selectedFactory.properties.จังหวัด)
+                    ?.name_en ?? null
+                }
+              />
+
+              {/* SOURCE GROUP 3 — citizen participation: community impact reports
+                  and crowd-sourced location corrections. Kept last and under its
+                  own header so it reads as the public's contribution, distinct
+                  from the two government registries above. */}
+              <Box as="section" aria-label="ข้อมูลจากภาคประชาชน" pt={2} borderTop="1px solid" borderColor="slate.100">
+                <Flex align="center" gap={2} mb={3} color="slate.500">
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={4}>
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </Icon>
+                  <Text fontSize="10px" fontWeight="800" letterSpacing=".06em" lineHeight="1.4">
+                    ภาคประชาชน · รายงานและแก้ไขข้อมูล
+                  </Text>
+                </Flex>
+
+                <VStack spacing={4} align="stretch">
+                  {/* Citizen impact reports — counts + submission CTA */}
+                  <ReportSection
+                    factory={selectedFactory}
+                    counts={reportCounts.get(selectedFactory.properties.เลขทะเบียน)}
+                  />
+
+                  {/* Crowd-sourced location correction */}
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    color="slate.400"
+                    fontWeight="500"
+                    px={1}
+                    alignSelf="flex-start"
+                    _hover={{ color: "primary.600" }}
+                    onClick={onCorrectionOpen}
                   >
-                    {selectedFactory.properties.coordQuality === "centroid"
-                      ? "ตำแหน่งโดยประมาณ (ระดับตำบล)"
-                      : "ตำแหน่งโดยประมาณ (จากที่อยู่)"}
-                  </Badge>
-                )}
-                <Button
-                  mt={2}
-                  size="xs"
-                  variant="ghost"
-                  color="slate.400"
-                  fontWeight="500"
-                  px={1}
-                  _hover={{ color: "primary.600" }}
-                  onClick={onCorrectionOpen}
-                >
-                  ตำแหน่งไม่ถูกต้อง? ปักหมุดตำแหน่งจริง
-                </Button>
+                    ตำแหน่งไม่ถูกต้อง? ปักหมุดตำแหน่งจริง
+                  </Button>
+                </VStack>
               </Box>
             </VStack>
 

@@ -14,6 +14,7 @@ server/node_modules/
 server/.env
 server/sync/venv/
 server/sync/__pycache__/
+server/collector/operators.tsv
 __pycache__/
 *.pyc
 

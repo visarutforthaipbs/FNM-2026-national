@@ -53,6 +53,7 @@ import psycopg2.extras
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from collect import ARCHIVE_ROOT as DIW_ARCHIVE, last_accepted  # noqa: E402
+from dbd_archive import latest_match_records, operator_key  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")
@@ -139,8 +140,11 @@ def main() -> int:
         logger.error("DATABASE_URL not set and --dsn not given")
         return 2
 
-    records = [json.loads(l) for l in MATCHES.read_text(encoding="utf-8").splitlines() if l.strip()]
-    logger.info(f"{len(records):,} resolved operators in archive")
+    records, physical_lines, invalid_lines = latest_match_records(MATCHES)
+    logger.info(
+        f"{len(records):,} canonical operators from {physical_lines:,} archive lines"
+        + (f" ({invalid_lines:,} invalid ignored)" if invalid_lines else "")
+    )
 
     isic_map = diw_isic_by_operator()
 
@@ -151,18 +155,22 @@ def main() -> int:
     # legal_name -> business_id. The match was made on the name, and that is
     # what has to be joined back.
     cur.execute("select id, legal_name from public.businesses where legal_name is not null")
-    business_by_name: dict[str, str] = {}
+    business_by_name: dict[str, list[str]] = defaultdict(list)
     for bid, name in cur.fetchall():
-        business_by_name.setdefault(name.strip(), bid)
-    logger.info(f"{len(business_by_name):,} businesses available to link")
+        business_by_name[operator_key(name)].append(bid)
+    logger.info(
+        f"{sum(map(len, business_by_name.values())):,} business rows across "
+        f"{len(business_by_name):,} legal names available to link"
+    )
 
     counts = defaultdict(int)
-    juristic_rows, match_rows = [], []
+    juristic_by_jp: dict[str, tuple] = {}
+    match_by_business: dict[str, tuple] = {}
 
     for r in records:
-        oname = r.get("oname", "")
-        bid = business_by_name.get(oname.strip())
-        if not bid:
+        oname = operator_key(r.get("oname"))
+        business_ids = business_by_name.get(oname, [])
+        if not business_ids:
             counts["no_business_row"] += 1
             continue
 
@@ -178,19 +186,20 @@ def main() -> int:
             if (r.get("factories") or 0) == 1:
                 prov_agrees = bool(r.get("province")) and r.get("province") == r.get("dbd_province")
 
-            juristic_rows.append((
+            juristic_by_jp[jp_no] = (
                 jp_no, r.get("jp_name") or "", cand.get("jpTypeCode"), r.get("jp_type"),
                 cand.get("jpStatCode"), r.get("jp_status"), cand.get("jpNameOld"),
                 r.get("capital"), r.get("dbd_province"), cand.get("pvCode"),
                 cand.get("ampurCode"), cand.get("tumbonCode"), setup, submit,
                 cand.get("businessSizeCode"), cand.get("jpAge"), cand.get("address"),
                 cand.get("fiscalYear"), json.dumps(cand, ensure_ascii=False),
-            ))
+            )
 
-        match_rows.append((
-            bid, oname, r.get("core"), r.get("matched_query"), r.get("expected_form"),
-            jp_no, r["outcome"], r.get("candidates"), isic_ok, prov_agrees,
-        ))
+        for bid in business_ids:
+            match_by_business[bid] = (
+                bid, oname, r.get("core"), r.get("matched_query"), r.get("expected_form"),
+                jp_no, r["outcome"], r.get("candidates"), isic_ok, prov_agrees,
+            )
         counts[r["outcome"]] += 1
         if isic_ok is True:
             counts["isic_agrees"] += 1
@@ -202,8 +211,14 @@ def main() -> int:
         logger.info(f"  {k:<20} {v:>8,}")
 
     if args.dry_run:
-        logger.info("dry run — nothing written")
+        logger.info(
+            f"dry run — would write {len(juristic_by_jp):,} distinct juristic rows "
+            f"and {len(match_by_business):,} business matches"
+        )
         return 0
+
+    juristic_rows = list(juristic_by_jp.values())
+    match_rows = list(match_by_business.values())
 
     psycopg2.extras.execute_batch(cur, """
         insert into dbd.juristic (
@@ -228,6 +243,7 @@ def main() -> int:
           jp_no, outcome, candidates, isic_agrees, province_agrees
         ) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         on conflict (business_id) do update set
+          legal_name = excluded.legal_name,
           core_name = excluded.core_name,
           matched_query = excluded.matched_query,
           jp_no = case when dbd.operator_match.verified_by is null
@@ -241,7 +257,10 @@ def main() -> int:
     """, match_rows, page_size=500)
 
     conn.commit()
-    logger.info(f"✅ wrote {len(juristic_rows):,} juristic rows, {len(match_rows):,} matches")
+    logger.info(
+        f"✅ wrote {len(juristic_rows):,} distinct juristic rows, "
+        f"{len(match_rows):,} business matches"
+    )
     cur.close()
     conn.close()
     return 0

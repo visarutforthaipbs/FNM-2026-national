@@ -51,7 +51,6 @@ import hashlib
 import json
 import logging
 import os
-import random
 import sys
 import threading
 import time
@@ -60,6 +59,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dbd_client import DBDClient  # noqa: E402
+from dbd_archive import (  # noqa: E402
+    latest_match_records,
+    operator_key,
+    write_gzip_json_atomic,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -239,6 +243,113 @@ def name_variants(core: str) -> list[str]:
     return out
 
 
+def compare_key(value: str) -> str:
+    """
+    Comparison form of a name: normalized, with all internal spacing removed.
+
+    Thai does not put semantic spaces between words, so DIW's "เอส.เจ.ซี.คอนกรีต"
+    and DBD's "เอส.เจ.ซี. คอนกรีต" are the same name written twice, as are
+    "ปูนซิเมนต์ไทย(แก่งคอย)" and "ปูนซิเมนต์ไทย (แก่งคอย)", and DBD's own
+    "ลินเด้ (ประเทศไทย )" with its stray space. Comparing on spacing therefore
+    measures typing, not identity — and every one of those differences used to
+    cost 5 points, dropping a single unambiguous candidate from `exact` to
+    `probable`, where the public view then hid it.
+    """
+    return "".join(normalize_name(value).split())
+
+
+# How each legal form writes its own suffix, for suffix-qualified queries.
+FORM_SUFFIX: dict[str, str] = {
+    "บริษัทจำกัด": "จำกัด",
+    "บริษัทมหาชนจำกัด": "จำกัด (มหาชน)",
+}
+
+# Why a candidate's name counts as equal to ours. Recorded on every match so a
+# whole class can be audited — or revoked — later without re-crawling.
+BASIS_IDENTICAL = "identical"    # equal after suffix normalization
+BASIS_SPACING = "spacing"        # equal once spacing is ignored
+BASIS_VARIANT = "variant"        # equal to a known spelling variant
+
+
+def name_equality(jp_name: str, core: str, matched_query: str | None,
+                  original_empty: bool) -> str | None:
+    """
+    Say whether a DBD name is the same name as ours, and on what basis.
+
+    The variant rung is the only one that accepts a genuinely different
+    spelling, and it is admissible only when `original_empty` — that is, when a
+    search for the spelling DIW actually wrote returned nothing at all. That
+    condition is what makes it safe: it proves no company exists under DIW's
+    spelling, so the variant cannot be shadowing a different real company.
+    """
+    if normalize_name(jp_name) == normalize_name(core):
+        return BASIS_IDENTICAL
+    if compare_key(jp_name) == compare_key(core):
+        return BASIS_SPACING
+    if matched_query and original_empty and compare_key(jp_name) == compare_key(matched_query):
+        return BASIS_VARIANT
+    return None
+
+
+def query_plan(form: str, core: str) -> list[tuple[str, bool]]:
+    """
+    The query shapes to try, in order, as (query, is_original_spelling).
+
+    The bare core name comes first so that every query already in the archive
+    stays valid and no settled operator is re-fetched. Suffix-qualified shapes
+    are appended for the cases the bare name cannot settle: searching "เสริมสุข"
+    returns 1,135 rows sorted by name, with the real company far beyond any page
+    we would fetch, while "เสริมสุข จำกัด (มหาชน)" returns exactly one row — the
+    right one. Narrowing the question beats paging through the wrong answer.
+    """
+    plan: list[tuple[str, bool]] = []
+    seen: set[str] = set()
+    variants = name_variants(core)
+    for variant in variants:
+        if variant not in seen:
+            seen.add(variant)
+            plan.append((variant, variant == core))
+    suffix = FORM_SUFFIX.get(form)
+    if suffix:
+        for variant in variants:
+            query = f"{variant} {suffix}"
+            if query not in seen:
+                seen.add(query)
+                plan.append((query, False))
+    return plan
+
+
+# The one DBD status that means the entity is still trading. Everything else —
+# ควบ (merged), สิ้นสภาพ, เลิก, ร้าง — describes a company that cannot be
+# operating a factory today.
+STATUS_LIVE = "ยังดำเนินกิจการอยู่"
+
+# Best to worst. Used to keep the strongest result across query shapes.
+OUTCOME_RANK = {
+    "exact": 5,
+    "probable": 4,
+    "ambiguous": 3,
+    "form_mismatch": 2,
+    "no_match": 1,
+}
+
+
+def failure_outcome(error: Exception | str | None) -> str:
+    """Classify terminal source rejections without pretending they are matches.
+
+    DBD returns HTTP 400 for structurally invalid searches and HTTP 403 for a
+    small set of names its gateway refuses. Neither means "no company exists",
+    so preserve them as explicit non-matchable states instead of retrying them
+    forever or silently converting them to ``no_match``.
+    """
+    message = str(error or "")
+    if "400 Client Error" in message:
+        return "invalid_name"
+    if "403 Client Error" in message:
+        return "source_blocked"
+    return "error"
+
+
 def split_legal_form(oname: str) -> tuple[str | None, str]:
     """
     Return (expected DBD jpTypeDesc, core name) for a DIW operator name.
@@ -268,9 +379,10 @@ def blob_path(query: str) -> Path:
 def archive_response(query: str, payload: dict) -> Path:
     """Store the raw response verbatim, before any interpretation."""
     path = blob_path(query)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with gzip.open(path, "wt", encoding="utf-8") as fh:
-        json.dump({"query": query, "fetched_at": utc_now(), "response": payload}, fh, ensure_ascii=False)
+    write_gzip_json_atomic(
+        path,
+        {"query": query, "fetched_at": utc_now(), "response": payload},
+    )
     return path
 
 
@@ -285,13 +397,36 @@ def load_archived(query: str) -> dict | None:
         return None
 
 
-def score(candidates: list[dict], expected_form: str, core: str, province: str) -> tuple[dict | None, str, list]:
+def score(candidates: list[dict], expected_form: str, core: str, province: str,
+          matched_query: str | None = None,
+          original_empty: bool = False) -> tuple[dict | None, str, list]:
     """
     Choose among DBD candidates, and say how confident that choice is.
 
     Deliberately conservative: an ambiguous result is reported as ambiguous
     rather than resolved to a best guess. A wrong ownership claim about a real
     company is worse than an absent one.
+
+    Loosening *how names are compared* (see `name_equality`) must not loosen
+    *how confidently we conclude*, so two gates bound the whole function:
+
+      - Legal form stays a hard requirement. DBD really does hold both
+        "ไทยวา จำกัด (มหาชน)" and "ไทยวา จำกัด" as separate companies, and the
+        form is the only field that tells them apart.
+      - A name that fits more than one *operating* candidate of the right form
+        is ambiguous, whatever the tie-breakers say. Previously a single point
+        of province or liveness could split two identically-named companies and
+        return one of them as a confident answer; with a looser comparison that
+        would have become the main way to acquire a wrong match.
+
+    Liveness is part of that test rather than a tie-breaker after it, because
+    of what the registry actually contains: measured over the full archive, 233
+    of 239 names that fit two companies fit exactly one that is still trading,
+    the other being ควบ (merged) or สิ้นสภาพ (defunct) — the same business
+    before and after a restructuring, as with สยามคราฟท์อุตสาหกรรม or
+    ซีพี แอ็กซ์ตร้า. A factory operating today cannot be run by the dissolved
+    half, so that is not an ambiguity. Two *live* companies sharing a name is,
+    and there were 2 of those.
     """
     scored = []
     for c in candidates:
@@ -299,17 +434,18 @@ def score(candidates: list[dict], expected_form: str, core: str, province: str) 
         jp_name = (c.get("jpName") or "").strip()
         pv = ((c.get("locationProvince") or {}).get("pvDesc") or "").strip()
         status = ((c.get("jpStatus") or {}).get("jpStatDesc") or "").strip()
+        basis = name_equality(jp_name, core, matched_query, original_empty)
 
         points = 0
         if jp_type == expected_form:
             points += 10          # legal form is the one hard signal
-        if normalize_name(jp_name) == normalize_name(core):
-            points += 5           # exact core-name equality, suffixes ignored
+        if basis:
+            points += 5           # same name, on one of the allowed bases
         if province and pv == province:
             points += 1           # tie-break only: DBD holds the head office
-        if status == "ยังดำเนินกิจการอยู่":
+        if status == STATUS_LIVE:
             points += 1           # prefer a live entity over a dissolved one
-        scored.append((points, c, jp_type, jp_name, pv, status))
+        scored.append((points, c, jp_type, jp_name, pv, status, basis))
 
     if not scored:
         return None, "no_match", []
@@ -318,12 +454,36 @@ def score(candidates: list[dict], expected_form: str, core: str, province: str) 
     if best[0] < 10:
         # Nothing matched on legal form; anything else is a coincidence of name.
         return None, "form_mismatch", scored
+
+    name_matched = [e for e in scored if e[6] and e[2] == expected_form]
+    if len(name_matched) > 1:
+        live = [e for e in name_matched if e[5] == STATUS_LIVE]
+        if len(live) != 1:
+            # Either several companies of this name are trading, or none is.
+            # No tie-break can honestly choose between them.
+            return best[1], "ambiguous", scored
+        # Exactly one of them can be running a factory today. Pick it
+        # explicitly rather than by points, which province agreement could
+        # otherwise swing towards the dissolved one.
+        chosen = live[0]
+        return chosen[1], "exact" if chosen[0] >= 15 else "probable", scored
     if len(scored) > 1 and scored[1][0] == best[0]:
         return best[1], "ambiguous", scored
     return best[1], "exact" if best[0] >= 15 else "probable", scored
 
 
-def resolve_one(oname: str, province: str, count: int, limiter: RateLimiter) -> dict:
+def basis_of(scored: list, match: dict | None) -> str | None:
+    """The name-equality basis recorded for the candidate that won."""
+    if not match:
+        return None
+    for entry in scored:
+        if entry[1] is match:
+            return entry[6]
+    return None
+
+
+def resolve_one(oname: str, province: str, count: int,
+                limiter: RateLimiter | None, offline: bool = False) -> dict:
     """
     Resolve a single operator. Runs on a worker thread; touches no shared state
     except the limiter and the archive, which is content-addressed by query and
@@ -333,54 +493,108 @@ def resolve_one(oname: str, province: str, count: int, limiter: RateLimiter) -> 
     if form is None:
         return {"oname": oname, "province": province, "factories": count,
                 "outcome": "not_juristic", "resolved_at": utc_now()}
+    if not core:
+        return {
+            "oname": oname,
+            "core": core,
+            "province": province,
+            "factories": count,
+            "outcome": "invalid_name",
+            "error": "legal-form prefix has no company name",
+            "resolved_at": utc_now(),
+        }
 
-    # Try the name as written, then known spelling variants. Each query is
-    # archived under its own key so a later rule change can replay them without
-    # touching DBD again.
-    payload, used_query, cached = None, core, True
+    # Walk the query plan, keeping the strongest outcome any shape produced.
+    # Each query is archived under its own key so a later rule change can replay
+    # them without touching DBD again.
+    best_rec: dict | None = None
     last_error = None
-    for variant in name_variants(core):
-        archived = load_archived(variant)
-        if archived is not None:
-            payload = archived
-        else:
-            # One retry after a rate-limit rejection: the limiter has already
-            # halved itself by then, so the second attempt goes out at a rate
-            # the server has not refused.
-            payload = None
-            for attempt in (1, 2):
-                limiter.acquire()
-                try:
-                    payload = client_for_thread().search(variant)
-                    archive_response(variant, payload)
-                    cached = False
-                    limiter.ok()
-                    break
-                except Exception as exc:
-                    last_error = exc
-                    throttled = "429" in str(exc)
-                    limiter.penalise(hard=throttled)
-                    payload = None
-                    if not throttled or attempt == 2:
-                        break
-                    time.sleep(2.0)
-            if payload is None:
-                continue
-        if (payload or {}).get("contents"):
-            used_query = variant
+    saw_payload = False
+    all_cached = True
+    original_empty = False
+
+    for query, is_original in query_plan(form, core):
+        payload, error, from_cache = search_once(query, limiter, offline=offline)
+        if payload is None:
+            last_error = error or last_error
+            continue
+        saw_payload = True
+        all_cached = all_cached and from_cache
+        contents = payload.get("contents") or []
+        if is_original and not contents:
+            # No company answers to the spelling DIW wrote. This is what later
+            # licenses a spelling variant to stand in for it.
+            original_empty = True
+        if not contents:
+            continue
+
+        match, outcome, scored = score(contents, form, core, province,
+                                       matched_query=query,
+                                       original_empty=original_empty)
+        rec = build_record(oname, core, form, province, count, outcome,
+                           len(contents), query, match, basis_of(scored, match))
+        if best_rec is None or OUTCOME_RANK[outcome] > OUTCOME_RANK[best_rec["outcome"]]:
+            best_rec = rec
+        if outcome == "exact":
             break
 
-    if payload is None:
+    if not saw_payload:
         return {"oname": oname, "core": core, "province": province, "factories": count,
-                "outcome": "error", "error": str(last_error), "resolved_at": utc_now()}
+                "outcome": failure_outcome(last_error), "error": str(last_error),
+                "resolved_at": utc_now()}
 
-    contents = payload.get("contents") or []
-    match, outcome, _ = score(contents, form, core, province)
+    if best_rec is None:
+        best_rec = build_record(oname, core, form, province, count, "no_match",
+                                0, core, None, None)
+    best_rec["from_cache"] = all_cached
+    return best_rec
+
+
+def search_once(query: str, limiter: RateLimiter | None,
+                offline: bool = False) -> tuple[dict | None, Exception | None, bool]:
+    """
+    Run one search, preferring the archive. Returns (payload, error, from_cache).
+
+    `offline` restricts the lookup to what has already been archived, which is
+    what lets a scoring change be replayed and reviewed without sending a single
+    request to DBD.
+
+    One retry after a rate-limit rejection: the limiter has already halved
+    itself by then, so the second attempt goes out at a rate the server has not
+    refused.
+    """
+    archived = load_archived(query)
+    if archived is not None:
+        return archived, None, True
+    if offline or limiter is None:
+        return None, None, True
+
+    last_error = None
+    for attempt in (1, 2):
+        limiter.acquire()
+        try:
+            payload = client_for_thread().search(query)
+            archive_response(query, payload)
+            limiter.ok()
+            return payload, None, False
+        except Exception as exc:
+            last_error = exc
+            throttled = "429" in str(exc)
+            limiter.penalise(hard=throttled)
+            if not throttled or attempt == 2:
+                break
+            time.sleep(2.0)
+    return None, last_error, False
+
+
+def build_record(oname: str, core: str, form: str, province: str, count: int,
+                 outcome: str, candidates: int, query: str,
+                 match: dict | None, basis: str | None) -> dict:
     rec = {
         "oname": oname, "core": core, "expected_form": form,
         "province": province, "factories": count,
-        "outcome": outcome, "candidates": len(contents), "matched_query": used_query,
-        "from_cache": cached, "resolved_at": utc_now(),
+        "outcome": outcome, "candidates": candidates, "matched_query": query,
+        "resolved_at": utc_now(),
     }
     if match:
         rec.update({
@@ -391,37 +605,44 @@ def resolve_one(oname: str, province: str, count: int, limiter: RateLimiter) -> 
             "dbd_province": ((match.get("locationProvince") or {}).get("pvDesc") or "").strip(),
             "capital": match.get("capAmt"),
             "setup_obj_code": match.get("setupObjCode"),
+            "match_basis": basis,
         })
     return rec
 
 
 def resolve(rows: list[tuple[str, str, int]], limit: int | None, refresh: bool,
-            rate: float, workers: int) -> None:
+            rate: float, workers: int) -> int:
     ARCHIVE.mkdir(parents=True, exist_ok=True)
+    input_keys = {operator_key(row[0]) for row in rows}
     # Only *settled* outcomes count as done. An "error" row means the request
     # failed, not that the operator has no match — treating it as complete would
     # bake a transient 429 into the dataset as a permanent gap.
     done, errored = set(), set()
     if MATCHES.exists() and not refresh:
-        for line in MATCHES.read_text(encoding="utf-8").splitlines():
-            try:
-                rec = json.loads(line)
-            except Exception:
-                continue
+        current, physical_lines, invalid_lines = latest_match_records(MATCHES)
+        for rec in current:
+            key = operator_key(rec.get("oname"))
             if rec.get("outcome") == "error":
-                errored.add(rec["oname"])
+                errored.add(key)
             else:
-                done.add(rec["oname"])
-        errored -= done
-        logger.info(f"resuming — {len(done):,} settled, {len(errored):,} to retry after earlier errors")
+                done.add(key)
+        logger.info(
+            f"resuming — {len(done):,} settled, {len(errored):,} to retry "
+            f"from {physical_lines:,} history lines"
+            + (f" ({invalid_lines:,} invalid ignored)" if invalid_lines else "")
+        )
 
     # Retry earlier failures first — they are the known gaps.
-    todo = [r for r in rows if r[0] in errored] + [r for r in rows if r[0] not in done and r[0] not in errored]
+    todo = [r for r in rows if operator_key(r[0]) in errored]
+    todo += [
+        r for r in rows
+        if operator_key(r[0]) not in done and operator_key(r[0]) not in errored
+    ]
     if limit is not None:
         todo = todo[:limit]
     if not todo:
         logger.info("nothing left to resolve")
-        return
+        return len(errored & input_keys)
 
     limiter = RateLimiter(rate)
     stats: dict[str, int] = {}
@@ -432,14 +653,24 @@ def resolve(rows: list[tuple[str, str, int]], limit: int | None, refresh: bool,
     # stays consistent without a second lock.
     with MATCHES.open("a", encoding="utf-8") as out:
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
-            futures = {pool.submit(resolve_one, o, p, c, limiter): o for o, p, c in todo}
+            futures = {
+                pool.submit(resolve_one, o, p, c, limiter): (o, p, c)
+                for o, p, c in todo
+            }
             for n, fut in enumerate(concurrent.futures.as_completed(futures), 1):
                 try:
                     rec = fut.result()
                 except Exception as exc:
-                    logger.warning(f"worker failed for {futures[fut]!r}: {exc}")
-                    stats["error"] = stats.get("error", 0) + 1
-                    continue
+                    oname, province, count = futures[fut]
+                    logger.warning(f"worker failed for {oname!r}: {exc}")
+                    rec = {
+                        "oname": oname,
+                        "province": province,
+                        "factories": count,
+                        "outcome": "error",
+                        "error": str(exc),
+                        "resolved_at": utc_now(),
+                    }
                 out.write(json.dumps(rec, ensure_ascii=False) + "\n")
                 out.flush()
                 stats[rec["outcome"]] = stats.get(rec["outcome"], 0) + 1
@@ -457,18 +688,104 @@ def resolve(rows: list[tuple[str, str, int]], limit: int | None, refresh: bool,
         logger.info(f"  {k:<16} {v:>8,}")
     logger.info(f"  {'elapsed':<16} {elapsed/60:>7.1f} min at {len(todo)/max(elapsed,1e-9):.1f}/s")
 
+    current, _, _ = latest_match_records(MATCHES)
+    unresolved = sum(
+        rec.get("outcome") == "error"
+        for rec in current
+        if operator_key(rec.get("oname")) in input_keys
+    )
+    if unresolved:
+        logger.error(f"{unresolved:,} operators remain unresolved after retries")
+    return unresolved
+
+
+def rescore(rows: list[tuple[str, str, int]], sample: int) -> int:
+    """
+    Replay the scoring rules over the existing archive and report what changes.
+
+    Sends no requests: every answer already on disk is re-read and re-judged, so
+    a scoring change can be inspected before it is allowed to write anything.
+    Promotions into `exact` are the ones that matter, because `dbd.factory_owner`
+    publishes that tier — so they are printed in full, old name against new, for
+    a human to disagree with.
+    """
+    current = {operator_key(rec.get("oname")): rec
+               for rec in latest_match_records(MATCHES)[0]}
+    transitions: dict[tuple[str, str], int] = {}
+    bases: dict[str, int] = {}
+    promotions: list[tuple[str, dict, dict]] = []
+    unchanged = missing_archive = 0
+
+    for oname, province, count in rows:
+        before = current.get(operator_key(oname))
+        if before is None:
+            continue
+        after = resolve_one(oname, province, count, None, offline=True)
+        if after["outcome"] == "error" and not after.get("jp_no"):
+            missing_archive += 1
+            continue
+        old, new = before.get("outcome", "?"), after["outcome"]
+        if old == new and before.get("jp_no") == after.get("jp_no"):
+            unchanged += 1
+            continue
+        transitions[(old, new)] = transitions.get((old, new), 0) + 1
+        if new == "exact":
+            bases[after.get("match_basis") or "?"] = bases.get(after.get("match_basis") or "?", 0) + 1
+            promotions.append((oname, before, after))
+
+    print(f"replayed {len(rows):,} operators against the archive")
+    print(f"  unchanged                {unchanged:>8,}")
+    print(f"  no archived response     {missing_archive:>8,}")
+    print(f"  changed                  {sum(transitions.values()):>8,}")
+    print()
+    print(f"{'from':<16}{'to':<16}{'operators':>10}")
+    print("-" * 42)
+    for (old, new), n in sorted(transitions.items(), key=lambda kv: -kv[1]):
+        print(f"{old:<16}{new:<16}{n:>10,}")
+
+    if bases:
+        print()
+        print("newly published (exact) by name-equality basis:")
+        for basis, n in sorted(bases.items(), key=lambda kv: -kv[1]):
+            print(f"   {basis:<12}{n:>8,}")
+
+    print()
+    print(f"--- sample of promotions into exact (showing {min(sample, len(promotions))} "
+          f"of {len(promotions):,}) ---")
+    for oname, before, after in promotions[:sample]:
+        print(f"  DIW  {oname}")
+        print(f"  DBD  {after.get('jp_name')}  [{after.get('jp_type')}] "
+              f"{after.get('dbd_province')}  jp_no={after.get('jp_no')}")
+        print(f"       was {before.get('outcome')}"
+              f"{'' if before.get('jp_no') == after.get('jp_no') else ' (different company!)'}"
+              f" · basis={after.get('match_basis')} · query={after.get('matched_query')!r}")
+        print()
+
+    changed_company = sum(
+        1 for _, b, a in promotions
+        if b.get("jp_no") and b.get("jp_no") != a.get("jp_no")
+    )
+    if changed_company:
+        print(f"⚠️  {changed_company:,} promotions point at a DIFFERENT company than "
+              f"the previous record — review these before applying")
+    return changed_company
+
 
 def report() -> None:
     if not MATCHES.exists():
         print("No matches yet.")
         return
-    recs = [json.loads(l) for l in MATCHES.read_text(encoding="utf-8").splitlines() if l.strip()]
+    recs, physical_lines, invalid_lines = latest_match_records(MATCHES)
     from collections import Counter
     outcomes = Counter(r["outcome"] for r in recs)
     factories = Counter()
     for r in recs:
         factories[r["outcome"]] += r.get("factories", 0) or 0
 
+    print(
+        f"canonical operators: {len(recs):,} from {physical_lines:,} history lines"
+        + (f" ({invalid_lines:,} invalid ignored)" if invalid_lines else "")
+    )
     print(f"{'outcome':<16} {'operators':>10} {'factories':>11}")
     print("-" * 40)
     for o, n in outcomes.most_common():
@@ -494,6 +811,10 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=DEFAULT_WORKERS,
                     help=f"Concurrent workers, capped by --rate (default {DEFAULT_WORKERS})")
     ap.add_argument("--report", action="store_true", help="Summarise what has been resolved")
+    ap.add_argument("--rescore", action="store_true",
+                    help="Re-judge the existing archive offline and report what would change")
+    ap.add_argument("--sample", type=int, default=25,
+                    help="Promotions to print in full under --rescore (default 25)")
     args = ap.parse_args()
 
     if args.report:
@@ -502,10 +823,12 @@ def main() -> int:
     if not args.input:
         ap.error("--input is required (or use --report)")
 
-    rows = []
+    rows_by_name: dict[str, tuple[str, str, int]] = {}
+    physical_input_rows = 0
     for line in Path(args.input).read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
+        physical_input_rows += 1
         parts = [p.strip() for p in line.split("\t")]
         name = parts[0]
         province = parts[1] if len(parts) > 1 else ""
@@ -514,14 +837,34 @@ def main() -> int:
         except ValueError:
             count = 0
         if name:
-            rows.append((name, province, count))
+            key = operator_key(name)
+            previous = rows_by_name.get(key)
+            candidate = (name.strip(), province, count)
+            # Duplicates in operators.tsv are export artifacts. Prefer the row
+            # carrying real province/factory context, then the larger count.
+            if previous is None or (bool(province), count) > (bool(previous[1]), previous[2]):
+                rows_by_name[key] = candidate
+
+    rows = list(rows_by_name.values())
+    if physical_input_rows != len(rows):
+        logger.info(
+            f"collapsed {physical_input_rows - len(rows):,} duplicate input rows "
+            f"to {len(rows):,} operator names"
+        )
 
     # Most factories first: if a run is interrupted, the operators already done
     # are the ones explaining the most of the map.
     rows.sort(key=lambda r: -r[2])
     logger.info(f"📋 {len(rows):,} operators to consider · archive {ARCHIVE}")
-    resolve(rows, args.limit, args.refresh, args.rate, args.workers)
-    return 0
+
+    if args.rescore:
+        # Report only. Nothing is written and no request is sent, so the result
+        # can be argued with before it becomes data.
+        rescore(rows[: args.limit] if args.limit else rows, args.sample)
+        return 0
+
+    unresolved = resolve(rows, args.limit, args.refresh, args.rate, args.workers)
+    return 1 if unresolved else 0
 
 
 if __name__ == "__main__":

@@ -55,6 +55,10 @@ interface Factory {
   province: string | null;
   district: string | null;
   sub_district: string | null;
+  /** Present when the factory already has an approximate position to correct. */
+  lat?: number | null;
+  lng?: number | null;
+  coord_precision?: string | null;
 }
 
 interface AdminSetPositionModalProps {
@@ -63,7 +67,14 @@ interface AdminSetPositionModalProps {
   factory: Factory | null;
   onSaved: (id: string, lat: number, lng: number) => void;
   authFetch: (path: string, init?: RequestInit) => Promise<unknown>;
+  /** Admin collection to POST to. Defaults to the no-coordinates queue. */
+  endpoint?: string;
 }
+
+const PRECISION_LABEL: Record<string, string> = {
+  tambon: "ตำแหน่งโดยประมาณระดับตำบล (คลาดเคลื่อน 2–5 กม.)",
+  street: "ตำแหน่งโดยประมาณจากที่อยู่",
+};
 
 const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
   isOpen,
@@ -71,6 +82,7 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
   factory,
   onSaved,
   authFetch,
+  endpoint = "/api/admin/unmapped-factories",
 }) => {
   const [position, setPosition] = useState<[number, number]>(THAILAND_CENTER);
   const [latInput, setLatInput] = useState("");
@@ -78,15 +90,23 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
+  // Where the pin started. Saving is only allowed once it has actually moved,
+  // which is what stops a reviewer from certifying a tambon centroid as an
+  // exact position simply by opening the dialog and pressing save.
+  const startRef = useRef<[number, number]>(THAILAND_CENTER);
 
   useEffect(() => {
-    if (isOpen) {
-      setPosition(THAILAND_CENTER);
-      setLatInput("");
-      setLngInput("");
-      setError(null);
-    }
-  }, [isOpen, factory?.id]);
+    if (!isOpen) return;
+    const start: [number, number] =
+      typeof factory?.lat === "number" && typeof factory?.lng === "number"
+        ? [factory.lat, factory.lng]
+        : THAILAND_CENTER;
+    startRef.current = start;
+    setPosition(start);
+    setLatInput(start === THAILAND_CENTER ? "" : start[0].toFixed(6));
+    setLngInput(start === THAILAND_CENTER ? "" : start[1].toFixed(6));
+    setError(null);
+  }, [isOpen, factory?.id, factory?.lat, factory?.lng]);
 
   const applyTypedCoords = () => {
     const lat = parseFloat(latInput);
@@ -99,14 +119,15 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
     .join(" ");
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
-  const hasValidPosition = position[0] !== THAILAND_CENTER[0] || position[1] !== THAILAND_CENTER[1];
+  const hasMoved =
+    position[0] !== startRef.current[0] || position[1] !== startRef.current[1];
 
   const handleSave = async () => {
     if (!factory) return;
     setIsSaving(true);
     setError(null);
     try {
-      await authFetch(`/api/admin/unmapped-factories/${encodeURIComponent(factory.id)}`, {
+      await authFetch(`${endpoint}/${encodeURIComponent(factory.id)}`, {
         method: "POST",
         body: JSON.stringify({ lat: position[0], lng: position[1] }),
       });
@@ -154,6 +175,22 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
           <Text mt={1} mb={3} fontSize="10px" color="slate.400">
             เปิดดูตำแหน่งจริง แล้วคัดลอกพิกัด (คลิกขวา → "What's here?") มาใส่ด้านล่าง
           </Text>
+
+          {factory.coord_precision && PRECISION_LABEL[factory.coord_precision] && (
+            <Text
+              mb={3}
+              px={3}
+              py={2}
+              bg="orange.50"
+              color="orange.800"
+              borderRadius="lg"
+              fontSize="11px"
+              lineHeight="1.6"
+            >
+              หมุดตั้งต้นคือ{PRECISION_LABEL[factory.coord_precision]} —
+              ต้องย้ายหมุดไปยังตำแหน่งจริงก่อนจึงจะบันทึกได้
+            </Text>
+          )}
 
           <Flex gap={2} mb={3}>
             <Input
@@ -222,7 +259,7 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
               bg="primary.600"
               color="white"
               borderRadius="xl"
-              isDisabled={!hasValidPosition}
+              isDisabled={!hasMoved}
               isLoading={isSaving}
               loadingText="กำลังบันทึก..."
               onClick={handleSave}

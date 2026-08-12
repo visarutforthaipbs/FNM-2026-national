@@ -51,6 +51,7 @@ import psycopg2.extras
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dbd_client import DBDClient  # noqa: E402
 from dbd_resolve import RateLimiter  # noqa: E402
+from dbd_archive import redact_sensitive, write_gzip_json_atomic  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")
@@ -71,10 +72,11 @@ def raw_path(jp_no: str, kind: str) -> Path:
 
 def archive(jp_no: str, kind: str, payload) -> None:
     p = raw_path(jp_no, kind)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    with gzip.open(p, "wt", encoding="utf-8") as fh:
-        json.dump({"jp_no": jp_no, "kind": kind, "fetched_at": utc_now(), "response": payload},
-                  fh, ensure_ascii=False)
+    safe_payload = redact_sensitive(payload) if kind in ("committees", "partners") else payload
+    write_gzip_json_atomic(
+        p,
+        {"jp_no": jp_no, "kind": kind, "fetched_at": utc_now(), "response": safe_payload},
+    )
 
 
 def load_raw(jp_no: str, kind: str):
@@ -112,11 +114,8 @@ def person_name(rec: dict) -> str:
 # the whole point of this dataset. Everything below is dropped before storage
 # rather than filtered at read time, so it cannot leak through a later view,
 # an export, or a debugging query against `raw`.
-PII_FIELDS = ("cmtNo", "address", "phoneNo", "zipCode", "tumbonCode", "ampurCode", "pvCode")
-
-
 def redact(rec: dict) -> dict:
-    return {k: v for k, v in rec.items() if k not in PII_FIELDS}
+    return redact_sensitive(rec)
 
 
 def num(value):
@@ -158,15 +157,23 @@ def main() -> int:
         join dbd.operator_match m on m.jp_no = j.jp_no
         join public.businesses b on b.id = m.business_id
         left join public.factories f on f.business_id = b.id and f.is_active
-        where (%s or not exists (select 1 from dbd.committee c where c.jp_no = j.jp_no)
-                  and not exists (select 1 from dbd.financial x where x.jp_no = j.jp_no))
         group by j.jp_no, j.jp_type_code
         order by factories desc
-    """, (args.refresh,))
-    targets = cur.fetchall()
+    """)
+    all_companies = cur.fetchall()
+    if args.refresh:
+        targets = all_companies
+    else:
+        targets = [
+            row for row in all_companies
+            if any(load_raw(row[0], kind) is None for kind in ("profile", "committees", "partners"))
+        ]
     if args.limit:
         targets = targets[: args.limit]
-    logger.info(f"{len(targets):,} companies to fetch")
+    logger.info(
+        f"{len(targets):,} companies with missing endpoint archives "
+        f"out of {len(all_companies):,} linked juristic entities"
+    )
 
     client = DBDClient()
     limiter = RateLimiter(args.rate)
@@ -265,9 +272,16 @@ def main() -> int:
     logger.info("=" * 56)
     for k, v in stats.items():
         logger.info(f"  {k:<12} {v:>8,}")
+    missing_after = sum(
+        load_raw(jp_no, kind) is None
+        for jp_no, _, _ in all_companies
+        for kind in ("profile", "committees", "partners")
+    )
+    if missing_after:
+        logger.error(f"{missing_after:,} endpoint archives are still missing or unreadable")
     cur.close()
     conn.close()
-    return 0
+    return 1 if stats["errors"] or missing_after else 0
 
 
 if __name__ == "__main__":

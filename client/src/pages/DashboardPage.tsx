@@ -30,9 +30,40 @@ import {
   ModalBody,
   ModalCloseButton
 } from '@chakra-ui/react';
+import type { IconProps } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
 import { factoryTypeName } from '../utils/factoryTypes';
 import { parseFactoryTypeCode } from '../utils/hazard';
+
+interface DashboardStats {
+  total: number;
+  highRiskCount: number;
+  totalCapital: number;
+  totalWorkers: number;
+  countByType: Record<string, number>;
+  countByProvince?: Record<string, number>;
+  countByIndustry?: Record<string, number>;
+  sortedProvinces: Array<[string, number]>;
+  topProvinces: Array<[string, number]>;
+  totalProvinces: number;
+}
+
+interface MetricCardProps {
+  title: string;
+  value: string;
+  subtitle: string;
+  icon: React.ComponentType<IconProps>;
+  color: string;
+}
+
+interface TypeStatCardProps {
+  type?: string;
+  name: string;
+  count: number;
+  total: number;
+  color: string;
+  bg: string;
+}
 
 interface FactoryExplorerItem {
   id: string;
@@ -52,7 +83,7 @@ interface FactoryExplorerItem {
 }
 
 const DashboardPage = () => {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Province-level Explorer States
@@ -85,8 +116,8 @@ const DashboardPage = () => {
         return res.json();
       })
       .then((data) => {
-        const sortedProvinces = Object.entries(data.countByProvince || {})
-            .sort((a: any, b: any) => b[1] - a[1]);
+        const sortedProvinces: Array<[string, number]> = (Object.entries(data.countByProvince || {}) as Array<[string, number]>)
+            .sort((a, b) => b[1] - a[1]);
 
         setStats({
             ...data,
@@ -114,8 +145,8 @@ const DashboardPage = () => {
       return;
     }
 
-    const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL;
-    const supabaseKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY;
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
       setProvinceError("ระบบฐานข้อมูลไม่พร้อมใช้งาน (Missing credentials)");
@@ -320,7 +351,7 @@ const DashboardPage = () => {
     );
   }
 
-  if (!stats) return null;
+  if (!stats || !displayStats) return null;
 
   return (
     <Box minH="100vh" w="full" bg="slate.50">
@@ -654,7 +685,7 @@ const DashboardPage = () => {
               </Text>
               
               <VStack spacing={4} align="stretch">
-                {stats.topProvinces.map(([province, count]: any, idx: number) => {
+                {stats.topProvinces.map(([province, count]: [string, number], idx: number) => {
                   const max = stats.topProvinces[0]?.[1] || 1;
                   const percentage = (count / max) * 100;
                   return (
@@ -746,22 +777,22 @@ const DashboardPage = () => {
                         <Tr>
                           <Td fontWeight="medium">กรุงเทพฯ และปริมณฑล</Td>
                           <Td isNumeric fontWeight="bold" color="primary.600">
-                             {stats.sortedProvinces.filter((p: any) => ["กรุงเทพมหานคร", "สมุทรปราการ", "นนทบุรี", "ปทุมธานี", "สมุทรสาคร", "นครปฐม"].includes(p[0]))
-                                  .reduce((acc: any, curr: any) => acc + curr[1], 0).toLocaleString()}
+                             {stats.sortedProvinces.filter((p: [string, number]) => ["กรุงเทพมหานคร", "สมุทรปราการ", "นนทบุรี", "ปทุมธานี", "สมุทรสาคร", "นครปฐม"].includes(p[0]))
+                                  .reduce((acc: number, curr: [string, number]) => acc + curr[1], 0).toLocaleString()}
                           </Td>
                         </Tr>
                         <Tr>
                           <Td fontWeight="medium">ภาคตะวันออก (EEC)</Td>
                           <Td isNumeric fontWeight="bold" color="primary.600">
-                             {stats.sortedProvinces.filter((p: any) => ["ชลบุรี", "ระยอง", "ฉะเชิงเทรา"].includes(p[0]))
-                                  .reduce((acc: any, curr: any) => acc + curr[1], 0).toLocaleString()}
+                             {stats.sortedProvinces.filter((p: [string, number]) => ["ชลบุรี", "ระยอง", "ฉะเชิงเทรา"].includes(p[0]))
+                                  .reduce((acc: number, curr: [string, number]) => acc + curr[1], 0).toLocaleString()}
                           </Td>
                         </Tr>
                         <Tr>
                           <Td fontWeight="medium">ภาคตะวันออกเฉียงเหนือ</Td>
                           <Td isNumeric fontWeight="bold" color="primary.600">
-                            {stats.sortedProvinces.filter((p: any) => ["นครราชสีมา", "ขอนแก่น", "อุบลราชธานี", "อุดรธานี"].includes(p[0]))
-                                  .reduce((acc: any, curr: any) => acc + curr[1], 0).toLocaleString()}+ 
+                            {stats.sortedProvinces.filter((p: [string, number]) => ["นครราชสีมา", "ขอนแก่น", "อุบลราชธานี", "อุดรธานี"].includes(p[0]))
+                                  .reduce((acc: number, curr: [string, number]) => acc + curr[1], 0).toLocaleString()}+ 
                           </Td>
                         </Tr>
                      </Tbody>
@@ -882,7 +913,7 @@ const DashboardPage = () => {
 };
 
 // MetricCard component — Chunked semantic units
-const MetricCard = ({ title, value, subtitle, icon: IconCmp, color }: any) => (
+const MetricCard = ({ title, value, subtitle, icon: IconCmp, color }: MetricCardProps) => (
   <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200">
     <Flex align="center" gap={3} mb={3}>
       <Box
@@ -908,7 +939,7 @@ const MetricCard = ({ title, value, subtitle, icon: IconCmp, color }: any) => (
 );
 
 // TypeStatCard — Risk-coded factory type breakdown
-const TypeStatCard = ({ name, count, total, color, bg }: any) => {
+const TypeStatCard = ({ name, count, total, color, bg }: TypeStatCardProps) => {
   const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
   return (
     <Box p={4} bg={bg} borderRadius="lg" border="1px solid" borderColor={`${color.split('.')[0]}.100`}>
@@ -1037,7 +1068,7 @@ const IndustryRanking = ({
 };
 
 // Icons
-const BuildingIcon = (props: any) => (
+const BuildingIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
     <path d="M9 22v-4h6v4" />
@@ -1053,7 +1084,7 @@ const BuildingIcon = (props: any) => (
   </Icon>
 );
 
-const AlertIcon = (props: any) => (
+const AlertIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
     <path d="M12 9v4" />
@@ -1061,14 +1092,14 @@ const AlertIcon = (props: any) => (
   </Icon>
 );
 
-const MapPinIcon = (props: any) => (
+const MapPinIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
     <circle cx="12" cy="10" r="3" />
   </Icon>
 );
 
-const TrendingUpIcon = (props: any) => (
+const TrendingUpIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
     <polyline points="16 7 22 7 22 13" />
