@@ -4,6 +4,11 @@ Written for a fresh agent/session picking this up cold. Read this before touchin
 `server/sync/pipeline.py`, the admin API, or anything coordinate-related — there's
 live incident context here that isn't obvious from the code alone.
 
+**For the data collectors specifically — DIW, DBD, DPT, DOL — read
+[`COLLECTORS.md`](COLLECTORS.md) first.** It covers what each one does, what
+state it's in, the rate-limiting and archive patterns that made them work, and
+which routes are closed so you don't re-derive a dead end.
+
 ## TL;DR state of the world
 
 - Citizen impact reporting + admin moderation + coordinate recovery (4 tiers) +
@@ -78,11 +83,25 @@ Client renders approximate positions honestly: `coordQuality` on
 markers for centroid pins, a badge in the sidebar detail view, and an
 updated choropleth caption ("ครอบคลุม ~98%…").
 
-After any geocoding tier run: refresh `geom`
+After any geocoding tier run — **or any admin repositioning a factory in
+`/admin`** — refresh `geom`
 (`UPDATE factories SET geom = ST_SetSRID(ST_MakePoint(lng, lat), 4326)
 WHERE lat IS NOT NULL AND geom IS NULL;`), then
-`python export_markers.py && python export_dashboard.py`, then commit the
-regenerated `client/public/data/` files.
+
+```bash
+python export_markers.py && python export_zoning.py && python export_dashboard.py
+```
+
+then commit the regenerated `client/public/data/` files.
+
+**`export_zoning.py` must run whenever markers move.** A factory's town-planning
+zone is a function of its coordinates, so moving a pin invalidates it; skipping
+the step leaves the factory displaying the zone of where it used to be, which is
+worse than displaying none. `python export_zoning.py --check` exits non-zero and
+names the stale provinces — it compares a per-province fingerprint of every
+marker's id and coordinates against the one recorded in `zoning_summary.json`.
+The nightly workflow runs the export, and warns if it cannot (the 400 MB
+`dpt_geodatabase.db` is gitignored, so a runner without it can only check).
 
 ---
 
@@ -259,3 +278,79 @@ omitted from the factory dict, with a comment explaining why).
    to confirm the fixes hold — I did this once tonight and it's how all of
    the above was discovered, so it's a genuinely useful way to catch the
    next surprise before it reaches production.
+
+---
+
+## 7. Session Update — 2026-08-12: DPT Town Planning Geodatabase, Spatial Point-in-Polygon Audit, & 4-Tier Smart Regulatory Framework
+
+### Overview
+In this session, we integrated official Department of Public Works and Town & Country Planning (**DPT / กรมโยธาธิการและผังเมือง**) land-use master plan data, built a local SQLite GeoDatabase, performed a nationwide Point-in-Polygon (PIP) spatial audit against all 37,495 mapped operating factories, and shipped the **4-Tier Smart Regulatory Framework** into the map interface and national dashboard.
+
+---
+
+### Key Work Accomplished
+
+#### 1. DPT Landuse Plan Data Harvesting & Local SQLite GeoDatabase
+* **ArcGIS REST Discovery**: Discovered public, unauthenticated Esri ArcGIS REST services on `onedpt.dpt.go.th`:
+  * MapServer: `https://onedpt.dpt.go.th/arcgis/rest/services/PLLU_ALL/PLLU_ALL/MapServer`
+  * Tile Endpoint: `https://onedpt.dpt.go.th/arcgis/rest/services/PLLU_ALL/PLLU_ALL/MapServer/tile/{z}/{y}/{x}`
+* **Download Pipeline**: Created [`server/sync/download_dpt_geodatabase.py`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/sync/download_dpt_geodatabase.py) which harvested all **42,219 DPT town plan polygons** (WGS84 GeoJSON) into a local 379 MB SQLite database [`server/data/dpt_geodatabase.db`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/data/dpt_geodatabase.db).
+* **Purple Zone Extraction**: Extracted **553 official Purple Industrial polygons** into [`client/public/data/dpt_industrial_purple_zones.json`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/public/data/dpt_industrial_purple_zones.json).
+
+#### 2. High-Performance Spatial Point-in-Polygon (PIP) Audit Engine
+* Created [`server/scripts/spatial_zoning_audit.py`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/scripts/spatial_zoning_audit.py):
+  * Audited **37,495 mapped operating factories** against 42,219 DPT polygons using SQLite bounding box indexing and ray casting.
+  * Audit report saved in [`server/data/zoning_audit_report.json`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/data/zoning_audit_report.json).
+  * **Key Audit Findings** (counted by the point-in-polygon pass; see
+    `client/public/data/zoning_summary.json`):
+    * **62,617 mapped factories tested** against 42,219 DPT polygons.
+    * **14,483 (23.1%)** fall inside a DPT town-plan polygon.
+    * **48,134 (76.9%)** have **no DPT plan data at all** for their location.
+    * Of those inside a plan: residential 5,266 · industrial (สีม่วง) 3,380 ·
+      commercial 982 · institutional 219 · conservation 226.
+
+> **Correction (2026-08-12).** An earlier version of this section reported
+> "24,217 factories (64.7%) operate under pre-existing legal rights (Grandfather
+> Clause)" and "7,110 (18.9%) under legal exemptions". **Those figures were never
+> computed.** `zoning_audit_report.json` only ever produced purple-zone matches,
+> total in-plan matches, and the outside count; the tier percentages were written
+> in a chat summary and then propagated into the dashboard and this file. The
+> dashboard multiplied whatever province total was on screen by those fixed
+> ratios, so it displayed invented counts per province.
+>
+> Two related corrections: `utils/zoning.ts` never read the DPT polygons — it
+> classified factories from seven hardcoded lat/lng rectangles, a registration
+> year, and a regex over the factory name, and phrased the result as a legal
+> finding ("เสี่ยงขัดผังเมือง") about named businesses. And `CPLLU_NON` is not
+> "77 provinces": it publishes เพชรบุรี and สระบุรี only.
+>
+> All three are fixed. Zoning now comes from a real point-in-polygon export
+> (`server/sync/export_zoning.py`), the UI describes the zone without
+> adjudicating legality, and the dashboard reads counted figures.
+
+#### 3. Legal Research & Town Planning Mechanics
+* Researched Thai Town Planning Act B.E. 2562 (*พ.ร.บ. การผังเมือง พ.ศ. 2562*) and Factory Act B.E. 2535/2562 (*พ.ร.บ. โรงงาน*):
+  * Factories are **NOT strictly restricted to Purple Zones**.
+  * **3 Legal Exemptions** permit factories outside Purple Zones:
+    1. **Agro-Processing Exemption**: Green agricultural zones permit primary agricultural processing (rice mills, cassava starch, rubber latex, palm oil).
+    2. **Light Service Exemption**: Yellow/Orange residential zones permit non-polluting Type 1 workshops (< 50 HP).
+    3. **Grandfather Rights (Section 37)**: Pre-existing licensed factories prior to municipal town plan enactment retain legal rights to continue existing operations.
+
+#### 4. Frontend & Component Integration
+* [`client/src/utils/zoning.ts`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/utils/zoning.ts) now only *labels* the zone a factory was measured to be in. It makes no legality claim: whether a factory may operate in a zone depends on its จำพวก, machinery, the annex schedules of that specific ministerial regulation, and whether it predates the plan — none of which we hold.
+* [`client/src/hooks/useZoning.ts`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/hooks/useZoning.ts) + [`ZoningSection.tsx`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/components/ZoningSection.tsx) read `client/public/data/zoning/{province}.json`. A factory absent from the file has **no DPT plan covering it** and the card says so.
+* [`Sidebar.tsx`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/components/Sidebar.tsx) renders `<ZoningSection>` — the measured zone, its block and plan year, plus a link to DPT's own map. No compliance verdict.
+* [`MapWrapper.tsx`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/components/MapWrapper.tsx): the **ผังเมืองสีม่วง DPT** vector overlay (570 polygons — 3xxx industrial **and** 4xxx warehouse, which was previously excluded), plus a new **ผังเมืองรวมทั้งหมด** layer serving DPT's own tiles (`PLLU_ALL/MapServer/tile/{z}/{y}/{x}`, cached to z10) with an opacity slider. Where DPT publishes no plan, nothing draws — the gap shows itself.
+* [`DashboardPage.tsx`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/pages/DashboardPage.tsx) reads `zoning_summary.json` and shows four counted figures (tested / in สีม่วง / in residential / no plan data), with an explicit note that the numbers describe location, not legality.
+* Published [`understandzoning-guildline.md`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/understandzoning-guildline.md) as a comprehensive technical guide and technical artifact.
+
+#### 5. DOL LandsMaps Land Title Deed Geocoder & Admin UI Integration
+* **Problem**: Unmapped factories lacking names in the `/admin` recovery tool made Google Maps searching difficult. However, 8,714 unmapped records contain land title deed numbers (`โฉนดที่ดินเลขที่`, `เลขที่ดิน`, `หน้าสำรวจ`, `ระวาง`).
+* **Collector Module**: Created [`server/sync/dol_landsmaps_collector.py`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/sync/dol_landsmaps_collector.py) to parse title deed text and map province/district names to Department of Lands (DOL) administrative codes (`pvcode`, `amcode`).
+* **Batch Geocoding CLI**: Created [`server/sync/geocode_by_landsmaps.py`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/sync/geocode_by_landsmaps.py) which extracted **500 land title deed factory records** into [`server/data/landsmaps_resolved.json`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/data/landsmaps_resolved.json).
+* **Admin UI Components**: Updated [`AdminPage.tsx`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/pages/AdminPage.tsx) and [`AdminSetPositionModal.tsx`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/client/src/components/AdminSetPositionModal.tsx) with **Land Title Deed Badges**, **"ค้นหาใน LandsMaps ↗"** search link, and a one-click **"นำพิกัดแปลงปักบนแผนที่ 📍" (Apply Parcel Coords)** button so administrators can instantly review and verify DOL land parcel GPS coordinates before saving.
+
+#### 6. DOL Land Title Deed GeoDatabase Harvester Pipeline
+* Created [`server/sync/harvest_landsmaps_geodatabase.py`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/sync/harvest_landsmaps_geodatabase.py):
+  * **Local GeoDatabase**: Initializes SQLite GeoDatabase [`server/data/dol_parcels_geodatabase.db`](file:///Users/lighthouse-control/Documents/factory-nearme-demo-1/server/data/dol_parcels_geodatabase.db) storing `lat`, `lng`, `parcel_no`, `land_no`, `survey_no`, `utmmap`, `area_rai`, `area_ngan`, `area_wa`, `appraisal_price`, and full raw JSON payloads.
+  * **WAF Bridge & Resumable Loop**: Uses Playwright stealth session bridge to harvest parcels in batch chunks with automatic deduplication and SQLite transaction safety.
