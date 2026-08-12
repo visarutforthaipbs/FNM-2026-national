@@ -550,6 +550,32 @@ const AdminPage = () => {
                         {f.address_full}
                       </Text>
                     )}
+                    {(() => {
+                      const text = `${f.name || ""} ${f.address_full || ""}`;
+                      const deedMatch = text.match(/(โฉนด|เลขที่โฉนด|โฉนดที่ดิน)\s*เลขที่?\s*(\d+[\d/|-]*)/);
+                      const landMatch = text.match(/(เลขที่ดิน|ดินเลขที่)\s*(\d+[\d/|-]*)/);
+                      const deedNo = deedMatch ? deedMatch[2] : null;
+                      const landNo = landMatch ? landMatch[2] : null;
+
+                      if (!deedNo && !landNo) return null;
+
+                      return (
+                        <Flex align="center" gap={2} mt={1.5} wrap="wrap">
+                          <Badge colorScheme="purple" fontSize="10px" borderRadius="md" px={2}>
+                            {deedNo ? `โฉนดเลขที่ ${deedNo}` : ''} {landNo ? `เลขที่ดิน ${landNo}` : ''}
+                          </Badge>
+                          <Link
+                            href="https://landsmaps.dol.go.th/"
+                            isExternal
+                            fontSize="10px"
+                            color="purple.600"
+                            fontWeight="600"
+                          >
+                            ค้นหาใน LandsMaps ↗
+                          </Link>
+                        </Flex>
+                      );
+                    })()}
                   </Box>
                   <Button
                     size="sm"

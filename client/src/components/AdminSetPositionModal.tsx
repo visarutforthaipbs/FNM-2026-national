@@ -95,6 +95,23 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
   // exact position simply by opening the dialog and pressing save.
   const startRef = useRef<[number, number]>(THAILAND_CENTER);
 
+  const [resolvedDeeds, setResolvedDeeds] = useState<Record<string, { deed_no?: string; land_no?: string; lat?: number; lng?: number }>>({});
+
+  useEffect(() => {
+    fetch("/data/landsmaps_resolved.json")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const map: Record<string, { deed_no?: string; land_no?: string; lat?: number; lng?: number }> = {};
+          data.forEach((item) => {
+            if (item.id) map[item.id] = item;
+          });
+          setResolvedDeeds(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (!isOpen) return;
     const start: [number, number] =
@@ -172,6 +189,74 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
           >
             ค้นหาที่อยู่นี้ใน Google Maps ↗
           </Link>
+          {/* DOL LandsMaps Land Title Deed Lookup & Coordinate Quick-Apply */}
+          {(() => {
+            const matchedDeed = factory?.id ? resolvedDeeds[factory.id] : null;
+            const text = address;
+            const deedMatch = text.match(/(โฉนด|เลขที่โฉนด|โฉนดที่ดิน)\s*เลขที่?\s*(\d+[\d/|-]*)/);
+            const landMatch = text.match(/(เลขที่ดิน|ดินเลขที่)\s*(\d+[\d/|-]*)/);
+            const deedNo = matchedDeed?.deed_no || (deedMatch ? deedMatch[2] : null);
+            const landNo = matchedDeed?.land_no || (landMatch ? landMatch[2] : null);
+
+            if (!deedNo && !landNo) return null;
+
+            const suggestedLat = matchedDeed?.lat;
+            const suggestedLng = matchedDeed?.lng;
+
+            return (
+              <Box bg="purple.50" p={3.5} borderRadius="xl" border="1px solid" borderColor="purple.200" my={2}>
+                <Flex align="center" justify="space-between" wrap="wrap" gap={2} mb={suggestedLat ? 2 : 0}>
+                  <Box>
+                    <Text fontSize="xs" fontWeight="700" color="purple.900">
+                      📍 เอกสารสิทธิ์ที่ดิน & ค่าพิกัดแปลง (กรมที่ดิน DOL)
+                    </Text>
+                    <Text fontSize="xs" color="purple.700">
+                      {deedNo ? `โฉนดที่ดินเลขที่ ${deedNo}` : ""} {landNo ? `เลขที่ดิน ${landNo}` : ""}
+                    </Text>
+                  </Box>
+                  <Link
+                    href="https://landsmaps.dol.go.th/"
+                    isExternal
+                    fontSize="xs"
+                    color="white"
+                    bg="purple.600"
+                    px={3}
+                    py={1.5}
+                    borderRadius="lg"
+                    fontWeight="600"
+                    _hover={{ bg: "purple.700", textDecoration: "none" }}
+                  >
+                    เปิดค้นหาใน LandsMaps ↗
+                  </Link>
+                </Flex>
+
+                {suggestedLat && suggestedLng && (
+                  <Flex align="center" justify="space-between" bg="white" p={2.5} borderRadius="lg" border="1px solid" borderColor="purple.100" wrap="wrap" gap={2}>
+                    <Box>
+                      <Text fontSize="xs" fontWeight="600" color="slate.700">
+                        ค่าพิกัดแปลง: {suggestedLat.toFixed(6)}, {suggestedLng.toFixed(6)}
+                      </Text>
+                      <Text fontSize="10px" color="slate.500">
+                        กดปุ่มเพื่อวางพิกัดนี้บนแผนที่และตรวจสอบก่อนบันทึก
+                      </Text>
+                    </Box>
+                    <Button
+                      size="xs"
+                      colorScheme="purple"
+                      onClick={() => {
+                        setPosition([suggestedLat, suggestedLng]);
+                        setLatInput(suggestedLat.toFixed(6));
+                        setLngInput(suggestedLng.toFixed(6));
+                      }}
+                    >
+                      นำพิกัดแปลงปักบนแผนที่ 📍
+                    </Button>
+                  </Flex>
+                )}
+              </Box>
+            );
+          })()}
+
           <Text mt={1} mb={3} fontSize="10px" color="slate.400">
             เปิดดูตำแหน่งจริง แล้วคัดลอกพิกัด (คลิกขวา → "What's here?") มาใส่ด้านล่าง
           </Text>
