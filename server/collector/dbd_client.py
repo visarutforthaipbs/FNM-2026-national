@@ -17,12 +17,32 @@ import base64
 import gzip
 import zlib
 import time
+from pathlib import Path
 from typing import Optional
 
 import requests
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives import hashes
+
+
+class WAFBlocked(RuntimeError):
+    """
+    Imperva refused the request — the gateway in front of DBD, not DBD itself.
+
+    Worth its own type because the remedy is the opposite of an auth error's: a
+    new token cannot help (the request never reached the service that issues
+    them), and asking for one makes it worse, since /api/refresh is the endpoint
+    Imperva guards most closely. The only cure is to stop for a while, or to
+    re-establish a browser session with dbd_bootstrap.py.
+
+    The message keeps the HTTP status in it so existing callers that test for
+    "403" in str(exc) keep behaving as they did.
+    """
+
+
+class APIError(RuntimeError):
+    """DBD answered, and said no. A token refresh may well fix it."""
 
 
 class DBDClient:
@@ -36,7 +56,13 @@ class DBDClient:
     REQUEST_TIMEOUT = (10, 30)
     UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
-    def __init__(self):
+    def __init__(self, cookies: "str | Path | list | None" = None):
+        """
+        `cookies` accepts a path to a file written by dbd_bootstrap.py, or the
+        list it contains. Passing them lets requests continue a session Imperva
+        has already cleared in a real browser; omitting them keeps the previous
+        behaviour exactly.
+        """
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": self.UA,
@@ -44,10 +70,57 @@ class DBDClient:
             "Origin": self.BASE,
             "Referer": f"{self.BASE}/",
         })
+        if cookies is not None:
+            self.load_cookies(cookies)
         self.token: Optional[str] = None
         self.enc_key: Optional[bytes] = None
         self.token_exp: float = 0
         self._refresh_token()
+
+    def load_cookies(self, cookies) -> int:
+        """Adopt browser cookies. Returns how many were loaded."""
+        if isinstance(cookies, (str, Path)):
+            cookies = json.loads(Path(cookies).read_text(encoding="utf-8"))
+        loaded = 0
+        for c in cookies or []:
+            name, value = c.get("name"), c.get("value")
+            if not name or value is None:
+                continue
+            self.session.cookies.set(
+                name, value,
+                domain=c.get("domain", ""),
+                path=c.get("path", "/"),
+            )
+            loaded += 1
+        # The browser's user agent has to travel with the browser's cookies:
+        # Imperva ties a cleared session to the client that cleared it.
+        for c in cookies or []:
+            if c.get("userAgent"):
+                self.session.headers["User-Agent"] = c["userAgent"]
+                break
+        return loaded
+
+    @classmethod
+    def classify_response(cls, status_code: int, content_type: str, path: str) -> None:
+        """
+        Decide what a non-200 actually means, and raise accordingly.
+
+        A 401/403 carrying JSON came from DBD: the token is stale or absent, and
+        refreshing it is the right response. The same status carrying HTML came
+        from Imperva's block page — no token will help. Treating those two the
+        same is why a WAF block used to look like an ordinary auth failure and
+        get "fixed" by hammering /api/refresh.
+        """
+        if status_code == 200:
+            return
+        is_json = "application/json" in content_type or "application/problem+json" in content_type
+        if status_code in (401, 403):
+            if is_json:
+                raise APIError(f"{status_code} Client Error: auth rejected for {path}")
+            raise WAFBlocked(
+                f"{status_code} Client Error: Imperva WAF block on {path} "
+                f"(content-type={content_type[:60] or 'none'})"
+            )
 
     @staticmethod
     def _b64d(s: str) -> bytes:
@@ -56,6 +129,7 @@ class DBDClient:
 
     def _refresh_token(self):
         r = self.session.post(f"{self.BASE}/api/refresh", timeout=self.REQUEST_TIMEOUT)
+        self.classify_response(r.status_code, r.headers.get("content-type", ""), "/api/refresh")
         r.raise_for_status()
         data = r.json()
         self.token = data["idToken"]
@@ -88,6 +162,7 @@ class DBDClient:
         self._ensure_token()
         kwargs.setdefault("timeout", self.REQUEST_TIMEOUT)
         r = self.session.request(method, f"{self.BASE}{path}", **kwargs)
+        self.classify_response(r.status_code, r.headers.get("content-type", ""), path)
         r.raise_for_status()
         obj = r.json()
         if "ct" in obj:
