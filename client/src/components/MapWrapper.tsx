@@ -287,6 +287,17 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
     const [selectedTile, setSelectedTile] =
       React.useState<keyof typeof TILE_URLS>(getPreferredTile);
 
+    // DPT Local Industrial Purple Zones layer state
+    const [showPurpleZones, setShowPurpleZones] = useState<boolean>(true);
+    // The full DPT land-use plan, drawn by DPT's own tile service. Our purple
+    // layer shows only the 553 industrial polygons we extracted; this shows
+    // every zone colour DPT publishes, so a reader can see what the factory
+    // actually sits on rather than take our word for it. Off by default —
+    // it covers the basemap.
+    const [showDptPlan, setShowDptPlan] = useState<boolean>(false);
+    const [dptPlanOpacity, setDptPlanOpacity] = useState<number>(0.55);
+    const [purpleZonesGeo, setPurpleZonesGeo] = useState<GeoJSON.FeatureCollection | null>(null);
+
     useEffect(() => {
       if (typeof window === 'undefined' || !window.matchMedia) return;
       const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -303,6 +314,11 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         .then((r) => r.json())
         .then(setProvinceGeo)
         .catch((err) => console.error("Error loading provinces:", err));
+
+      fetch("/data/dpt_industrial_purple_zones.json")
+        .then((r) => r.json())
+        .then(setPurpleZonesGeo)
+        .catch((err) => console.error("Error loading DPT purple zones:", err));
     }, []);
 
     // Build counts lookup: English name → ProvinceCount
@@ -405,7 +421,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
     return (
       <Box h="full" position="relative" bg="white">
         {/* Map Controls Card */}
-        <Box
+        <Flex
           position="absolute"
           top={isMobile ? "16" : "4"}
           right="4"
@@ -414,6 +430,8 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
           borderRadius="xl"
           boxShadow="lg"
           p={2}
+          gap={2}
+          align="center"
           border="1px solid"
           borderColor="slate.100"
         >
@@ -433,7 +451,61 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             <option value="dark">กลางคืน</option>
             <option value="satellite">ดาวเทียม</option>
           </Select>
-        </Box>
+
+          <Button
+            size="sm"
+            variant={showPurpleZones ? "solid" : "outline"}
+            colorScheme={showPurpleZones ? "purple" : "gray"}
+            onClick={() => setShowPurpleZones((prev) => !prev)}
+            fontSize="xs"
+            fontWeight="600"
+            px={3}
+            borderRadius="lg"
+            leftIcon={
+              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
+                <path d="M9 22V12" />
+                <path d="M15 22V12" />
+              </Icon>
+            }
+          >
+            ผังเมืองสีม่วง DPT
+          </Button>
+
+          <Button
+            size="sm"
+            variant={showDptPlan ? "solid" : "outline"}
+            colorScheme={showDptPlan ? "orange" : "gray"}
+            onClick={() => setShowDptPlan((prev) => !prev)}
+            fontSize="xs"
+            fontWeight="600"
+            px={3}
+            borderRadius="lg"
+            leftIcon={
+              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                <path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z" />
+                <path d="M9 3v15M15 6v15" />
+              </Icon>
+            }
+          >
+            ผังเมืองรวมทั้งหมด
+          </Button>
+
+          {showDptPlan && (
+            <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
+              <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้ม</Text>
+              <input
+                type="range"
+                min={20}
+                max={90}
+                value={Math.round(dptPlanOpacity * 100)}
+                onChange={(e) => setDptPlanOpacity(Number(e.target.value) / 100)}
+                style={{ width: 90 }}
+                aria-label="ความเข้มของชั้นผังเมือง"
+              />
+            </Flex>
+          )}
+        </Flex>
 
         {/* Back to overview button */}
         {isProvinceMode && (
@@ -590,6 +662,42 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
           </Box>
         )}
 
+        {/* DPT Purple Industrial Zones Legend */}
+        {showPurpleZones && (
+          <Box
+            position="absolute"
+            bottom={4}
+            right={4}
+            zIndex="1000"
+            bg="white"
+            borderRadius="xl"
+            boxShadow="lg"
+            p={3}
+            border="1px solid"
+            borderColor="purple.200"
+            fontSize="xs"
+            maxW="240px"
+          >
+            <Flex align="center" gap={2} mb={1.5}>
+              <Icon viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" boxSize={4}>
+                <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
+              </Icon>
+              <Text fontWeight="700" color="purple.900" fontSize="xs">
+                ผังเมืองสีม่วง DPT (570 โซน)
+              </Text>
+            </Flex>
+            <Flex align="center" gap={2} mb={1}>
+              <Box w="12px" h="12px" borderRadius="2px" bg="#7C3AED" flex="none" />
+              <Text color="slate.700" fontSize="2xs" fontWeight="500">
+                เขตอุตสาหกรรมและคลังสินค้า
+              </Text>
+            </Flex>
+            <Text color="slate.400" fontSize="2xs">
+              ข้อมูลทางการจาก GeoDatabase landuseplan.dpt.go.th
+            </Text>
+          </Box>
+        )}
+
         <MapContainer
           center={[13.2, 101.0]}
           zoom={6}
@@ -600,6 +708,59 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             url={TILE_URLS[selectedTile]}
             attribution={TILE_ATTRIBUTIONS[selectedTile]}
           />
+
+          {/* The official land-use plan, rendered by DPT itself.
+              Cached to zoom 10, so maxNativeZoom lets Leaflet upscale rather
+              than request tiles that do not exist. Where DPT publishes no plan
+              — Bangkok, the EEC provinces and thirteen others — nothing draws,
+              which is the honest depiction of a gap in the source. */}
+          {showDptPlan && (
+            <TileLayer
+              url="https://onedpt.dpt.go.th/arcgis/rest/services/PLLU_ALL/PLLU_ALL/MapServer/tile/{z}/{y}/{x}"
+              maxNativeZoom={10}
+              maxZoom={18}
+              opacity={dptPlanOpacity}
+              zIndex={350}
+              attribution='ผังเมืองรวม &copy; กรมโยธาธิการและผังเมือง (DPT)'
+            />
+          )}
+
+          {/* Official DPT Purple Industrial Zones Layer (553 Polygons) */}
+          {showPurpleZones && purpleZonesGeo && (
+            <GeoJSON
+              key="dpt-purple-industrial-zones"
+              data={purpleZonesGeo}
+              style={(feature) => ({
+                color: feature?.properties?.color || "#7C3AED",
+                weight: 2,
+                opacity: 0.85,
+                fillColor: feature?.properties?.color || "#7C3AED",
+                fillOpacity: 0.38,
+                dashArray: "5, 5",
+              })}
+              onEachFeature={(feature, layer) => {
+                const props = feature.properties;
+                layer.bindTooltip(
+                  `<div style="font-family: 'IBM Plex Sans Thai', sans-serif; padding: 4px 6px; max-width: 250px;">
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                      <span style="width: 10px; height: 10px; border-radius: 2px; background: ${props.color || '#7C3AED'}; flex: none;"></span>
+                      <strong style="color: #4C1D95; font-size: 13px;">${props.name || 'เขตผังเมืองรวม'}</strong>
+                    </div>
+                    <div style="font-size: 11px; color: #6B21A8; font-weight: 600; margin-bottom: 2px;">
+                      ${props.zone_desc || 'ผังเมืองสีม่วง'} (${props.pl_block || ''})
+                    </div>
+                    <div style="font-size: 11px; color: #475569;">
+                      ${props.cw_name || ''} ${props.amphoe_nam || ''}
+                    </div>
+                    <div style="font-size: 10px; color: #64748B; margin-top: 3px; font-style: italic;">
+                      สถานะ: ${props.status || 'ประกาศบังคับใช้'}
+                    </div>
+                  </div>`,
+                  { direction: "top", sticky: true }
+                );
+              }}
+            />
+          )}
 
           {/* Province choropleth (overview mode) */}
           {!isProvinceMode && provinceGeo && (

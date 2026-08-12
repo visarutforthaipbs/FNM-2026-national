@@ -43,9 +43,20 @@ export interface DbdFactoryProfile {
   registeredProvince: string | null;
   matchOutcome: "exact" | "probable" | "ambiguous" | string;
   humanVerified: boolean;
-  directors: DbdDirector[];
-  owners: DbdOwner[];
   /** Empty when DBD publishes no nationality breakdown for this company. */
   nationalities: DbdNationality[];
+  /**
+   * Whether a detail record exists for this factory. Directors, named
+   * shareholders and financial statements are half the payload and only render
+   * behind a disclosure, so they live in a second per-province file and are
+   * fetched when the reader asks for them.
+   */
+  hasDetail: boolean;
+}
+
+/** Loaded on disclosure, from /data/dbd/{province}.detail.json. */
+export interface DbdFactoryDetail {
+  directors: DbdDirector[];
+  owners: DbdOwner[];
   financial: DbdFinancialSnapshot | null;
 }

@@ -239,7 +239,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Collect shareholder nationality summaries from DBD.")
     ap.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
     ap.add_argument("--source", type=Path, help="JSON list of {jp_no, jp_type_desc} instead of the DB")
-    ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parents[1] / "data" / "dbd_nations.json")
+    # The archive is the record and dbd.company_nations is the destination;
+    # this optional dump is only for reading by eye. Off by default so a stale
+    # copy cannot reappear and start looking like a source.
+    ap.add_argument("--out", type=Path, default=None,
+                    help="Optional JSON dump of the aggregates (not used by the pipeline)")
     ap.add_argument("--rate", type=float, default=DEFAULT_RATE,
                     help=f"Total requests/sec across all workers (default {DEFAULT_RATE})")
     ap.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
@@ -268,7 +272,7 @@ def main() -> int:
     # purely from the archive would silently discard every company collected
     # before this script existed.
     results: dict[str, list[dict]] = {}
-    if args.out.exists():
+    if args.out and args.out.exists():
         try:
             results = json.loads(args.out.read_text(encoding="utf-8"))
             logger.info(f"↺ carried {len(results):,} companies over from {args.out.name}")
@@ -285,6 +289,10 @@ def main() -> int:
         started = time.time()
 
         def checkpoint() -> None:
+            # Each response is already written to the archive as it arrives, so
+            # the crawl is resumable with or without this dump.
+            if not args.out:
+                return
             args.out.parent.mkdir(parents=True, exist_ok=True)
             tmp = args.out.with_suffix(".tmp")
             tmp.write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -349,15 +357,17 @@ def main() -> int:
         logger.info("=" * 56)
         for k, v in stats.items():
             logger.info(f"  {k:<8}{v:>8,}")
-    else:
+    elif args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
 
     with_data = sum(1 for v in results.values() if v)
     foreign = sum(1 for v in results.values()
                   if any(r["code"] != "TH" for r in v))
-    logger.info(f"✅ {len(results):,} companies in {args.out.name} — "
+    where = args.out.name if args.out else "the archive"
+    logger.info(f"✅ {len(results):,} companies in {where} — "
                 f"{with_data:,} with a nationality split, {foreign:,} with a non-Thai holder")
+    logger.info("   run dbd_nations_load.py --apply to load them into dbd.company_nations")
     return 0
 
 

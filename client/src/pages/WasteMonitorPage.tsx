@@ -255,7 +255,7 @@ const WasteMonitorPage = () => {
           <GridItem>
             <VStack align="stretch" spacing={5} h="full">
               <Box bg="primary.500" color="white" p={6} borderRadius="xl" position="relative" overflow="hidden">
-                <Icon viewBox="0 0 24 24" boxSize={8} fill="none" stroke="currentColor" strokeWidth="1.7">
+                <Icon viewBox="0 0 24 24" boxSize={8} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 3 2.8 19h18.4L12 3Z" strokeLinejoin="round"/><path d="M12 9v4.5M12 17h.01" strokeLinecap="round"/>
                 </Icon>
                 <Text mt={8} fontSize="xl" fontWeight="800">พื้นที่เสี่ยง ไม่เท่ากับ โรงงานผิดกฎหมาย</Text>

@@ -13,7 +13,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useDbdProfile } from "../hooks/useDbdProfile";
+import { useDbdDetail, useDbdProfile } from "../hooks/useDbdProfile";
 import { summarizeNationalities } from "../utils/nationality";
 import type { NationalityShare } from "../utils/nationality";
 
@@ -63,20 +63,20 @@ function undisclosedReason(juristicType: string | null): string {
 }
 
 const BuildingIcon = () => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={4}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={4}>
     <path d="M4 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M16 9h3a1 1 0 0 1 1 1v11M2 21h20" />
     <path d="M8 7h4M8 11h4M8 15h4M8 19h4" />
   </Icon>
 );
 
 const PeopleIcon = () => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={3.5}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
   </Icon>
 );
 
 const GlobeIcon = () => (
-  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" boxSize={3.5}>
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
     <circle cx="12" cy="12" r="9" />
     <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" />
   </Icon>
@@ -113,6 +113,10 @@ const DbdShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, provinceEn }) => {
   const { profile, isLoading, hasLoaded, error, retry } = useDbdProfile(factoryId, provinceEn);
   const [isExpanded, setIsExpanded] = useState(false);
+  // Directors, shareholders and financials are half the exported bytes and
+  // only render here, so they are fetched the first time someone asks.
+  const { detail, isLoading: isDetailLoading } =
+    useDbdDetail(factoryId, provinceEn, isExpanded);
 
   useEffect(() => {
     setIsExpanded(false);
@@ -157,9 +161,9 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
   }
 
   const isActive = profile.legalStatus === "ยังดำเนินกิจการอยู่";
-  const nationalities = summarizeNationalities(profile.nationalities, profile.owners);
-  const visibleDirectors = profile.directors.slice(0, 6);
-  const remainingDirectors = Math.max(0, profile.directors.length - visibleDirectors.length);
+  const nationalities = summarizeNationalities(profile.nationalities, detail?.owners ?? []);
+  const visibleDirectors = (detail?.directors ?? []).slice(0, 6);
+  const remainingDirectors = Math.max(0, (detail?.directors.length ?? 0) - visibleDirectors.length);
 
   return (
     <DbdShell>
@@ -294,6 +298,8 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
       </Box>
 
       {/* LAYER 3: Minimal directors and financial details collapse */}
+      {profile.hasDetail && (
+      <>
       <Button
         mt={4}
         minH="40px"
@@ -325,7 +331,13 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
       </Button>
 
       <Collapse in={isExpanded} animateOpacity>
-        <VStack align="stretch" spacing={4} pt={4}>
+        {isDetailLoading && (
+          <VStack align="stretch" spacing={3} pt={4}>
+            <SkeletonText noOfLines={3} spacing={2} skeletonHeight="3" />
+            <SkeletonText noOfLines={2} spacing={2} skeletonHeight="3" />
+          </VStack>
+        )}
+        <VStack align="stretch" spacing={4} pt={4} display={isDetailLoading ? "none" : undefined}>
           <Box>
             <Flex align="center" gap={2} color="slate.600" mb={2}>
               <PeopleIcon />
@@ -351,26 +363,26 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
 
           <Box>
             <Text fontSize="xs" color="slate.600" fontWeight="700" mb={2}>
-              งบการเงินล่าสุด{profile.financial ? ` · ปี ${profile.financial.year}` : ""}
+              งบการเงินล่าสุด{detail?.financial ? ` · ปี ${detail.financial.year}` : ""}
             </Text>
-            {profile.financial ? (
+            {detail?.financial ? (
               <SimpleGrid columns={2} spacingX={4} spacingY={3}>
                 <Box>
                   <Text fontSize="10px" color="slate.400">รายได้รวม</Text>
                   <Text fontSize="sm" color="slate.700" fontWeight="700">
-                    {formatBaht(profile.financial.totalRevenue)}
+                    {formatBaht(detail.financial.totalRevenue)}
                   </Text>
                 </Box>
                 <Box>
                   <Text fontSize="10px" color="slate.400">กำไรสุทธิ</Text>
                   <Text fontSize="sm" color="slate.700" fontWeight="700">
-                    {formatBaht(profile.financial.netProfit)}
+                    {formatBaht(detail.financial.netProfit)}
                   </Text>
                 </Box>
                 <Box>
                   <Text fontSize="10px" color="slate.400">สินทรัพย์รวม</Text>
                   <Text fontSize="sm" color="slate.700" fontWeight="700">
-                    {formatBaht(profile.financial.totalAssets)}
+                    {formatBaht(detail.financial.totalAssets)}
                   </Text>
                 </Box>
               </SimpleGrid>
@@ -385,6 +397,8 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
           </Text>
         </VStack>
       </Collapse>
+      </>
+      )}
     </DbdShell>
   );
 };

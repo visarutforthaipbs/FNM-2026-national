@@ -1,0 +1,353 @@
+{
+  "audit_timestamp": "2026-08-12 17:33:47",
+  "total_factories_audited": 37495,
+  "execution_time_seconds": 672.18,
+  "overall_summary": {
+    "purple_industrial_zone_matches": 3110,
+    "purple_industrial_zone_pct": 8.29,
+    "dpt_master_plan_matches": 10220,
+    "dpt_master_plan_pct": 27.26,
+    "outside_dpt_polygons": 27275,
+    "outside_dpt_pct": 72.74
+  },
+  "landuse_distribution": {
+    "purple_industrial": 3110,
+    "yellow_residential": 3151,
+    "orange_residential": 0,
+    "brown_residential": 17,
+    "red_commercial": 1135,
+    "green_agriculture": 2,
+    "blue_government": 110,
+    "other_zone": 2695
+  },
+  "hazard_mismatch_count": 3058,
+  "sample_hazard_mismatches": [
+    {
+      "reg_id": "3-53(5)-23/35",
+      "name": "บริษัท ต้ากงเคมีคอลอินดัสเทรียล (ไทยแลนด์) จำกัด",
+      "province": "กรุงเทพมหานคร",
+      "district": "บางนา",
+      "lat": 13.654264899385,
+      "lng": 100.61373710632,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.6-5"
+    },
+    {
+      "reg_id": "3-7(1)-1/20สป",
+      "name": "บริษัท ธนากรผลิตภัณฑ์น้ำมันพืช จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "พระสมุทรเจดีย์",
+      "lat": 13.604716666667,
+      "lng": 100.57851666667,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "พ.4-4"
+    },
+    {
+      "reg_id": "3-34(2)-1/23สป",
+      "name": "บริษัท ธีรวัฒน์-สรรพสิทธิ์ จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.639566666667,
+      "lng": 100.60613333333,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": ".6-6"
+    },
+    {
+      "reg_id": "3-22(1)-1/39สป",
+      "name": "บริษัท แพรกษาเท็กซ์ไทล์ จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.565883333333,
+      "lng": 100.67253333333,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": ".3-3"
+    },
+    {
+      "reg_id": "3-22(2)-1/43สป",
+      "name": "บริษัท ฮงเค่ง เท็กซ์ไทล์ จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "พระประแดง",
+      "lat": 13.60285,
+      "lng": 100.52866666667,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.5-2"
+    },
+    {
+      "reg_id": "3-64(5)-1/51สป",
+      "name": "บริษัท ไว.เอส.สกรูอินเตอร์เทรด จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "บางพลี",
+      "lat": 13.61027,
+      "lng": 100.75745,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "อ.1-2"
+    },
+    {
+      "reg_id": "3-53(1)-2/16สป",
+      "name": "บริษัท แปรงไทยแห่งแรก จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.6348,
+      "lng": 100.614272,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.6-6"
+    },
+    {
+      "reg_id": "3-34(2)-2/28สป",
+      "name": "กิจพัฒนา",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.6328,
+      "lng": 100.61698333333,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": ".6-6"
+    },
+    {
+      "reg_id": "3-22(1)-2/37สป",
+      "name": "บริษัท ดีไลท์ เท็กซ์ไทล์ จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.533483333333,
+      "lng": 100.62356666667,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "อ.3-15"
+    },
+    {
+      "reg_id": "3-77(2)-2/41สป",
+      "name": "บริษัท เด็นโซ่ (ประเทศไทย) จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.638292,
+      "lng": 100.606326,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.6-6"
+    },
+    {
+      "reg_id": "3-64(2)-2/51สป",
+      "name": "บริษัท พีเค.เชลฟ แอนด์ สแตนด์ จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "พระสมุทรเจดีย์",
+      "lat": 13.58006,
+      "lng": 100.54831,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": ".3-6"
+    },
+    {
+      "reg_id": "3-45(1)-3/27สป",
+      "name": "บริษัท สเป็คตรัม อินดัสตรี จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.605016666667,
+      "lng": 100.64743333333,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.3-3"
+    },
+    {
+      "reg_id": "3-39-3/33สป",
+      "name": "บริษัท ไทร์-วอล (ประเทศไทย) จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "บางพลี",
+      "lat": 13.604516666667,
+      "lng": 100.75936666667,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "อ.1-2"
+    },
+    {
+      "reg_id": "3-45(1)-3/50สป",
+      "name": "บริษัท จากัวร์เพ้นท์ (ประเทศไทย) จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "บางพลี",
+      "lat": 13.609383333333,
+      "lng": 100.67911666667,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.6-4"
+    },
+    {
+      "reg_id": "3-64(13)-4/22สป",
+      "name": "บริษัท จงไทยรุ่งเรือง จำกัด",
+      "province": "สมุทรปราการ",
+      "district": "เมืองสมุทรปราการ",
+      "lat": 13.628693,
+      "lng": 100.584279,
+      "zone_type": "ที่อยู่อาศัย",
+      "dpt_plan_name": " ",
+      "dpt_block": "ท.8-1"
+    }
+  ],
+  "top_provinces": [
+    {
+      "province": "สมุทรปราการ",
+      "total_factories": 5909,
+      "purple_zone_count": 2216,
+      "purple_zone_pct": 37.5,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 1604
+    },
+    {
+      "province": "กรุงเทพมหานคร",
+      "total_factories": 4768,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 6
+    },
+    {
+      "province": "สมุทรสาคร",
+      "total_factories": 2498,
+      "purple_zone_count": 346,
+      "purple_zone_pct": 13.9,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 135
+    },
+    {
+      "province": "ชลบุรี",
+      "total_factories": 2209,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 0
+    },
+    {
+      "province": "นนทบุรี",
+      "total_factories": 1467,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 0
+    },
+    {
+      "province": "เชียงใหม่",
+      "total_factories": 1316,
+      "purple_zone_count": 10,
+      "purple_zone_pct": 0.8,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 189
+    },
+    {
+      "province": "นครปฐม",
+      "total_factories": 1134,
+      "purple_zone_count": 175,
+      "purple_zone_pct": 15.4,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 171
+    },
+    {
+      "province": "ฉะเชิงเทรา",
+      "total_factories": 1118,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 2
+    },
+    {
+      "province": "พัทลุง",
+      "total_factories": 918,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 0
+    },
+    {
+      "province": "นครราชสีมา",
+      "total_factories": 877,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 6
+    },
+    {
+      "province": "ตรัง",
+      "total_factories": 813,
+      "purple_zone_count": 4,
+      "purple_zone_pct": 0.5,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 70
+    },
+    {
+      "province": "พระนครศรีอยุธยา",
+      "total_factories": 798,
+      "purple_zone_count": 1,
+      "purple_zone_pct": 0.1,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 11
+    },
+    {
+      "province": "ระยอง",
+      "total_factories": 706,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 0
+    },
+    {
+      "province": "นครสวรรค์",
+      "total_factories": 681,
+      "purple_zone_count": 3,
+      "purple_zone_pct": 0.4,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 64
+    },
+    {
+      "province": "เชียงราย",
+      "total_factories": 671,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 8
+    },
+    {
+      "province": "สุราษฎร์ธานี",
+      "total_factories": 564,
+      "purple_zone_count": 0,
+      "purple_zone_pct": 0.0,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 3
+    },
+    {
+      "province": "ลำพูน",
+      "total_factories": 519,
+      "purple_zone_count": 85,
+      "purple_zone_pct": 16.4,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 37
+    },
+    {
+      "province": "ราชบุรี",
+      "total_factories": 517,
+      "purple_zone_count": 3,
+      "purple_zone_pct": 0.6,
+      "agriculture_zone_count": 2,
+      "residential_zone_count": 46
+    },
+    {
+      "province": "ปทุมธานี",
+      "total_factories": 485,
+      "purple_zone_count": 138,
+      "purple_zone_pct": 28.5,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 47
+    },
+    {
+      "province": "ลำปาง",
+      "total_factories": 426,
+      "purple_zone_count": 3,
+      "purple_zone_pct": 0.7,
+      "agriculture_zone_count": 0,
+      "residential_zone_count": 53
+    }
+  ]
+}

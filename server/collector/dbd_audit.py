@@ -73,7 +73,30 @@ def main() -> int:
               (select count(*) from dbd.shareholder
                  where raw ?| array['cmtNo','address','phoneNo','zipCode','tumbonCode','ampurCode','pvCode']),
               (select count(*) from dbd.factory_owner
-                 where match_outcome <> 'exact' and not human_verified)
+                 where match_outcome <> 'exact' and not human_verified),
+
+              -- Shareholder nationality. These are aggregates with no person
+              -- in them, so the risk is not disclosure but arithmetic: a
+              -- percentage outside 0–100, or a blank country code, would be
+              -- rendered to a reader as a fact about who owns a factory.
+              (select count(*) from dbd.company_nations),
+              (select count(distinct jp_no) from dbd.company_nations),
+              (select count(*) from dbd.company_nations
+                 where nullif(btrim(nt_code), '') is null),
+              (select count(*) from dbd.company_nations
+                 where share_percent < 0 or share_percent > 100),
+              (select count(*) from dbd.company_nations n
+                 left join dbd.juristic j on j.jp_no = n.jp_no where j.jp_no is null),
+              -- Splits that do not add up. DBD rounds small stakes, so a few
+              -- points either way is the source's own arithmetic, not ours;
+              -- anything wider than that means we are reading it wrong.
+              (select count(*) from (
+                 select jp_no from dbd.company_nations
+                 group by jp_no having sum(share_percent) not between 90 and 110
+               ) bad),
+              (select count(*) from dbd.juristic j
+                 join dbd.operator_match m on m.jp_no = j.jp_no
+                 where not exists (select 1 from dbd.company_nations n where n.jp_no = j.jp_no))
         """)
         (
             juristic_rows,
@@ -85,6 +108,13 @@ def main() -> int:
             committee_pii,
             shareholder_pii,
             unsafe_public_matches,
+            nation_rows,
+            nation_companies,
+            nation_blank_code,
+            nation_bad_percent,
+            nation_orphans,
+            nation_bad_total,
+            nation_missing,
         ) = cur.fetchone()
     conn.close()
 
@@ -123,6 +153,14 @@ def main() -> int:
         f"orphans=business:{orphan_business},juristic:{orphan_juristic} "
         f"unsafe_public_matches={unsafe_public_matches}"
     )
+    print(
+        f"nationality_rows={nation_rows} companies={nation_companies} "
+        f"blank_code={nation_blank_code} bad_percent={nation_bad_percent} "
+        f"orphans={nation_orphans} splits_not_totalling_100={nation_bad_total}"
+    )
+    # Informational: a company DBD publishes no split for is a gap in the
+    # source, not a fault of ours, so it is reported without failing the run.
+    print(f"nationality_not_collected={nation_missing}")
 
     blockers = (
         invalid_match_lines
@@ -136,6 +174,9 @@ def main() -> int:
         + orphan_business
         + orphan_juristic
         + unsafe_public_matches
+        + nation_blank_code
+        + nation_bad_percent
+        + nation_orphans
     )
     if args.strict and blockers:
         print(f"AUDIT FAILED: {blockers:,} blocking findings", file=sys.stderr)

@@ -16,6 +16,7 @@ import Navbar from "../components/Navbar";
 import AdminSetPositionModal from "../components/AdminSetPositionModal";
 import AdminDbdMatchQueue from "../components/AdminDbdMatchQueue";
 import AdminApproximateQueue from "../components/AdminApproximateQueue";
+import AdminProvinceMismatchQueue from "../components/AdminProvinceMismatchQueue";
 import type { ImpactType } from "../types/report";
 import { IMPACT_TYPE_META, FREQUENCY_META, DISTANCE_META } from "../types/report";
 import type { DistanceBand, ReportFrequency } from "../types/report";
@@ -65,7 +66,7 @@ interface UnmappedFactory {
   capital_investment: number | null;
 }
 
-type Tab = "reports" | "corrections" | "unmapped" | "approx" | "dbd";
+type Tab = "reports" | "corrections" | "unmapped" | "approx" | "mismatch" | "dbd";
 
 const TOKEN_KEY = "factory-nearme-admin-token";
 
@@ -97,6 +98,7 @@ const AdminPage = () => {
   // Factories already on the map, but at a derived position rather than a real
   // one. Distinct from `unmapped`, which is only those with no position at all.
   const [approxTotal, setApproxTotal] = useState<number | null>(null);
+  const [mismatchTotal, setMismatchTotal] = useState<number | null>(null);
 
   const authFetch = useCallback(
     async (path: string, init?: RequestInit) => {
@@ -299,6 +301,16 @@ const AdminPage = () => {
             <Button
               size="sm"
               borderRadius="full"
+              bg={tab === "mismatch" ? "primary.600" : "white"}
+              color={tab === "mismatch" ? "white" : "slate.600"}
+              _hover={{ bg: tab === "mismatch" ? "primary.700" : "slate.100" }}
+              onClick={() => setTab("mismatch")}
+            >
+              พิกัดผิดจังหวัด{mismatchTotal === null ? "" : ` (${mismatchTotal.toLocaleString()})`}
+            </Button>
+            <Button
+              size="sm"
+              borderRadius="full"
               bg={tab === "dbd" ? "primary.600" : "white"}
               color={tab === "dbd" ? "white" : "slate.600"}
               _hover={{ bg: tab === "dbd" ? "primary.700" : "slate.100" }}
@@ -310,7 +322,7 @@ const AdminPage = () => {
               size="sm"
               variant="ghost"
               color="slate.400"
-              isDisabled={tab === "dbd" || tab === "approx"}
+              isDisabled={tab === "dbd" || tab === "approx" || tab === "mismatch"}
               onClick={() => (tab === "unmapped" ? loadUnmapped(unmappedOffset, unmappedSearch) : loadQueues())}
             >
               รีเฟรช
@@ -550,6 +562,32 @@ const AdminPage = () => {
                         {f.address_full}
                       </Text>
                     )}
+                    {(() => {
+                      const text = `${f.name || ""} ${f.address_full || ""}`;
+                      const deedMatch = text.match(/(โฉนด|เลขที่โฉนด|โฉนดที่ดิน)\s*เลขที่?\s*(\d+[\d/|-]*)/);
+                      const landMatch = text.match(/(เลขที่ดิน|ดินเลขที่)\s*(\d+[\d/|-]*)/);
+                      const deedNo = deedMatch ? deedMatch[2] : null;
+                      const landNo = landMatch ? landMatch[2] : null;
+
+                      if (!deedNo && !landNo) return null;
+
+                      return (
+                        <Flex align="center" gap={2} mt={1.5} wrap="wrap">
+                          <Badge colorScheme="purple" fontSize="10px" borderRadius="md" px={2}>
+                            {deedNo ? `โฉนดเลขที่ ${deedNo}` : ''} {landNo ? `เลขที่ดิน ${landNo}` : ''}
+                          </Badge>
+                          <Link
+                            href="https://landsmaps.dol.go.th/"
+                            isExternal
+                            fontSize="10px"
+                            color="purple.600"
+                            fontWeight="600"
+                          >
+                            ค้นหาใน LandsMaps ↗
+                          </Link>
+                        </Flex>
+                      );
+                    })()}
                   </Box>
                   <Button
                     size="sm"
@@ -597,6 +635,13 @@ const AdminPage = () => {
             On the map already, but derived rather than surveyed. */}
         {tab === "approx" && (
           <AdminApproximateQueue authFetch={authFetch} onTotalChange={setApproxTotal} />
+        )}
+
+        {/* ── Province tag vs coordinates ──
+            On the map, but in the wrong province: missing from where a
+            neighbour would look, present where it does not belong. */}
+        {tab === "mismatch" && (
+          <AdminProvinceMismatchQueue authFetch={authFetch} onTotalChange={setMismatchTotal} />
         )}
 
         {/* ── DBD ownership match review ──

@@ -14,8 +14,16 @@ This is a React + TypeScript + Vite civic tech application that displays **63,80
 
 - **`client/`** — the deployed frontend (React 18 + TypeScript + Vite). This is where almost all development happens.
 - **`api/index.js`** — thin Vercel serverless wrapper around `server/index.js`. The Express + PostGIS API it exposes is **legacy — the client never calls `/api/*`**; the app runs on static JSON + direct Supabase queries instead.
-- **`server/sync/`** — Python pipeline that produces the static data files (`export_markers.py`, `export_dashboard.py`, Selenium-based enrichment). Run offline; outputs are committed into `client/public/data/`.
+- **`server/sync/`** — Python pipeline that produces the static data files (`export_markers.py`, `export_zoning.py`, `export_dbd_profiles.py`, `export_dashboard.py`, geocoding tiers). Run offline; outputs are committed into `client/public/data/`.
+- **`server/collector/`** — the DBD ownership collectors (resolve → load → detail → nations → audit), archive helpers and their tests.
 - **`vercel.json`** — static build of `client/` + the legacy API function; non-file routes fall back to `client/index.html` for SPA routing.
+
+### Read before touching any data collector
+
+- **[`COLLECTORS.md`](COLLECTORS.md)** — the four government sources (DIW, DBD, DPT, DOL), what state each collector is in, and the patterns that made them work: one central rate limiter (never a per-worker sleep), archive-first so a rules change replays instead of re-crawling, an explicit outcome per record, and telling a WAF's answer apart from the service's (both return **HTTP 200 with HTML** when blocking). Also records what is *closed* — DOL is blocked behind hCaptcha and PIPR is government-to-government — so nobody re-derives a dead end.
+- **[`HANDOFF.md`](HANDOFF.md)** — live incident history for `pipeline.py`, the frozen `status` field, and the coordinate-corruption post-mortem.
+
+Two facts that have bitten repeatedly: **`factories.is_active` is `true` for all 274,421 rows and filters nothing** — operating factories are `status = 'ดำเนินการ'` (63,384). And **any statistic shown to the public must be recounted from the artifact**, not carried over from a summary; several fabricated figures have reached production that way.
 
 ## Development Commands
 

@@ -19,13 +19,13 @@ export interface ReportCountSummary {
   byType: Partial<Record<ImpactType, number>>;
 }
 
-export const IMPACT_TYPE_META: Record<ImpactType, { label: string; emoji: string }> = {
-  smell: { label: "กลิ่นเหม็น", emoji: "👃" },
-  noise: { label: "เสียงดัง", emoji: "🔊" },
-  water: { label: "น้ำเสีย", emoji: "💧" },
-  dust: { label: "ฝุ่น / ควัน", emoji: "🌫️" },
-  vibration: { label: "แรงสั่นสะเทือน", emoji: "📳" },
-  other: { label: "อื่นๆ", emoji: "⚠️" },
+export const IMPACT_TYPE_META: Record<ImpactType, { label: string }> = {
+  smell: { label: "กลิ่นเหม็น" },
+  noise: { label: "เสียงดัง" },
+  water: { label: "น้ำเสีย" },
+  dust: { label: "ฝุ่น / ควัน" },
+  vibration: { label: "แรงสั่นสะเทือน" },
+  other: { label: "อื่นๆ" },
 };
 
 export const FREQUENCY_META: Record<ReportFrequency, string> = {
