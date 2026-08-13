@@ -586,3 +586,138 @@ tailscale funnel status   # /rest/v1 must still show "Funnel on"; /api gone
 Reviewers keep working because they are on the tailnet; the public site never
 called `/api/*`. To roll back, re-add the `/api` handler on `:443` — the
 pre-change config is recorded in correction 1 above.
+
+---
+
+## 9. Session — 2026-08-13: admin API lockdown, deploys, and a white screen
+
+§8 above carries the full security narrative. This section is the operational
+record: what is now live, how to actually use `/admin`, and what is still open.
+
+### How to use `/admin` now — read this first
+
+**Tailscale must be connected on the device you are reviewing from.** Nothing
+else about signing in changed: same URL, same `ADMIN_TOKEN`, same box.
+
+- The page is still served publicly from Vercel at `/admin`.
+- It now calls `https://lighthouse-sev01.tail83945e.ts.net:4443/api/...`, which
+  resolves **only inside the tailnet**.
+- With Tailscale off, the page loads but every queue fails to fetch. That is the
+  intended behaviour — it is what puts reporter contact details out of reach of
+  the public internet. On mobile, toggle the Tailscale app on.
+
+Verified working: CORS preflight from the Vercel origin to `:4443` returns 204
+with `access-control-allow-headers: authorization,content-type`, so the bearer
+token reaches the API.
+
+### Production deploys this session
+
+The Vercel project is **not git-connected** — deploys are CLI-driven
+(`vercel --prod`), which uploads the *working directory*, not a commit. So a
+`git push` does **not** redeploy, and an uncommitted file in the tree **does**
+ship. Worth knowing before the next deploy.
+
+Two production deploys went out: the admin cutover, then the white-screen fix.
+
+### The white screen — cause, fix, and the guard
+
+The first deploy rendered nothing and threw:
+
+```
+Uncaught TypeError: Cannot read properties of undefined (reading 'useLayoutEffect')
+    at chakra-RR2l5xT5.js:1:8067
+```
+
+**Cause.** The `manualChunks` split in `client/vite.config.ts` produced chunks
+importing each other in both directions:
+
+```
+react-vendor → vendor → chakra → react-vendor
+```
+
+ES modules evaluate in order, so `chakra` ran before `react-vendor` had finished
+exporting; React was still `undefined` when Chakra read `useLayoutEffect` off
+it. Splitting by **package name cannot prevent this** — a package name says
+nothing about the import graph, and the catch-all `vendor` bucket collected
+modules Chakra needed that in turn needed React.
+
+**Not Chakra's fault.** Worth stating plainly, because it is the natural wrong
+conclusion to draw from the stack trace. Chakra was simply the chunk that
+evaluated first and touched React.
+
+**Fix.** Two buckets that are acyclic by construction: nothing in
+`node_modules` imports app code, so `vendor` can never point back at the entry
+chunk, and `leaflet` imports nothing at all. Deployed graph:
+
+```
+index → vendor, leaflet     vendor → leaflet     leaflet → (leaf)
+```
+
+**Guard.** `client/scripts/check-chunks.mjs`, wired into `npm run build`, so a
+cyclic split fails the build instead of shipping. Vercel runs `npm run build`,
+so it is enforced on deploy. Verified both directions: exit 1 on the config that
+broke production, exit 0 on the fix.
+
+One subtlety worth preserving if that script is ever edited: it counts **static
+imports only**. Dynamic `import()` is deferred until after the importing chunk
+has evaluated, so a lazy route pointing back at the entry chunk
+(`index → DashboardPage → index`) is normal and must not be flagged. An earlier
+version of the check did flag those and failed a perfectly good build.
+
+**Tradeoff accepted:** `vendor` is now a single ~590 kB chunk rather than four
+smaller ones, so Vite prints a chunk-size warning on every build. Correct and
+coarse beat granular and broken. A finer split is safe to attempt *now that the
+check exists* — run it before believing any new split.
+
+### Chakra → Tailwind: considered, deferred
+
+Raised this session, deliberately **not** done. Numbers measured from this
+codebase so nobody has to re-derive them:
+
+| | measured |
+|---|---|
+| Chakra + Emotion + framer-motion + popper et al. | 296 kB raw / **96 kB gzip** |
+| Installed on disk | 13.8 MB |
+| Files importing Chakra | 18 of 32 |
+| Distinct Chakra exports used | 53 |
+| Responsive `{ base: … }` props to convert | 81 |
+| `theme/index.ts` to port | 187 lines |
+
+Shape of the job, if it is ever picked up: the bulk is `Box`/`Flex`/`Text`/
+`VStack`/`HStack`/`SimpleGrid` — layout primitives that map onto Tailwind
+classes mechanically, and the 81 responsive props map onto `md:` prefixes. The
+parts needing real thought are few and enumerable: `Modal` (5 files), `Popover`,
+`Collapse`, `Skeleton`, `Spinner`, `Select`, `useDisclosure` — behaviour, not
+styling (focus trap, scroll lock, ARIA). Use Radix or Headless UI for those
+rather than hand-rolling; that is where accessibility regressions come from.
+
+Two things that make it easier than feared: there is **no** `useColorMode`, **no**
+`useToast` and **no** direct `framer-motion` import anywhere in `src/`.
+`useBreakpointValue` appears only twice, both in `MapPage` — worth replacing
+regardless, since it is a JS-evaluated media query that renders once with the
+wrong value before correcting, where a CSS class is right on first paint.
+
+**Check the premise before spending the days.** Per-province marker JSON is
+50–500 KB, which plausibly dwarfs 96 kB of JS in what users actually feel. Run a
+throttled Lighthouse pass on `/` and on a province view first; if the time is
+going to map data and Leaflet, this buys less than it looks like on paper.
+
+### Still outstanding after this session
+
+1. **The API hardening is not running.** `factory-api.service` on
+   `lighthouse-sev01` runs `/home/visarut298/app/FNM/server/index.js` — a
+   *different checkout* whose `server/index.js` carries ~485 lines of
+   uncommitted local changes (the approximate-factories / province-mismatch /
+   dbd-matches / dbd-nations routes). It therefore does **not** have the rate
+   limiting, request logging or constant-time compare from `06a15d3`. Confirmed
+   live: no `RateLimit-*` headers from `:4443`. Reconcile that checkout with
+   `main` and `systemctl restart factory-api` — **carefully**, because those
+   local changes exist in no git repo and a hard reset destroys them. Lower
+   urgency now the port is tailnet-only, but not done.
+2. **`DATABASE_URL` and `ADMIN_TOKEN` are still set in the Vercel project**
+   although the API no longer runs there — unused credentials in a third
+   party's store. Remove once nothing else reads them.
+3. §3's GitHub Actions permission is now `write`, but **no run has been watched
+   end-to-end yet** (§6 step 5). Do that before trusting the nightly sync.
+4. The `FFLAG`/`STATUS` question (§4) and the 317-factory gap (§2) are
+   untouched and still need domain knowledge.
