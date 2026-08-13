@@ -359,8 +359,11 @@ In this session, we integrated official Department of Public Works and Town & Co
 
 ## 8. Open security exposure — `/api` is on the public internet behind one static token
 
-**Status: unresolved. Nothing here is a breach; it is a thin margin.** Recorded
-2026-08-13, verified against the live host the same day.
+**Status: partially resolved — items 2, 3 and the stray 500 are fixed in code;
+item 1, the exposure itself, is still open and needs a human on
+`lighthouse-sev01`.** Recorded 2026-08-13, verified against the live host the
+same day, re-verified and partly fixed later the same day (see "Progress" at the
+end of this section).
 
 ### What is actually exposed
 
@@ -442,3 +445,105 @@ Also noticed while probing, unrelated to auth: **`GET /api/factories` returns
 500** on the live host. It is legacy — the client never calls it (see
 `CLAUDE.md`) — but it is publicly reachable and broken, so either fix it or
 remove it rather than leaving a 500 on the internet.
+
+### Progress — 2026-08-13 (later the same day)
+
+Re-probed from outside the tailnet first; both findings above still reproduced
+(`/api/admin/reports` → 401, so the route is genuinely public; `/api/factories`
+→ 500).
+
+**Done, in `server/index.js`:**
+
+- **Rate limiting** (recommendation 2) — `express-rate-limit`, 30/min per IP,
+  registered as `app.use('/api/admin', adminLimiter)` *before* `requireAdmin`
+  so failed auth attempts are throttled too, not only successful ones.
+  Verified: 40 rapid bad-token requests → 30×401 then 429.
+- **Admin request logging** (recommendation 2) — one line per admin request with
+  timestamp, IP, method, route and outcome (`ok` / `DENIED` / `unconfigured`).
+  Verified the token never appears in the log.
+- **Constant-time compare** (recommendation 3) — `crypto.timingSafeEqual`. Note
+  it throws on length mismatch, which would itself leak the token length, so
+  both sides are SHA-256'd to a fixed 32 bytes first. Verified a 1-char token
+  returns 401 rather than crashing the process.
+- `app.set('trust proxy', 'loopback')` — required for the limiter's per-IP key
+  to see the real client IP through the tailscale proxy, but scoped to the
+  single loopback hop so a caller cannot spoof `X-Forwarded-For` to dodge it.
+- **`GET /api/factories` removed** rather than fixed. Nothing references it
+  (`grep` over `client/src` and `api/` finds no caller), it had been 500ing in
+  public, and a broken unreferenced endpoint is only attack surface. Recover
+  from git history if a caller ever appears. `GET /api/provinces` is equally
+  unreferenced but works, so it was left alone.
+- `express-rate-limit` added to **both** `server/package.json` and the root
+  `package.json` — Vercel builds from root, which has bitten before (see §5).
+
+**GitHub Actions permission (§3) is done** — it did *not* need a human after
+all. `gh api -X PUT repos/.../actions/permissions/workflow -f
+default_workflow_permissions=write` succeeded with the existing CLI token
+(scopes `gist, read:org, repo, workflow`); reads back `"write"`. The earlier 404
+in §3 was wrong about the cause. The nightly workflow's `git push` step should
+now work — **watch one run end-to-end before trusting it** (§6 step 5).
+
+### Two corrections to the write-up above
+
+**1. `AllowFunnel` is keyed per `host:port`, not per path.** From
+`tailscale serve status --json` on the host:
+
+```json
+"AllowFunnel": {
+  "lighthouse-sev01.tail83945e.ts.net:443": true,
+  "lighthouse-sev01.tail83945e.ts.net:8443": true
+}
+```
+
+So `/api` and `/rest/v1` share one Funnel switch and there is **no command that
+withdraws `/api` while leaving `/rest/v1` public on `:443`** — recommendation 1's
+"costs nothing, one command" framing was wrong. `/rest/v1` genuinely must stay
+public: `VITE_SUPABASE_URL` points at it and it is the app's PostgREST backend.
+The admin API therefore has to move to **its own port**, which changes the admin
+URL and so requires a `VITE_API_BASE` change in Vercel.
+
+**2. There were two public doors, not one.** `vercel.json` routed `/api/(.*)` →
+`api/index.js`, which is just `module.exports = require('../server/index.js')` —
+the same code, the same table-owner pool, the same token, on the plain public
+Vercel domain. `https://factory-nearme-demo-1.vercel.app/api/admin/reports`
+answered `401`, confirming it was live. Withdrawing the Funnel alone would have
+left this one wide open. Rate limiting is also much weaker there, since each
+lambda instance keeps its own counter.
+
+### Done
+
+- **`:4443` serve endpoint created** on `lighthouse-sev01`, tailnet-only:
+  `sudo tailscale serve --bg --https=4443 --set-path=/api http://127.0.0.1:3001/api`.
+  Verified it answers `401` from the tailnet and that `4443` is **absent** from
+  `AllowFunnel`. Original config backed up before any change.
+- **API removed from Vercel** — `api/index.js` build and its route dropped from
+  `vercel.json`, with an explicit `404` rule for `/api/(.*)` so those paths don't
+  fall through the SPA catch-all and answer `200 text/html` (the exact
+  WAF-vs-service ambiguity `COLLECTORS.md` warns about). `api/index.js` is left
+  on disk, unreferenced, if it is ever needed again.
+- **`client/.env.local`** `VITE_API_BASE` → `...ts.net:4443`.
+
+### Remaining step — needs Vercel access
+
+`:443` still serves `/api`, so the exposure is not closed yet. Sequenced this
+way deliberately to avoid an `/admin` outage:
+
+1. In the Vercel project, set
+   `VITE_API_BASE=https://lighthouse-sev01.tail83945e.ts.net:4443` and redeploy.
+   (Verify by fetching the deployed `assets/AdminPage-*.js` and grepping for
+   `:4443` — the value is inlined at build time, which is how the old value was
+   confirmed.)
+2. Load `/admin` from a tailnet machine and confirm the queues load.
+3. Then, on `lighthouse-sev01`:
+
+```bash
+sudo tailscale serve --https=443 --set-path=/api off
+tailscale funnel status   # /rest/v1 must still show "Funnel on"; /api gone
+```
+
+4. From a machine **off** the tailnet, confirm `https://lighthouse-sev01.tail83945e.ts.net/api/admin/reports`
+   no longer answers, while `/rest/v1` still does and the public map still loads.
+
+Reviewers keep working because they are on the tailnet; the public site never
+called `/api/*`. To roll back, re-add the `/api` handler on `:443` — the
+pre-change config is recorded in correction 1 above.

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const { Pool } = require('pg');
 const path = require('path');
 const crypto = require('crypto');
@@ -10,6 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+// This process sits behind exactly one reverse proxy on localhost (tailscale
+// serve/funnel → 127.0.0.1:3001), so trust the loopback hop only. Trusting
+// every hop would let a caller spoof X-Forwarded-For and defeat the rate
+// limiter's per-IP key below.
+app.set('trust proxy', 'loopback');
 app.use(cors());
 app.use(express.json());
 
@@ -34,107 +40,18 @@ pool.connect((err, client, release) => {
 });
 
 /**
- * GET /api/factories
- * Query params:
- * - minLat, maxLat, minLng, maxLng (Bounding box)
- * - province (Optional: filter by province)
- * - search (Optional: search term)
- * - limit (Optional: max results, default 500)
+ * REMOVED 2026-08-13: GET /api/factories
+ *
+ * A bounding-box GeoJSON query that nothing calls — the client browses static
+ * JSON in client/public/data/ and fetches detail straight from PostgREST. It
+ * had been returning 500 on the live public host for an unknown length of time.
+ * Removed rather than fixed: a broken, unreferenced, publicly reachable
+ * endpoint is only ever an attack surface. Recover it from git history if a
+ * caller ever turns up.
+ *
+ * GET /api/provinces below is equally unreferenced by the client but still
+ * works, so it is left alone for now.
  */
-app.get('/api/factories', async (req, res) => {
-    try {
-        const { minLat, maxLat, minLng, maxLng, province, search, limit = 500, type } = req.query;
-
-        if (!minLat || !maxLat || !minLng || !maxLng) {
-            return res.status(400).json({ error: 'Missing bounding box parameters (minLat, maxLat, minLng, maxLng)' });
-        }
-
-        let query = `
-      SELECT 
-        id, 
-        fac_reg,
-        name as "ชื่อโรงงาน", 
-        operator_name as "ผู้ประกอบก", 
-        business_type as "ประกอบกิจก", 
-        district as "อำเภอ", 
-        province as "จังหวัด", 
-        factory_type as "ประเภท",
-        address as "ที่อยู่",
-        capital_investment as "เงินลงทุน",
-        horsepower as "แรงม้า",
-        workers_male as "คนงานชาย",
-        workers_female as "คนงานหญิง",
-        lat as "ละติจูด", 
-        lng as "ลองติจูด"
-      FROM factories
-      WHERE geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
-    `;
-
-        const values = [
-            parseFloat(minLng),
-            parseFloat(minLat),
-            parseFloat(maxLng),
-            parseFloat(maxLat)
-        ];
-
-        if (values.some((v) => !Number.isFinite(v))) {
-            return res.status(400).json({ error: 'Bounding box parameters must be valid numbers' });
-        }
-
-        let paramIndex = 5;
-
-        // Optional: Filter by Province
-        if (province) {
-            query += ` AND province = $${paramIndex}`;
-            values.push(province);
-            paramIndex++;
-        }
-
-        // Optional: Filter by High Risk (Type "3")
-        if (type === '3') {
-            query += ` AND factory_type = '3'`;
-        }
-
-        // Optional: Search term
-        if (search) {
-            const searchPattern = `%${search}%`;
-            query += ` AND (name ILIKE $${paramIndex} OR operator_name ILIKE $${paramIndex} OR business_type ILIKE $${paramIndex} OR address ILIKE $${paramIndex})`;
-            values.push(searchPattern);
-            paramIndex++;
-        }
-
-        // Limit results (clamp to 1–5000; fall back to 500 on bad input)
-        const parsedLimit = parseInt(limit, 10);
-        const safeLimit = Number.isFinite(parsedLimit)
-            ? Math.min(Math.max(parsedLimit, 1), 5000)
-            : 500;
-        query += ` LIMIT $${paramIndex}`;
-        values.push(safeLimit);
-
-        const result = await pool.query(query, values);
-
-        // Transform to GeoJSON
-        const features = result.rows.map(row => ({
-            type: "Feature",
-            properties: row,
-            geometry: {
-                type: "Point",
-                coordinates: [row.ลองติจูด, row.ละติจูด]
-            }
-        }));
-
-        res.json({
-            type: "FeatureCollection",
-            features: features,
-            total: result.rowCount
-        });
-
-    } catch (err) {
-        console.error('Error fetching factories:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 /**
  * GET /api/provinces
  * Returns list of provinces with value and label
@@ -161,16 +78,52 @@ app.get('/api/provinces', async (req, res) => {
  * Auth: static bearer token (ADMIN_TOKEN env var). The pg pool connects as
  * the table owner, so RLS on reports/location_corrections doesn't apply here.
  */
+/**
+ * Rate limiter for /api/admin/*. The token is the only thing standing between
+ * the public internet and reporter contact details on unmoderated reports, and
+ * before this there was no throttle at all — 20 bad tokens in a row were
+ * answered 401 identically with no backoff. 30/min per IP is far above what a
+ * human reviewer clicking through a queue needs.
+ */
+const adminLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 30,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: { error: 'Too many requests' }
+});
+
+/**
+ * One line per admin request: who, what, and the outcome. Without this a leaked
+ * token leaves no way to establish what was read. Never logs the token itself.
+ */
+const logAdminRequest = (req, outcome) => {
+    console.log(
+        `[admin] ${new Date().toISOString()} ip=${req.ip} ${req.method} ${req.originalUrl} → ${outcome}`
+    );
+};
+
 const requireAdmin = (req, res, next) => {
     const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
     if (!process.env.ADMIN_TOKEN) {
+        logAdminRequest(req, 'unconfigured');
         return res.status(503).json({ error: 'Admin API not configured (ADMIN_TOKEN missing)' });
     }
-    if (token !== process.env.ADMIN_TOKEN) {
+    // Constant-time compare. timingSafeEqual throws on length mismatch, which
+    // would itself leak the length, so hash both sides to a fixed 32 bytes first.
+    const presented = crypto.createHash('sha256').update(token).digest();
+    const expected = crypto.createHash('sha256').update(process.env.ADMIN_TOKEN).digest();
+    if (!crypto.timingSafeEqual(presented, expected)) {
+        logAdminRequest(req, 'DENIED');
         return res.status(401).json({ error: 'Unauthorized' });
     }
+    logAdminRequest(req, 'ok');
     next();
 };
+
+// Applied before requireAdmin so that failed auth attempts are throttled too,
+// not just successful ones.
+app.use('/api/admin', adminLimiter);
 
 const MODERATION_STATUSES = ['pending', 'approved', 'rejected'];
 
