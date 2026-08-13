@@ -56,7 +56,7 @@ export interface DbdMatch {
 }
 
 interface Props {
-  authFetch: (path: string, init?: RequestInit) => Promise<unknown>;
+  authFetch: <T>(path: string, init?: RequestInit) => Promise<T>;
   onPendingTotal?: (total: number) => void;
 }
 
@@ -118,10 +118,9 @@ const AdminDbdMatchQueue: React.FC<Props> = ({ authFetch, onPendingTotal }) => {
           offset: String(nextOffset),
         });
         if (nextSearch.trim()) params.set("search", nextSearch.trim());
-        const data = (await authFetch(`/api/admin/dbd-matches?${params}`)) as {
-          rows: DbdMatch[];
-          total: number;
-        };
+        const data = await authFetch<{ rows: DbdMatch[]; total: number }>(
+          `/api/admin/dbd-matches?${params}`
+        );
         setRows(data.rows);
         setTotal(data.total);
         setOffset(nextOffset);

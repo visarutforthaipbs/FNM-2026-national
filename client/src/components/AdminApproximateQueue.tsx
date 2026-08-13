@@ -45,7 +45,7 @@ export interface ApproximateFactory {
 }
 
 interface Props {
-  authFetch: (path: string, init?: RequestInit) => Promise<unknown>;
+  authFetch: <T>(path: string, init?: RequestInit) => Promise<T>;
   onTotalChange?: (total: number) => void;
 }
 
@@ -77,10 +77,9 @@ const AdminApproximateQueue: React.FC<Props> = ({ authFetch, onTotalChange }) =>
         });
         if (nextPrecision) params.set("precision", nextPrecision);
         if (nextSearch.trim()) params.set("search", nextSearch.trim());
-        const data = (await authFetch(`/api/admin/approximate-factories?${params}`)) as {
-          rows: ApproximateFactory[];
-          total: number;
-        };
+        const data = await authFetch<{ rows: ApproximateFactory[]; total: number }>(
+          `/api/admin/approximate-factories?${params}`
+        );
         setRows(data.rows);
         setTotal(data.total);
         setOffset(nextOffset);

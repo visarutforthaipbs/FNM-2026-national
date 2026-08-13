@@ -66,7 +66,7 @@ interface AdminSetPositionModalProps {
   onClose: () => void;
   factory: Factory | null;
   onSaved: (id: string, lat: number, lng: number) => void;
-  authFetch: (path: string, init?: RequestInit) => Promise<unknown>;
+  authFetch: <T>(path: string, init?: RequestInit) => Promise<T>;
   /** Admin collection to POST to. Defaults to the no-coordinates queue. */
   endpoint?: string;
 }

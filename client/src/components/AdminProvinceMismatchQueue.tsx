@@ -45,7 +45,7 @@ export interface MismatchRow {
 }
 
 interface Props {
-  authFetch: (path: string, init?: RequestInit) => Promise<unknown>;
+  authFetch: <T>(path: string, init?: RequestInit) => Promise<T>;
   onTotalChange?: (total: number) => void;
 }
 
@@ -68,10 +68,9 @@ const AdminProvinceMismatchQueue: React.FC<Props> = ({ authFetch, onTotalChange 
           offset: String(nextOffset),
         });
         if (nextSearch.trim()) params.set("search", nextSearch.trim());
-        const data = (await authFetch(`/api/admin/province-mismatch?${params}`)) as {
-          rows: MismatchRow[];
-          total: number;
-        };
+        const data = await authFetch<{ rows: MismatchRow[]; total: number }>(
+          `/api/admin/province-mismatch?${params}`
+        );
         setRows(data.rows);
         setTotal(data.total);
         setOffset(nextOffset);

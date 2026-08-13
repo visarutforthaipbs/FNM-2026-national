@@ -101,7 +101,7 @@ const AdminPage = () => {
   const [mismatchTotal, setMismatchTotal] = useState<number | null>(null);
 
   const authFetch = useCallback(
-    async (path: string, init?: RequestInit) => {
+    async <T,>(path: string, init?: RequestInit): Promise<T> => {
       const res = await fetch(`${API_BASE}${path}`, {
         ...init,
         headers: {
@@ -119,7 +119,7 @@ const AdminPage = () => {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `HTTP ${res.status}`);
       }
-      return res.json();
+      return res.json() as Promise<T>;
     },
     [token]
   );
@@ -129,8 +129,8 @@ const AdminPage = () => {
     setError(null);
     try {
       const [r, c] = await Promise.all([
-        authFetch("/api/admin/reports?status=pending"),
-        authFetch("/api/admin/corrections?status=pending"),
+        authFetch<AdminReport[]>("/api/admin/reports?status=pending"),
+        authFetch<AdminCorrection[]>("/api/admin/corrections?status=pending"),
       ]);
       setReports(r);
       setCorrections(c);
@@ -155,10 +155,11 @@ const AdminPage = () => {
           offset: String(offset),
         });
         if (search.trim()) params.set("search", search.trim());
-        const data = await authFetch(`/api/admin/unmapped-factories?${params}`);
-        const { rows, total } = data as { rows: UnmappedFactory[]; total: number };
-        setUnmapped(rows);
-        setUnmappedTotal(total);
+        const data = await authFetch<{ rows: UnmappedFactory[]; total: number }>(
+          `/api/admin/unmapped-factories?${params}`
+        );
+        setUnmapped(data.rows);
+        setUnmappedTotal(data.total);
         setUnmappedOffset(offset);
       } catch (err) {
         setError(err instanceof Error ? err.message : "โหลดข้อมูลไม่สำเร็จ");
