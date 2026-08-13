@@ -26,6 +26,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh; /* iOS Safari: track the visible viewport, not the URL-bar-hidden one */
   /* Improve mobile rendering */
   -webkit-overflow-scrolling: touch;
   -webkit-tap-highlight-color: transparent;
@@ -34,6 +35,7 @@ body {
 #root {
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
   padding: 0;
 }
@@ -88,6 +90,18 @@ body {
   /* Improve map container on mobile */
   .leaflet-container {
     touch-action: pan-x pan-y;
+  }
+
+  /* Zoom control: comfortable touch targets, cleared above the attribution */
+  .leaflet-touch .leaflet-bar a {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 22px;
+  }
+
+  .leaflet-bottom.leaflet-right .leaflet-control-zoom {
+    margin-bottom: 42px; /* keep clear of the attribution line */
   }
 }
 

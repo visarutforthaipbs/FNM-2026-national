@@ -228,6 +228,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               variant="ghost"
               onClick={onMobileClose}
               color="slate.400"
+              minW="44px"
+              minH="44px"
+              fontSize="md"
+              aria-label="ปิดแผงข้อมูล"
               _hover={{ color: "slate.600" }}
             >
               ✕
@@ -392,7 +396,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             variant="ghost"
             color="slate.400"
             onClick={onOpen}
-            px={1}
+            px={2}
+            minH="32px"
             minW="auto"
             fontSize="xs"
             _hover={{ color: "primary.500" }}
@@ -411,7 +416,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </Flex>
 
       {/* LAYER 3: Conscious Deep-Dive — Factory detail or list */}
-      <Box flex="1" overflowY="auto" py={2} pb={20}>
+      <Box flex="1" overflowY="auto" py={2} pb={isMobile ? "calc(5rem + env(safe-area-inset-bottom, 0px))" : 20}>
         {/* SIGNAL 39: Selected Factory Detail — Progressive Disclosure */}
         {selectedFactory ? (
           <Box px={5} py={4}>
@@ -429,6 +434,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 color="slate.500"
                 mr={2}
                 borderRadius="full"
+                minW="44px"
+                minH="44px"
                 onClick={() => onFactorySelect(null)}
               />
               <Text fontSize="xs" color="slate.400">กลับไปรายการ</Text>

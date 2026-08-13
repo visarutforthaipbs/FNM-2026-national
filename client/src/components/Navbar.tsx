@@ -38,19 +38,22 @@ const Navbar = () => {
             position="sticky"
             top={0}
         >
-            <Flex h={14} alignItems="center" justifyContent="space-between" px={6}>
+            <Flex h={14} alignItems="center" justifyContent="space-between" px={{ base: 4, md: 6 }}>
                 <IconButton
                     size="sm"
                     icon={isOpen ? <CloseIcon boxSize={3} /> : <HamburgerIcon />}
-                    aria-label="Open Menu"
+                    aria-label={isOpen ? "ปิดเมนู" : "เปิดเมนู"}
                     display={{ md: 'none' }}
                     onClick={isOpen ? onClose : onOpen}
                     variant="ghost"
                     color="slate.500"
+                    minW="44px"
+                    minH="44px"
                 />
 
-                <HStack spacing={10} alignItems="center">
-                    {/* Product signature — compact enough to remain legible on a map */}
+                <HStack spacing={{ base: 2, md: 10 }} alignItems="center">
+                    {/* Product signature — compact on phones: symbol + name only.
+                        The Thai PBS lockup and English subtitle appear from sm+. */}
                     <Flex alignItems="center" gap={3}>
                         <Image
                             src="/thai-pbs-logo.svg"
@@ -59,8 +62,9 @@ const Navbar = () => {
                             w="auto"
                             fallbackSrc="https://upload.wikimedia.org/wikipedia/commons/d/d3/Thai_PBS_Logo_2016.svg"
                             flexShrink={0}
+                            display={{ base: 'none', sm: 'block' }}
                         />
-                        <Box h="20px" w="1px" bg="slate.200" flexShrink={0} />
+                        <Box h="20px" w="1px" bg="slate.200" flexShrink={0} display={{ base: 'none', sm: 'block' }} />
                         <Image
                             src="/assets/brand/brand-symbol.svg"
                             alt=""
@@ -85,6 +89,7 @@ const Navbar = () => {
                                 letterSpacing="1.1px"
                                 lineHeight="1.1"
                                 mt="3px"
+                                display={{ base: 'none', sm: 'block' }}
                             >
                                 FACTORY NEAR ME
                             </Text>
@@ -141,11 +146,15 @@ const Navbar = () => {
                                     key={link.name}
                                     px={3}
                                     py={2}
+                                    minH="44px"
+                                    display="flex"
+                                    alignItems="center"
                                     rounded="lg"
                                     fontSize="sm"
                                     fontWeight={isActive ? "600" : "400"}
                                     color={isActive ? "primary.600" : "slate.600"}
                                     bg={isActive ? "primary.50" : "transparent"}
+                                    onClick={onClose}
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: 'slate.50',

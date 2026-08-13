@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Box, Text, Flex, Select, Button, Icon } from "@chakra-ui/react";
+import { Box, Text, Flex, Select, Button, Icon, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverBody, VStack } from "@chakra-ui/react";
 import {
   MapContainer,
   TileLayer,
@@ -7,6 +7,7 @@ import {
   Popup,
   Circle,
   GeoJSON,
+  ZoomControl,
   useMap,
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -51,6 +52,9 @@ interface MapWrapperProps {
   isMobile?: boolean;
   isTablet?: boolean;
   isLoading?: boolean;
+  /** Mobile only: the sidebar overlay is open — hide floating map chrome so the
+      narrow visible strip stays clean (Signal 39: no chrome competing with content). */
+  hideChrome?: boolean;
 }
 
 // Fix for default markers
@@ -171,7 +175,7 @@ const FactoryLegendMarker: React.FC<{ level: HazardLevel }> = ({ level }) => {
       <path
         d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5"
         stroke={detailColor}
-        strokeWidth="1.5"
+        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>
@@ -273,8 +277,12 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
     provinceCounts,
     isMobile = false,
     isLoading = false,
+    hideChrome = false,
   }) => {
     const isProvinceMode = !!filters.selectedProvince;
+    // When the mobile sidebar covers the map, all floating controls hide —
+    // otherwise legend, zoom, layer toggles and back button crowd the strip.
+    const showChrome = !hideChrome;
 
     // Auto-detect dark mode
     const getPreferredTile = (): keyof typeof TILE_URLS => {
@@ -420,95 +428,212 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
 
     return (
       <Box h="full" position="relative" bg="white">
-        {/* Map Controls Card */}
-        <Flex
-          position="absolute"
-          top={isMobile ? "16" : "4"}
-          right="4"
-          zIndex="1000"
-          bg="white"
-          borderRadius="xl"
-          boxShadow="lg"
-          p={2}
-          gap={2}
-          align="center"
-          border="1px solid"
-          borderColor="slate.100"
-        >
-          <Select
-            value={selectedTile}
-            onChange={(e) =>
-              setSelectedTile(e.target.value as keyof typeof TILE_URLS)
-            }
-            size="sm"
-            width="auto"
-            variant="filled"
-            cursor="pointer"
-            fontWeight="medium"
+        {/* Map Controls — desktop: one compact row. Mobile: a single "เลเยอร์"
+            menu (Signal 39: one Layer-2 affordance instead of four floating chunks). */}
+        {showChrome && !isMobile && (
+          <Flex
+            position="absolute"
+            top="4"
+            right="4"
+            zIndex="1000"
+            bg="white"
+            borderRadius="xl"
+            boxShadow="lg"
+            p={2}
+            gap={2}
+            align="center"
+            border="1px solid"
+            borderColor="slate.100"
           >
-            <option value="light">เรียบง่าย</option>
-            <option value="openstreet">แผนที่ถนน</option>
-            <option value="dark">กลางคืน</option>
-            <option value="satellite">ดาวเทียม</option>
-          </Select>
+            <Select
+              value={selectedTile}
+              onChange={(e) =>
+                setSelectedTile(e.target.value as keyof typeof TILE_URLS)
+              }
+              size="sm"
+              width="auto"
+              variant="filled"
+              cursor="pointer"
+              fontWeight="medium"
+            >
+              <option value="light">เรียบง่าย</option>
+              <option value="openstreet">แผนที่ถนน</option>
+              <option value="dark">กลางคืน</option>
+              <option value="satellite">ดาวเทียม</option>
+            </Select>
 
-          <Button
-            size="sm"
-            variant={showPurpleZones ? "solid" : "outline"}
-            colorScheme={showPurpleZones ? "purple" : "gray"}
-            onClick={() => setShowPurpleZones((prev) => !prev)}
-            fontSize="xs"
-            fontWeight="600"
-            px={3}
-            borderRadius="lg"
-            leftIcon={
-              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
-                <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
-                <path d="M9 22V12" />
-                <path d="M15 22V12" />
-              </Icon>
-            }
-          >
-            ผังเมืองสีม่วง DPT
-          </Button>
+            <Button
+              size="sm"
+              variant={showPurpleZones ? "solid" : "outline"}
+              colorScheme={showPurpleZones ? "purple" : "gray"}
+              onClick={() => setShowPurpleZones((prev) => !prev)}
+              fontSize="xs"
+              fontWeight="600"
+              px={3}
+              borderRadius="lg"
+              leftIcon={
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                  <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
+                  <path d="M9 22V12" />
+                  <path d="M15 22V12" />
+                </Icon>
+              }
+            >
+              ผังเมืองสีม่วง DPT
+            </Button>
 
-          <Button
-            size="sm"
-            variant={showDptPlan ? "solid" : "outline"}
-            colorScheme={showDptPlan ? "orange" : "gray"}
-            onClick={() => setShowDptPlan((prev) => !prev)}
-            fontSize="xs"
-            fontWeight="600"
-            px={3}
-            borderRadius="lg"
-            leftIcon={
-              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
-                <path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z" />
-                <path d="M9 3v15M15 6v15" />
-              </Icon>
-            }
-          >
-            ผังเมืองรวมทั้งหมด
-          </Button>
+            <Button
+              size="sm"
+              variant={showDptPlan ? "solid" : "outline"}
+              colorScheme={showDptPlan ? "orange" : "gray"}
+              onClick={() => setShowDptPlan((prev) => !prev)}
+              fontSize="xs"
+              fontWeight="600"
+              px={3}
+              borderRadius="lg"
+              leftIcon={
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                  <path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z" />
+                  <path d="M9 3v15M15 6v15" />
+                </Icon>
+              }
+            >
+              ผังเมืองรวมทั้งหมด
+            </Button>
 
-          {showDptPlan && (
-            <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
-              <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้ม</Text>
-              <input
-                type="range"
-                min={20}
-                max={90}
-                value={Math.round(dptPlanOpacity * 100)}
-                onChange={(e) => setDptPlanOpacity(Number(e.target.value) / 100)}
-                style={{ width: 90 }}
-                aria-label="ความเข้มของชั้นผังเมือง"
-              />
-            </Flex>
-          )}
-        </Flex>
+            {showDptPlan && (
+              <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
+                <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้ม</Text>
+                <input
+                  type="range"
+                  min={20}
+                  max={90}
+                  value={Math.round(dptPlanOpacity * 100)}
+                  onChange={(e) => setDptPlanOpacity(Number(e.target.value) / 100)}
+                  style={{ width: 90 }}
+                  aria-label="ความเข้มของชั้นผังเมือง"
+                />
+              </Flex>
+            )}
+          </Flex>
+        )}
+
+        {showChrome && isMobile && (
+          <Box position="absolute" top="16" right="3" zIndex="1000">
+            <Popover placement="bottom-end" isLazy closeOnBlur>
+              <PopoverTrigger>
+                <Button
+                  size="sm"
+                  minH="44px"
+                  bg="white"
+                  color="slate.700"
+                  border="1px solid"
+                  borderColor="slate.100"
+                  boxShadow="lg"
+                  borderRadius="xl"
+                  fontWeight="600"
+                  leftIcon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
+                      <path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z" />
+                      <path d="M9 3v15M15 6v15" />
+                    </Icon>
+                  }
+                >
+                  เลเยอร์
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                w="248px"
+                borderRadius="xl"
+                boxShadow="xl"
+                border="1px solid"
+                borderColor="slate.100"
+                _focusVisible={{ outline: "none" }}
+              >
+                <PopoverArrow />
+                <PopoverBody p={3}>
+                  <VStack spacing={2.5} align="stretch">
+                    <Box>
+                      <Text fontSize="xs" fontWeight="700" color="slate.500" mb={1}>
+                        สไตล์แผนที่
+                      </Text>
+                      <Select
+                        value={selectedTile}
+                        onChange={(e) =>
+                          setSelectedTile(e.target.value as keyof typeof TILE_URLS)
+                        }
+                        size="sm"
+                        variant="filled"
+                        cursor="pointer"
+                        fontWeight="medium"
+                      >
+                        <option value="light">เรียบง่าย</option>
+                        <option value="openstreet">แผนที่ถนน</option>
+                        <option value="dark">กลางคืน</option>
+                        <option value="satellite">ดาวเทียม</option>
+                      </Select>
+                    </Box>
+
+                    <Button
+                      size="sm"
+                      variant={showPurpleZones ? "solid" : "outline"}
+                      colorScheme={showPurpleZones ? "purple" : "gray"}
+                      onClick={() => setShowPurpleZones((prev) => !prev)}
+                      fontSize="xs"
+                      fontWeight="600"
+                      borderRadius="lg"
+                      leftIcon={
+                        <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                          <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
+                          <path d="M9 22V12" />
+                          <path d="M15 22V12" />
+                        </Icon>
+                      }
+                    >
+                      ผังเมืองสีม่วง DPT
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      variant={showDptPlan ? "solid" : "outline"}
+                      colorScheme={showDptPlan ? "orange" : "gray"}
+                      onClick={() => setShowDptPlan((prev) => !prev)}
+                      fontSize="xs"
+                      fontWeight="600"
+                      borderRadius="lg"
+                      leftIcon={
+                        <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                          <path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z" />
+                          <path d="M9 3v15M15 6v15" />
+                        </Icon>
+                      }
+                    >
+                      ผังเมืองรวมทั้งหมด
+                    </Button>
+
+                    {showDptPlan && (
+                      <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
+                        <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้ม</Text>
+                        <input
+                          type="range"
+                          min={20}
+                          max={90}
+                          value={Math.round(dptPlanOpacity * 100)}
+                          onChange={(e) => setDptPlanOpacity(Number(e.target.value) / 100)}
+                          style={{ width: 90 }}
+                          aria-label="ความเข้มของชั้นผังเมือง"
+                        />
+                      </Flex>
+                    )}
+                  </VStack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+        )}
 
         {/* Back to overview button */}
-        {isProvinceMode && (
+        {showChrome && isProvinceMode && (
           <Box
             position="absolute"
             top={isMobile ? "16" : "4"}
@@ -567,7 +692,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* Legend (province detail mode) - SIGNAL 39 Layer 1 color key */}
-        {isProvinceMode && (
+        {showChrome && isProvinceMode && (
           <Box
             position="absolute"
             bottom={4}
@@ -604,7 +729,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* Legend (overview mode) */}
-        {!isProvinceMode && (
+        {showChrome && !isProvinceMode && (
           <Box
             position="absolute"
             bottom={4}
@@ -663,10 +788,10 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* DPT Purple Industrial Zones Legend */}
-        {showPurpleZones && (
+        {showChrome && showPurpleZones && (
           <Box
             position="absolute"
-            bottom={4}
+            bottom={isMobile ? "140px" : 4}
             right={4}
             zIndex="1000"
             bg="white"
@@ -704,6 +829,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
           style={{ height: "100%", width: "100%" }}
           zoomControl={false}
         >
+          {showChrome && <ZoomControl position="bottomright" />}
           <TileLayer
             url={TILE_URLS[selectedTile]}
             attribution={TILE_ATTRIBUTIONS[selectedTile]}

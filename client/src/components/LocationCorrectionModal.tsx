@@ -97,9 +97,9 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg" motionPreset="slideInBottom">
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size={{ base: "full", md: "lg" }} motionPreset="slideInBottom" scrollBehavior="inside">
       <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.400" />
-      <ModalContent borderRadius="2xl" boxShadow="xl" mx={4} overflow="hidden">
+      <ModalContent borderRadius="2xl" boxShadow="xl" mx={{ base: 3, md: 4 }}>
         {isSubmitted ? (
           <ModalBody py={10} textAlign="center">
             <Flex w="56px" h="56px" mx="auto" mb={4} borderRadius="full" bg="green.50" align="center" justify="center">
@@ -128,7 +128,7 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
               </Text>
             </ModalHeader>
             <ModalBody pb={5}>
-              <Box borderRadius="xl" overflow="hidden" h="300px" border="1px solid" borderColor="slate.100">
+              <Box borderRadius="xl" overflow="hidden" h={{ base: "240px", md: "300px" }} border="1px solid" borderColor="slate.100">
                 <MapContainer
                   center={[initialLat, initialLng]}
                   zoom={15}
@@ -170,7 +170,8 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
                 value={note}
                 onChange={(e) => setNote(e.target.value.slice(0, 500))}
                 placeholder="หมายเหตุ เช่น ประตูทางเข้าอยู่ฝั่งถนนใหญ่ (ไม่บังคับ)"
-                size="sm"
+                size="md"
+                fontSize={{ base: "md", md: "sm" }}
                 bg="slate.50"
                 border="none"
                 borderRadius="xl"

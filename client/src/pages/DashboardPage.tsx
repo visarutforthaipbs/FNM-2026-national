@@ -554,7 +554,7 @@ const DashboardPage = () => {
               <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={4} mb={6}>
                 <Box>
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>สืบค้นข้อความ</Text>
-                  <InputGroup size="sm">
+                  <InputGroup size={{ base: "md", md: "sm" }}>
                     <InputLeftElement pointerEvents="none" color="slate.300">
                       <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
                         <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -576,7 +576,7 @@ const DashboardPage = () => {
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>เขตอำเภอ</Text>
                   <Select 
                     placeholder="ทุกอำเภอ" 
-                    size="sm" 
+                    size={{ base: "md", md: "sm" }}
                     value={explorerDistrict} 
                     onChange={e => { setExplorerDistrict(e.target.value); setCurrentPage(1); }}
                     borderRadius="lg"
@@ -594,7 +594,7 @@ const DashboardPage = () => {
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>ระดับความเสี่ยง</Text>
                   <Select 
                     placeholder="ทุกจำพวก" 
-                    size="sm" 
+                    size={{ base: "md", md: "sm" }}
                     value={explorerType} 
                     onChange={e => { setExplorerType(e.target.value); setCurrentPage(1); }}
                     borderRadius="lg"
@@ -612,7 +612,7 @@ const DashboardPage = () => {
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>ประเภทอุตสาหกรรม (ลำดับที่)</Text>
                   <Select
                     placeholder="ทุกประเภท"
-                    size="sm"
+                    size={{ base: "md", md: "sm" }}
                     value={explorerIndustry}
                     onChange={e => { setExplorerIndustry(e.target.value); setCurrentPage(1); }}
                     borderRadius="lg"
@@ -646,7 +646,7 @@ const DashboardPage = () => {
                 </Flex>
               ) : (
                 <>
-                  <TableContainer border="1px solid" borderColor="slate.100" borderRadius="lg" overflowY="auto" maxH="600px">
+                  <TableContainer border="1px solid" borderColor="slate.100" borderRadius="lg" overflowY="auto" overflowX="auto" maxH="600px">
                     <Table variant="simple" size="sm">
                       <Thead bg="slate.50" position="sticky" top={0} zIndex={1}>
                         <Tr>

@@ -40,3 +40,5 @@ client/public/data/landsmaps_resolved.json
 # last — never in the repo.
 *cookies*.json
 *session*.json
+.aider*
+.codewhale/
