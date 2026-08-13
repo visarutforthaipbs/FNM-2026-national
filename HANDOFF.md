@@ -523,7 +523,46 @@ lambda instance keeps its own counter.
   on disk, unreferenced, if it is ever needed again.
 - **`client/.env.local`** `VITE_API_BASE` → `...ts.net:4443`.
 
-### Remaining step — needs Vercel access
+### Cutover completed 2026-08-13
+
+Done in this order, so `/admin` was never broken:
+
+1. `VITE_API_BASE` set to `https://lighthouse-sev01.tail83945e.ts.net:4443` for
+   Production **and** Preview via `vercel env`. (Note: `vercel env rm NAME
+   production` removes the variable from *every* environment it was attached to,
+   not just the named one — Preview had to be re-added.)
+2. `vercel --prod` deployed. Verified by grepping the deployed
+   `assets/AdminPage-*.js`: it now contains `...ts.net:4443`.
+3. `sudo tailscale serve --https=443 --set-path=/api off` on `lighthouse-sev01`.
+
+Verified from **off the tailnet**:
+
+| URL | Before | After |
+|---|---|---|
+| `lighthouse-sev01…ts.net/api/admin/reports` | 401 (reachable) | **404 (gone)** |
+| `lighthouse-sev01…ts.net/rest/v1/` | 401 | 401 (still public — required) |
+| `factory-nearme-demo-1.vercel.app/api/admin/reports` | 401 (reachable) | **404 (gone)** |
+
+The admin API is now reachable only from the tailnet, on `:4443`.
+
+### Still outstanding
+
+- **The hardening is not running yet.** `factory-api.service` on
+  `lighthouse-sev01` runs `/home/visarut298/app/FNM/server/index.js`, a
+  *different checkout* whose `server/index.js` has ~485 lines of uncommitted
+  local changes (the approximate-factories / province-mismatch / dbd-matches /
+  dbd-nations routes). It therefore does **not** have the rate limiting, request
+  logging or constant-time compare from commit `06a15d3`. Confirmed live: no
+  `RateLimit-*` headers on a `:4443` response. Reconcile that checkout with
+  `main` and `systemctl restart factory-api` — carefully, because those local
+  changes are not in git anywhere and would be lost by a hard reset.
+  Lower urgency now that the port is tailnet-only, but not done.
+- **`DATABASE_URL` and `ADMIN_TOKEN` are still set in the Vercel project** even
+  though the API no longer runs there. They are now unused credentials sitting
+  in a third party's store; remove them once you are sure nothing else reads
+  them.
+
+### Superseded — original remaining-step plan (kept for the rollback commands)
 
 `:443` still serves `/api`, so the exposure is not closed yet. Sequenced this
 way deliberately to avoid an `/admin` outage:
