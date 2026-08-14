@@ -1065,3 +1065,111 @@ as an example of the rule it already stated.
 5. **Citizen database backups are unverified.** It holds the only data nothing can
    rebuild. Confirm PITR is on, and test a restore once.
 6. §4's `FFLAG`/`STATUS` question and §2's 317-factory gap are still untouched.
+
+## 12. Session — 2026-08-14: the feed that oscillates, and two guards that had stopped guarding
+
+Started as hardening the gov-collector-vs-`/admin` collision on `lat`/`lng`.
+Ended somewhere more important.
+
+### 12.1 The coordinate rule is now atomic, and DIW's value is kept
+
+`apply_gov_coordinates()` read the protected ids back into a Python set and then
+upserted. On a chunked 274k-row sync those steps are minutes apart, so a
+moderator approving a correction inside that window had it overwritten by the
+same run — silently. The rule now lives in SQL
+(`apply_gov_coordinates(jsonb)`, migration `20260815000000`) and does the check
+and the write in one transaction.
+
+The rule itself is unchanged: skip `community`/`admin`/`repaired`, overwrite
+`sibling`. Verified against a real row of each source inside a rolled-back
+transaction.
+
+`factories.gov_lat` / `gov_lng` / `gov_coord_seen_at` now record what DIW
+published for every row, override or not. Nothing reads them — `lat`/`lng` is
+still what the app draws. They exist because the override used to destroy the
+evidence: `location_corrections` stores only the *proposed* position and lives
+on the citizen database, so the government database kept no memory of what it
+replaced. Without them a bad moderation cannot be reverted and an upstream fix
+by DIW can never be noticed. `coord_override_drift` turns that into a query.
+
+### 12.2 Two guards that had silently stopped guarding
+
+**`TEST_MODE` was evaluated at import.** `--test` sets `SYNC_TEST_MODE` inside
+`main()`, which runs *after* the module is imported, so the constant was read
+while the variable was unset and stayed `False` for the entire run. The log says
+it out loud once you look: `Test mode enabled via CLI flag` followed two lines
+later by `Test mode: OFF`.
+
+`TEST_MODE` is the guard on the permits and statistics clear+insert — added
+after a test run cleared 814,588 permits and 1,621,380 statistics rows and
+replaced them with 100. **That guard had done nothing since.** What actually
+prevented a rerun was the volume floor in `promote_staging()`, a second line of
+defence that should never have been the only one. Now a function, read per call.
+
+**`soft_delete_missing()` read active ids with a plain `.select()`.** PostgREST
+caps responses at 1,000 rows server-side and reports it only in `Content-Range`;
+the request still returns 200. So it compared the whole feed against the first
+1,000 of 274,422 active factories — a 0.4% sample. Everything past the sample
+looked missing, the ratio came out at 100%, and the breaker aborted. It had
+never deactivated a single factory, and the failure was invisible because it
+presented as the breaker working correctly.
+
+Note the first paginated fix was *worse* than the bug: `OFFSET` paging over an
+unordered result, with the factories upsert rewriting the table immediately
+before, returned 169,413 of 274,422. The ~105,000 skipped rows look absent from
+the *database*, not the feed. Always `.order("id")`.
+
+### 12.3 The finding: the DIW feed oscillates by ~33,000 rows
+
+With pagination correct, the dry run found **37,819** active factories absent
+from that day's `Factory_Data` — of which **32,762 are `ดำเนินการ` and 32,662
+are drawn on the map.** That is more than half the 63,384 operating factories
+the site publishes. Only 4,542 appeared in `Business_Location` that day, so
+~33,277 were absent from every endpoint at once.
+
+`sync_logs` explains it. The feed swings between two populations ~33,000 apart
+and has for months:
+
+| date | `Factory_Data` rows |
+|---|---:|
+| 2026-04-02 | 274,340 |
+| 2026-07-17 | 274,414 |
+| 2026-07-18 | 243,977 |
+| 2026-08-08 | **274,418** *and* **241,588** — same day |
+| 2026-08-14 | 241,145 |
+
+DIW is not striking off 33,000 factories and reinstating them overnight. **The
+endpoint drops a population and restores it.** Our 274,422 rows are the
+high-water mark of that oscillation — which is why accumulating by upsert has
+been right all along, and why deleting on absence would have been catastrophic.
+
+This is also a caution for any statistic derived from a single fetch. A count
+taken on a low day and a count taken on a high day differ by 33,000 with no
+change in the world.
+
+**Consequence for the rule:** absence is now measured over time.
+`factories.last_seen_in_feed` (migration `20260815010000`) is stamped on every
+upsert; a row is a candidate only once that stamp is older than
+`SYNC_DEACTIVATE_AFTER_DAYS` (default 30). NULL is never a candidate — a factory
+must have been seen at least once and then gone. One bad fetch now moves
+nothing, because a single day cannot age a row past the window.
+
+`SYNC_DEACTIVATE` has three modes; **it defaults to `dry`** and has still never
+written. Do not set it to `on` until `last_seen_in_feed` has accumulated for a
+full window *and* a dry run reports a plausible handful rather than tens of
+thousands.
+
+### 12.4 Still open
+
+- **No raw archive for DIW.** `server/collector/` archives DBD before
+  interpreting it; `pipeline.py` archives nothing. There is no way to replay a
+  past DIW feed or to say when the oscillation began — the table above is
+  reconstructed from `sync_logs` row counts, which is all we have. This is the
+  clearest gap left in the load path.
+- **`status` holds raw `FFLAG` codes on ~3,240 rows** — 1,544 `'0'`, 1,285
+  `'3'`, 415 `'1'`, 95 `'2'`, and one `'5000000'` — leftovers of the 2026-08-08
+  corruption that were never cleaned. They are excluded from every
+  `ดำเนินการ` count, so they are invisible rather than wrong, but they are
+  factories missing from the map.
+- The `/admin` drift queue and publish-visibility work (steps 3 and 4 of the
+  plan) were not started.
