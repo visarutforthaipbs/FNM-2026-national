@@ -3,264 +3,254 @@
 **เปิดข้อมูลโรงงาน เพื่อชุมชนที่น่าอยู่**
 _Opening factory data for a livable community_
 
-A civic tech application that visualizes factory data across Thailand on an interactive map, promoting industrial transparency for citizens, communities, and researchers. Built with data from Thai government OpenAPI endpoints covering **63,790+ operating factories** nationwide.
+A civic tech application that puts Thailand's factory registry on a map, so anyone can
+see what operates near them. Built on Thai government open data: **63,384 operating
+factories**, **62,656 of them mapped (98.8%)**, across all 77 provinces — plus company
+ownership, town-planning zones, and a channel for residents to report what they are
+actually experiencing.
 
-![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Vite](https://img.shields.io/badge/Vite-6-purple) ![Node.js](https://img.shields.io/badge/Node.js-Express-green) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-PostGIS-blue)
+![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Vite](https://img.shields.io/badge/Vite-6-purple) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17%20+%20PostGIS-blue) ![Python](https://img.shields.io/badge/Python-3.12-yellow)
 
----
-
-## Features
-
-### 🗺️ Interactive Map
-- Leaflet-based map with multiple tile layers (Light, Dark, Satellite, OpenStreetMap)
-- Marker clustering for performance at scale
-- User geolocation with fallback to Prachinburi (14.0504°N, 101.3678°E)
-- Manual location setting via dialog
-- Selected factory pulse animation
-
-### 🔍 Search & Filtering
-- Search by factory name, operator, or business type
-- Province filter (77 provinces)
-- High-risk factory filter (Category 3 — requires special permits)
-- Radius filter (within 10 km of user location)
-
-### 📊 Dashboard
-- Total factories, high-risk count, capital investment, and worker statistics
-- Breakdown by factory type and province (top 15)
-
-### 📱 Responsive Design
-- Mobile-first with overlay sidebar and floating menu button
-- Tablet (360px sidebar) and desktop (420px sidebar) layouts
-- Touch-friendly marker sizing
+> Counts are from 2026-08-14. They move — recount from the database rather than citing
+> this file. Several fabricated figures have reached production by being copied from a
+> summary instead of counted.
 
 ---
 
-## Tech Stack
+## What it does
 
-| Layer | Technologies |
-|-------|-------------|
-| **Frontend** | React 18, TypeScript, Vite, Chakra UI, Leaflet, React-Leaflet, Turf.js, Framer Motion, React Router |
-| **Backend** | Node.js, Express, PostgreSQL + PostGIS |
-| **Data Sync** | Python 3, Pandas, Supabase SDK |
-| **Analytics** | Vercel Analytics |
+**Find factories near you.** Geolocation or a manual pin, a province choropleth that
+opens into clustered markers, and a three-tier hazard colour derived from the DIW
+industry code — hazardous industries, licensed จำพวก 3, and everything else.
+
+**See who owns them.** Company, directors, registered capital and shareholder
+nationality, resolved from the Department of Business Development registry. Only exact
+or human-verified matches are published; national ID numbers and contact details never
+leave the database.
+
+**See the zoning.** 42,219 town-planning polygons from DPT, matched by real
+point-in-polygon. The app names the zone a factory sits in and makes no claim about
+whether it is allowed to be there — that depends on its จำพวก, machinery and the
+annexes of a specific ministerial regulation, none of which we hold.
+
+**Report what you experience.** Smell, noise, water, dust or vibration, in a three-step
+form with no free text required. Anonymous by default, moderated before publication,
+rate-limited, and stored with only a coarse distance band — never the reporter's
+coordinates.
+
+**Keep your own record.** Sign in and you get a watchlist, a private impact diary with
+notes only you can see, and a printable complaint dossier formatted for กรมโรงงาน,
+ศูนย์ดำรงธรรม or your อบต.
+
+**Fix the map.** Roughly one factory in three arrived from the government feed with no
+coordinate, and some of the coordinates that did arrive are wrong. Residents can drag a
+pin to the right place; a moderator reviews it.
 
 ---
+
+## Two databases
+
+Government data and citizen data live in **separate Postgres instances**, split by one
+question: can a collector rebuild this from scratch?
+
+|  | Government | Citizen |
+|---|---|---|
+| Holds | factories, businesses, permits, statistics, DBD ownership | accounts, watchlists, reports, location corrections |
+| Rebuildable | yes — re-run the collectors | **no** |
+| Backups | a convenience; the archive is the truth | the point |
+| In an export | that is what it is for | **never** |
+
+No foreign keys and no joins cross the boundary — fetch ids from one, hydrate names from
+the other. Full detail in **[DATA_LAYER.md](DATA_LAYER.md)**.
 
 ## Architecture
 
 ```
-Thai Government OpenAPIs (CSV)
-        ↓
-  Python Sync Pipeline
-        ↓
-  Supabase (PostgreSQL + PostGIS)
-        ↓
-  Express REST API          →  Static JSON exports
-        ↓                            ↓
-  React Frontend (Map + Dashboard)
+DIW · DBD · DPT  ──►  collectors  ──►  raw archive  ──►  NAS
+   (open data)         (archive-first, rate-limited)
+                            │
+                            ▼
+                   government database  ──►  static JSON  ──►  CDN ──► browser
+                   (self-hosted PG 17)       (~51 MB, 95% of reads)
+                            │
+                            └──────────────►  PostgREST ──► factory detail
+
+                   citizen database  ──────►  PostgREST ──► sign-in, diary, reporting
+                            ▲
+                            └── Express admin API (moderation, tailnet-only)
 ```
 
-**Data sources** — 6 government endpoints including `Business_Location`, `Factory_Data`, `Factory_Operation_Permit`, `Sum_Factory_Local`, and `Sum_Status_Factory_Local`.
+The browser mostly does not touch a database. Browsing is served by static JSON —
+per-province marker files, zoning, ownership profiles, dashboard aggregates — regenerated
+by the nightly pipeline and served from a CDN. Live queries are only factory detail and
+the signed-in features.
 
-The sync pipeline fetches CSV data, transforms it, and upserts to Supabase. It also exports lightweight static JSON files (`markers.json`, `dashboard_stats.json`) for fast frontend loading.
+`api/index.js` and most of `server/index.js` are **legacy**: the client never calls
+`/api/*`. What survives is the moderation API, which is reachable only from the tailnet.
+
+## Where the data comes from
+
+| Source | What it gives | State |
+|---|---|---|
+| **DIW** — Department of Industrial Works | the factory registry itself | ✅ nightly |
+| **DBD** — Business Development | company, directors, financials, nationality | ✅ weekly |
+| **DPT** — Public Works & Town Planning | 42,219 land-use polygons | ✅ on release |
+| **DOL** — Department of Lands | title-deed → parcel coordinates | ⛔ blocked behind hCaptcha |
+
+Every collector archives the raw response *before* interpreting it, so a change in
+parsing rules replays from disk instead of re-crawling a rate-limited source. See
+**[COLLECTORS.md](COLLECTORS.md)** before touching any of them.
+
+## Coordinate provenance
+
+Not every pin is equally trustworthy, and the app says so rather than pretending
+otherwise.
+
+| Source | Count | Rendered as |
+|---|---:|---|
+| `gov` | 39,035 | exact — though government coordinates are **not** automatically correct |
+| `centroid` | 19,960 | faded pin, "ตำแหน่งโดยประมาณ" badge (±2–5 km) |
+| `geocoded` | 3,045 | approximate badge |
+| `sibling` | 568 | exact, labelled by origin — inherited from a licence at the same address |
+| `admin` | 36 | exact — placed by a moderator |
+| `repaired` | 12 | exact — a whole-degree digit error in the feed, corrected |
+| *(none)* | 728 | not on the map |
+
+**Never present an approximate position as exact.** A wrong pin on a named business is a
+claim about that business.
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-├── client/                        # React frontend
-│   ├── src/
-│   │   ├── App.tsx                # Main app — state management, routing
-│   │   ├── components/
-│   │   │   ├── FactoryCard.tsx    # Individual factory display
-│   │   │   ├── MapWrapper.tsx     # Leaflet map with markers & clustering
-│   │   │   ├── Navbar.tsx         # Top navigation (Map / Dashboard)
-│   │   │   └── Sidebar.tsx        # Search, filters, factory list
-│   │   ├── hooks/
-│   │   │   └── useFactoriesApi.ts # Data fetching & caching
-│   │   ├── pages/
-│   │   │   ├── DashboardPage.tsx  # Statistics & charts
-│   │   │   └── MapPage.tsx        # Map view with sidebar
-│   │   ├── theme/
-│   │   │   └── index.ts          # Chakra UI theme (colors, fonts)
-│   │   └── types/
-│   │       └── factory.ts        # TypeScript interfaces
-│   └── public/data/               # Static JSON data files
-│       ├── markers.json
-│       ├── dashboard_stats.json
-│       ├── factories.geojson
-│       └── factories_loc.json
-├── server/                        # Express backend
-│   ├── index.js                   # REST API (factories, provinces)
-│   ├── reload_schema.js           # PostgREST schema refresh
-│   └── scripts/
-│       ├── seed.js                # Import GeoJSON to Postgres
-│       └── seed-nationwide.js     # Import nationwide data
-└── server/sync/                   # Python data pipeline
-    ├── pipeline.py                # ETL: fetch → transform → upsert
-    ├── export_markers.py          # Export compact markers.json
-    ├── export_dashboard.py        # Export dashboard_stats.json
-    ├── config.py                  # API endpoint configuration
-    └── requirements.txt
+client/                          React 18 + TypeScript + Vite — the deployed app
+  src/
+    context/                     auth + watchlist providers (one shared store each)
+    components/                  map, sidebar, report form, dossier, admin modals
+    hooks/                       useFactoriesApi, useReports, useWatchlist, useZoning
+    pages/                       MapPage · DashboardPage · WasteMonitorPage
+                                 UserDiaryPage · AdminPage
+    utils/                       hazard classification, geo, the two Supabase clients
+  public/data/                   generated — markers/ zoning/ dbd/ + aggregates
+
+server/
+  index.js                       Express moderation API (tailnet-only)
+  collector/                     DBD collectors: resolve → load → detail → nations → audit
+  sync/                          Python ETL and the export scripts
+    pipeline.py                  fetch → transform → load (upsert, or atomic staging swap)
+    export_markers.py            per-province marker files
+    export_zoning.py             point-in-polygon against the DPT geodatabase
+    geocode_missing.py           sibling / geocode / centroid recovery tiers
+    repair_*.py                  fix swapped, mis-scaled and whole-degree coordinates
+  deploy/systemd/                the four timers that run all of the above
+
+supabase/
+  migrations/                    government database
+  migrations-citizen/            citizen database
 ```
 
----
+## Getting started
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL with PostGIS extension (or Supabase)
-- Python 3.9+ (for sync pipeline only)
-
-### Environment Variables
-
-**Client** (`client/.env`)
-```env
-VITE_SUPABASE_URL=<supabase-url>
-VITE_SUPABASE_ANON_KEY=<supabase-anon-key>
-```
-
-**Server** (`server/.env`)
-```env
-DATABASE_URL=postgresql://user:pass@host/dbname
-PORT=3001
-```
-
-**Sync Pipeline** (`server/sync/.env`)
-```env
-SUPABASE_URL=<supabase-url>
-SUPABASE_SERVICE_KEY=<supabase-service-key>
-SYNC_TEST_MODE=false
-SYNC_TEST_LIMIT=100
-```
-
-### Development
+**Prerequisites** — Node.js 18+, Python 3.12+ (pipeline only), and access to both
+databases.
 
 ```bash
-# Frontend
 cd client
 npm install
-npm run dev             # http://localhost:5173
-
-# Backend (separate terminal)
-cd server
-npm install
-npm run dev             # http://localhost:3001
+npm run dev          # http://localhost:5173
 ```
 
-### Data Sync (optional)
+### Environment
+
+`client/.env.local` — **two credential pairs, one per database**:
+
+```env
+# government data
+VITE_SUPABASE_URL=https://<gov-host>
+VITE_SUPABASE_ANON_KEY=<anon-key>
+
+# citizen data — accounts, reports, watchlists
+VITE_CITIZEN_SUPABASE_URL=https://<citizen-project>.supabase.co
+VITE_CITIZEN_SUPABASE_ANON_KEY=<anon-key>
+
+# moderation API (tailnet-only)
+VITE_API_BASE=https://<host>:4443
+```
+
+Missing credentials degrade gracefully: the map still works, detail lookups return null,
+sign-in and reporting are unavailable. `server/.env` mirrors the pair as `DATABASE_URL`
+and `CITIZEN_DATABASE_URL`; `server/sync/.env` needs `SUPABASE_URL`,
+`SUPABASE_SERVICE_KEY` and `LONGDO_API_KEY`.
+
+### Data pipeline
 
 ```bash
 cd server/sync
-pip install -r requirements.txt
+python pipeline.py                          # full sync
+python pipeline.py --test                   # test mode — no destructive writes
+python pipeline.py --endpoint Factory_Data  # one endpoint
 
-python pipeline.py                          # Full sync
-python pipeline.py --test                   # Test mode (100 records)
-python pipeline.py --endpoint Factory_Data  # Single endpoint
+python export_markers.py && python export_dashboard.py
+python export_zoning.py --check             # names any province whose zoning drifted
 ```
 
-### Database Seeding
+**Whenever a coordinate changes**, re-run `export_markers`, `export_dashboard`,
+`export_zoning` and `audit_province_mismatch`. `geom` needs no manual step — a trigger
+maintains it.
 
-```bash
-cd server
-npm run seed              # Import local GeoJSON
-npm run seed:nationwide   # Import nationwide data
-```
+### Deploying
 
-### Production Build
+**A push to GitHub does not publish.** The flow is: push, then trigger a Vercel deploy by
+hand (`vercel --prod` from `client/`, or the dashboard). A human gates production, on
+purpose.
 
-```bash
-cd client
-npm run build      # TypeScript compilation + Vite build
-npm run preview    # Preview production build
-```
-
-### Linting
-
-```bash
-cd client
-npm run lint
-```
+Two things follow. A successful nightly run leaves its exports *committed and waiting*,
+not live. And `vercel --prod` uploads the **working directory, not a commit** — an
+uncommitted file ships, so commit before you deploy.
 
 ---
 
-## API Endpoints
+## Documentation
 
-| Method | Endpoint | Description | Query Parameters |
-|--------|----------|-------------|-----------------|
-| `GET` | `/api/factories` | List factories | `bbox`, `province`, `search`, `highRisk` |
-| `GET` | `/api/provinces` | List provinces | — |
+| File | What it covers |
+|---|---|
+| **[CLAUDE.md](CLAUDE.md)** | how the app is built, and the rules that bind it |
+| **[DATA_LAYER.md](DATA_LAYER.md)** | the two databases, the load path, every guard and why it exists |
+| **[COLLECTORS.md](COLLECTORS.md)** | the four sources, the patterns that made them work, the dead ends |
+| **[HANDOFF.md](HANDOFF.md)** | incident history — read §2 before touching `pipeline.py` |
+| **[supabase/README.md](supabase/README.md)** | which migration belongs to which database |
 
-**Bounding box format:** `bbox=west,south,east,north`
-
----
-
-## Database Schema
-
-```sql
-CREATE TABLE factories (
-  id SERIAL PRIMARY KEY,
-  fac_reg TEXT,
-  name TEXT,
-  operator_name TEXT,
-  business_type TEXT,
-  district TEXT,
-  province TEXT,
-  factory_type TEXT,           -- 1=low, 2=medium, 3=high-risk
-  address TEXT,
-  capital_investment NUMERIC,
-  horsepower NUMERIC,
-  workers_male INTEGER,
-  workers_female INTEGER,
-  lat DOUBLE PRECISION,
-  lng DOUBLE PRECISION,
-  geom GEOMETRY(Point, 4326)   -- PostGIS spatial column
-);
-
--- Indexes
-CREATE INDEX factories_geom_idx ON factories USING GIST (geom);
-CREATE INDEX factories_province_idx ON factories (province);
-CREATE INDEX factories_type_idx ON factories (factory_type);
-```
+The pipeline carries guards that exist because the failure already happened: a 5%
+deactivation circuit breaker, volume floors on every full refresh, an atomic staging swap
+so no reader ever sees an empty table, and protection for coordinates a human placed.
+Read before changing the load path.
 
 ---
 
-## Performance Optimizations
+## Design system
 
-- **Compact markers format** — `markers.json` uses abbreviated keys (`i`, `n`, `a`, `t`, `p`) to minimize payload
-- **Viewport filtering** — only factories within the visible map bounds are rendered
-- **Render cap** — max 2,000 markers on the map at once
-- **Sidebar pagination** — max 200 factories in the list view
-- **Marker caching** — `useFactoriesApi` caches fetched data to prevent redundant requests
-- **Icon pre-creation** — Leaflet icons instantiated once and reused
-- **React.memo** — `MapWrapper` wrapped to prevent unnecessary re-renders
-- **PostGIS ST_MakeEnvelope** — server-side spatial filtering via GIST index
+**"Industrial-Eco"** — see `client/src/theme/index.ts`.
 
----
+| Colour | Hex | Used for |
+|---|---|---|
+| Thai PBS Orange | `#F05223` | brand, calls to action, selection |
+| Choropleth navy | `#0B3558` | province density ramp, from `#E8F1F4` |
+| Eco Green | `#10B981` | general-industry hazard tier |
+| Alert Crimson | `#EF4444` | hazardous industries only |
+| Slate | `#f8fafc`–`#0f172a` | backgrounds, borders, text |
 
-## Design System
+Typography: IBM Plex Sans Thai for Thai, Inter for Latin and numerals. The project follows
+the Signal 39 cognitive design framework — three hazard colours, three primary filters,
+progressive disclosure for everything else.
 
-**"Industrial-Eco" theme** — professional, trustworthy, and accessible.
+## Data source & license
 
-| Color | HEX | Usage |
-|-------|-----|-------|
-| Industrial Blue | `#1A365D` | Headers, factory markers |
-| Safety Orange | `#F59E0B` | Actions, user location, warnings |
-| Eco Green | `#10B981` | Normal/clean status indicators |
-| Alert Crimson | `#EF4444` | High-risk indicators only |
-| Slate | `#f8fafc`–`#1e293b` | Backgrounds, text, borders |
+Factory data from Thai government open data (Department of Industrial Works), company
+data from the Department of Business Development, zoning from the Department of Public
+Works and Town & Country Planning.
 
-**Typography:** IBM Plex Sans Thai + Noto Sans Thai (Thai), Inter (Latin/numbers)
+Citizen reports are **testimony, not verified fact**, and always render with that
+disclaimer. Reporter contact details are visible only to moderators, over a tailnet.
 
----
-
-## Data Source
-
-Factory data sourced from Thai government open data APIs (Department of Industrial Works). Includes registration numbers, business types, locations, capital investment, and workforce data across 77 provinces.
-
-## License
-
-ISC
+ISC.
