@@ -494,11 +494,23 @@ def apply_gov_coordinates(coordinates: list[dict]) -> int:
     Skips rows whose current coord_source is 'community' or 'admin' — a
     human-verified pin should not be silently overwritten by the next
     daily sync.
+
+    'repaired' is protected too. Those rows exist precisely because the
+    government coordinate was wrong — a whole-degree digit error that plotted
+    the factory outside its own province — and the feed still carries the wrong
+    value, so an unprotected sync restores the corruption the repair undid
+    (HANDOFF.md §10.5). The repair was accepted only if it landed inside the
+    stated province AND within 15 km of the stated tambon centroid AND was the
+    only shift to do both, so it is better evidence than the value it replaced.
+
+    'sibling' is deliberately NOT protected: an inherited position is a
+    stand-in for missing government data, so a real DIW coordinate should
+    overwrite it. See migration 20260814000000.
     """
     if not coordinates:
         return 0
 
-    PROTECTED = ("community", "admin")
+    PROTECTED = ("community", "admin", "repaired")
     ids = [c["id"] for c in coordinates]
     protected_ids: set[str] = set()
     for chunk in chunks_for_uri(ids):
