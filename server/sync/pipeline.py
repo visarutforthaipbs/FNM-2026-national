@@ -608,48 +608,55 @@ def load_and_promote(
         return None
 
 
+COORD_RPC_BATCH_SIZE = 5000
+
+
 def apply_gov_coordinates(coordinates: list[dict]) -> int:
     """
-    Upsert lat/lng for factories the gov CSV has real coordinates for.
-    Skips rows whose current coord_source is 'community' or 'admin' — a
-    human-verified pin should not be silently overwritten by the next
-    daily sync.
+    Apply lat/lng for factories the gov CSV has real coordinates for, via the
+    apply_gov_coordinates(jsonb) RPC (migration 20260815000000).
 
-    'repaired' is protected too. Those rows exist precisely because the
-    government coordinate was wrong — a whole-degree digit error that plotted
-    the factory outside its own province — and the feed still carries the wrong
-    value, so an unprotected sync restores the corruption the repair undid
-    (HANDOFF.md §10.5). The repair was accepted only if it landed inside the
-    stated province AND within 15 km of the stated tambon centroid AND was the
-    only shift to do both, so it is better evidence than the value it replaced.
+    The protection rule — skip 'community', 'admin' and 'repaired', overwrite
+    'sibling' — lives in SQL, not here. It used to be a readback into a Python
+    set followed by an upsert, which is two round-trips minutes apart on a
+    274k-row sync: a moderator approving a correction in that window had it
+    silently overwritten by the same run. In the function both statements are
+    one transaction, so that window is gone.
 
-    'sibling' is deliberately NOT protected: an inherited position is a
-    stand-in for missing government data, so a real DIW coordinate should
-    overwrite it. See migration 20260814000000.
+    The RPC also records what DIW published into gov_lat/gov_lng for every row,
+    override or not, so an override can be reverted and upstream fixes can be
+    detected. See the coord_override_drift view.
+
+    Batched because the payload travels as a JSON body: each call is its own
+    transaction, which is fine — the two statements that must agree are within
+    a batch, not across them.
     """
     if not coordinates:
         return 0
 
-    PROTECTED = ("community", "admin", "repaired")
-    ids = [c["id"] for c in coordinates]
-    protected_ids: set[str] = set()
-    for chunk in chunks_for_uri(ids):
-        rows = (
-            supabase.table("factories")
-            .select("id")
-            .in_("id", chunk)
-            .in_("coord_source", list(PROTECTED))
-            .execute()
-            .data
-        )
-        protected_ids.update(r["id"] for r in rows)
+    applied = 0
+    shadowed = 0
+    for i in range(0, len(coordinates), COORD_RPC_BATCH_SIZE):
+        batch = coordinates[i : i + COORD_RPC_BATCH_SIZE]
+        payload = [
+            {"id": c["id"], "lat": c["lat"], "lng": c["lng"]} for c in batch
+        ]
+        try:
+            rows = supabase.rpc("apply_gov_coordinates", {"p": payload}).execute().data
+        except Exception as e:
+            logger.error(f"❌ apply_gov_coordinates batch {i // COORD_RPC_BATCH_SIZE} failed: {e}")
+            continue
 
-    to_apply = [c for c in coordinates if c["id"] not in protected_ids]
-    if protected_ids:
-        logger.info(f"🛡️  Skipping {len(protected_ids)} human-verified positions")
+        # `returns table(...)` arrives as a single-element list of dicts.
+        row = rows[0] if isinstance(rows, list) and rows else (rows or {})
+        applied += row.get("applied") or 0
+        shadowed += row.get("shadowed") or 0
 
-    applied = upsert_batch("factories", to_apply, on_conflict="id")
+    skipped = shadowed - applied
     logger.info(f"📍 Applied gov coordinates for {applied} factories")
+    logger.info(f"🗃️  Recorded gov position for {shadowed} factories (gov_lat/gov_lng)")
+    if skipped > 0:
+        logger.info(f"🛡️  {skipped} rows kept their existing position (human-verified, or already current)")
     return applied
 
 
