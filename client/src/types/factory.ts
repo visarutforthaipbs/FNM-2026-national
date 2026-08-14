@@ -31,12 +31,17 @@ export type FactoryProperties = {
   คนงานหญิง?: number;
   ประเภท: string;
   /**
-   * Position provenance: "geocoded" (from address, street-level) or
-   * "centroid" (tambon centroid, ±2–5 km). Absent = exact position.
-   * Approximate positions must be visually distinguished (faded marker,
-   * "ตำแหน่งโดยประมาณ" label) — never presented as surveyed.
+   * Position provenance. Absent = straight from the government feed.
+   *  - "geocoded"  from the address, street-level
+   *  - "centroid"  tambon centroid, ±2–5 km
+   *  - "sibling"   inherited from another licence at the SAME address. Exact,
+   *                not approximate: one plant often holds several ทะเบียนโรงงาน
+   *                and only one of them carries a coordinate.
+   * The first two are approximate and must be visually distinguished (faded
+   * marker, "ตำแหน่งโดยประมาณ" label) — never presented as surveyed. "sibling"
+   * is a real position, so it is labelled by origin rather than by uncertainty.
    */
-  coordQuality?: "geocoded" | "centroid";
+  coordQuality?: "geocoded" | "centroid" | "sibling";
 };
 
 export type FactoryFeature = {

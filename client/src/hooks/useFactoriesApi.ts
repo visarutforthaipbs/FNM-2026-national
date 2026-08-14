@@ -112,8 +112,13 @@ async function loadProvinceMarkers(slug: string): Promise<FactoryFeature[]> {
         properties: {
             เลขทะเบียน: m.i || "",
             ชื่อโรงงาน: m.n || "",
-            // 'g'/'c' = approximate position (geocoded / tambon centroid)
-            coordQuality: m.q === "g" ? "geocoded" : m.q === "c" ? "centroid" : undefined,
+            // 'g'/'c' = approximate (geocoded / tambon centroid);
+            // 's' = exact, inherited from a licence at the same address
+            coordQuality:
+                m.q === "g" ? "geocoded"
+                : m.q === "c" ? "centroid"
+                : m.q === "s" ? "sibling"
+                : undefined,
             ผู้ประกอบก: "",
             ประกอบกิจก: "",
             ละติจูด: m.a[1],

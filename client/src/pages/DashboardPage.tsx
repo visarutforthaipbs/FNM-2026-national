@@ -43,6 +43,9 @@ interface DashboardStats {
   countByType: Record<string, number>;
   countByProvince?: Record<string, number>;
   countByIndustry?: Record<string, number>;
+  /** Where each pin came from — keys are factories.coord_source, plus "none"
+   *  for rows with no position at all. Written by export_dashboard.py. */
+  countByCoordSource?: Record<string, number>;
   sortedProvinces: Array<[string, number]>;
   topProvinces: Array<[string, number]>;
   totalProvinces: number;
@@ -441,6 +444,15 @@ const DashboardPage = () => {
             color="primary"
           />
         </SimpleGrid>
+
+        {/* Where the pins come from. Placed immediately above the zoning grid
+            because the zoning numbers are computed FROM these coordinates — a
+            factory sitting on a tambon centroid can fall in the wrong polygon,
+            so the reader needs the precision of the input before reading the
+            output. Counted from coord_source, never estimated. */}
+        {!selectedProvince && stats.countByCoordSource && (
+          <CoordinateProvenanceCard counts={stats.countByCoordSource} />
+        )}
 
         {/* Town-planning coverage, counted rather than assumed.
             This grid previously multiplied whatever total was on screen by
@@ -1056,6 +1068,112 @@ const TypeStatCard = ({ name, count, total, color, bg }: TypeStatCardProps) => {
     </Box>
   )
 }
+
+// CoordinateProvenanceCard — how the map's pins were obtained.
+//
+// The map plots ~62,600 factories, and it would be easy to read every pin as a
+// surveyed location. Only about 63% are. This states the split rather than
+// letting the map imply a precision it does not have.
+//
+// SIGNAL 39: collapsed to three chunks (Rule of Three) — exact / approximate /
+// unmapped — with a single stacked bar as the Layer 1 hook, so the shape is
+// readable before a word is. The per-source detail sits underneath as Layer 3.
+const CoordinateProvenanceCard = ({ counts }: { counts: Record<string, number> }) => {
+  const get = (k: string) => counts[k] ?? 0;
+  // 'sibling' is exact: a surveyed position inherited from another licence at
+  // the same address. 'repaired'/'community'/'admin' are exact by definition too.
+  const exact = get("gov") + get("repaired") + get("community") + get("admin") + get("sibling");
+  const approximate = get("geocoded") + get("centroid");
+  const unmapped = get("none");
+  const total = exact + approximate + unmapped;
+  if (total === 0) return null;
+  const pct = (n: number) => (n / total) * 100;
+
+  const groups = [
+    {
+      key: "exact",
+      label: "พิกัดจากราชการ",
+      note: "กรมโรงงานฯ ให้พิกัดมาโดยตรง หรือยืนยันแล้ว",
+      count: exact,
+      color: "#0B3558",
+    },
+    {
+      key: "approximate",
+      label: "ตำแหน่งโดยประมาณ",
+      note: "แปลงจากที่อยู่หรือใช้จุดกึ่งกลางตำบล คลาดเคลื่อนได้ถึง 5 กม.",
+      count: approximate,
+      color: "#F59E0B",
+    },
+    {
+      key: "unmapped",
+      label: "ยังไม่มีพิกัด",
+      note: "มีทะเบียนโรงงาน แต่ไม่ปรากฏบนแผนที่",
+      count: unmapped,
+      color: "#CBD5E1",
+    },
+  ];
+
+  return (
+    <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="slate.200" mb={8}>
+      <Flex align="center" justify="space-between" mb={1} wrap="wrap" gap={2}>
+        <Flex align="center" gap={2}>
+          <Box w="10px" h="10px" borderRadius="full" bg="#0B3558" />
+          <Text fontSize="lg" fontWeight="bold" color="slate.800">
+            ที่มาของพิกัดบนแผนที่
+          </Text>
+        </Flex>
+        <Badge colorScheme="gray" p={2} borderRadius="lg" fontSize="xs">
+          {(exact + approximate).toLocaleString()} โรงงานบนแผนที่
+        </Badge>
+      </Flex>
+      <Text fontSize="xs" color="slate.500" mb={4} lineHeight="1.7">
+        หมุดบนแผนที่ไม่ได้แม่นยำเท่ากันทุกจุด — ส่วนหนึ่งได้พิกัดจากกรมโรงงานฯ โดยตรง
+        อีกส่วนหนึ่งประมาณจากที่อยู่หรือจุดกึ่งกลางตำบล ตัวเลขชุดนี้บอกสัดส่วนตามจริง
+        เพื่อไม่ให้เข้าใจผิดว่าทุกหมุดคือตำแหน่งที่รังวัดแล้ว
+      </Text>
+
+      {/* Layer 1 — one bar, no reading required */}
+      <Flex h="10px" borderRadius="full" overflow="hidden" mb={4} bg="slate.100">
+        {groups.map((g) =>
+          g.count > 0 ? (
+            <Box key={g.key} w={`${pct(g.count)}%`} bg={g.color} />
+          ) : null
+        )}
+      </Flex>
+
+      <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={4}>
+        {groups.map((g) => (
+          <Box key={g.key} bg="slate.50" p={4} borderRadius="xl" border="1px solid" borderColor="slate.200">
+            <Flex align="center" gap={2} mb={1}>
+              <Box w="8px" h="8px" borderRadius="full" bg={g.color} flexShrink={0} />
+              <Text fontSize="xs" color="slate.600" fontWeight="600">
+                {g.label}
+              </Text>
+            </Flex>
+            <Flex align="baseline" gap={2}>
+              <Text fontSize="xl" fontWeight="bold" color="slate.900">
+                {g.count.toLocaleString()}
+              </Text>
+              <Text fontSize="xs" color="slate.500" fontWeight="600">
+                {pct(g.count).toFixed(1)}%
+              </Text>
+            </Flex>
+            <Text fontSize="2xs" color="slate.600" mt={1} lineHeight="1.6">
+              {g.note}
+            </Text>
+          </Box>
+        ))}
+      </SimpleGrid>
+
+      {get("sibling") > 0 && (
+        <Text fontSize="2xs" color="slate.500" mt={3} lineHeight="1.7">
+          ในจำนวนพิกัดจากราชการ มี {get("sibling").toLocaleString()} โรงงานที่ใช้พิกัดของอีกใบอนุญาต
+          ซึ่งจดทะเบียนที่อยู่เดียวกัน — โรงงานหนึ่งแห่งมักถือหลายใบอนุญาต และมีเพียงใบเดียวที่มีพิกัดกำกับ
+        </Text>
+      )}
+    </Box>
+  );
+};
 
 // SIGNAL 39 Layer 3: IndustryRanking — deep-dive into DIW industry types
 // (ลำดับที่ 1-107). Each row links to the map filtered to that industry.

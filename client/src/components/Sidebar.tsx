@@ -52,6 +52,121 @@ const SearchIcon = (props: IconProps) => (
 
 
 
+/**
+ * How a position that did not come from the government feed is described.
+ *
+ * The two approximate tiers say plainly that they are approximate. "sibling" is
+ * deliberately worded differently: it is an exact surveyed position, just one
+ * recorded against another licence at the same address — one plant commonly
+ * holds several ทะเบียนโรงงาน and only one of them carries a coordinate.
+ * Calling that "โดยประมาณ" would understate it as badly as calling a tambon
+ * centroid exact.
+ */
+const COORD_PROVENANCE: Record<
+  NonNullable<FactoryFeature["properties"]["coordQuality"]>,
+  { label: string; detail: string; approximate: boolean }
+> = {
+  centroid: {
+    label: "ตำแหน่งโดยประมาณ (ระดับตำบล)",
+    detail: "ใช้จุดกึ่งกลางตำบลแทนที่อยู่จริง คลาดเคลื่อนได้ 2–5 กม.",
+    approximate: true,
+  },
+  geocoded: {
+    label: "ตำแหน่งโดยประมาณ (จากที่อยู่)",
+    detail: "ได้จากการแปลงที่อยู่เป็นพิกัดระดับถนน ไม่ใช่พิกัดที่กรมโรงงานฯ ให้มา",
+    approximate: true,
+  },
+  sibling: {
+    label: "อ้างอิงจากใบอนุญาตที่อยู่เดียวกัน",
+    detail: "ใบอนุญาตนี้ไม่มีพิกัดของตนเอง จึงใช้พิกัดของอีกใบอนุญาตที่จดทะเบียนที่อยู่เดียวกัน",
+    approximate: false,
+  },
+};
+
+/**
+ * The พิกัด block. When the position did not come from the government feed the
+ * whole block is tinted and carries its own correction chip — the person best
+ * placed to fix a wrong pin is the one looking at it, and asking them there
+ * costs less attention than sending them to the button at the foot of the panel.
+ */
+const CoordinateBlock: React.FC<{
+  factory: FactoryFeature;
+  onCorrect: () => void;
+}> = ({ factory, onCorrect }) => {
+  const quality = factory.properties.coordQuality;
+  const provenance = quality ? COORD_PROVENANCE[quality] : null;
+  // Approximate positions get the warmer, more insistent treatment; an
+  // inherited-but-exact one is merely noted.
+  const tint = !provenance ? null : provenance.approximate ? "orange" : "blue";
+
+  return (
+    <Box pt={3} borderTop="1px solid" borderColor="slate.100">
+      <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>
+        พิกัด
+      </Text>
+      <Box
+        {...(tint
+          ? {
+              bg: `${tint}.50`,
+              border: "1px solid",
+              borderColor: `${tint}.200`,
+              borderRadius: "lg",
+              p: 3,
+            }
+          : {})}
+      >
+        <Text fontSize="xs" color="slate.600" fontFamily="'Inter', monospace">
+          {factory.geometry.coordinates[1].toFixed(6)}, {factory.geometry.coordinates[0].toFixed(6)}
+        </Text>
+
+        {provenance && (
+          <>
+            <Badge
+              mt={1.5}
+              bg={`${tint}.100`}
+              color={`${tint}.800`}
+              borderRadius="full"
+              px={2.5}
+              py={0.5}
+              fontSize="10px"
+              fontWeight="700"
+              whiteSpace="normal"
+              textAlign="left"
+            >
+              {provenance.label}
+            </Badge>
+            <Text fontSize="10px" color="slate.600" mt={1.5} lineHeight="1.6">
+              {provenance.detail}
+            </Text>
+            <Button
+              mt={2.5}
+              size="xs"
+              borderRadius="full"
+              bg="white"
+              color={`${tint}.800`}
+              border="1px solid"
+              borderColor={`${tint}.300`}
+              fontWeight="600"
+              fontSize="11px"
+              px={3}
+              _hover={{ bg: `${tint}.100` }}
+              onClick={onCorrect}
+              leftIcon={
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3}>
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
+                  <circle cx="12" cy="10" r="3" />
+                </Icon>
+              }
+            >
+              รู้ตำแหน่งจริง? ปักหมุดให้ถูกต้อง
+            </Button>
+          </>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
 interface SidebarProps {
   factories: FactoryGeoJSON | null;
   selectedFactory: FactoryFeature | null;
@@ -612,29 +727,13 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </Button>
                   )}
 
-                  {/* Coordinates — with provenance so approximate positions are
-                      never mistaken for surveyed ones */}
-                  <Box pt={3} borderTop="1px solid" borderColor="slate.100">
-                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>พิกัด</Text>
-                    <Text fontSize="xs" color="slate.500" fontFamily="'Inter', monospace">
-                      {selectedFactory.geometry.coordinates[1].toFixed(6)}, {selectedFactory.geometry.coordinates[0].toFixed(6)}
-                    </Text>
-                    {selectedFactory.properties.coordQuality && (
-                      <Badge
-                        mt={1.5}
-                        bg="orange.50"
-                        color="orange.700"
-                        borderRadius="full"
-                        px={2.5}
-                        fontSize="10px"
-                        fontWeight="600"
-                      >
-                        {selectedFactory.properties.coordQuality === "centroid"
-                          ? "ตำแหน่งโดยประมาณ (ระดับตำบล)"
-                          : "ตำแหน่งโดยประมาณ (จากที่อยู่)"}
-                      </Badge>
-                    )}
-                  </Box>
+                  {/* Coordinates — with provenance so a position that did not
+                      come from the government feed is never mistaken for a
+                      surveyed one, and can be corrected on the spot */}
+                  <CoordinateBlock
+                    factory={selectedFactory}
+                    onCorrect={onCorrectionOpen}
+                  />
                 </VStack>
               </Box>
 
