@@ -579,12 +579,11 @@ def main():
 
     if args.apply:
         print("\nNext steps:")
-        # NOT 'geom IS NULL' — the sibling and geocode tiers also MOVE rows that
-        # already had a coordinate, leaving a stale geom behind. Rewrite any geom
-        # that disagrees with lat/lng, not just the missing ones.
-        print("   UPDATE factories SET geom = ST_SetSRID(ST_MakePoint(lng, lat), 4326)")
-        print("   WHERE lat IS NOT NULL AND (geom IS NULL")
-        print("      OR ABS(ST_X(geom) - lng) > 1e-9 OR ABS(ST_Y(geom) - lat) > 1e-9);")
+        # No geom step: tr_factories_set_geometry fires BEFORE INSERT OR UPDATE
+        # OF lat, lng and keeps geom in sync by itself, including for tiers that
+        # MOVE a row that already had a coordinate. Verify rather than assume:
+        #   SELECT count(*) FROM factories WHERE lat IS NOT NULL AND (geom IS NULL
+        #     OR ABS(ST_X(geom) - lng) > 1e-9 OR ABS(ST_Y(geom) - lat) > 1e-9);
         print("   python export_markers.py && python export_dashboard.py")
 
 
