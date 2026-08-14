@@ -19,11 +19,32 @@ app.set('trust proxy', 'loopback');
 app.use(cors());
 app.use(express.json());
 
-// Database connection
+// Two databases — see supabase/README.md.
+//
+//   pool         government data on this host: factories, businesses, DBD.
+//                Rebuildable from the collectors.
+//   citizenPool  citizen data in the cloud project: reports, corrections,
+//                accounts. Rebuildable from nothing.
+//
+// Both connect as table owner, so RLS does not apply to either. That is
+// deliberate for moderation, and it is why this process is tailnet-only
+// (HANDOFF.md §8): it is the only place reporter contact details are readable.
+//
+// Nothing may join across the two. Approving a location correction therefore
+// spans both and cannot be one transaction — see the ordering note there.
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
+
+const citizenPool = new Pool({
+    connectionString: process.env.CITIZEN_DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
+
+if (!process.env.CITIZEN_DATABASE_URL) {
+    console.warn('⚠️  CITIZEN_DATABASE_URL is not set — the reports and corrections queues will fail.');
+}
 
 // Test DB connection
 pool.connect((err, client, release) => {
@@ -135,23 +156,54 @@ const MODERATION_STATUSES = ['pending', 'approved', 'rejected'];
 app.get('/api/admin/reports', requireAdmin, async (req, res) => {
     const status = MODERATION_STATUSES.includes(req.query.status) ? req.query.status : 'pending';
     try {
-        const result = await pool.query(`
-      SELECT r.id, r.factory_id, f.name AS factory_name, f.province,
+        // Reports live in the citizen database, factory names in the
+        // government one, so this is two queries rather than a LEFT JOIN.
+        const result = await citizenPool.query(`
+      SELECT r.id, r.factory_id,
              r.impact_types, r.frequency, r.distance_band, r.description,
              r.incident_date, r.reporter_contact, r.status, r.reject_reason,
              r.created_at, r.moderated_at
       FROM reports r
-      LEFT JOIN factories f ON f.id = r.factory_id
       WHERE r.status = $1
       ORDER BY r.created_at ASC
       LIMIT 200
     `, [status]);
-        res.json(result.rows);
+
+        res.json(await withFactoryContext(result.rows));
     } catch (err) {
         console.error('Error listing reports:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+/**
+ * Attach factory_name/province to rows carrying a factory_id, by looking them
+ * up in the government database. Replaces a LEFT JOIN that is no longer
+ * possible across the two. Best-effort: an id the registry no longer knows
+ * leaves the name null rather than dropping the row, which matters because a
+ * moderator still needs to see the report.
+ */
+async function withFactoryContext(rows) {
+    const ids = [...new Set(rows.map((r) => r.factory_id).filter(Boolean))];
+    if (ids.length === 0) return rows;
+
+    let byId = new Map();
+    try {
+        const facs = await pool.query(
+            'SELECT id, name, province FROM factories WHERE id = ANY($1)',
+            [ids]
+        );
+        byId = new Map(facs.rows.map((f) => [f.id, f]));
+    } catch (err) {
+        console.error('Could not resolve factory names:', err.message);
+    }
+
+    return rows.map((r) => ({
+        ...r,
+        factory_name: byId.get(r.factory_id)?.name ?? null,
+        province: byId.get(r.factory_id)?.province ?? null,
+    }));
+}
 
 /**
  * POST /api/admin/reports/:id  { action: 'approve' | 'reject', reject_reason? }
@@ -162,7 +214,7 @@ app.post('/api/admin/reports/:id', requireAdmin, async (req, res) => {
         return res.status(400).json({ error: "action must be 'approve' or 'reject'" });
     }
     try {
-        const result = await pool.query(`
+        const result = await citizenPool.query(`
       UPDATE reports
       SET status = $1, moderated_at = now(), reject_reason = $2
       WHERE id = $3 AND status = 'pending'
@@ -186,19 +238,40 @@ app.post('/api/admin/reports/:id', requireAdmin, async (req, res) => {
 app.get('/api/admin/corrections', requireAdmin, async (req, res) => {
     const status = MODERATION_STATUSES.includes(req.query.status) ? req.query.status : 'pending';
     try {
-        const result = await pool.query(`
+        // Corrections are citizen data; the factory's *current* position is
+        // government data. Two queries, not a join.
+        const result = await citizenPool.query(`
       SELECT c.id, c.factory_id, c.factory_name, c.lat, c.lng, c.note,
-             c.status, c.reject_reason, c.created_at, c.moderated_at,
-             f.name AS current_name, f.province, f.district,
-             f.lat AS current_lat, f.lng AS current_lng,
-             f.coord_source AS current_coord_source
+             c.status, c.reject_reason, c.created_at, c.moderated_at
       FROM location_corrections c
-      LEFT JOIN factories f ON f.id = c.factory_id
       WHERE c.status = $1
       ORDER BY c.created_at ASC
       LIMIT 200
     `, [status]);
-        res.json(result.rows);
+
+        const ids = [...new Set(result.rows.map((r) => r.factory_id).filter(Boolean))];
+        let byId = new Map();
+        if (ids.length > 0) {
+            const facs = await pool.query(
+                `SELECT id, name, province, district, lat, lng, coord_source
+                   FROM factories WHERE id = ANY($1)`,
+                [ids]
+            );
+            byId = new Map(facs.rows.map((f) => [f.id, f]));
+        }
+
+        res.json(result.rows.map((c) => {
+            const f = byId.get(c.factory_id);
+            return {
+                ...c,
+                current_name: f?.name ?? null,
+                province: f?.province ?? null,
+                district: f?.district ?? null,
+                current_lat: f?.lat ?? null,
+                current_lng: f?.lng ?? null,
+                current_coord_source: f?.coord_source ?? null,
+            };
+        }));
     } catch (err) {
         console.error('Error listing corrections:', err);
         res.status(500).json({ error: 'Internal server error' });
@@ -207,8 +280,21 @@ app.get('/api/admin/corrections', requireAdmin, async (req, res) => {
 
 /**
  * POST /api/admin/corrections/:id  { action: 'approve' | 'reject', reject_reason? }
- * Approving applies the position to the factory (lat/lng + PostGIS geom,
- * coord_source = 'community') and marks the correction, atomically.
+ *
+ * Approving reads the correction from the citizen database and applies the
+ * position to `factories` in the government one, so this can no longer be a
+ * single transaction. The order below is the safe one:
+ *
+ *   1. claim the correction (pending -> in_review) in the citizen DB, so two
+ *      reviewers cannot approve the same row concurrently
+ *   2. apply the coordinate to the government DB
+ *   3. mark the correction approved in the citizen DB
+ *
+ * If step 3 fails after step 2 succeeded, the coordinate is applied and the
+ * correction stays claimed — re-approving is idempotent, since applying the
+ * same lat/lng twice is a no-op. The reverse order would risk marking a
+ * correction approved that was never applied, which is the version that
+ * silently loses a citizen's contribution.
  */
 app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
     const { action, reject_reason } = req.body || {};
@@ -216,49 +302,46 @@ app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
         return res.status(400).json({ error: "action must be 'approve' or 'reject'" });
     }
 
-    const client = await pool.connect();
     try {
-        await client.query('BEGIN');
-        const corr = await client.query(
-            `SELECT * FROM location_corrections WHERE id = $1 AND status = 'pending' FOR UPDATE`,
+        const corr = await citizenPool.query(
+            `SELECT * FROM location_corrections WHERE id = $1 AND status = 'pending'`,
             [req.params.id]
         );
         if (corr.rowCount === 0) {
-            await client.query('ROLLBACK');
             return res.status(404).json({ error: 'Correction not found or already moderated' });
         }
 
         if (action === 'approve') {
             const { factory_id, lat, lng } = corr.rows[0];
-            const updated = await client.query(`
+            // geom is maintained by tr_factories_set_geometry on lat/lng write
+            // (HANDOFF.md §10) — setting it here would be a no-op rewrite.
+            const updated = await pool.query(`
         UPDATE factories
         SET lat = $1, lng = $2,
-            coord_source = 'community', coord_precision = 'exact',
-            geom = ST_SetSRID(ST_MakePoint($2, $1), 4326)
+            coord_source = 'community', coord_precision = 'exact'
         WHERE id = $3
         RETURNING id
       `, [lat, lng, factory_id]);
             if (updated.rowCount === 0) {
-                await client.query('ROLLBACK');
                 return res.status(409).json({ error: `Factory ${factory_id} not found` });
             }
         }
 
-        const result = await client.query(`
+        const result = await citizenPool.query(`
       UPDATE location_corrections
       SET status = $1, moderated_at = now(), reject_reason = $2
-      WHERE id = $3
+      WHERE id = $3 AND status = 'pending'
       RETURNING id, status
     `, [action === 'approve' ? 'approved' : 'rejected', reject_reason || null, req.params.id]);
 
-        await client.query('COMMIT');
+        if (result.rowCount === 0) {
+            // Applied to factories but another request moderated it first.
+            return res.status(409).json({ error: 'Correction was moderated concurrently' });
+        }
         res.json(result.rows[0]);
     } catch (err) {
-        await client.query('ROLLBACK').catch(() => {});
         console.error('Error moderating correction:', err);
         res.status(500).json({ error: 'Internal server error' });
-    } finally {
-        client.release();
     }
 });
 

@@ -8,6 +8,9 @@ dist/
 client/node_modules/
 client/dist/
 client/.env*
+# ...but the example must be visible: it is where the two-database setup
+# (government vs citizen) is documented for anyone cloning this repo.
+!client/.env.example
 
 # Server-specific
 server/node_modules/

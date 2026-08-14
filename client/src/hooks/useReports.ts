@@ -1,37 +1,37 @@
 import { useEffect, useState } from "react";
 import type { ImpactType, ReportCountSummary, ReportInput } from "../types/report";
-
-// ── Supabase REST helpers (same raw-fetch pattern as useFactoriesApi) ──
-
-function supabaseConfig(): { url: string; key: string } | null {
-  const url = import.meta.env.VITE_SUPABASE_URL;
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return { url, key };
-}
+import { supabaseCitizen } from "../utils/supabaseClient";
 
 /**
  * Submit a citizen impact report. Inserts a pending row; it becomes publicly
  * visible only after moderation. Throws with a Thai message on failure.
  */
 export async function submitReport(input: ReportInput): Promise<void> {
-  const cfg = supabaseConfig();
-  if (!cfg) throw new Error("ระบบรับรายงานยังไม่พร้อมใช้งาน");
+  const { data: sessionData } = await supabaseCitizen.auth.getSession();
+  const userId = sessionData?.session?.user?.id || input.user_id;
 
-  const res = await fetch(`${cfg.url}/rest/v1/reports`, {
-    method: "POST",
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    },
-    body: JSON.stringify({ ...input, source: "web" }),
-  });
+  const payload: Record<string, unknown> = {
+    factory_id: input.factory_id,
+    impact_types: input.impact_types,
+    frequency: input.frequency,
+    distance_band: input.distance_band,
+    description: input.description,
+    incident_date: input.incident_date,
+    reporter_contact: input.reporter_contact,
+    source: "web",
+  };
 
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    if (body.includes("rate_limited")) {
+  if (userId) {
+    payload.user_id = userId;
+  }
+  if (input.private_note) {
+    payload.private_note = input.private_note;
+  }
+
+  const { error } = await supabaseCitizen.from("reports").insert(payload);
+
+  if (error) {
+    if (error.message?.includes("rate_limited")) {
       throw new Error("ส่งรายงานได้สูงสุด 5 ครั้งต่อชั่วโมง กรุณาลองใหม่ภายหลัง");
     }
     throw new Error("ส่งรายงานไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -49,23 +49,13 @@ export async function submitLocationCorrection(input: {
   lng: number;
   note?: string;
 }): Promise<void> {
-  const cfg = supabaseConfig();
-  if (!cfg) throw new Error("ระบบรับข้อมูลยังไม่พร้อมใช้งาน");
-
-  const res = await fetch(`${cfg.url}/rest/v1/location_corrections`, {
-    method: "POST",
-    headers: {
-      apikey: cfg.key,
-      Authorization: `Bearer ${cfg.key}`,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    },
-    body: JSON.stringify({ ...input, source: "web" }),
+  const { error } = await supabaseCitizen.from("location_corrections").insert({
+    ...input,
+    source: "web",
   });
 
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    if (body.includes("rate_limited")) {
+  if (error) {
+    if (error.message?.includes("rate_limited")) {
       throw new Error("ส่งการแก้ไขได้สูงสุด 5 ครั้งต่อชั่วโมง กรุณาลองใหม่ภายหลัง");
     }
     throw new Error("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -80,18 +70,17 @@ let countsPromise: Promise<Map<string, ReportCountSummary>> | null = null;
 
 async function loadReportCounts(): Promise<Map<string, ReportCountSummary>> {
   const counts = new Map<string, ReportCountSummary>();
-  const cfg = supabaseConfig();
-  if (!cfg) return counts;
 
-  const res = await fetch(
-    `${cfg.url}/rest/v1/report_counts?select=factory_id,impact_type,count`,
-    { headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}` } }
-  );
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const { data, error } = await supabaseCitizen
+    .from("report_counts")
+    .select("factory_id, impact_type, count");
 
-  const rows: { factory_id: string; impact_type: ImpactType; count: number }[] =
-    await res.json();
-  for (const row of rows) {
+  if (error) {
+    console.error("Failed to load report counts:", error.message);
+    return counts;
+  }
+
+  for (const row of (data || []) as { factory_id: string; impact_type: ImpactType; count: number }[]) {
     const entry = counts.get(row.factory_id) ?? { total: 0, byType: {} };
     entry.total += row.count;
     entry.byType[row.impact_type] = (entry.byType[row.impact_type] ?? 0) + row.count;
@@ -100,26 +89,36 @@ async function loadReportCounts(): Promise<Map<string, ReportCountSummary>> {
   return counts;
 }
 
-/** Approved-report counts per factory id. Empty map while loading or if unavailable. */
-export function useReportCounts(): Map<string, ReportCountSummary> {
-  const [counts, setCounts] = useState<Map<string, ReportCountSummary>>(new Map());
+export function useReportCounts(): {
+  counts: Map<string, ReportCountSummary>;
+  isLoading: boolean;
+} {
+  const [counts, setCounts] = useState<Map<string, ReportCountSummary>>(
+    new Map()
+  );
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
     if (!countsPromise) {
-      countsPromise = loadReportCounts().catch((err) => {
-        console.error("❌ Failed to load report counts:", err);
-        countsPromise = null; // allow retry next mount
-        return new Map<string, ReportCountSummary>();
-      });
+      countsPromise = loadReportCounts();
     }
-    countsPromise.then((m) => {
-      if (!cancelled && m.size > 0) setCounts(m);
-    });
+    let cancelled = false;
+    countsPromise
+      .then((c) => {
+        if (!cancelled) {
+          setCounts(c);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load report counts:", err);
+        if (!cancelled) setIsLoading(false);
+      });
+
     return () => {
       cancelled = true;
     };
   }, []);
 
-  return counts;
+  return { counts, isLoading };
 }
