@@ -1,8 +1,8 @@
 {
   "total": 63384,
   "highRiskCount": 57163,
-  "totalCapital": 7756297869870.38,
-  "totalWorkers": 3344767,
+  "totalCapital": 7758796598313.42,
+  "totalWorkers": 3345601,
   "countByType": {
     "1": 47,
     "2": 3287,
@@ -227,7 +227,7 @@
     },
     "กรุงเทพมหานคร": {
       "101": 6,
-      "105": 45,
+      "105": 46,
       "106": 6
     },
     "กาญจนบุรี": {
@@ -514,9 +514,10 @@
   "countByCoordSource": {
     "geocoded": 3045,
     "gov": 39035,
-    "sibling": 570,
-    "centroid": 19976,
-    "none": 746,
+    "sibling": 568,
+    "centroid": 19960,
+    "admin": 36,
+    "none": 728,
     "repaired": 12
   }
 }
