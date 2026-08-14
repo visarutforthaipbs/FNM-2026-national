@@ -759,6 +759,16 @@ def fetch_all_active_ids(page: int = 1000) -> set[str]:
 
     274k rows at 1,000 a page is ~275 requests against a database on the same
     host as the caller. That is acceptable for a nightly.
+
+    .order("id") is not cosmetic. OFFSET paging over an unordered result is
+    undefined: Postgres may return rows in any order, and the upsert that runs
+    immediately before this rewrites most of the table, so pages shift under
+    the reader and rows fall between them. The first paginated version of this
+    function read back 169,413 of 274,422 active ids for exactly that reason —
+    which is worse than the bug it replaced, because the ~105,000 rows it
+    happened to skip look absent from the database, not absent from the feed,
+    and would be candidates for deactivation. Order by the primary key so every
+    row lands in exactly one page.
     """
     ids: set[str] = set()
     start = 0
@@ -767,6 +777,7 @@ def fetch_all_active_ids(page: int = 1000) -> set[str]:
             supabase.table("factories")
             .select("id")
             .eq("is_active", True)
+            .order("id")
             .range(start, start + page - 1)
             .execute()
             .data
@@ -821,16 +832,35 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
             logger.info("✅ No factories to deactivate")
             return 0
 
+        missing_list = sorted(missing_ids)
+        ratio = len(missing_ids) / len(existing_ids) if existing_ids else 0
+
+        # A dry run reports before the circuit breaker gets a say. The breaker
+        # exists to stop a *write*, and the whole point of dry mode is to see
+        # the number in the case where the breaker would fire — which, given
+        # the current 13% gap, is every run. Returning early on the breaker
+        # meant the candidate list was never written and the count stayed
+        # buried in an error line.
+        if mode != "on":
+            path = write_deactivation_candidates(missing_list)
+            logger.warning(
+                f"🧪 Dry run: {len(missing_list)}/{len(existing_ids)} factories ({ratio:.1%}) "
+                f"are absent from the feed and WOULD be deactivated. Nothing written."
+            )
+            logger.warning(f"   Candidate ids: {path}")
+            logger.warning("   Review, then set SYNC_DEACTIVATE=on to apply.")
+            return 0
+
         # Circuit breaker: a healthy daily sync deactivates a handful of
         # factories (closures), not a large fraction of the table. If the
         # gov CSV fetch was truncated/incomplete for any reason, fetched_ids
         # would look artificially small and this would otherwise mass-
         # deactivate the database. Abort instead of guessing.
         max_deactivation_ratio = 0.05
-        if existing_ids and len(missing_ids) > len(existing_ids) * max_deactivation_ratio:
+        if existing_ids and ratio > max_deactivation_ratio:
             logger.error(
                 f"❌ Refusing to deactivate {len(missing_ids)}/{len(existing_ids)} factories "
-                f"({len(missing_ids) / len(existing_ids):.0%} — over the {max_deactivation_ratio:.0%} safety "
+                f"({ratio:.0%} — over the {max_deactivation_ratio:.0%} safety "
                 "threshold). This usually means the source CSV fetch was incomplete. Investigate manually."
             )
             return 0
@@ -840,17 +870,6 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
         # UPSERT_BATCH_SIZE — 2000 Thai ids exceed the gateway's URI limit and
         # the resulting 414 was swallowed by the except below, silently
         # skipping deactivation altogether.
-        missing_list = sorted(missing_ids)
-
-        if mode != "on":
-            path = write_deactivation_candidates(missing_list)
-            logger.warning(
-                f"🧪 Dry run: {len(missing_list)} factories are absent from the feed and "
-                f"WOULD be deactivated. Nothing written. Candidates: {path}"
-            )
-            logger.warning("   Set SYNC_DEACTIVATE=on to apply, after reviewing the list.")
-            return 0
-
         deactivated = 0
         for batch in chunks_for_uri(missing_list):
             supabase.table("factories").update({"is_active": False}).in_("id", batch).execute()
