@@ -31,7 +31,7 @@ This file was itself an example: it claimed "~39,000 with map coordinates" and "
 
 ## Two databases
 
-**Government data and citizen data live in separate Postgres instances.** Read [`supabase/README.md`](supabase/README.md) before writing a migration or a query that spans them.
+**Government data and citizen data live in separate Postgres instances.** Read [`supabase/README.md`](supabase/README.md) before writing a migration or a query that spans them, and [`DATA_LAYER.md`](DATA_LAYER.md) for the full inventory, the load path, the timer schedule, and every guard in the pipeline and why it exists.
 
 | | Government | Citizen |
 |---|---|---|
