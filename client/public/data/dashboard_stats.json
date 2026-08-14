@@ -510,5 +510,12 @@
       "105": 1,
       "106": 0
     }
+  },
+  "countByCoordSource": {
+    "geocoded": 3045,
+    "gov": 39047,
+    "sibling": 570,
+    "centroid": 19976,
+    "none": 746
   }
 }

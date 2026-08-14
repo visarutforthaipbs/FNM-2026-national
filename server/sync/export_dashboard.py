@@ -69,11 +69,15 @@ def export_dashboard_stats():
     count_by_province = {}
     count_by_industry = {}  # DIW ลำดับที่ 1-107, parsed from the registration id
     waste_by_province = {}  # Province counts for waste-related types 101, 105, 106 with coords
+    # Where each pin came from. Published so the dashboard can state map coverage
+    # honestly instead of implying every plotted factory was surveyed — roughly a
+    # third of them are an address geocode or a tambon centroid.
+    count_by_coord_source = {}
 
     while True:
         # Note: We omit .not_.is_("lat", "null") to include ALL active factories
         query = supabase.table("factories") \
-            .select("id,factory_type,province,capital_investment,total_workers,lat,lng") \
+            .select("id,factory_type,province,capital_investment,total_workers,lat,lng,coord_source") \
             .eq("is_active", True) \
             .eq("status", "ดำเนินการ") \
             .order("id") \
@@ -103,6 +107,11 @@ def export_dashboard_stats():
                 
             # Province counts
             count_by_province[f_prov] = count_by_province.get(f_prov, 0) + 1
+
+            # Coordinate provenance — 'none' covers rows with no position at all,
+            # which are counted in `total` but never appear on the map
+            src = (item.get("coord_source") or "none") if has_coords else "none"
+            count_by_coord_source[src] = count_by_coord_source.get(src, 0) + 1
 
             # Industry type counts (ลำดับที่)
             code = parse_industry_code(item.get("id") or "")
@@ -135,6 +144,8 @@ def export_dashboard_stats():
     print(f"✅ Total Active Factories (incl. no coords): {total}")
     print(f"💰 Total Capital: {total_capital}")
     print(f"👷 Total Workers: {total_workers}")
+    print("📍 Coordinate provenance: " + ", ".join(
+        f"{k}={v:,}" for k, v in sorted(count_by_coord_source.items(), key=lambda kv: -kv[1])))
     
     stats = {
         "total": total,
@@ -144,7 +155,8 @@ def export_dashboard_stats():
         "countByType": count_by_type,
         "countByProvince": count_by_province,
         "countByIndustry": count_by_industry,
-        "wasteByProvince": waste_by_province
+        "wasteByProvince": waste_by_province,
+        "countByCoordSource": count_by_coord_source
     }
     
     # Write to client/public

@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 """
-Tier 2 + 3 geocoding for factories without coordinates.
-=======================================================
+Tier 1.5 + 2 + 3 geocoding for factories without coordinates.
+=============================================================
+Tier 1.5 ("sibling"): inherit the exact position of another licence at the SAME
+                     address. One plant often holds several ทะเบียนโรงงาน; when
+                     only one carries a government coordinate the others used to
+                     fall through to Longdo or the tambon centroid and land far
+                     from their own address twin. Free, no API quota, and more
+                     accurate than either fallback — so it runs first.
+                     → coord_source='sibling', coord_precision='exact'
 Tier 2 ("geocode"):  Longdo Map address geocoding (Thai-native address parsing).
                      A result is accepted ONLY if it falls inside the factory's
                      stated province polygon — a wrong pin is worse than none.
@@ -13,10 +20,13 @@ Tier 3 ("centroid"): tambon (ตำบล) centroid fallback from the open
 Run Tier 1 (repair_coordinates.py) first — it's free and exact.
 
 Usage:
+    python geocode_missing.py --tier sibling              # dry run
+    python geocode_missing.py --tier sibling --apply
     python geocode_missing.py --tier geocode              # dry run
     python geocode_missing.py --tier geocode --apply
     python geocode_missing.py --tier centroid --apply     # fallback for the rest
-    python geocode_missing.py --tier both --apply
+    python geocode_missing.py --tier both --apply         # geocode + centroid
+    python geocode_missing.py --tier all --apply          # sibling first, then both
 
 Env: LONGDO_API_KEY   (https://map.longdo.com/console — free tier available)
 
@@ -25,7 +35,9 @@ crash or a parsing fix cost no API quota. After --apply, refresh the PostGIS
 geom column and re-run export_markers.py / export_dashboard.py.
 """
 import argparse
+import csv
 import json
+import math
 import os
 import re
 import sys
@@ -82,10 +94,12 @@ def load_province_polygons() -> dict:
     return polygons
 
 
-def fetch_missing(include_centroid: bool = False) -> list[dict]:
+def fetch_missing(include_centroid: bool = False, include_geocoded: bool = False) -> list[dict]:
     """Operating factories without coordinates. With include_centroid, also
     returns tambon-centroid rows so later Tier-2 runs can upgrade them to
-    street-level positions."""
+    street-level positions. include_geocoded additionally returns street-level
+    rows — only Tier 1.5 wants those, since an exact coordinate inherited from a
+    co-located licence beats a geocoder guess, but re-geocoding them is a no-op."""
     missing, last_id = [], None
     while True:
         q = (
@@ -96,8 +110,13 @@ def fetch_missing(include_centroid: bool = False) -> list[dict]:
             .order("id")
             .limit(1000)
         )
+        approx = ["lat.is.null"]
         if include_centroid:
-            q = q.or_("lat.is.null,coord_source.eq.centroid")
+            approx.append("coord_source.eq.centroid")
+        if include_geocoded:
+            approx.append("coord_source.eq.geocoded")
+        if len(approx) > 1:
+            q = q.or_(",".join(approx))
         else:
             q = q.is_("lat", "null")
         if last_id is not None:
@@ -107,7 +126,8 @@ def fetch_missing(include_centroid: bool = False) -> list[dict]:
             break
         missing.extend(batch)
         last_id = batch[-1]["id"]
-    label = "missing or centroid-approximate" if include_centroid else "still missing coordinates"
+    label = ("missing or approximate" if include_centroid or include_geocoded
+             else "still missing coordinates")
     print(f"🔍 {len(missing)} operating factories {label}")
     return missing
 
@@ -136,6 +156,176 @@ def apply_updates(rows: list[dict], source: str, precision: str, dry_run: bool):
         if (i + 1) % 200 == 0:
             print(f"   ... {i + 1}/{len(rows)}", flush=True)
     print("✅ Done.")
+
+
+# ── Tier 1.5: inherit a co-located licence's exact coordinate ──────────────
+
+# Sources trusted as a donor position. 'geocoded'/'centroid' are excluded on
+# purpose — inheriting an approximation would launder it into a pin the UI
+# renders as exact.
+DONOR_SOURCES = ("gov", "repaired", "admin", "community")
+# Donors for one address that disagree by more than this are treated as
+# unresolvable rather than guessed between. Real cases exist: พี.แอล.ซีเมนต์ has
+# two 'gov' rows at 888 ม.13 คลองนารายณ์ whose longitudes differ by almost
+# exactly 1.000° (101.145 vs 102.145) — a digit error in the government feed.
+DONOR_DISAGREE_KM = 0.5
+# A donor further than this from the centroid of the tambon it claims is not
+# credibly inside that tambon — most Thai tambons fit within a ~15 km radius, and
+# the outliers we measured (ลาดตะเคียน, ~29 km tall) still pass. Rejecting costs
+# nothing: the row simply falls through to the centroid tier, exactly as today.
+# Accepting a bad donor pins a factory tens of km away and renders it as exact,
+# so the asymmetry favours rejection. Observed hits: solar/power (code 88) rows
+# registered at a head office rather than the plant.
+MAX_DONOR_TAMBON_KM = 15
+
+MOO_RE = re.compile(r"ม\.\s*\d+")
+ROAD_RE = re.compile(r"ถ\.\S*")
+HOUSE_NO_RE = re.compile(r"\d")
+
+
+def norm_addr(addr: str) -> str:
+    """Normalize the street part of an address for exact matching. Deliberately
+    conservative — over-normalizing invents matches between different plots."""
+    addr = (addr or "").strip()
+    addr = re.sub(r"หมู่ที่|หมู่", "ม.", addr)
+    addr = re.sub(r"\s+", " ", addr)
+    return addr.strip(" ,.-")
+
+
+def has_house_number(addr: str) -> bool:
+    """A usable address needs a house/plot number, not just a moo or a road.
+    'ม.7' alone is a whole village; '98, 99 ม.7' is a specific plot."""
+    rest = ROAD_RE.sub("", MOO_RE.sub("", addr))
+    return bool(HOUSE_NO_RE.search(rest))
+
+
+def addr_key(factory: dict) -> tuple | None:
+    address = norm_addr(factory.get("address_full"))
+    if not address or not has_house_number(address):
+        return None
+    return (
+        norm(factory.get("province")),
+        norm(factory.get("district")),
+        norm(factory.get("sub_district")),
+        address,
+    )
+
+
+def haversine_km(a: tuple, b: tuple) -> float:
+    lat1, lng1 = map(math.radians, a)
+    lat2, lng2 = map(math.radians, b)
+    h = (math.sin((lat2 - lat1) / 2) ** 2
+         + math.cos(lat1) * math.cos(lat2) * math.sin((lng2 - lng1) / 2) ** 2)
+    return 2 * 6371.0 * math.asin(math.sqrt(h))
+
+
+def fetch_coord_donors() -> list[dict]:
+    """Operating factories carrying a trustworthy coordinate, to donate from."""
+    donors, last_id = [], None
+    while True:
+        q = (
+            supabase.table("factories")
+            .select("id,address_full,province,district,sub_district,coord_source,lat,lng")
+            .eq("is_active", True)
+            .eq("status", "ดำเนินการ")
+            .in_("coord_source", list(DONOR_SOURCES))
+            .not_.is_("lat", "null")
+            .order("id")
+            .limit(1000)
+        )
+        if last_id is not None:
+            q = q.gt("id", last_id)
+        batch = execute_with_retry(q).data
+        if not batch:
+            break
+        donors.extend(batch)
+        last_id = batch[-1]["id"]
+    print(f"🔗 {len(donors)} operating factories carry a donor-grade coordinate")
+    return donors
+
+
+def tier_sibling(missing: list[dict], polygons: dict, limit: int, dry_run: bool,
+                 dump_path: str | None = None):
+    """Fill missing/approximate coordinates from another licence at the same
+    address. Three guards keep government errors from propagating: the donor must
+    sit inside its stated province polygon, within MAX_DONOR_TAMBON_KM of the
+    centroid of the tambon it claims, and donors for one address must agree with
+    each other. Anything rejected is left to the geocode/centroid tiers."""
+    gazetteer = load_gazetteer()
+    index = {}
+    outside_province = outside_tambon = 0
+    for donor in fetch_coord_donors():
+        key = addr_key(donor)
+        if key is None:
+            continue
+        polygon = polygons.get((donor.get("province") or "").strip())
+        point = (donor["lat"], donor["lng"])
+        if polygon is not None and not polygon.contains(Point(point[1], point[0])):
+            outside_province += 1  # corrupt gov row — never donate from it
+            continue
+        centroid = gazetteer.get(key[:3])
+        if centroid is not None and haversine_km(centroid, point) > MAX_DONOR_TAMBON_KM:
+            outside_tambon += 1  # too far from the tambon it claims to be in
+            continue
+        index.setdefault(key, []).append({"id": donor["id"], "point": point})
+
+    accepted, proposals, no_match, ambiguous = [], [], 0, 0
+    ambiguous_keys = set()
+    for factory in missing[:limit]:
+        key = addr_key(factory)
+        donors = index.get(key) if key else None
+        if not donors:
+            no_match += 1
+            continue
+        if factory["id"] in {d["id"] for d in donors}:
+            no_match += 1  # already the donor for this address
+            continue
+        points = [d["point"] for d in donors]
+        spread = max((haversine_km(x, y) for x in points for y in points), default=0.0)
+        if spread > DONOR_DISAGREE_KM:
+            ambiguous += 1  # donors contradict each other — leave for a later tier
+            ambiguous_keys.add(key)
+            continue
+        lat, lng = points[0]
+        accepted.append({"id": factory["id"], "lat": lat, "lng": lng})
+        proposals.append({
+            "id": factory["id"],
+            "old_source": factory.get("coord_source") or "none",
+            "donor_id": donors[0]["id"],
+            "donors": len(donors),
+            "province": factory.get("province"),
+            "district": factory.get("district"),
+            "sub_district": factory.get("sub_district"),
+            "address_full": factory.get("address_full"),
+            "lat": lat,
+            "lng": lng,
+        })
+
+    print("\n📊 Tier 1.5 (co-located licence) results")
+    print(f"   inherited an exact coordinate:  {len(accepted)}")
+    print(f"   no licence at the same address: {no_match}")
+    print(f"   donors disagreed >{DONOR_DISAGREE_KM} km:      {ambiguous}"
+          f" (across {len(ambiguous_keys)} addresses)")
+    if outside_province:
+        print(f"   donors rejected, outside province: {outside_province}")
+    if outside_tambon:
+        print(f"   donors rejected, >{MAX_DONOR_TAMBON_KM} km from own tambon: {outside_tambon}")
+    by_source = {}
+    for p in proposals:
+        by_source[p["old_source"]] = by_source.get(p["old_source"], 0) + 1
+    for source, n in sorted(by_source.items(), key=lambda kv: -kv[1]):
+        print(f"     upgraded from {source:9}: {n}")
+
+    if dump_path:
+        with open(dump_path, "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=list(proposals[0].keys())
+                                    if proposals else ["id"])
+            writer.writeheader()
+            writer.writerows(proposals)
+        print(f"   📄 wrote {len(proposals)} proposed moves to {dump_path}")
+
+    apply_updates(accepted, "sibling", "exact", dry_run)
+    return accepted
 
 
 # ── Tier 2: Longdo address geocoding ───────────────────────────────────────
@@ -350,30 +540,51 @@ def tier_centroid(missing: list[dict], polygons: dict, limit: int, dry_run: bool
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tier", choices=["geocode", "centroid", "both"], required=True)
+    parser.add_argument("--tier",
+                        choices=["sibling", "geocode", "centroid", "both", "all"],
+                        required=True,
+                        help="'both' = geocode + centroid; 'all' = sibling first, then both")
     parser.add_argument("--apply", action="store_true", help="write results to Supabase")
     parser.add_argument("--cache-only", action="store_true",
                         help="Tier 2: use cached responses only, no API calls (quota exhausted)")
     parser.add_argument("--limit", type=int, default=100000)
+    parser.add_argument("--dump", metavar="PATH",
+                        help="Tier 1.5: write every proposed move to a CSV for review "
+                             "(donor, distance moved, old source) before applying")
     args = parser.parse_args()
 
     polygons = load_province_polygons()
-    # Tier-2 runs also target centroid rows so street-level results upgrade them
-    missing = fetch_missing(include_centroid=args.tier in ("geocode", "both"))
 
-    if args.tier in ("geocode", "both"):
+    if args.tier in ("sibling", "all"):
+        # Widest recipient set: an inherited exact coordinate improves on a
+        # geocoded pin too, not just on a blank or a tambon centroid
+        tier_sibling(fetch_missing(include_centroid=True, include_geocoded=True),
+                     polygons, args.limit, dry_run=not args.apply,
+                     dump_path=args.dump)
+
+    if args.tier == "sibling":
+        missing = []
+    else:
+        # Tier 2 also targets centroid rows, so a street-level result upgrades them
+        missing = fetch_missing(include_centroid=args.tier in ("geocode", "both", "all"))
+
+    if args.tier in ("geocode", "both", "all"):
         tier_geocode(missing, polygons, args.limit, dry_run=not args.apply,
                      cache_only=args.cache_only)
-    if args.tier in ("centroid", "both"):
-        # Re-fetch when both ran with --apply, so Tier 3 only fills what Tier 2 left
-        if args.tier == "both" and args.apply:
+    if args.tier in ("centroid", "both", "all"):
+        # Re-fetch when earlier tiers ran with --apply, so Tier 3 only fills the rest
+        if args.tier in ("both", "all") and args.apply:
             missing = fetch_missing()
         tier_centroid(missing, polygons, args.limit, dry_run=not args.apply)
 
     if args.apply:
         print("\nNext steps:")
+        # NOT 'geom IS NULL' — the sibling and geocode tiers also MOVE rows that
+        # already had a coordinate, leaving a stale geom behind. Rewrite any geom
+        # that disagrees with lat/lng, not just the missing ones.
         print("   UPDATE factories SET geom = ST_SetSRID(ST_MakePoint(lng, lat), 4326)")
-        print("   WHERE lat IS NOT NULL AND geom IS NULL;")
+        print("   WHERE lat IS NOT NULL AND (geom IS NULL")
+        print("      OR ABS(ST_X(geom) - lng) > 1e-9 OR ABS(ST_Y(geom) - lat) > 1e-9);")
         print("   python export_markers.py && python export_dashboard.py")
 
 

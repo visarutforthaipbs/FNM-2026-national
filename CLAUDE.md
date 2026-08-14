@@ -76,9 +76,12 @@ Client-side filtering (search, high-risk, type codes, 10 km radius) happens in `
 ### Coordinate Provenance & Geocoding
 ~38.6% of operating factories lack coordinates. Recovery is tiered (`supabase/migrations/20260807010000_coords_and_corrections.sql` adds `factories.coord_source` / `coord_precision`):
 1. **repaired** — `server/sync/repair_coordinates.py` re-reads raw gov CSVs and fixes swapped/mis-scaled values, accepted only if inside the stated province polygon (dry-run by default, `--apply` to write)
-2. **geocoded** (street) — `server/sync/geocode_missing.py --tier geocode`, Longdo API (`LONGDO_API_KEY`), province-validated, responses cached in `geocode_cache.json`
-3. **centroid** (tambon, ±2–5 km) — `--tier centroid`, thailand-geography-json gazetteer
-4. **community** — citizens drag a pin (`LocationCorrectionModal.tsx` → `location_corrections` table → admin approval)
+2. **sibling** (exact) — `geocode_missing.py --tier sibling`, inherits the exact position of another licence at the same address. ~2% of operating licences sit on a site holding several ทะเบียนโรงงาน (one plant, separate licences per industry code); when only one carried a gov coordinate the rest used to fall through to the geocoder or the centroid and land up to 99 km from their own address twin. Free — no API quota. `--dump PATH` writes every proposed move to CSV for review first
+3. **geocoded** (street) — `--tier geocode`, Longdo API (`LONGDO_API_KEY`), province-validated, responses cached in `geocode_cache.json`
+4. **centroid** (tambon, ±2–5 km) — `--tier centroid`, thailand-geography-json gazetteer
+5. **community** — citizens drag a pin (`LocationCorrectionModal.tsx` → `location_corrections` table → admin approval)
+
+**Government coordinates are not automatically trustworthy** — some `coord_source='gov'` rows are corrupt (e.g. พี.แอล.ซีเมนต์ has two licences at one address whose longitudes differ by almost exactly 1.000°, a digit error). The sibling tier therefore validates every donor three ways: inside its province polygon, within 15 km of the centroid of the tambon it claims, and in agreement with any other donor at the same address. Rejected donors just fall through to the next tier. Apply the same suspicion to any new coordinate source.
 
 `export_markers.py` emits a `q` flag ('g'/'c') for approximate positions → `coordQuality` on `FactoryProperties`. Centroid pins render faded on the map; both kinds get a "ตำแหน่งโดยประมาณ" badge in the sidebar. Never present approximate positions as exact. After any geocoding run: refresh `geom`, re-run `export_markers.py` + `export_dashboard.py`
 

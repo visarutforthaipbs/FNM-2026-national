@@ -80,10 +80,15 @@ def export_markers():
     print(f"✅ Total: {len(all_markers)} operating factories with coordinates")
 
     # Compact format: minimize JSON size
-    # "q" flags approximate positions so the UI can render them honestly:
-    #   'g' = geocoded from address (street-level), 'c' = tambon centroid.
-    # Absent means an exact position (gov feed / repaired / community-verified).
-    QUALITY_FLAGS = {"geocoded": "g", "centroid": "c"}
+    # "q" flags non-government positions so the UI can render them honestly:
+    #   'g' = geocoded from address (street-level), 'c' = tambon centroid,
+    #   's' = inherited from another licence at the same address.
+    # 's' is exact, not approximate — it is a real surveyed position, just one
+    # recorded against a co-located licence rather than this one — so the UI
+    # labels it differently and does not fade its marker.
+    # Absent means the position came straight from the gov feed (or was repaired
+    # from it, or verified by a human).
+    QUALITY_FLAGS = {"geocoded": "g", "centroid": "c", "sibling": "s"}
     compact = []
     for m in all_markers:
         entry = {
