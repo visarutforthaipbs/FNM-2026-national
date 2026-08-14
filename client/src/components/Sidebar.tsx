@@ -42,11 +42,27 @@ import LocationCorrectionModal from "./LocationCorrectionModal";
 import DbdOwnershipSection from "./DbdOwnershipSection";
 import { useReportCounts } from "../hooks/useReports";
 
+import { useWatchlist } from "../hooks/useWatchlist";
+
 // Inline Icons
 const SearchIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <circle cx="11" cy="11" r="8" />
     <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </Icon>
+);
+
+const StarIcon = ({ filled }: { filled: boolean }) => (
+  <Icon
+    viewBox="0 0 24 24"
+    boxSize={3.5}
+    fill={filled ? "#F59E0B" : "none"}
+    stroke={filled ? "#F59E0B" : "#94A3B8"}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
   </Icon>
 );
 
@@ -205,14 +221,22 @@ const Sidebar: React.FC<SidebarProps> = ({
     onOpen: onCorrectionOpen,
     onClose: onCorrectionClose,
   } = useDisclosure();
-  const reportCounts = useReportCounts();
+  const { counts: reportCounts } = useReportCounts();
+  const { isFactoryWatched, toggleWatchFactory, watchedFactories } = useWatchlist();
+  const [showWatchedOnly, setShowWatchedOnly] = useState(false);
   const [manualLat, setManualLat] = useState<string>("13.7563");
   const [manualLng, setManualLng] = useState<string>("100.5018");
   const hasReliableLocation = Boolean(userLocation && !locationError);
 
   // Filtering (province/search/high-risk/radius) happens in useFactoriesApi —
   // the features received here are already filtered
-  const filteredFactories = useMemo(() => factories?.features ?? [], [factories]);
+  const rawFeatures = useMemo(() => factories?.features ?? [], [factories]);
+  const filteredFactories = useMemo(() => {
+    if (showWatchedOnly) {
+      return rawFeatures.filter((f) => watchedFactories.includes(f.properties.เลขทะเบียน));
+    }
+    return rawFeatures;
+  }, [rawFeatures, showWatchedOnly, watchedFactories]);
 
   // Sort by distance (nearest first) then limit for performance
   const displayedFactories = useMemo(() => {
@@ -356,11 +380,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Search — Primary action, prominent placement */}
         <InputGroup size="lg">
-          <InputLeftElement pointerEvents="none" color="slate.300">
+          <InputLeftElement pointerEvents="none" color="slate.400">
             <SearchIcon boxSize={5} />
           </InputLeftElement>
           <Input
             placeholder="ค้นหาชื่อโรงงาน..."
+            aria-label="ค้นหาชื่อโรงงาน"
             value={filters.searchTerm}
             onChange={handleSearchChange}
             bg="slate.50"
@@ -377,6 +402,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Province — Single select, semantic grouping with search */}
         <Select
           mt={3}
+          aria-label="เลือกจังหวัด"
           value={filters.selectedProvince}
           onChange={(e) => {
             const val = e.target.value;
@@ -392,7 +418,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           }}
           borderRadius="xl"
           fontWeight="medium"
-          color={filters.selectedProvince ? "slate.800" : "slate.400"}
+          color={filters.selectedProvince ? "slate.800" : "slate.500"}
         >
           <option value="">ทุกจังหวัด ({provinceCounts.reduce((s, p) => s + p.count, 0).toLocaleString()})</option>
           {[...provinceCounts]
@@ -463,6 +489,24 @@ const Sidebar: React.FC<SidebarProps> = ({
               {factoryTypeName(parseInt(code, 10))}
             </Button>
           ))}
+
+          {/* Watched factories filter chip */}
+          {watchedFactories.length > 0 && (
+            <Button
+              size="sm"
+              borderRadius="full"
+              variant="ghost"
+              bg={showWatchedOnly ? "amber.100" : "amber.50"}
+              color={showWatchedOnly ? "amber.800" : "amber.700"}
+              fontWeight={showWatchedOnly ? "700" : "500"}
+              onClick={() => setShowWatchedOnly(!showWatchedOnly)}
+              flexShrink={0}
+              leftIcon={<StarIcon filled={showWatchedOnly} />}
+              _hover={{ bg: "amber.100" }}
+            >
+              {showWatchedOnly && "●  "}ที่ฉันติดตาม ({watchedFactories.length})
+            </Button>
+          )}
 
           {hasActiveFilters && (
             <Button
@@ -538,7 +582,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             {/* LAYER 1: Back navigation — minimal visual weight */}
             <Flex align="center" mb={4}>
               <IconButton
-                aria-label="Back to list"
+                aria-label="ย้อนกลับไปหน้ารายการโรงงาน"
                 icon={
                   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
                     <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -546,31 +590,44 @@ const Sidebar: React.FC<SidebarProps> = ({
                 }
                 size="sm"
                 variant="ghost"
-                color="slate.500"
+                color="slate.600"
                 mr={2}
                 borderRadius="full"
                 minW="44px"
                 minH="44px"
                 onClick={() => onFactorySelect(null)}
               />
-              <Text fontSize="xs" color="slate.400">กลับไปรายการ</Text>
-              <Button
-                size="xs"
-                variant="ghost"
-                ml="auto"
-                color={shareCopied ? "green.600" : "slate.500"}
-                fontWeight="600"
-                onClick={handleShareFactory}
-                leftIcon={
-                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
-                    {shareCopied
-                      ? <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                      : <><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></>}
-                  </Icon>
-                }
-              >
-                {shareCopied ? "คัดลอกแล้ว" : "แชร์"}
-              </Button>
+              <Text fontSize="xs" color="slate.500" fontWeight="500">กลับไปรายการ</Text>
+              <HStack ml="auto" spacing={1}>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  color={isFactoryWatched(selectedFactory.properties.เลขทะเบียน) ? "amber.700" : "slate.500"}
+                  bg={isFactoryWatched(selectedFactory.properties.เลขทะเบียน) ? "amber.50" : "transparent"}
+                  fontWeight="600"
+                  onClick={() => toggleWatchFactory(selectedFactory.properties.เลขทะเบียน)}
+                  leftIcon={<StarIcon filled={isFactoryWatched(selectedFactory.properties.เลขทะเบียน)} />}
+                  _hover={{ bg: "amber.50" }}
+                >
+                  {isFactoryWatched(selectedFactory.properties.เลขทะเบียน) ? "ติดตามแล้ว" : "ติดตาม"}
+                </Button>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  color={shareCopied ? "green.600" : "slate.500"}
+                  fontWeight="600"
+                  onClick={handleShareFactory}
+                  leftIcon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                      {shareCopied
+                        ? <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                        : <><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></>}
+                    </Icon>
+                  }
+                >
+                  {shareCopied ? "คัดลอกแล้ว" : "แชร์"}
+                </Button>
+              </HStack>
             </Flex>
 
             {/* LAYER 2: Primary info — factory name + risk signal */}

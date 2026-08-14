@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Flex, Icon, Text } from "@chakra-ui/react";
+import { Box, Flex, HStack, Icon, IconButton, Text } from "@chakra-ui/react";
 import type { FactoryFeature, UserLocation } from "../types/factory";
 import { haversineKm, formatDistanceTh } from "../utils/geo";
 import { getHazardLevel, HAZARD_COLORS } from "../utils/hazard";
+import { useWatchlist } from "../hooks/useWatchlist";
 
 interface FactoryCardProps {
   factory: FactoryFeature;
@@ -13,6 +14,20 @@ interface FactoryCardProps {
   reportCount?: number;
 }
 
+const StarIcon = ({ filled }: { filled: boolean }) => (
+  <Icon
+    viewBox="0 0 24 24"
+    boxSize={3.5}
+    fill={filled ? "#F59E0B" : "none"}
+    stroke={filled ? "#F59E0B" : "#94A3B8"}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </Icon>
+);
+
 const FactoryCard: React.FC<FactoryCardProps> = ({
   factory,
   isSelected,
@@ -21,6 +36,10 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
   reportCount,
 }) => {
   const props = factory.properties;
+  const factoryId = props.เลขทะเบียน;
+  const { isFactoryWatched, toggleWatchFactory } = useWatchlist();
+  const isWatched = isFactoryWatched(factoryId);
+
   const hazardLevel = getHazardLevel(props.เลขทะเบียน, props.ประเภท);
   const isHighRisk = hazardLevel === "hazard";
   const riskColor = HAZARD_COLORS[hazardLevel];
@@ -97,7 +116,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
         </Flex>
 
         <Box flex="1" minW={0}>
-          <Flex align="flex-start" justify="space-between" gap={3}>
+          <Flex align="flex-start" justify="space-between" gap={2}>
             <Text
               flex="1"
               fontWeight="700"
@@ -108,17 +127,32 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
             >
               {props.ชื่อโรงงาน || "ไม่ระบุชื่อโรงงาน"}
             </Text>
-            {distance !== null && (
-              <Text
-                fontSize="xs"
-                fontWeight="700"
-                color={distance < 1 ? "primary.600" : "slate.600"}
-                fontFamily="'Inter', sans-serif"
-                flexShrink={0}
-              >
-                {formatDistanceTh(distance)}
-              </Text>
-            )}
+            
+            <HStack spacing={1} flexShrink={0}>
+              <IconButton
+                aria-label={isWatched ? "เลิกติดตาม" : "ติดตามโรงงานนี้"}
+                title={isWatched ? "ติดตามอยู่ (คลิกเพื่อยกเลิก)" : "ติดตามโรงงานนี้"}
+                icon={<StarIcon filled={isWatched} />}
+                size="xs"
+                variant="ghost"
+                borderRadius="full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleWatchFactory(factoryId);
+                }}
+                _hover={{ bg: "slate.100" }}
+              />
+              {distance !== null && (
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  color={distance < 1 ? "primary.600" : "slate.600"}
+                  fontFamily="'Inter', sans-serif"
+                >
+                  {formatDistanceTh(distance)}
+                </Text>
+              )}
+            </HStack>
           </Flex>
 
           <Text fontSize="xs" color="slate.500" mt={1} noOfLines={1}>

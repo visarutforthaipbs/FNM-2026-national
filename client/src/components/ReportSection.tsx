@@ -178,6 +178,8 @@ interface ReportSectionProps {
   counts?: ReportCountSummary;
 }
 
+import { useAuth } from "../context/useAuth";
+
 /**
  * Citizen impact reporting — counts of approved reports + the submission
  * modal. SIGNAL 39: one decision per step, chips over free text, everything
@@ -185,6 +187,7 @@ interface ReportSectionProps {
  */
 const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useAuth();
   const factoryId = factory.properties.เลขทะเบียน;
 
   // Form state
@@ -195,6 +198,7 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
   const [description, setDescription] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
   const [contact, setContact] = useState("");
+  const [privateNote, setPrivateNote] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -222,6 +226,7 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
       setDescription("");
       setIncidentDate("");
       setContact("");
+      setPrivateNote("");
       setHoneypot("");
       setIsSubmitted(false);
       setError(null);
@@ -245,6 +250,8 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
         description: description.trim() || undefined,
         incident_date: incidentDate || undefined,
         reporter_contact: contact.trim() || undefined,
+        user_id: user?.id,
+        private_note: privateNote.trim() || undefined,
       });
       setIsSubmitted(true);
     } catch (err) {
@@ -476,6 +483,7 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                       value={description}
                       onChange={(e) => setDescription(e.target.value.slice(0, 2000))}
                       placeholder="เล่าสิ่งที่เกิดขึ้น เช่น ช่วงเวลา ลักษณะกลิ่น/เสียง ผลที่เกิดกับครอบครัวคุณ..."
+                      aria-label="รายละเอียดเหตุการณ์ที่เกิดขึ้น"
                       rows={4}
                       bg="slate.50"
                       border="none"
@@ -484,11 +492,12 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                       _focus={{ bg: "white", boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)" }}
                     />
                     <Box>
-                      <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1}>
+                      <Text fontSize="xs" fontWeight="600" color="slate.600" mb={1}>
                         วันที่เกิดเหตุ (ถ้าจำได้)
                       </Text>
                       <Input
                         type="date"
+                        aria-label="วันที่เกิดเหตุ"
                         value={incidentDate}
                         max={new Date().toISOString().slice(0, 10)}
                         onChange={(e) => setIncidentDate(e.target.value)}
@@ -499,11 +508,12 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                       />
                     </Box>
                     <Box>
-                      <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1}>
+                      <Text fontSize="xs" fontWeight="600" color="slate.600" mb={1}>
                         เบอร์โทรหรือ LINE ID (ไม่บังคับ)
                       </Text>
                       <Input
                         value={contact}
+                        aria-label="เบอร์โทรหรือ LINE ID"
                         onChange={(e) => setContact(e.target.value.slice(0, 200))}
                         placeholder="สำหรับติดตามผลเท่านั้น"
                         size="sm"
@@ -511,10 +521,35 @@ const ReportSection: React.FC<ReportSectionProps> = ({ factory, counts }) => {
                         border="none"
                         borderRadius="xl"
                       />
-                      <Text mt={1} fontSize="10px" color="slate.400">
+                      <Text mt={1} fontSize="10px" color="slate.500">
                         ข้อมูลติดต่อจะไม่ถูกเผยแพร่ ใช้เพื่อติดตามผลเท่านั้น
                       </Text>
                     </Box>
+
+                    {user && (
+                      <Box bg="slate.50" p={3} borderRadius="xl" border="1px solid" borderColor="slate.200">
+                        <HStack spacing={1.5} mb={1.5}>
+                          <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5} color="primary.500">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                          </Icon>
+                          <Text fontSize="xs" fontWeight="600" color="slate.700">
+                            บันทึกช่วยจำส่วนตัว (ไม่แสดงบนแผนที่สาธารณะ):
+                          </Text>
+                        </HStack>
+                        <Textarea
+                          value={privateNote}
+                          aria-label="บันทึกช่วยจำส่วนตัว"
+                          onChange={(e) => setPrivateNote(e.target.value)}
+                          placeholder="เช่น ทิศทางลม, สภาพอากาศ, ผลกระทบต่อเด็ก/ผู้สูงอายุในบ้าน..."
+                          size="sm"
+                          rows={2}
+                          bg="white"
+                          fontSize="xs"
+                          borderRadius="lg"
+                        />
+                      </Box>
+                    )}
 
                     {error && (
                       <Text fontSize="xs" color="red.500" fontWeight="600">

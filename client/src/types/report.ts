@@ -12,6 +12,8 @@ export interface ReportInput {
   description?: string;
   incident_date?: string; // YYYY-MM-DD
   reporter_contact?: string; // stored privately, never displayed
+  user_id?: string; // linked to authenticated citizen
+  private_note?: string; // private notes for citizen's personal diary
 }
 
 export interface ReportCountSummary {

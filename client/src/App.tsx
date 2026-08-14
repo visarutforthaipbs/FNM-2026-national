@@ -11,10 +11,13 @@ import { useFactoriesApi, fetchFactoryDetail } from "./hooks/useFactoriesApi";
 import { theme } from "./theme";
 import MapPage from "./pages/MapPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { WatchlistProvider } from "./context/WatchlistContext";
 
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const WasteMonitorPage = lazy(() => import("./pages/WasteMonitorPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
+const UserDiaryPage = lazy(() => import("./pages/UserDiaryPage"));
 
 // Shareable URLs: read ?province=, ?factory= and ?type= once at startup
 const initialParams = new URLSearchParams(window.location.search);
@@ -148,7 +151,6 @@ function App() {
             lng: position.coords.longitude,
             accuracy: position.coords.accuracy,
           });
-
           setUserLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -157,36 +159,23 @@ function App() {
           setIsLocationLoading(false);
         },
         (error) => {
-          let errorMessage = "ไม่สามารถระบุตำแหน่งได้";
+          console.warn("⚠️ Geolocation error:", error.code, error.message);
+          let errorMessage = "ไม่สามารถระบุตำแหน่งของคุณได้";
 
           switch (error.code) {
             case error.PERMISSION_DENIED:
-              errorMessage =
-                "การเข้าถึงตำแหน่งถูกปฏิเสธ กรุณาอนุญาตในการตั้งค่าเบราว์เซอร์";
-              console.log("📍 Location access denied by user");
+              errorMessage = "คุณไม่อนุญาตให้เข้าถึงตำแหน่ง";
               break;
             case error.POSITION_UNAVAILABLE:
-              errorMessage = "ไม่สามารถระบุตำแหน่งได้ในขณะนี้";
-              console.log(
-                "📍 Location unavailable (GPS disabled or no signal)"
-              );
+              errorMessage = "ข้อมูลตำแหน่งไม่พร้อมใช้งาน";
               break;
             case error.TIMEOUT:
-              errorMessage = "หมดเวลาในการระบุตำแหน่ง";
-              console.log("📍 Location request timed out");
-              break;
-            default:
-              errorMessage = "เกิดข้อผิดพลาดในการระบุตำแหน่ง";
-              console.warn("📍 Unexpected geolocation error:", error.message);
+              errorMessage = "หมดเวลาในการขอตำแหน่ง";
               break;
           }
 
           setLocationError(errorMessage);
-
-          // Use fallback location (Prachinburi city center)
-          console.log(
-            "🏠 Using fallback location (Prachinburi city center: 14.0504, 101.3678)"
-          );
+          console.log("Using fallback location (Prachinburi)");
           setUserLocation({
             lat: 14.0504,
             lng: 101.3678,
@@ -209,56 +198,68 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route 
-            path="/" 
-            element={
-              <MapPage
-                factories={factoriesGeoJSON}
-                userLocation={userLocation}
-                selectedFactory={selectedFactory}
-                setSelectedFactory={handleFactorySelect}
-                filters={filters}
-                setFilters={setFilters}
-                locationError={locationError}
-                isLocationLoading={isLocationLoading}
-                setManualLocation={setManualLocation}
-                isMobileSidebarOpen={isMobileSidebarOpen}
-                setIsMobileSidebarOpen={setIsMobileSidebarOpen}
-                provinceCounts={provinceCounts}
-                onProvinceSelect={handleProvinceSelect}
-                isApiLoading={isApiLoading}
+      <AuthProvider>
+        <WatchlistProvider>
+          <Router>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <MapPage
+                    factories={factoriesGeoJSON}
+                    userLocation={userLocation}
+                    selectedFactory={selectedFactory}
+                    setSelectedFactory={handleFactorySelect}
+                    filters={filters}
+                    setFilters={setFilters}
+                    locationError={locationError}
+                    isLocationLoading={isLocationLoading}
+                    setManualLocation={setManualLocation}
+                    isMobileSidebarOpen={isMobileSidebarOpen}
+                    setIsMobileSidebarOpen={setIsMobileSidebarOpen}
+                    provinceCounts={provinceCounts}
+                    onProvinceSelect={handleProvinceSelect}
+                    isApiLoading={isApiLoading}
+                  />
+                }
               />
-            } 
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <Suspense fallback={null}>
-                <DashboardPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/waste-monitor"
-            element={
-              <Suspense fallback={null}>
-                <WasteMonitorPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <Suspense fallback={null}>
-                <AdminPage />
-              </Suspense>
-            }
-          />
-        </Routes>
-      </Router>
-      <Analytics />
+              <Route
+                path="/dashboard"
+                element={
+                  <Suspense fallback={null}>
+                    <DashboardPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/waste-monitor"
+                element={
+                  <Suspense fallback={null}>
+                    <WasteMonitorPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/diary"
+                element={
+                  <Suspense fallback={null}>
+                    <UserDiaryPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <Suspense fallback={null}>
+                    <AdminPage />
+                  </Suspense>
+                }
+              />
+            </Routes>
+          </Router>
+          <Analytics />
+        </WatchlistProvider>
+      </AuthProvider>
     </ChakraProvider>
   );
 }
