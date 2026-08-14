@@ -787,14 +787,18 @@ are big enough that a wrong point lands inside one by luck.
    rewriting identical values. Corrected in `75cf65f`. Verify, don't rewrite:
    `SELECT count(*) FROM factories WHERE lat IS NOT NULL AND (geom IS NULL OR
    ABS(ST_X(geom)-lng) > 1e-9 OR ABS(ST_Y(geom)-lat) > 1e-9);` → 0.
-2. **§9's "the Vercel project is not git-connected" no longer holds.** Observed
-   this session: `75cf65f` was committed at 08:37 UTC and pushed; the live
-   `data/dashboard_stats.json` carried the new `countByCoordSource` with
-   `repaired: 12` by 08:44 UTC, with **no `vercel --prod` run by anyone**. The
-   deployed `assets/index-C2AAFRn4.js` and `assets/AdminPage-DUOiSzyf.js` are
-   byte-identical filenames to the local `client/dist` build. Treat a push to
-   `main` as a production deploy until someone checks the Vercel dashboard and
-   says otherwise.
+2. ~~**§9's "the Vercel project is not git-connected" no longer holds.**~~
+   **Retracted 2026-08-14 — §9 was right and this correction was wrong.** It
+   reasoned from `75cf65f` being pushed at 08:37 UTC and the live
+   `dashboard_stats.json` carrying `repaired: 12` by 08:44 "with no `vercel
+   --prod` run by anyone". The deploy had in fact been triggered by hand; the
+   author simply did not know. Confirmed by the project owner: **the flow is
+   push to GitHub, then trigger the Vercel deploy manually**, deliberately, so a
+   human gates production.
+
+   The lesson is about the inference, not the fact: "the site updated and I did
+   not deploy it" is not evidence that nothing deployed it. Verify a deployment
+   by checking Vercel, not by observing that content changed.
 
 ### Where the queue lives, and the trap in updating it
 
@@ -963,22 +967,51 @@ as an example of the rule it already stated.
   `on delete cascade`, so a government data refresh could have deleted a
   citizen's saved list.
 
+### Done later the same session
+
+- **Staging-swap shipped** (`fb1b209`). `promote_staging(table, min_rows, source)`
+  loads into `*_staging` and swaps in one transaction, so a reader never observes
+  an empty table. Verified against live data: refuses below the floor, rejects a
+  non-whitelisted table, round-trips 241,145 permits, and a source-scoped promote
+  left the other endpoint's 185,917 rows untouched.
+- **`dbd-collect` has a timer** (Sunday 04:30) — and, more to the point,
+  regenerates `operators.tsv` first. It was consuming a frozen list, so a timer
+  would have re-resolved the same operators forever. The query behind that file
+  had been elided in a docstring and existed nowhere else; recovered and verified
+  against the committed copy (52,515 of 52,525 lines identical).
+- **The timer-ordering item was withdrawn, not fixed.** The premise was wrong:
+  `collect.py` writes to the archive and the NAS and never touches the
+  application database — `run_collector.sh` says so in its own header. The
+  decoupling is deliberate, and chaining the two would have let a failed collect
+  block the sync.
+- **The nightly now runs `export_zoning.py` and `audit_province_mismatch.py`**
+  and commits their output. It previously could not: `dpt_geodatabase.db` (398 MB,
+  gitignored) was not on this host until it was copied there on 2026-08-14. Until
+  then a coordinate change left zoning silently stale, against the rule CLAUDE.md
+  already stated.
+
 ### Still outstanding
 
-1. **The staging-swap for `permits` and `factory_statistics` is not done.**
-   They are still delete-then-insert, the pattern behind the 08-08 incident —
-   and demonstrably behind the duplicate copies found on cloud. Load into a
-   staging table, validate, then `ALTER TABLE ... RENAME` in a transaction.
-2. **`/admin` still mutates derived tables in place.** A moderator's decision
-   and the collector's value occupy the same cell, distinguished only by
-   `coord_source`, so `core` cannot be rebuilt without losing human work. It
-   wants an append-only overrides table and a view. The 36 pins are the
-   argument: they had no replay source at all.
-3. **The systemd timers are clock-ordered, not dependency-ordered.**
-   `diw-collector` 02:32, `factory-sync` 03:05 — the day the first runs long,
-   the second reads a half-loaded table. `dbd-collect.service` has no timer.
-4. **EXIF stripping is mandatory before photo/video reporting ships.** A phone
-   photo carries GPS to metre precision; a citizen photographing the factory
-   next door would upload their home coordinates, defeating the entire
-   `distance_band` design. Strip server-side, never client-side.
-5. §4's `FFLAG`/`STATUS` question and §2's 317-factory gap are still untouched.
+1. **`/admin` still mutates derived tables in place.** A moderator's decision and
+   the collector's value occupy the same cell, distinguished only by
+   `coord_source`, so the table cannot be rebuilt without losing human work. It
+   wants an append-only overrides table and a composing view. The 36 admin pins
+   are the argument: they had no replay source at all.
+2. **An approved correction does not reach the map on its own.** It takes three
+   steps — the approval writes to the database, an export regenerates the static
+   JSON, a deploy publishes it — and only the first is automatic. A moderator
+   working in a web UI has no way to know the other two are pending, and no
+   feedback that they are. Observed on บริษัท เวสต์ 2 เอ็นเนอร์ยี่: approved,
+   applied to `factories`, and still showing the old position 2.16 km away. The
+   overrides layer in item 1 would remove the second step.
+3. **EXIF stripping is mandatory before photo/video reporting ships.** A phone
+   photo carries GPS to metre precision; a citizen photographing the factory next
+   door would upload their home coordinates, defeating the entire `distance_band`
+   design. Strip server-side, never client-side.
+4. **The DBD archive exists on one disk.** 865 MB, only on lighthouse-sev01. The
+   DIW archive is mirrored to the NAS by `run_collector.sh`; this one is not, and
+   it is the source where losing the archive costs most — recollecting means
+   another multi-hour rate-limited crawl behind a WAF.
+5. **Citizen database backups are unverified.** It holds the only data nothing can
+   rebuild. Confirm PITR is on, and test a restore once.
+6. §4's `FFLAG`/`STATUS` question and §2's 317-factory gap are still untouched.

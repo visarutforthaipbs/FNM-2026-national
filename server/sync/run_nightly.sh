@@ -1,7 +1,11 @@
 #!/bin/bash
 # Nightly DIW sync for Factory Near Me, running on lsev01 against the
-# self-hosted Supabase. Publishes regenerated static data to GitHub, which
-# triggers a Vercel rebuild.
+# self-hosted Supabase. Pushes regenerated static data to GitHub.
+#
+# It does NOT reach the public site. Vercel is not connected to the repository —
+# a deploy is triggered by hand (`vercel --prod` from client/, or the Vercel
+# dashboard), deliberately, so a human gates what reaches production. Until
+# someone does that, this script's output is committed and waiting, not live.
 #
 # Safety: HANDOFF.md documents a run that silently halved factories.status.
 # This script snapshots the operating-factory count before and after and
@@ -41,6 +45,14 @@ cd "$REPO/server/sync" || exit 1
 ./venv/bin/python pipeline.py        || { echo "ABORT: pipeline.py failed"; exit 1; }
 ./venv/bin/python export_markers.py  || { echo "ABORT: export_markers.py failed"; exit 1; }
 ./venv/bin/python export_dashboard.py|| { echo "ABORT: export_dashboard.py failed"; exit 1; }
+# Zoning is a function of position, so a moved pin invalidates it — a factory
+# left showing the zone of where it used to be is worse than showing none.
+# This could not run here until dpt_geodatabase.db was copied to this host on
+# 2026-08-14; before that the nightly could only warn that it was skipping it.
+./venv/bin/python export_zoning.py   || { echo "WARN: export_zoning.py failed (zoning may be stale)"; }
+# Refreshes the /admin พิกัดผิดจังหวัด queue, which reads this file from disk on
+# this host per request. Without it the queue serves a stale report forever.
+./venv/bin/python audit_province_mismatch.py || { echo "WARN: audit_province_mismatch.py failed"; }
 
 after=$(count_operating)
 echo "operating factories AFTER: ${after:-unknown}"
@@ -57,12 +69,14 @@ if [ "$after" -lt "$floor" ]; then
 fi
 
 cd "$REPO" || exit 1
-git add client/public/data/markers client/public/data/province-counts.json client/public/data/dashboard_stats.json
+git add client/public/data/markers client/public/data/province-counts.json \
+        client/public/data/dashboard_stats.json client/public/data/zoning \
+        client/public/data/zoning_summary.json server/data/province_mismatch_report.json
 if git diff --cached --quiet; then
   echo "no data changes to publish"
 else
   git -c user.name="lsev01 sync" -c user.email="sync@lighthouse.local" \
       commit -q -m "chore: daily factory data sync $(date -u +%F)"
-  if git push --quiet; then echo "published to GitHub (Vercel will rebuild)"; else echo "ERROR: git push failed"; exit 1; fi
+  if git push --quiet; then echo "pushed to GitHub — NOT yet live; trigger a Vercel deploy to publish"; else echo "ERROR: git push failed"; exit 1; fi
 fi
 echo "=== done $(date -Is) ==="

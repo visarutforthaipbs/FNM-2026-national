@@ -126,10 +126,30 @@ host. Times are Bangkok; each carries randomised jitter.
 |---|---|---|
 | every 10 min | `dbd-stall-check` | Watches for a hung DBD crawl. One ran 5h24m silently before this existed. |
 | daily 02:30 | `diw-collector` | Archives a raw DIW snapshot, mirrors it to the NAS. No database writes. |
-| daily 03:00 | `factory-sync` | Loads DIW, regenerates every static export, commits and pushes — which deploys. |
+| daily 03:00 | `factory-sync` | Loads DIW, regenerates every static export, commits and pushes to GitHub. **Does not publish** — see below. |
 | Sunday 04:30 | `dbd-collect` | Full DBD pass: refresh operator list → resolve → load → detail → audit. |
 
 `factory-sync` is **independent** of `diw-collector` by design, not by oversight.
+
+### Nothing here reaches the public site on its own
+
+**Vercel is not connected to the repository.** The deploy flow is: push to GitHub,
+then trigger a deploy by hand (`vercel --prod` from `client/`, or the dashboard).
+That is deliberate — a human gates what reaches production, which is a reasonable
+guard for a project with this incident history.
+
+Two consequences worth holding on to:
+
+- A nightly run that succeeds leaves its exports **committed and waiting**, not
+  live. The site updates when someone deploys.
+- `vercel --prod` uploads the **working directory, not a commit**. An uncommitted
+  file ships; a committed file that is not in the working tree does not. The
+  entire citizen-account UI was live in production for a day while absent from
+  git for exactly this reason.
+
+Approving a location correction in `/admin` therefore takes three steps to become
+visible: the approval writes to the database, an export regenerates the static
+JSON, and a deploy publishes it. Only the first is automatic.
 
 `dbd-collect` regenerates `operators.tsv` from the factory registry as stage 0.
 Without that it would re-resolve a frozen list forever, which is why it had no
