@@ -34,8 +34,19 @@ ties, never to reject a candidate.
 
 Usage
 -----
-    # operators, one per line: name <TAB> province <TAB> factory_count
-    psql ... -tAc "select ..." > operators.tsv
+    # operators, one per line: name <TAB> province <TAB> factory_count.
+    # dbd_run_all.sh regenerates this before every run; the query is here so it
+    # can be reproduced by hand. min(province) rather than mode() is not
+    # arbitrary — it is what produced the committed list, verified by
+    # regenerating against it (52,515 of 52,525 lines identical, the remainder
+    # six days of DIW drift). Province only breaks ties downstream, so which
+    # representative it picks does not affect matching.
+    psql "$DATABASE_URL" -At -c "
+      select concat_ws(E'\t', b.legal_name, min(f.province), count(*))
+        from factories f join businesses b on b.id = f.business_id
+       where f.status = 'ดำเนินการ'
+       group by b.legal_name
+       order by count(*) desc, b.legal_name;" > operators.tsv
 
     python dbd_resolve.py --input operators.tsv --limit 50   # pilot
     python dbd_resolve.py --input operators.tsv              # full run

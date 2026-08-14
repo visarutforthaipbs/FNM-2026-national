@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart DBD collection if it stops making progress
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /home/visarut298/app/FNM/server/collector/dbd_stall_check.sh

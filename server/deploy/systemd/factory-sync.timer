@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Factory Near Me DIW sync nightly
+
+[Timer]
+# 03:00 Bangkok time (server clock is UTC+7 via Persistent handling)
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+RandomizedDelaySec=900
+
+[Install]
+WantedBy=timers.target

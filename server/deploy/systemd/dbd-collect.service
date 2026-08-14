@@ -1,0 +1,20 @@
+[Unit]
+Description=DBD full collection (resolve -> load -> detail), restartable
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=visarut298
+WorkingDirectory=/home/visarut298/app/FNM/server/collector
+ExecStart=/bin/bash /home/visarut298/app/FNM/server/collector/dbd_run_all.sh
+StandardOutput=append:/home/visarut298/app/logs/dbd-run-all.log
+StandardError=append:/home/visarut298/app/logs/dbd-run-all.log
+# Every stage is resumable, so restarting after a crash, a dropped connection or
+# a reboot costs only the work in flight. 5 minutes between attempts so a
+# persistent failure does not become a hot loop against DBD.
+Restart=on-failure
+RestartSec=300
+
+[Install]
+WantedBy=multi-user.target

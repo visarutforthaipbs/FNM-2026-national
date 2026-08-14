@@ -1,0 +1,9 @@
+[Unit]
+Description=Check every 10 minutes that DBD collection is still progressing
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=10min
+
+[Install]
+WantedBy=timers.target

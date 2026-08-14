@@ -60,6 +60,9 @@ TEST_LIMIT = int(os.getenv("SYNC_TEST_LIMIT", "100"))
 # anything under this floor means a truncated or degraded response, not a real
 # drop in permits, and the refresh is skipped instead.
 MIN_EXPECTED_PERMITS = 100_000
+# Each Sum_* endpoint returned 185,917 rows on 2026-08-14. Floor set well below
+# that so ordinary movement does not trip it, but a truncated fetch does.
+MIN_EXPECTED_STATISTICS = 100_000
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     logger.error("❌ SUPABASE_URL and SUPABASE_SERVICE_KEY must be set in .env")
@@ -488,6 +491,57 @@ def upsert_batch(table: str, records: list[dict], on_conflict: str = "id") -> in
     return total
 
 
+def load_and_promote(
+    table: str, records: list[dict], min_rows: int, source: str | None = None
+) -> int | None:
+    """
+    Full-refresh a table without ever leaving it empty.
+
+    Loads into `{table}_staging`, then calls public.promote_staging(), which
+    truncates the live table and copies staging over it inside one transaction.
+    TRUNCATE takes an ACCESS EXCLUSIVE lock, so a concurrent reader blocks until
+    the commit and then sees the new rows — it never observes an empty or
+    half-loaded table, which the old delete-then-insert could not promise.
+
+    Returns the number of rows promoted, or None if anything failed, in which
+    case the live table is untouched and the caller should abort rather than
+    treat the sync as successful.
+    """
+    staging = f"{table}_staging"
+
+    try:
+        # Clear any residue from a previous failed run before loading.
+        q = supabase.table(staging).delete()
+        if source is None:
+            q = q.neq("id", "00000000-0000-0000-0000-000000000000")
+        else:
+            q = q.eq("source_endpoint", source)
+        q.execute()
+    except Exception as e:
+        logger.error(f"❌ Could not clear {staging}: {e}")
+        return None
+
+    loaded = insert_batch(staging, records)
+    if loaded < min_rows:
+        logger.error(
+            f"❌ Only {loaded}/{len(records)} rows reached {staging} "
+            f"(need {min_rows}); {table} left untouched."
+        )
+        return None
+
+    try:
+        result = supabase.rpc(
+            "promote_staging",
+            {"p_table": table, "p_min_rows": min_rows, "p_source": source},
+        ).execute()
+        promoted = result.data if isinstance(result.data, int) else loaded
+        logger.info(f"🔄 Promoted {promoted} rows into {table} (atomic swap)")
+        return promoted
+    except Exception as e:
+        logger.error(f"❌ promote_staging({table}) failed, table untouched: {e}")
+        return None
+
+
 def apply_gov_coordinates(coordinates: list[dict]) -> int:
     """
     Upsert lat/lng for factories the gov CSV has real coordinates for.
@@ -806,13 +860,12 @@ def sync_permits() -> dict:
         log_sync(endpoint_key, len(df), 0, 0, "ERROR", msg, time.time() - start)
         return {"status": "ABORTED", "fetched": len(df), "upserted": 0}
 
-    try:
-        supabase.table("permits").delete().neq("id", "00000000-0000-0000-0000-000000000000").execute()
-        logger.info("🗑️ Cleared existing permits for fresh sync")
-    except Exception as e:
-        logger.warning(f"⚠️ Could not clear permits table: {e}")
-
-    count = insert_batch("permits", permits)
+    count = load_and_promote("permits", permits, MIN_EXPECTED_PERMITS)
+    if count is None:
+        msg = "Staging load or promotion failed; permits left untouched."
+        logger.error(f"🛑 {msg}")
+        log_sync(endpoint_key, len(df), 0, 0, "ERROR", msg, time.time() - start)
+        return {"status": "ABORTED", "fetched": len(df), "upserted": 0}
 
     duration = time.time() - start
     log_sync(endpoint_key, len(df), count, 0, "SUCCESS", None, duration)
@@ -840,13 +893,16 @@ def sync_statistics(endpoint_key: str) -> dict:
         )
         return {"status": "SKIPPED", "fetched": len(df), "upserted": 0, "duration": round(time.time() - start, 2)}
 
-    # Clear existing stats for this source and reinsert
-    try:
-        supabase.table("factory_statistics").delete().eq("source_endpoint", endpoint_key).execute()
-    except Exception:
-        pass
-
-    count = insert_batch("factory_statistics", stats)
+    # Replace only this source's slice, atomically. Each Sum_* endpoint owns
+    # its own rows, so this must not touch the other one's.
+    count = load_and_promote(
+        "factory_statistics", stats, MIN_EXPECTED_STATISTICS, source=endpoint_key
+    )
+    if count is None:
+        msg = f"Staging load or promotion failed; {endpoint_key} statistics left untouched."
+        logger.error(f"🛑 {msg}")
+        log_sync(endpoint_key, len(df), 0, 0, "ERROR", msg, time.time() - start)
+        return {"status": "ABORTED", "fetched": len(df), "upserted": 0}
 
     duration = time.time() - start
     log_sync(endpoint_key, len(df), count, 0, "SUCCESS", None, duration)

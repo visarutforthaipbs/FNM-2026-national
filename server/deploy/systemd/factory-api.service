@@ -1,0 +1,22 @@
+[Unit]
+Description=Factory Near Me admin API (Express)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=visarut298
+WorkingDirectory=/home/visarut298/app/FNM/server
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+# Bind is localhost-only inside the app; Tailscale fronts it publicly.
+Environment=NODE_OPTIONS=--enable-source-maps
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/visarut298/app/FNM
+
+[Install]
+WantedBy=multi-user.target

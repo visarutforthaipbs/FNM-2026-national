@@ -1,0 +1,11 @@
+[Unit]
+Description=Factory Near Me nightly DIW sync
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=visarut298
+WorkingDirectory=/home/visarut298/app/FNM/server/sync
+ExecStart=/bin/bash /home/visarut298/app/FNM/server/sync/run_nightly.sh
+TimeoutStartSec=10800

@@ -1,0 +1,12 @@
+[Unit]
+Description=Collect a DIW snapshot daily
+
+[Timer]
+# 02:30 Bangkok — ahead of the 03:00 sync, so each night's load has a matching
+# archived snapshot to be reproduced from later.
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=600
+
+[Install]
+WantedBy=timers.target

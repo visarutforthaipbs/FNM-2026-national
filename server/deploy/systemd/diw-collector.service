@@ -1,0 +1,11 @@
+[Unit]
+Description=DIW raw snapshot collector (archives before interpreting)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=visarut298
+WorkingDirectory=/home/visarut298/app/FNM/server/collector
+ExecStart=/bin/bash /home/visarut298/app/FNM/server/collector/run_collector.sh
+TimeoutStartSec=3600

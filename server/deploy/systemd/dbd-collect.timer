@@ -1,0 +1,22 @@
+[Unit]
+Description=Run the full DBD collection weekly
+Documentation=https://github.com/visarutforthaipbs/FNM-2026-national/blob/main/COLLECTORS.md
+
+[Timer]
+# Sunday 04:30 Bangkok — after the nightly DIW sync (03:00) has landed, because
+# dbd_run_all.sh now regenerates operators.tsv from the factories table and
+# wants the freshest operator list.
+#
+# Weekly, not nightly: DBD is crawled at 1.2 req/s behind a WAF and a full pass
+# takes hours. Company registrations also move far more slowly than the factory
+# registry.
+#
+# Firing while a run is still in progress is harmless — systemd will not start a
+# second instance of an already-active service, and every stage is resumable
+# besides.
+OnCalendar=Sun *-*-* 04:30:00
+Persistent=true
+RandomizedDelaySec=1800
+
+[Install]
+WantedBy=timers.target
