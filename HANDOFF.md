@@ -721,3 +721,125 @@ going to map data and Leaflet, this buys less than it looks like on paper.
    end-to-end yet** (§6 step 5). Do that before trusting the nightly sync.
 4. The `FFLAG`/`STATUS` question (§4) and the 317-factory gap (§2) are
    untouched and still need domain knowledge.
+
+---
+
+## 10. Session — 2026-08-14: coordinate provenance, co-located licences, and a whole-degree repair
+
+Started from one question — why does บริษัท เวสต์ 2 เอ็นเนอร์ยี่ จำกัด appear
+three times in ปราจีนบุรี — and ended up rewriting 582 coordinates. All of it is
+on `main` (`5834cfc`, `3b049e2`, `ffed464`, `b09f9cf`, `75cf65f`) and live.
+
+### The finding that started it
+
+Not a duplicate: three genuine DIW licences, one company. **One plant commonly
+holds several ทะเบียนโรงงาน** — a waste operator licensed separately for
+คัดแยก (105) and รีไซเคิล (106). Two of the three shared a byte-identical
+address but were plotted **10.7 km apart**, because only one carried a
+government coordinate and the other fell through to the tambon centroid.
+
+Measured across all 63,384 operating licences: **1,137 sites hold more than one
+licence** (2,427 licences between them), so the headline count is ~2.0% above a
+physical-site count. 67% of those sites mix industry codes. Median pin spread
+within one site is **4 metres** — i.e. most already stack invisibly.
+
+### What was built
+
+1. **Tier 1.5 "sibling"** in `geocode_missing.py` — a row with no coordinate of
+   its own inherits the exact position of another licence at the same
+   province/district/tambon/address. Runs before the geocoder; free, no API
+   quota. **570 applied** (478 from centroid, 71 from geocoded, 21 unmapped).
+   New `coord_source='sibling'`, migration `20260814000000`.
+2. **`repair_province_mismatch.py`** — whole-degree repair for coordinates that
+   land outside their tagged province. **12 applied** as `repaired`.
+3. **UI** — the พิกัด block in the sidebar is tinted whenever the position did
+   not come from the gov feed, explains why in plain Thai, and carries its own
+   correction chip. New ที่มาของพิกัดบนแผนที่ card on the dashboard, counted
+   from `coord_source`.
+4. **Satellite** in the correction modal, with labels overlaid and initial zoom
+   set by provenance (centroid z13 → exact z17).
+
+### Three guards, and why they exist
+
+Government coordinates are not ground truth. Donors are rejected unless they
+sit inside their province polygon (172 rejected), within 15 km of the centroid
+of the tambon they claim (537 rejected), and agree with any other donor at the
+same address (27 recipients left alone).
+
+The middle guard was **added after the first dry run proposed 30+ km moves** —
+those turned out to be head-office addresses registered against solar plants
+(code 88). Rejecting costs nothing: the row falls through to the tier it would
+have used anyway.
+
+**The tambon test is what makes any of this safe.** Of 185 province-mismatched
+rows, 62 had at least one whole-degree shift that landed inside the right
+province, but only 12 landed within 15 km of the stated tambon — 8 within 5 km,
+11 within 10 km, then a clean gap to the next at 18.9 km. An estimate of
+"60–70 repairable" made from the province test alone was wrong by 5×. Provinces
+are big enough that a wrong point lands inside one by luck.
+
+### Two corrections to earlier beliefs
+
+1. **`geom` is maintained by a trigger.** `tr_factories_set_geometry` fires
+   `BEFORE INSERT OR UPDATE OF lat, lng`. Commit `5834cfc` described the
+   `geom IS NULL` hint as a latent bug leaving stale geometry after a row moves;
+   it does not, and the manual `UPDATE` that commit prescribed was a no-op
+   rewriting identical values. Corrected in `75cf65f`. Verify, don't rewrite:
+   `SELECT count(*) FROM factories WHERE lat IS NOT NULL AND (geom IS NULL OR
+   ABS(ST_X(geom)-lng) > 1e-9 OR ABS(ST_Y(geom)-lat) > 1e-9);` → 0.
+2. **§9's "the Vercel project is not git-connected" no longer holds.** Observed
+   this session: `75cf65f` was committed at 08:37 UTC and pushed; the live
+   `data/dashboard_stats.json` carried the new `countByCoordSource` with
+   `repaired: 12` by 08:44 UTC, with **no `vercel --prod` run by anyone**. The
+   deployed `assets/index-C2AAFRn4.js` and `assets/AdminPage-DUOiSzyf.js` are
+   byte-identical filenames to the local `client/dist` build. Treat a push to
+   `main` as a production deploy until someone checks the Vercel dashboard and
+   says otherwise.
+
+### Where the queue lives, and the trap in updating it
+
+`audit_province_mismatch.py` was re-run: **221 → 209** mismatches (205 gov, 4
+geocoded) after the repairs. น่ำเฮงคอนกรีต and พี.แอล.ซีเมนต์ are both out of it.
+
+Review at `https://factory-nearme-demo-1.vercel.app/admin` → พิกัดผิดจังหวัด,
+**with Tailscale connected** (§9). The page is on Vercel; the API is not —
+`/api/(.*)` returns a deliberate 404 there, and the deployed bundle calls
+`https://lighthouse-sev01.tail83945e.ts.net:4443/api/...` (verified by grepping
+the live `AdminPage-DUOiSzyf.js`).
+
+**The trap:** the queue reads `server/data/province_mismatch_report.json` from
+disk *on lighthouse-sev01*, per request. A Vercel deploy does not touch that
+host, so it still serves the old 221-row report until the file is copied over.
+Do **not** naively `git pull` there — §9 item 1 records that
+`/home/visarut298/app/FNM` carries ~485 lines of uncommitted local changes that
+exist in no git repo. Copy the single file instead, e.g.
+`scp server/data/province_mismatch_report.json lighthouse-sev01:/home/visarut298/app/FNM/server/data/`.
+No restart needed.
+
+### Still outstanding
+
+1. **The 209 remaining mismatches need a human.** They are not whole-degree
+   errors; they look genuinely transposed. Some are >300 km out, worst 1,052 km
+   (`จ3-34(1)-18/49อด`, tagged อุดรธานี, plotted in กระบี่).
+2. **Wrong gov coordinates are still published to the public map**, styled as
+   exact, with no badge, while they sit in the queue. Options considered and
+   not taken: suppress them in `export_markers.py`, or flag them with a new `q`
+   value and render them faded like centroids. Worth deciding.
+3. **Site grouping is unbuilt.** One marker per physical plant rather than per
+   licence — keep licence-level rows (the government's unit, and what permits,
+   hazard tier and reports attach to) but group them for display. Would fix
+   hazard colour taking max over a site, report counts fragmenting across
+   licences (`reports.factory_id` is a registration id), and radius counts
+   double-counting. Needs a decision on IRPC (21 licences at one address) and
+   on keeping `?factory=` deep links working.
+4. `AdminSetPositionModal` still uses the plain street map; same treatment as
+   the citizen modal would help.
+5. **No rollback exists for the 582 rewritten coordinates.** Both write batches
+   were snapshotted before applying, but into a session-scoped scratchpad that
+   is not committed anywhere — once that session is gone, nothing reconstructs
+   the pre-change `lat`/`lng`/`coord_source` for those rows. The gov feed would
+   restore the original (wrong) values for the 12 repaired ones on the next
+   sync, since `repaired` is not in `apply_gov_coordinates`'s PROTECTED list,
+   but the 570 sibling inheritances are not recoverable that way. If that
+   matters, snapshot `id, lat, lng, coord_source` for
+   `coord_source IN ('sibling','repaired')` and keep it somewhere durable.
