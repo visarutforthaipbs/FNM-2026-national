@@ -87,7 +87,14 @@ def fetch_csv(endpoint_key: str) -> pd.DataFrame | None:
     try:
         response = requests.get(url, timeout=FETCH_TIMEOUT)
         response.raise_for_status()
-        response.encoding = "utf-8"
+        # utf-8-sig, not utf-8: these CSVs carry a byte-order mark, and pandas
+        # only sometimes strips it. Measured 2026-08-14 across all five
+        # endpoints — four parsed as expected, but Factory_Operation_Permit's
+        # first header stayed '﻿DISPFACREG', so every
+        # row_dict.get("DISPFACREG") returned "" and permit_no was NULL for all
+        # 241,145 rows. Decoding with utf-8-sig removes the BOM before pandas
+        # ever sees it, so no endpoint can silently lose its first column again.
+        response.encoding = "utf-8-sig"
 
         content = response.text.strip()
         if not content:
@@ -424,6 +431,9 @@ def transform_permits(df: pd.DataFrame) -> list[dict]:
 
         permit = {
             "factory_fid": fid or None,
+            # DISPFACREG here is the permit number (น.42(1)-5/2535-ญนพ.), a
+            # different namespace from a factory's registration id — so it is
+            # not a join key. factory_id is resolved from FID after loading.
             "permit_no": disp_facreg or None,
             "issue_date": parse_date(row_dict.get("POKDATE", "")),
             "permit_status": row_dict.get("STATUS", "").strip() or None,
@@ -435,26 +445,82 @@ def transform_permits(df: pd.DataFrame) -> list[dict]:
     return permits
 
 
+def link_permits_to_factories() -> int:
+    """
+    Fill permits.factory_id from factory_fid, so the table can be joined to
+    factories on the id everything else uses.
+
+    Nothing populated this column: PERMIT_TO_PERMITS has no rule for it, so it
+    was NULL for all 241,145 rows and `permits` answered no question. The only
+    available link is FID, which resolves about 39% of rows — the rest are
+    permits for factories the registry no longer carries.
+    """
+    try:
+        result = supabase.rpc("link_permits_to_factories").execute()
+        linked = result.data if isinstance(result.data, int) else 0
+        logger.info(f"🔗 Linked {linked:,} permits to factories via FID")
+        return linked
+    except Exception as e:
+        logger.warning(f"⚠️ Could not link permits to factories: {e}")
+        return 0
+
+
 def transform_statistics(df: pd.DataFrame, source: str) -> list[dict]:
-    """Transform Sum_Factory_Local or Sum_Status_Factory_Local CSV."""
+    """
+    Transform Sum_Factory_Local or Sum_Status_Factory_Local into statistics rows.
+
+    The two endpoints publish different columns and are handled separately.
+    Sum_Status_Factory_Local is counts by year/month/province/industry/status;
+    Sum_Factory_Local is current aggregates by province/industry including
+    workers, capital and a size split, with no year or status dimension.
+
+    Until 2026-08-14 one mapping was applied to both, so every Sum_Factory_Local
+    row landed with year, month, province and status NULL — province purely
+    because the column is PROVINCE there and FPROVNAME in the other.
+    """
     stats = []
+    is_status_endpoint = source == "Sum_Status_Factory_Local"
 
     for _, row in df.iterrows():
         row_dict = row.to_dict()
 
-        stat = {
-            "year": parse_int(row_dict.get("YEAR", "")),
-            "month": row_dict.get("MONTH", "").strip() or None,
-            "province": row_dict.get("FPROVNAME", "").strip() or None,
+        if is_status_endpoint:
+            stat = {
+                "year": parse_int(row_dict.get("YEAR", "")),
+                "month": row_dict.get("MONTH", "").strip() or None,
+                "province": row_dict.get("FPROVNAME", "").strip() or None,
+                "status": row_dict.get("STATUS", "").strip() or None,
+            }
+        else:
+            stat = {
+                "province": row_dict.get("PROVINCE", "").strip() or None,
+                "total_workers": parse_int(row_dict.get("TOTALMAN", "")),
+                "total_capital": parse_float(row_dict.get("TOTALCAP", "")),
+                "size_small": parse_int(row_dict.get("FACSIZE_S", "")),
+                "size_medium": parse_int(row_dict.get("FACSIZE_M", "")),
+                "size_large": parse_int(row_dict.get("FACSIZE_L", "")),
+            }
+
+        stat.update({
             "tsic_code": row_dict.get("TSIC", "").strip() or None,
             "description": row_dict.get("DESCR", "").strip() or None,
-            "status": row_dict.get("STATUS", "").strip() or None,
             "total": parse_int(row_dict.get("TOTAL", "")),
             "source_endpoint": source,
             "last_update": parse_date(row_dict.get("LAST_UPDATE", "")),
-        }
+        })
 
         stats.append(stat)
+
+    # Loud enough to notice if a feed changes shape again: a mapping that stops
+    # matching shows up here as a column that is suddenly empty for every row.
+    if stats:
+        filled = {k: sum(1 for s in stats if s.get(k) is not None) for k in stats[0]}
+        empty = [k for k, n in filled.items() if n == 0]
+        if empty:
+            logger.warning(
+                f"⚠️ {source}: these columns are NULL for all {len(stats)} rows "
+                f"— check the feed's headers against config.py: {', '.join(empty)}"
+            )
 
     logger.info(f"📊 Extracted {len(stats)} statistics records from {source}")
     return stats
@@ -861,6 +927,8 @@ def sync_permits() -> dict:
         return {"status": "ABORTED", "fetched": len(df), "upserted": 0}
 
     count = load_and_promote("permits", permits, MIN_EXPECTED_PERMITS)
+    if count is not None:
+        link_permits_to_factories()
     if count is None:
         msg = "Staging load or promotion failed; permits left untouched."
         logger.error(f"🛑 {msg}")

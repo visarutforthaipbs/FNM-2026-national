@@ -102,17 +102,43 @@ PERMIT_TO_PERMITS = {
     "LAST_UPDATE": "_last_update",
 }
 
-# Sum endpoints → factory_statistics table
-SUM_TO_STATISTICS = {
+# The two Sum_* endpoints publish DIFFERENT columns and need separate mappings.
+# One shared mapping was applied to both until 2026-08-14; it fits
+# Sum_Status_Factory_Local exactly and Sum_Factory_Local not at all, so all
+# 185,917 rows from the latter landed with year, month, province and status
+# NULL. Province was lost purely to the name difference below.
+
+# Sum_Status_Factory_Local → factory_statistics
+# Counts by registration year, month, province, industry and status.
+SUM_STATUS_TO_STATISTICS = {
     "YEAR": "year",
     "MONTH": "month",
-    "FPROVNAME": "province",
+    "FPROVNAME": "province",     # note: FPROVNAME here...
     "TSIC": "tsic_code",
     "DESCR": "description",
     "STATUS": "status",
     "TOTAL": "total",
     "LAST_UPDATE": "last_update",
 }
+
+# Sum_Factory_Local → factory_statistics
+# Current aggregates by province and industry: counts, workers, capital and a
+# small/medium/large size split. No year, month or status dimension.
+SUM_FACTORY_TO_STATISTICS = {
+    "PROVINCE": "province",      # ...but PROVINCE here. This was the bug.
+    "TSIC": "tsic_code",
+    "DESCR": "description",
+    "TOTAL": "total",
+    "TOTALMAN": "total_workers",
+    "TOTALCAP": "total_capital",
+    "FACSIZE_S": "size_small",
+    "FACSIZE_M": "size_medium",
+    "FACSIZE_L": "size_large",
+    "LAST_UPDATE": "last_update",
+}
+
+# Kept as an alias so older imports do not break; prefer the two above.
+SUM_TO_STATISTICS = SUM_STATUS_TO_STATISTICS
 
 # =============================================================================
 # Batch sizes for upsert operations
