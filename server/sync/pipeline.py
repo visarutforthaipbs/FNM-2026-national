@@ -20,7 +20,7 @@ import hashlib
 import logging
 import argparse
 from io import StringIO
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import quote
 
 import pandas as pd
@@ -81,14 +81,29 @@ def deactivation_mode() -> str:
     'dry' (default) reports what soft_delete_missing would deactivate without
     writing; 'on' writes; 'off' skips entirely.
 
-    Defaults to dry because soft_delete_missing has never once run correctly —
+    Defaults to dry. soft_delete_missing has never once deactivated a factory —
     it read back only the first 1,000 active factories (PostgREST's hard
-    max-rows), so it compared the feed against a 0.4% sample, and the circuit
-    breaker tripped on every run. Its first correct run would be its first ever,
-    against a gap of ~33,000 rows, and that number needs to be understood before
-    it is written. See SYNC_DEACTIVATE in DATA_LAYER.md.
+    max-rows), compared the whole feed against that 0.4% sample, and tripped the
+    circuit breaker on every run. It is now correct, and it now runs against a
+    rule (sustained absence) rather than the unsound one it had (absence today),
+    but it has still never written. Leave it dry until last_seen_in_feed has
+    been accumulating for at least a full window and a dry run reports a
+    plausible handful rather than tens of thousands.
+
+    See SYNC_DEACTIVATE in DATA_LAYER.md.
     """
     return os.getenv("SYNC_DEACTIVATE", "dry").lower()
+
+
+# One timestamp per process, so every row a run touches carries the same value
+# and "seen in the same run" is exactly comparable.
+FEED_SEEN_AT = datetime.now().astimezone().isoformat()
+
+# How long a factory must be continuously absent from the feed before it counts
+# as closed. The endpoint oscillates between two populations ~33k apart from one
+# day to the next — on 2026-08-08 it served both 274,418 and 241,588 — so any
+# window shorter than a couple of weeks will deactivate live factories.
+DEACTIVATE_AFTER_DAYS = int(os.getenv("SYNC_DEACTIVATE_AFTER_DAYS", "30"))
 
 # sync_permits() clears the whole table before reinserting, so a short fetch
 # would silently empty it. The endpoint returned 241,588 rows on 2026-08-08;
@@ -359,6 +374,10 @@ def transform_factory_data(df: pd.DataFrame) -> tuple[list[dict], list[dict], li
             # `status` is currently untouched by the pipeline entirely until
             # a trustworthy source/decode is confirmed.
             "is_active": True,
+            # Stamped on every row the feed carries, so deactivation can key off
+            # sustained absence. The endpoint oscillates by ~33k rows between
+            # runs; one day's absence means nothing. See migration 20260815010000.
+            "last_seen_in_feed": FEED_SEEN_AT,
         }
 
         factories.append(factory)
@@ -435,6 +454,10 @@ def transform_business_location(df: pd.DataFrame) -> tuple[list[dict], list[dict
             "district": row_dict.get("FAMPNAME", "").strip() or None,
             "sub_district": row_dict.get("FTUMNAME", "").strip() or None,
             "is_active": True,
+            # Stamped on every row the feed carries, so deactivation can key off
+            # sustained absence. The endpoint oscillates by ~33k rows between
+            # runs; one day's absence means nothing. See migration 20260815010000.
+            "last_seen_in_feed": FEED_SEEN_AT,
         }
 
         factories.append(factory)
@@ -743,54 +766,21 @@ def insert_batch(table: str, records: list[dict]) -> int:
 # =============================================================================
 # 4. SOFT DELETE — Mark missing factories as inactive
 # =============================================================================
-def fetch_all_active_ids(page: int = 1000) -> set[str]:
+def count_active_factories() -> int:
     """
-    Every active factory id, paginated.
-
-    PostgREST caps a response at 1,000 rows server-side (db-max-rows) and says
-    so only in the Content-Range header — the request still returns 200 with a
-    plausible-looking body. soft_delete_missing() used a plain .select() and so
-    compared the whole government feed against the first 1,000 of 274,422
-    active factories, a 0.4% sample. Every id beyond that sample looked absent
-    from the database rather than absent from the feed, the ratio came out at
-    100%, and the circuit breaker aborted the run. That is why this function
-    has never deactivated a single closed factory, and why the failure was
-    invisible: it looked like the breaker doing its job.
-
-    274k rows at 1,000 a page is ~275 requests against a database on the same
-    host as the caller. That is acceptable for a nightly.
-
-    .order("id") is not cosmetic. OFFSET paging over an unordered result is
-    undefined: Postgres may return rows in any order, and the upsert that runs
-    immediately before this rewrites most of the table, so pages shift under
-    the reader and rows fall between them. The first paginated version of this
-    function read back 169,413 of 274,422 active ids for exactly that reason —
-    which is worse than the bug it replaced, because the ~105,000 rows it
-    happened to skip look absent from the database, not absent from the feed,
-    and would be candidates for deactivation. Order by the primary key so every
-    row lands in exactly one page.
+    Number of active factories, from PostgREST's exact count header rather than
+    by reading rows. The previous code paginated all 274,422 ids purely to get a
+    denominator for the circuit-breaker ratio — ~275 requests to compute one
+    integer.
     """
-    ids: set[str] = set()
-    start = 0
-    while True:
-        rows = (
-            supabase.table("factories")
-            .select("id")
-            .eq("is_active", True)
-            .order("id")
-            .range(start, start + page - 1)
-            .execute()
-            .data
-        )
-        if not rows:
-            break
-        ids.update(r["id"] for r in rows)
-        if len(rows) < page:
-            break
-        start += page
-
-    logger.info(f"📖 Read back {len(ids)} active factory ids")
-    return ids
+    res = (
+        supabase.table("factories")
+        .select("id", count="exact")
+        .eq("is_active", True)
+        .limit(1)
+        .execute()
+    )
+    return res.count or 0
 
 
 def write_deactivation_candidates(ids: list[str]) -> str:
@@ -811,8 +801,29 @@ def write_deactivation_candidates(ids: list[str]) -> str:
 
 def soft_delete_missing(fetched_ids: set[str]) -> int:
     """
-    Mark factories as inactive if their ID is no longer in the fetched dataset.
-    Returns count of deactivated records.
+    Deactivate factories that have been absent from the DIW feed for
+    DEACTIVATE_AFTER_DAYS, not merely absent from today's fetch.
+
+    The old rule was a set difference against one day's response, and it was
+    unsound. The endpoint oscillates between two populations about 33,000 rows
+    apart — from sync_logs, Factory_Data returned 274,418 and 241,588 on the
+    same day (2026-08-08), 274,414 on 07-17 and 243,977 on 07-18, 274,340 back
+    in April. A dry run on 2026-08-14 found 37,819 rows absent from that day's
+    fetch, of which 32,762 are ดำเนินการ and 32,662 are drawn on the map:
+    acting on it would have removed more than half the operating factories the
+    site publishes. Only 4,542 of them appeared in Business_Location that day,
+    so this is the feed dropping a population, not DIW striking off 33,000
+    factories overnight.
+
+    So absence is now measured over time. Every upsert stamps
+    last_seen_in_feed; a row becomes a candidate only once that stamp is older
+    than the window. NULL is never a candidate — a factory must have been seen
+    at least once, and then gone, before it can be deactivated. That also makes
+    the rule safe on a truncated fetch: a bad day moves nothing, because a
+    single bad day cannot age a row past the window.
+
+    `fetched_ids` is no longer used for the comparison; it is kept as a
+    liveness check that the run actually fetched something.
     """
     if not fetched_ids:
         return 0
@@ -823,43 +834,55 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
         return 0
 
     try:
-        existing_ids = fetch_all_active_ids()
+        cutoff = (
+            datetime.now().astimezone() - timedelta(days=DEACTIVATE_AFTER_DAYS)
+        ).isoformat()
 
-        # Find IDs that exist in DB but not in fetched data
-        missing_ids = existing_ids - fetched_ids
+        stale = (
+            supabase.table("factories")
+            .select("id")
+            .eq("is_active", True)
+            .not_.is_("last_seen_in_feed", "null")
+            .lt("last_seen_in_feed", cutoff)
+            .order("id")
+            .limit(20000)
+            .execute()
+            .data
+        )
+        missing_list = sorted(r["id"] for r in stale)
 
-        if not missing_ids:
-            logger.info("✅ No factories to deactivate")
+        if not missing_list:
+            logger.info(
+                f"✅ No factories absent from the feed for {DEACTIVATE_AFTER_DAYS}+ days"
+            )
             return 0
 
-        missing_list = sorted(missing_ids)
-        ratio = len(missing_ids) / len(existing_ids) if existing_ids else 0
-
         # A dry run reports before the circuit breaker gets a say. The breaker
-        # exists to stop a *write*, and the whole point of dry mode is to see
-        # the number in the case where the breaker would fire — which, given
-        # the current 13% gap, is every run. Returning early on the breaker
-        # meant the candidate list was never written and the count stayed
+        # exists to stop a *write*; the point of dry mode is to see the number
+        # precisely in the cases where the breaker would fire. Returning early
+        # on it meant the candidate list was never written and the count stayed
         # buried in an error line.
         if mode != "on":
             path = write_deactivation_candidates(missing_list)
             logger.warning(
-                f"🧪 Dry run: {len(missing_list)}/{len(existing_ids)} factories ({ratio:.1%}) "
-                f"are absent from the feed and WOULD be deactivated. Nothing written."
+                f"🧪 Dry run: {len(missing_list)} factories absent from the feed for "
+                f"{DEACTIVATE_AFTER_DAYS}+ days WOULD be deactivated. Nothing written."
             )
             logger.warning(f"   Candidate ids: {path}")
             logger.warning("   Review, then set SYNC_DEACTIVATE=on to apply.")
             return 0
 
-        # Circuit breaker: a healthy daily sync deactivates a handful of
-        # factories (closures), not a large fraction of the table. If the
-        # gov CSV fetch was truncated/incomplete for any reason, fetched_ids
-        # would look artificially small and this would otherwise mass-
-        # deactivate the database. Abort instead of guessing.
+        # Circuit breaker: a healthy sync deactivates a handful of factories
+        # (closures), not a large fraction of the table. Retained even though
+        # the age window already makes a single bad fetch harmless — a sustained
+        # feed regression would still age rows out, and that should stop the
+        # pipeline rather than drain the map slowly.
+        active_total = count_active_factories()
+        ratio = len(missing_list) / active_total if active_total else 0
         max_deactivation_ratio = 0.05
-        if existing_ids and ratio > max_deactivation_ratio:
+        if active_total and ratio > max_deactivation_ratio:
             logger.error(
-                f"❌ Refusing to deactivate {len(missing_ids)}/{len(existing_ids)} factories "
+                f"❌ Refusing to deactivate {len(missing_list)}/{active_total} factories "
                 f"({ratio:.0%} — over the {max_deactivation_ratio:.0%} safety "
                 "threshold). This usually means the source CSV fetch was incomplete. Investigate manually."
             )
