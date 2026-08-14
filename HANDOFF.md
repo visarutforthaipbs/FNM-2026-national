@@ -843,3 +843,142 @@ No restart needed.
    but the 570 sibling inheritances are not recoverable that way. If that
    matters, snapshot `id, lat, lng, coord_source` for
    `coord_source IN ('sibling','repaired')` and keep it somewhere durable.
+
+---
+
+## 11. Session — 2026-08-14: two databases, and the six days nobody noticed
+
+Started as an audit of the new Google sign-in. The auth bugs were real, but
+they were symptoms: the app had been running against **two different
+databases** since 2026-08-08, and which one your work landed in depended on
+which machine you ran it from.
+
+### The root cause, in one line
+
+Commit `309a633` moved the backend from the cloud Supabase project to
+self-hosted Supabase on `lighthouse-sev01`, because cloud had outgrown the
+500 MB free tier at 1,058 MB. It updated sev01's config correctly. It could
+not update the laptop's, because **`.env` files are gitignored** — so the
+laptop kept pointing at the project the move was meant to retire, and nothing
+ever said so out loud.
+
+| Ran on sev01 → sev01 | Ran from the laptop → cloud |
+|---|---|
+| nightly DIW sync | `geocode_missing.py --tier sibling` → 570 rows |
+| DBD collectors (416 MB) | `repair_coordinates.py` → 12 rows |
+| `/admin` moderation → **36 admin pins** | Google sign-in → 1 `auth.users` row |
+
+Neither database was a superset. Worse, the published site read from **both**
+at once: the static JSON in `client/public/data/` was exported from cloud,
+while `VITE_SUPABASE_URL` in the deployed bundle pointed at sev01. Map pins
+came from one database, the detail panel from the other. **The 36 admin pins
+had never appeared on the public map** — every export ever published came
+from the database that did not have them.
+
+### Corrections to earlier sections
+
+1. **§9.1 and §10's warning about the sev01 checkout is obsolete.** Both say
+   it carries "~485 lines of uncommitted local changes that exist in no git
+   repo" and must not be lost to a `git pull`. Measured against current `main`
+   rather than sev01's stale HEAD (`70d27b2`): 18 of 31 files are
+   byte-identical, and the only lines unique to sev01's `server/index.js` are
+   the legacy `GET /api/factories` route that `06a15d3` deliberately removed.
+   Those routes were committed to main from the laptop afterwards and the
+   warning was never updated. The checkout was safe to reconcile, and has been.
+2. **§10 says the 582 rewritten coordinates are "live".** True of the
+   published JSON, not of the production database — they existed only on
+   cloud. Both are now on sev01.
+3. **§3/§8's GitHub Actions permission and the nightly `git push`.** The push
+   was failing because sev01's `main` had diverged (3 ahead, 30 behind), not
+   because of permissions. The three local commits were nightly exports that
+   predate `countByCoordSource` by 30 commits; preserved on
+   `origin/preserve/sev01-nightly-exports` and superseded.
+
+### What was done
+
+**Preserved first** (`afce30c`, branch `preserve/single-copy-artifacts`) —
+the 582 cloud coordinates, the 36 sev01 admin pins, and three untracked
+collector scripts. §10.5 asked for exactly this snapshot; it exists now.
+A verbatim tarball of all 31 sev01 files is at
+`~/sev01-uncommitted-capture-20260814.tgz` on the laptop.
+
+**Reconciled** (`55d5e42`) — replayed 582 coordinates onto sev01, skipping 2
+ids that already carried an admin pin (they agree to within 440 m, so the
+human decision wins at no cost). Two traps found on the way:
+
+- sev01's `coord_source` check constraint rejected `'sibling'` outright —
+  migration `20260814000000` had never been applied there.
+- The first dry run under-counted by 20, because `coord_source NOT IN (...)`
+  is NULL, not true, for unmapped rows — it silently excluded exactly the 20
+  previously-unmapped factories that most needed the fix. Use
+  `coalesce(coord_source,'')` in any predicate like this.
+
+**Protected `repaired`** (`25e1eb9`) — closes §10.5. `sibling` is deliberately
+left unprotected per migration `20260814000000`: an inherited position is a
+stand-in for missing government data, so a real DIW coordinate should win.
+
+**Split the databases** (`f561b02`, `3f0ed4e`) — see `supabase/README.md`.
+Government data on sev01, citizen data (accounts, watchlists, reports,
+corrections) in the cloud project. The auth and RLS migrations had **never
+been applied anywhere**, which is why sign-in produced "relation does not
+exist" on every query rather than the RLS denials first suspected.
+
+Before dropping the duplicated government tables from cloud, checked what was
+actually unique: `factories` and `businesses` had zero rows absent from
+sev01, but **1,776 permits were in cloud and not in the current DIW feed** —
+served through 08-08, gone by 08-13, issue dates 1966–2026, 1,572 still
+marked ดำเนินการ. Committed as
+`server/data/permits_retired_from_diw_feed_20260814.csv`. Full dump of all
+four tables (128 MB gzipped, verified) at
+`lighthouse-sev01:/home/visarut298/app/archive/cloud-gov-tables-20260814.sql.gz`.
+Cloud went 1,059 MB → 20 MB, back inside the free tier.
+
+### Numbers, recounted 2026-08-14
+
+Operating factories **63,384**; mapped **62,656 (98.8%)**, unmapped 728 (1.1%).
+Provenance: gov 39,035 · centroid 19,960 · geocoded 3,045 · sibling 568 ·
+admin 36 · repaired 12. Zoning: 14,486 of 62,656 inside a DPT polygon (23.1%),
+`--check` clean for all 77 provinces. Province mismatches: **209** of 62,656.
+
+CLAUDE.md had claimed "~39,000 with map coordinates" and "38.6% lack
+coordinates" for a week after the tiers took coverage to 98.8% — the stale
+figure was exactly the `gov` count. Corrected, and the incident recorded there
+as an example of the rule it already stated.
+
+### Also fixed this session
+
+- The API hardening from `06a15d3` is **finally running**. §9.1 was right that
+  it was not: `express-rate-limit` was in `package.json` but never installed,
+  so restarting would have crashed the service. Installed, restarted, verified
+  (`ratelimit: limit=30, remaining=29`).
+- `dpt_geodatabase.db` (398 MB, gitignored) copied to sev01, so the nightly run
+  can regenerate zoning instead of only warning that it cannot (§1).
+- `client/.env.example` was matched by `client/.env*` and had **never been
+  tracked** — nobody cloning this repo had ever seen it. Un-ignored.
+- The auth work itself: watchlist rebuilt as a provider (it was instantiated
+  once per FactoryCard, up to 200 copies), local list now merges into the
+  account on sign-in instead of being overwritten, watchlist cleared on sign-out
+  (it leaked between accounts on a shared device), and the FK from
+  `user_factory_watchlist` to `factories` dropped — it carried
+  `on delete cascade`, so a government data refresh could have deleted a
+  citizen's saved list.
+
+### Still outstanding
+
+1. **The staging-swap for `permits` and `factory_statistics` is not done.**
+   They are still delete-then-insert, the pattern behind the 08-08 incident —
+   and demonstrably behind the duplicate copies found on cloud. Load into a
+   staging table, validate, then `ALTER TABLE ... RENAME` in a transaction.
+2. **`/admin` still mutates derived tables in place.** A moderator's decision
+   and the collector's value occupy the same cell, distinguished only by
+   `coord_source`, so `core` cannot be rebuilt without losing human work. It
+   wants an append-only overrides table and a view. The 36 pins are the
+   argument: they had no replay source at all.
+3. **The systemd timers are clock-ordered, not dependency-ordered.**
+   `diw-collector` 02:32, `factory-sync` 03:05 — the day the first runs long,
+   the second reads a half-loaded table. `dbd-collect.service` has no timer.
+4. **EXIF stripping is mandatory before photo/video reporting ships.** A phone
+   photo carries GPS to metre precision; a citizen photographing the factory
+   next door would upload their home coordinates, defeating the entire
+   `distance_band` design. Strip server-side, never client-side.
+5. §4's `FFLAG`/`STATUS` question and §2's 317-factory gap are still untouched.

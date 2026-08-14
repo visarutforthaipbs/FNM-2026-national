@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a React + TypeScript + Vite civic tech application that displays **63,800+ operating factories across Thailand** (~39,000 with map coordinates) on an interactive map. The application helps citizens find nearby factories with filtering capabilities, promoting industrial transparency for communities.
+This is a React + TypeScript + Vite civic tech application that displays **63,384 operating factories across Thailand** (62,656 of them mapped, 98.8%) on an interactive map. The application helps citizens find nearby factories with filtering capabilities, promoting industrial transparency for communities.
+
+*Counted 2026-08-14 from `factories` on lighthouse-sev01. Recount before reuse — see the warning below.*
 
 **Tagline**: "เปิดข้อมูลโรงงาน เพื่อชุมชนที่น่าอยู่" (Opening factory data for a livable community)
 
@@ -23,7 +25,23 @@ This is a React + TypeScript + Vite civic tech application that displays **63,80
 - **[`COLLECTORS.md`](COLLECTORS.md)** — the four government sources (DIW, DBD, DPT, DOL), what state each collector is in, and the patterns that made them work: one central rate limiter (never a per-worker sleep), archive-first so a rules change replays instead of re-crawling, an explicit outcome per record, and telling a WAF's answer apart from the service's (both return **HTTP 200 with HTML** when blocking). Also records what is *closed* — DOL is blocked behind hCaptcha and PIPR is government-to-government — so nobody re-derives a dead end.
 - **[`HANDOFF.md`](HANDOFF.md)** — live incident history for `pipeline.py`, the frozen `status` field, and the coordinate-corruption post-mortem.
 
-Two facts that have bitten repeatedly: **`factories.is_active` is `true` for all 274,421 rows and filters nothing** — operating factories are `status = 'ดำเนินการ'` (63,384). And **any statistic shown to the public must be recounted from the artifact**, not carried over from a summary; several fabricated figures have reached production that way.
+Two facts that have bitten repeatedly: **`factories.is_active` is `true` for all 274,422 rows and filters nothing** — operating factories are `status = 'ดำเนินการ'` (63,384). And **any statistic shown to the public must be recounted from the artifact**, not carried over from a summary; several fabricated figures have reached production that way.
+
+This file was itself an example: it claimed "~39,000 with map coordinates" and "38.6% lack coordinates" for a week after the geocoding tiers had taken coverage to 98.8%. The stale figure was exactly the `gov` count — written before the tiers existed and never recounted. Recount, don't carry over, including from here.
+
+## Two databases
+
+**Government data and citizen data live in separate Postgres instances.** Read [`supabase/README.md`](supabase/README.md) before writing a migration or a query that spans them.
+
+| | Government | Citizen |
+|---|---|---|
+| Where | `lighthouse-sev01`, self-hosted Supabase | cloud Supabase project |
+| Holds | `factories`, `businesses`, `permits`, `factory_statistics`, `dbd.*` | `auth.users`, `user_profiles`, watchlists, `reports`, `location_corrections` |
+| Migrations | `supabase/migrations/` | `supabase/migrations-citizen/` |
+| Client | `supabaseGov` | `supabaseCitizen` |
+| Rebuildable | yes — re-run the collectors | **no** |
+
+The split is by recoverability, not subject: government data can be deleted and rebuilt, citizen data cannot be rebuilt from anything. **No foreign keys and no joins cross the boundary** — fetch ids from one, hydrate names from the other. Auth sits on the citizen side because it must: the Tailscale Funnel on sev01 exposes `/rest/v1` only, so `/auth/v1` answers 404 and GoTrue there is unreachable from a browser.
 
 ## Development Commands
 
@@ -34,7 +52,9 @@ Run these inside `client/`:
 - `npm run lint` - Run ESLint
 - `npm run preview` - Preview production build
 
-Supabase credentials go in `client/.env.local` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`); see `client/.env.example`. Missing credentials degrade gracefully (detail fetches return null).
+Credentials go in `client/.env.local` — **two sets, one per database**: `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (government, sev01) and `VITE_CITIZEN_SUPABASE_URL`/`VITE_CITIZEN_SUPABASE_ANON_KEY` (citizen, cloud). See `client/.env.example`. Missing credentials degrade gracefully — detail fetches return null, sign-in and reporting are unavailable, the map still works.
+
+The same two must be set in the Vercel project; the deployed bundle inlines them at build time, so a missing citizen pair silently disables sign-in in production. `server/.env` mirrors the pair as `DATABASE_URL` and `CITIZEN_DATABASE_URL`.
 
 ## Architecture
 
@@ -57,12 +77,14 @@ Supabase credentials go in `client/.env.local` (`VITE_SUPABASE_URL`, `VITE_SUPAB
    - `markers/{province-slug}.json` — 77 per-province files (~50–500 KB each) lazy-loaded only when a province is selected, cached in memory. Markers use abbreviated keys: `i` (registration id), `n` (name), `p` (province), `t` (จำพวก), `a` ([lng, lat])
    - `thailand-provinces.json` — province polygons for choropleth + province detection
    - `dashboard_stats.json` — pre-aggregated nationwide stats
-2. **Detail (Supabase REST, direct from browser)**: selecting a factory fetches full properties (`fetchFactoryDetail` in `hooks/useFactoriesApi.ts`) with a stale-response guard so slow responses can't overwrite a newer selection. DashboardPage's explorer also queries Supabase directly.
+2. **Detail (PostgREST on sev01, direct from browser)**: selecting a factory fetches full properties (`fetchFactoryDetail` in `hooks/useFactoriesApi.ts`) with a stale-response guard so slow responses can't overwrite a newer selection. DashboardPage's explorer queries it directly too.
+
+Both stages read the **government** database. Anything about the signed-in person — watchlist, their own reports, private notes — comes from the **citizen** database via `supabaseCitizen`. The static exports are generated from the government database, so a coordinate that exists in only one of the two will not appear on the map: that mismatch published one database's pins under the other's detail panel for six days (HANDOFF §11).
 
 Client-side filtering (search, high-risk, type codes, 10 km radius) happens in `useFactoriesApi`, capped at 2,000 rendered markers.
 
 ### Citizen Impact Reports (รายงานผลกระทบ)
-- Anonymous, moderated reporting of factory impacts (smell/noise/water/dust/vibration) — schema in `supabase/migrations/20260807000000_citizen_reports.sql`
+- Anonymous, moderated reporting of factory impacts (smell/noise/water/dust/vibration) — lives in the **citizen** database; schema in `supabase/migrations/20260807000000_citizen_reports.sql`, auth/watchlist layer in `supabase/migrations-citizen/`
 - Anon role can only INSERT into `reports`; public reads go through `approved_reports` / `report_counts` views (approved rows only, never reporter contact). Moderation = flipping `status` via service key/Studio
 - Rate-limited by a DB trigger (5/hour per IP hash); reporter location stored only as a coarse `distance_band`, never coordinates — keep it that way (reporter safety)
 - Client: `hooks/useReports.ts` (submit + shared counts cache), `components/ReportSection.tsx` (3-step chip form in the sidebar detail view), count badge in `FactoryCard.tsx`
@@ -70,11 +92,24 @@ Client-side filtering (search, high-risk, type codes, 10 km radius) happens in `
 
 ### Admin & Moderation
 - `/admin` (client route) — moderation UI for pending reports and location corrections; static bearer token (`ADMIN_TOKEN` env on the server), stored in sessionStorage
-- Endpoints in `server/index.js`: `GET/POST /api/admin/reports[/:id]`, `GET/POST /api/admin/corrections[/:id]`. The pg pool connects as table owner, bypassing RLS — this is the only place reporter contact info is visible
-- Approving a location correction applies lat/lng + PostGIS geom to `factories` with `coord_source='community'` in one transaction
+- Endpoints in `server/index.js`: `GET/POST /api/admin/reports[/:id]`, `GET/POST /api/admin/corrections[/:id]`. Two pools — `pool` (government) and `citizenPool` (citizen) — both connecting as table owner and bypassing RLS. This is the only place reporter contact info is visible, which is why the service is tailnet-only on `:4443` (HANDOFF §8)
+- The queues **cannot join**: reports and corrections come from `citizenPool`, factory names and current positions are hydrated from `pool` afterwards. An id the registry no longer knows leaves the name null rather than dropping the row — a moderator still needs to see the report
+- Approving a location correction spans both databases, so it is **not** one transaction. It writes lat/lng to `factories` (`coord_source='community'`) first, then marks the correction. Re-approving is idempotent; the reverse order could mark a correction approved that was never applied. `geom` needs no manual write — the trigger maintains it
 
 ### Coordinate Provenance & Geocoding
-~38.6% of operating factories lack coordinates. Recovery is tiered (`supabase/migrations/20260807010000_coords_and_corrections.sql` adds `factories.coord_source` / `coord_precision`):
+**728 of 63,384 operating factories (1.1%) lack coordinates** — down from ~38.6% before the recovery tiers ran. Current provenance, counted 2026-08-14:
+
+| source | count | meaning |
+|---|---|---|
+| `gov` | 39,035 | straight from the DIW feed |
+| `centroid` | 19,960 | tambon centroid, ±2–5 km |
+| `geocoded` | 3,045 | Longdo street geocode |
+| `sibling` | 568 | inherited from a co-located licence, exact |
+| `admin` | 36 | placed by a moderator in `/admin` |
+| `repaired` | 12 | whole-degree gov error, corrected |
+| *(none)* | 728 | still unmapped |
+
+Recovery is tiered (`supabase/migrations/20260807010000_coords_and_corrections.sql` adds `factories.coord_source` / `coord_precision`):
 1. **repaired** — two scripts write this source, both dry-run by default with `--apply` to write:
    - `server/sync/repair_coordinates.py` re-reads raw gov CSVs and fixes swapped/mis-scaled values for factories with **no** coordinate, accepted only if inside the stated province polygon
    - `server/sync/repair_province_mismatch.py` fixes factories that **have** a coordinate that lands outside their tagged province, by trying whole-degree shifts (a wrong digit in the degrees field moves a point exactly 1°). Because it rewrites existing positions it accepts a shift only if it lands inside the province **and** within 15 km of the stated tambon centroid **and** is the only shift that does both
@@ -121,7 +156,7 @@ This replaced the old red/green จำพวก split because ~90% of factories 
 - Thai-language error messages per failure mode; manual lat/lng entry available in the sidebar
 
 ### Map Performance
-- Markers only render in province mode (never all ~39,000 at once); clustered, max 2,000
+- Markers only render in province mode (never all 62,656 at once); clustered, max 2,000
 - Pre-created `divIcon` instances (6 combinations: 3 hazard levels × selected/normal)
 - `React.memo` on MapWrapper; memoized GeoJSON construction in App.tsx
 
