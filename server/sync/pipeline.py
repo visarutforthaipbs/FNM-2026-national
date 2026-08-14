@@ -52,8 +52,43 @@ logger = logging.getLogger("factory-sync")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
-TEST_MODE = os.getenv("SYNC_TEST_MODE", "false").lower() == "true"
 TEST_LIMIT = int(os.getenv("SYNC_TEST_LIMIT", "100"))
+
+
+def test_mode() -> bool:
+    """
+    Whether this run is a test run.
+
+    Read on every call, never cached at import. `--test` sets SYNC_TEST_MODE
+    inside main(), which runs *after* this module is imported, so the old
+    module-level `TEST_MODE = os.getenv(...)` constant was evaluated while the
+    variable was still unset and was therefore False for the entire run. The
+    log said "Test mode enabled via CLI flag" and then "Test mode: OFF" two
+    lines later.
+
+    That mattered: TEST_MODE is the guard on the permits and statistics
+    clear+insert, added after a test run cleared 814,588 permits and 1,621,380
+    statistics rows and replaced them with 100. Those guards had silently done
+    nothing since. What actually held the line was the volume floor in
+    promote_staging(), a second line of defence that should not have been load-
+    bearing.
+    """
+    return os.getenv("SYNC_TEST_MODE", "false").lower() == "true"
+
+
+def deactivation_mode() -> str:
+    """
+    'dry' (default) reports what soft_delete_missing would deactivate without
+    writing; 'on' writes; 'off' skips entirely.
+
+    Defaults to dry because soft_delete_missing has never once run correctly —
+    it read back only the first 1,000 active factories (PostgREST's hard
+    max-rows), so it compared the feed against a 0.4% sample, and the circuit
+    breaker tripped on every run. Its first correct run would be its first ever,
+    against a gap of ~33,000 rows, and that number needs to be understood before
+    it is written. See SYNC_DEACTIVATE in DATA_LAYER.md.
+    """
+    return os.getenv("SYNC_DEACTIVATE", "dry").lower()
 
 # sync_permits() clears the whole table before reinserting, so a short fetch
 # would silently empty it. The endpoint returned 241,588 rows on 2026-08-08;
@@ -128,10 +163,8 @@ def fetch_csv(endpoint_key: str) -> pd.DataFrame | None:
 
         logger.info(f"✅ Fetched {len(df)} records from {endpoint_key} ({len(df.columns)} columns)")
 
-        test_mode = os.getenv("SYNC_TEST_MODE", "false").lower() == "true"
-        test_limit = int(os.getenv("SYNC_TEST_LIMIT", "100"))
-        if test_mode:
-            df = df.head(test_limit)
+        if test_mode():
+            df = df.head(int(os.getenv("SYNC_TEST_LIMIT", "100")))
             logger.info(f"🧪 Test mode: limited to {len(df)} records")
 
         return df
@@ -710,6 +743,61 @@ def insert_batch(table: str, records: list[dict]) -> int:
 # =============================================================================
 # 4. SOFT DELETE — Mark missing factories as inactive
 # =============================================================================
+def fetch_all_active_ids(page: int = 1000) -> set[str]:
+    """
+    Every active factory id, paginated.
+
+    PostgREST caps a response at 1,000 rows server-side (db-max-rows) and says
+    so only in the Content-Range header — the request still returns 200 with a
+    plausible-looking body. soft_delete_missing() used a plain .select() and so
+    compared the whole government feed against the first 1,000 of 274,422
+    active factories, a 0.4% sample. Every id beyond that sample looked absent
+    from the database rather than absent from the feed, the ratio came out at
+    100%, and the circuit breaker aborted the run. That is why this function
+    has never deactivated a single closed factory, and why the failure was
+    invisible: it looked like the breaker doing its job.
+
+    274k rows at 1,000 a page is ~275 requests against a database on the same
+    host as the caller. That is acceptable for a nightly.
+    """
+    ids: set[str] = set()
+    start = 0
+    while True:
+        rows = (
+            supabase.table("factories")
+            .select("id")
+            .eq("is_active", True)
+            .range(start, start + page - 1)
+            .execute()
+            .data
+        )
+        if not rows:
+            break
+        ids.update(r["id"] for r in rows)
+        if len(rows) < page:
+            break
+        start += page
+
+    logger.info(f"📖 Read back {len(ids)} active factory ids")
+    return ids
+
+
+def write_deactivation_candidates(ids: list[str]) -> str:
+    """
+    Write the would-be-deactivated ids to CSV so the set can be reviewed
+    against the registry before anything is written. Ids only — join to
+    factories for status and name rather than duplicating them here.
+    """
+    out_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+    os.makedirs(out_dir, exist_ok=True)
+    path = os.path.abspath(os.path.join(out_dir, "deactivation_candidates.csv"))
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("id\n")
+        for i in ids:
+            fh.write(f"{i}\n")
+    return path
+
+
 def soft_delete_missing(fetched_ids: set[str]) -> int:
     """
     Mark factories as inactive if their ID is no longer in the fetched dataset.
@@ -718,15 +806,13 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
     if not fetched_ids:
         return 0
 
+    mode = deactivation_mode()
+    if mode == "off":
+        logger.info("⏭️  Deactivation disabled (SYNC_DEACTIVATE=off)")
+        return 0
+
     try:
-        # Get all currently active factory IDs
-        result = (
-            supabase.table("factories")
-            .select("id")
-            .eq("is_active", True)
-            .execute()
-        )
-        existing_ids = {row["id"] for row in result.data}
+        existing_ids = fetch_all_active_ids()
 
         # Find IDs that exist in DB but not in fetched data
         missing_ids = existing_ids - fetched_ids
@@ -754,7 +840,17 @@ def soft_delete_missing(fetched_ids: set[str]) -> int:
         # UPSERT_BATCH_SIZE — 2000 Thai ids exceed the gateway's URI limit and
         # the resulting 414 was swallowed by the except below, silently
         # skipping deactivation altogether.
-        missing_list = list(missing_ids)
+        missing_list = sorted(missing_ids)
+
+        if mode != "on":
+            path = write_deactivation_candidates(missing_list)
+            logger.warning(
+                f"🧪 Dry run: {len(missing_list)} factories are absent from the feed and "
+                f"WOULD be deactivated. Nothing written. Candidates: {path}"
+            )
+            logger.warning("   Set SYNC_DEACTIVATE=on to apply, after reviewing the list.")
+            return 0
+
         deactivated = 0
         for batch in chunks_for_uri(missing_list):
             supabase.table("factories").update({"is_active": False}).in_("id", batch).execute()
@@ -849,7 +945,7 @@ def sync_factory_data() -> dict:
     # rows, and soft_delete_missing would otherwise try to deactivate nearly
     # the entire table (see safety threshold inside soft_delete_missing too)
     fetched_ids = {f["id"] for f in factories}
-    deactivated = 0 if TEST_MODE else soft_delete_missing(fetched_ids)
+    deactivated = 0 if test_mode() else soft_delete_missing(fetched_ids)
 
     duration = time.time() - start
     log_sync(endpoint_key, len(df), biz_count + fac_count, deactivated, "SUCCESS", None, duration)
@@ -917,7 +1013,7 @@ def sync_permits() -> dict:
     #      cleared 814,588 permits and inserted 100. Test mode now touches nothing.
     #   2. A degraded or truncated CSV would do the same thing silently, so refuse
     #      to clear when the fetch is implausibly small.
-    if TEST_MODE:
+    if test_mode():
         logger.warning(
             f"🧪 Test mode: skipping permits clear+insert entirely "
             f"({len(permits)} rows fetched; clearing would wipe the table)"
@@ -961,7 +1057,7 @@ def sync_statistics(endpoint_key: str) -> dict:
 
     # Same delete-then-insert shape as sync_permits, same hazard: a test run
     # cleared 1,621,380 statistics rows and inserted 200. Test mode does nothing.
-    if TEST_MODE:
+    if test_mode():
         logger.warning(
             f"🧪 Test mode: skipping {endpoint_key} statistics clear+insert "
             f"({len(stats)} rows fetched; clearing would wipe this source)"
@@ -993,7 +1089,7 @@ def run_pipeline(target_endpoint: str | None = None) -> None:
     logger.info("=" * 60)
     logger.info("🚀 Factory Near Me — Daily Sync Pipeline")
     logger.info(f"🕐 Started at {datetime.now().isoformat()}")
-    logger.info(f"🧪 Test mode: {'ON' if TEST_MODE else 'OFF'}")
+    logger.info(f"🧪 Test mode: {'ON' if test_mode() else 'OFF'}")
     logger.info("=" * 60)
 
     pipeline_start = time.time()
