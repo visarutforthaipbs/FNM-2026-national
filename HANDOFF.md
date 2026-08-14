@@ -234,6 +234,56 @@ goes in `transform_factory_data()` / `transform_business_location()` in
 `server/sync/pipeline.py` (currently both have `status` intentionally
 omitted from the factory dict, with a comment explaining why).
 
+### RESOLVED 2026-08-14 — and the answer is "keep it frozen, permanently"
+
+**The codes decode cleanly.** Joining `Factory_Data` (FFLAG) to
+`Business_Location` (STATUS) on `DISPFACREG` across the archived 2026-08-13
+snapshots: 241,349 rows, perfect 1:1, zero cross-contamination.
+
+| FFLAG | STATUS | rows | meaning |
+|---|---|---:|---|
+| `0` | ได้รับใบอนุญาต | 4,556 | licensed (รง.4 issued), machinery not yet started |
+| `1` | ดำเนินการ | 33,696 | operating |
+| `2` | จำหน่าย | 201,926 | **struck off the register** — not "sold" |
+| `3` | หยุดดำเนินการ | 1,171 | temporarily stopped, still registered |
+
+So the two fields are two encodings of one field, which is exactly why writing
+both into one column was last-write-wins garbage.
+
+**But the decode must NOT be applied.** DIW's own executive dashboard
+(`http://reg.diw.go.th/executive/thailand3.asp`, ณ 14 ส.ค. 69) reports the
+national operating total as **71,012** factories นอกนิคมฯ — จำพวก 1: 47,
+จำพวก 2: 3,359, จำพวก 3: 67,606 — with 8,623,184 ล้านบาท capital and
+3,751,795 workers.
+
+Against that, our data validates on three independent measures at once:
+
+| | DIW official | ours | |
+|---|---:|---:|---|
+| จำพวก 1 | 47 | **47** | exact |
+| จำพวก 2 | 3,359 | 3,287 | 97.9% |
+| จำพวก 3 | 67,606 | 57,163 | 84.6% |
+| capital (ล้านบาท) | 8,623,184 | 7,758,797 | 90.0% |
+| workers | 3,751,795 | 3,345,601 | 89.2% |
+
+The open-data feed's 33,696 is **47%** of the official figure. Whatever
+`FFLAG=1` means administratively, it is not "currently operating" in the sense
+DIW itself publishes. Applying the decode would have halved the map and moved
+it *away* from the official total. The instruction above was right; this is the
+evidence for why.
+
+**Corollaries.** The 29,695 rows in our operating set that are absent from the
+current feed are almost certainly real: without them the totals drop to ~53% of
+official rather than ~89%. The feed also shrinks ~48 rows/day, and our table is
+~32,700 rows larger than it — roughly 1.9 years of that drift — so the feed is
+a narrowing view, not ground truth.
+
+**What is still missing.** Excluding our 2,887 กนอ.-format rows (all `น.`
+prefixed, industrial-estate jurisdiction — the dashboard reports
+`ในนิคมอุตสาหกรรม: 0`, so they are counted elsewhere), our comparable total is
+**60,497 against 71,012 — short by 10,515, essentially all จำพวก 3 (10,443).**
+That gap is the open question now, not the decode.
+
 ---
 
 ## 5. Where things are, concretely

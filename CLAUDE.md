@@ -29,6 +29,8 @@ Two facts that have bitten repeatedly: **`factories.is_active` is `true` for all
 
 This file was itself an example: it claimed "~39,000 with map coordinates" and "38.6% lack coordinates" for a week after the geocoding tiers had taken coverage to 98.8%. The stale figure was exactly the `gov` count — written before the tiers existed and never recounted. Recount, don't carry over, including from here.
 
+**Never write DIW's `STATUS` / `FFLAG` into `factories.status`.** The codes decode cleanly (`0` ได้รับใบอนุญาต, `1` ดำเนินการ, `2` จำหน่าย = struck off, `3` หยุดดำเนินการ — verified 1:1 across 241,349 rows), but the feed's `ดำเนินการ` count is **33,696 against DIW's own published 71,012** — 47%. Our 63,384 validates at 89–90% of the official figure on three independent measures, including จำพวก 1 matching exactly at 47. Applying the decode halves the map and moves it away from the truth. `status` is frozen deliberately; see HANDOFF §4. The official figures are at `http://reg.diw.go.th/executive/thailand3.asp`.
+
 ## Two databases
 
 **Government data and citizen data live in separate Postgres instances.** Read [`supabase/README.md`](supabase/README.md) before writing a migration or a query that spans them, and [`DATA_LAYER.md`](DATA_LAYER.md) for the full inventory, the load path, the timer schedule, and every guard in the pipeline and why it exists.

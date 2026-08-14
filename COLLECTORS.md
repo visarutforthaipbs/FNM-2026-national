@@ -13,7 +13,7 @@ Written 2026-08-13.
 
 | # | Source | What we get | Collector | State |
 |---|--------|-------------|-----------|-------|
-| 1 | **DIW** — Department of Industrial Works | The factory registry itself: 274,421 records, 63,384 operating | `server/collector/collect.py`, `server/sync/pipeline.py` | ✅ working, nightly |
+| 1 | **DIW** — Department of Industrial Works | The factory registry itself: 274,422 records, 63,384 operating (~89% of DIW's published 71,012 — see below) | `server/collector/collect.py`, `server/sync/pipeline.py` | ✅ working, nightly |
 | 2 | **DBD** — Dept. of Business Development | Who owns each factory: company, directors, financials, shareholder nationality | `server/collector/dbd_*.py` | ✅ working — 36,965 exact links, 36,487 companies with nationality |
 | 3 | **DPT** — Dept. of Public Works & Town Planning | Land-use zoning: 42,219 polygons, 203 town/community plans | `server/sync/download_dpt_geodatabase.py`, `export_zoning.py` | ✅ working, one-shot + re-runnable |
 | 4 | **DOL** — Department of Lands | Land-title-deed → parcel coordinates, for 8,705 factories with no position | `server/sync/harvest_landsmaps_geodatabase.py`, `dol_session.py` | ⛔ **blocked** — see §6 |
@@ -23,6 +23,27 @@ Plus geocoding tiers that are not "collectors" but sit in the same pipeline:
 committed — do not delete it).
 
 ---
+
+
+### DIW: the open-data feed is not the official count
+
+Two DIW sources disagree, and the API is the one that is wrong for our purpose.
+
+- The **open-data feed** we poll reports 33,696 factories as `ดำเนินการ`.
+- DIW's **executive dashboard** (`http://reg.diw.go.th/executive/thailand3.asp`)
+  reports **71,012** operating factories นอกนิคมฯ, with 8,623,184 ล้านบาท capital
+  and 3,751,795 workers.
+
+Our database validates against the dashboard at 89–90% on three independent
+measures — factory count, capital and workers — with จำพวก 1 matching exactly at
+47. The feed is 47%. Whatever `FFLAG=1` encodes administratively, it is not the
+operating population DIW publishes, so **never write `STATUS`/`FFLAG` into
+`factories.status`** (HANDOFF §4 carries the full evidence).
+
+The feed also shrinks by roughly **48 rows/day** and is now ~32,700 rows smaller
+than our table — about 1.9 years of drift. Treat it as a narrowing view of the
+registry, not as ground truth, and do not let `soft_delete_missing()` reconcile
+against it.
 
 ## 2. The patterns that worked
 
