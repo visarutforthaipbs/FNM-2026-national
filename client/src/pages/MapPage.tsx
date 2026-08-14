@@ -138,7 +138,7 @@ const MapPage: React.FC<MapPageProps> = ({
             zIndex={1100}
           >
             <IconButton
-              aria-label="Menu"
+              aria-label="เปิดเมนูค้นหาโรงงาน"
               icon={<Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18" /></Icon>}
               size="sm"
               minW="44px"
@@ -249,6 +249,9 @@ const MapPage: React.FC<MapPageProps> = ({
           alignItems="center"
           justifyContent="center"
           p={4}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="welcome-modal-heading"
         >
           <VStack
             bg="white"
@@ -274,7 +277,7 @@ const MapPage: React.FC<MapPageProps> = ({
 
             {/* LAYER 2: One-sentence value prop — 8 words max */}
             <VStack spacing={2}>
-              <Text fontSize="2xl" fontWeight="bold" color="slate.800" lineHeight="short">
+              <Text id="welcome-modal-heading" fontSize="2xl" fontWeight="bold" color="slate.800" lineHeight="short">
                 ค้นหาโรงงานใกล้บ้านคุณ
               </Text>
               <Text fontSize="sm" color="slate.500" fontWeight="medium">
@@ -311,9 +314,9 @@ const MapPage: React.FC<MapPageProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              color="slate.400"
+              color="slate.500"
               fontWeight="normal"
-              _hover={{ color: "slate.600" }}
+              _hover={{ color: "slate.700" }}
               onClick={handleSkipWelcome}
             >
               ดูภาพรวมทั้งประเทศ

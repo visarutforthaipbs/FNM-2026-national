@@ -256,6 +256,7 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
                 value={note}
                 onChange={(e) => setNote(e.target.value.slice(0, 500))}
                 placeholder="หมายเหตุ เช่น ประตูทางเข้าอยู่ฝั่งถนนใหญ่ (ไม่บังคับ)"
+                aria-label="หมายเหตุตำแหน่งที่ถูกต้อง"
                 size="md"
                 fontSize={{ base: "md", md: "sm" }}
                 bg="slate.50"

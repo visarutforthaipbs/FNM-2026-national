@@ -357,7 +357,25 @@ const DashboardPage = () => {
 
   const SortIndicator = ({ field }: { field: keyof FactoryExplorerItem }) => {
     if (sortField !== field) return null;
-    return sortOrder === 'asc' ? <span> ▲</span> : <span> ▼</span>;
+    return (
+      <Icon
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        boxSize={3}
+        ml={1}
+        display="inline-block"
+        verticalAlign="middle"
+        aria-hidden="true"
+      >
+        {sortOrder === 'asc' ? (
+          <polyline points="18 15 12 9 6 15" />
+        ) : (
+          <polyline points="6 9 12 15 18 9" />
+        )}
+      </Icon>
+    );
   };
 
   if (isLoading) {

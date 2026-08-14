@@ -38,7 +38,18 @@ export const colors = {
   // Legacy mappings for backward compatibility
   navy: "#F05223",    // primary.500
   beige: "#f8fafc",   // slate.50
-  orange: "#F05223",  // accent.orange
+  orange: {
+    50: "#FFF0EB",
+    100: "#FFD1C4",
+    200: "#FFAEA2",
+    300: "#FF8876",
+    400: "#FF614E",
+    500: "#F05223",
+    600: "#D23F15",
+    700: "#B2300D",
+    800: "#932207",
+    900: "#741703",
+  },
   gray: "#94a3b8",    // slate.400
   sky: "#F05223",     // primary.500 (updated from old blue)
   steel: "#64748b",   // slate.500
