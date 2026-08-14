@@ -16,6 +16,12 @@ import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import type { FactoryFeature } from "../types/factory";
 import { submitLocationCorrection } from "../hooks/useReports";
+import {
+  TILE_URLS,
+  TILE_ATTRIBUTIONS,
+  SATELLITE_LABELS_URL,
+  SATELLITE_MAX_NATIVE_ZOOM,
+} from "../utils/tiles";
 
 // Leaflet maps inside a Chakra modal mount before the modal reaches its final
 // size — invalidate once the animation settles or tiles render blank
@@ -63,7 +69,20 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Satellite by default: the whole task is "find this building", and imagery is
+  // what makes a roof, a yard or an access road recognisable to someone who
+  // lives next to it. The street map is a deliberate second choice, not a base.
+  const [basemap, setBasemap] = useState<"satellite" | "street">("satellite");
   const markerRef = useRef<L.Marker | null>(null);
+
+  // Open wide enough that the real factory is plausibly already on screen.
+  // A tambon centroid can sit 5–15 km from the actual site, so starting at
+  // building zoom would put the target off-screen in exactly the cases that most
+  // need correcting. An exact pin, by contrast, only needs nudging.
+  const initialZoom =
+    factory.properties.coordQuality === "centroid" ? 13
+    : factory.properties.coordQuality === "geocoded" ? 15
+    : 17;
 
   useEffect(() => {
     if (isOpen) {
@@ -128,17 +147,43 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
               </Text>
             </ModalHeader>
             <ModalBody pb={5}>
-              <Box borderRadius="xl" overflow="hidden" h={{ base: "240px", md: "300px" }} border="1px solid" borderColor="slate.100">
+              <Box position="relative" borderRadius="xl" overflow="hidden" h={{ base: "240px", md: "300px" }} border="1px solid" borderColor="slate.100">
                 <MapContainer
                   center={[initialLat, initialLng]}
-                  zoom={15}
+                  zoom={initialZoom}
+                  maxZoom={21}
                   style={{ height: "100%", width: "100%" }}
                 >
                   <MapResizer />
-                  <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-                    attribution='© <a href="https://carto.com/">CARTO</a>'
-                  />
+                  {basemap === "satellite" ? (
+                    // Imagery first: a citizen recognises their neighbour's
+                    // factory by its roof, yard and access road, not by a street
+                    // name. The labels layer goes on top because Esri's imagery
+                    // carries no place names at all.
+                    <>
+                      <TileLayer
+                        key="satellite"
+                        url={TILE_URLS.satellite}
+                        attribution={TILE_ATTRIBUTIONS.satellite}
+                        maxNativeZoom={SATELLITE_MAX_NATIVE_ZOOM}
+                        maxZoom={21}
+                      />
+                      <TileLayer
+                        key="satellite-labels"
+                        url={SATELLITE_LABELS_URL}
+                        maxNativeZoom={SATELLITE_MAX_NATIVE_ZOOM}
+                        maxZoom={21}
+                      />
+                    </>
+                  ) : (
+                    <TileLayer
+                      key="street"
+                      url={TILE_URLS.light}
+                      attribution={TILE_ATTRIBUTIONS.light}
+                      maxNativeZoom={19}
+                      maxZoom={21}
+                    />
+                  )}
                   <Marker
                     position={position}
                     icon={pinIcon}
@@ -152,6 +197,47 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
                     }}
                   />
                 </MapContainer>
+
+                {/* Basemap toggle. Two options only, satellite first because
+                    that is the one that makes a factory findable; the street map
+                    stays one tap away for orientation. Sits above Leaflet's
+                    panes (z-index 400) but below the modal itself. */}
+                <Flex
+                  position="absolute"
+                  top={2}
+                  right={2}
+                  zIndex={500}
+                  bg="white"
+                  borderRadius="lg"
+                  boxShadow="md"
+                  overflow="hidden"
+                  role="group"
+                  aria-label="เลือกรูปแบบแผนที่"
+                >
+                  {(
+                    [
+                      { key: "satellite", label: "ภาพดาวเทียม" },
+                      { key: "street", label: "แผนที่ถนน" },
+                    ] as const
+                  ).map((option) => (
+                    <Button
+                      key={option.key}
+                      size="xs"
+                      borderRadius="none"
+                      fontSize="11px"
+                      fontWeight="700"
+                      px={3}
+                      h="28px"
+                      bg={basemap === option.key ? "primary.500" : "white"}
+                      color={basemap === option.key ? "white" : "slate.600"}
+                      _hover={{ bg: basemap === option.key ? "primary.600" : "slate.100" }}
+                      aria-pressed={basemap === option.key}
+                      onClick={() => setBasemap(option.key)}
+                    >
+                      {option.label}
+                    </Button>
+                  ))}
+                </Flex>
               </Box>
 
               <Flex mt={3} align="center" justify="space-between" gap={3}>

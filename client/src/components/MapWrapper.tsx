@@ -25,21 +25,9 @@ import { getHazardLevel, HAZARD_COLORS } from "../utils/hazard";
 import type { HazardLevel } from "../utils/hazard";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 
-const TILE_URLS = {
-  light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-  dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-  satellite:
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  openstreet: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-};
-
-const TILE_ATTRIBUTIONS = {
-  light: '© <a href="https://carto.com/">CARTO</a>',
-  dark: '© <a href="https://carto.com/">CARTO</a>',
-  satellite: '© <a href="https://www.esri.com/">Esri</a>',
-  openstreet:
-    '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-};
+// Tile sources live in utils/tiles.ts — shared with LocationCorrectionModal so
+// the two maps can't drift apart.
+import { TILE_URLS, TILE_ATTRIBUTIONS } from "../utils/tiles";
 
 interface MapWrapperProps {
   factories: FactoryGeoJSON | null;
