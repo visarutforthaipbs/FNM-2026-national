@@ -325,8 +325,35 @@ app.post('/api/admin/reports/:id', requireAdmin, async (req, res) => {
     }
 });
 
+async function withCurrentFactoryPositions(rows) {
+    const ids = [...new Set(rows.map((r) => r.factory_id).filter(Boolean))];
+    let byId = new Map();
+    if (ids.length > 0) {
+        const facs = await pool.query(
+            `SELECT id, name, province, district, lat, lng, coord_source
+               FROM factories WHERE id = ANY($1)`,
+            [ids]
+        );
+        byId = new Map(facs.rows.map((f) => [f.id, f]));
+    }
+
+    return rows.map((c) => {
+        const f = byId.get(c.factory_id);
+        return {
+            ...c,
+            current_name: f?.name ?? null,
+            province: f?.province ?? null,
+            district: f?.district ?? null,
+            current_lat: f?.lat ?? null,
+            current_lng: f?.lng ?? null,
+            current_coord_source: f?.coord_source ?? null,
+        };
+    });
+}
+
 /**
- * GET /api/admin/corrections?status=pending
+ * GET /api/admin/corrections?status=pending|approved|rejected
+ *
  * Citizen location corrections with the factory's current position for
  * side-by-side comparison.
  */
