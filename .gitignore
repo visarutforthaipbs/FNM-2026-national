@@ -32,7 +32,6 @@ enriched_factories_sample.csv
 # GitHub's 100 MB limit (dpt_geodatabase.db alone is ~400 MB).
 server/data/*.db
 server/data/dpt-archive/
-client/public/data/dpt-province-landuse/
 
 # Factory→land-title-deed mappings. These stay out of the repo, and above all
 # out of client/public/, which is served to everyone: 551 of the 8,705 records
