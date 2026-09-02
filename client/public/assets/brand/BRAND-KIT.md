@@ -4,16 +4,18 @@
 
 ## Core assets
 
-- `../project-favicon.svg` — current favicon, compact mobile navbar mark, and welcome mark
-- `../project-apple-touch-icon.png` — 180px iOS home-screen derivative of the current favicon
+- `../new-favicon-2.svg` — current browser favicon
+- `../project-apple-touch-icon.png` — 180px iOS home-screen derivative of `new-favicon-2.svg`
+- `../project-favicon.svg` — compact mobile navbar and welcome mark
 - `../project-logo.svg` — current horizontal desktop navbar signature
 - `../thai-pbs-logo.svg` — current Thai PBS partner mark in the desktop navbar
 - `brand-symbol.svg` / `brand-lockup.svg` — legacy signatures; do not use in the live UI
 - `og-cover.svg` / `og-cover.png` — social sharing and link previews (1200 × 630)
 - `brand-pattern.svg` — low-attention background for section headers and campaign cards
 - `empty-search.svg` — empty search/filter state
-- `map-home-marker.svg` — user/home location marker
-- `map-factory-marker.svg` — reusable safe-state factory marker; runtime color changes to red for high-risk factories
+- `../markers/home.svg` — current user/home location marker
+- `../markers/{green,yellow,red}-factory.svg` — current three-level factory marker set
+- `map-home-marker.svg` / `map-factory-marker.svg` — legacy markers; do not use in the live map
 
 ## Brand language
 

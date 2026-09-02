@@ -21,7 +21,7 @@ import type {
   FilterState,
   UserLocation,
 } from "../types/factory";
-import { getHazardLevel, HAZARD_COLORS } from "../utils/hazard";
+import { getHazardLevel } from "../utils/hazard";
 import type { HazardLevel } from "../utils/hazard";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 
@@ -83,16 +83,16 @@ if (typeof document !== "undefined" && !document.getElementById("factory-marker-
   document.head.appendChild(style);
 }
 
-const MARKER_STYLE: Record<HazardLevel, { color: string; detail: string; pulse: string }> = {
-  hazard: { color: HAZARD_COLORS.hazard, detail: "#B91C1C", pulse: "239, 68, 68" },
-  type3: { color: HAZARD_COLORS.type3, detail: "#B45309", pulse: "245, 158, 11" },
-  general: { color: HAZARD_COLORS.general, detail: "#087F5B", pulse: "16, 185, 129" },
+const MARKER_STYLE: Record<HazardLevel, { asset: string; pulse: string }> = {
+  hazard: { asset: "/assets/markers/red-factory.svg", pulse: "239, 68, 68" },
+  type3: { asset: "/assets/markers/yellow-factory.svg", pulse: "245, 158, 11" },
+  general: { asset: "/assets/markers/green-factory.svg", pulse: "16, 185, 129" },
 };
 
 const buildFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = false) => {
   const width = isSelected ? 38 : 30;
   const height = isSelected ? 46 : 38;
-  const { color, detail: detailColor, pulse: pulseColor } = MARKER_STYLE[level];
+  const { asset, pulse: pulseColor } = MARKER_STYLE[level];
 
   return L.divIcon({
     html: `
@@ -109,11 +109,14 @@ const buildFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = fa
             animation: factory-marker-pulse 1.5s infinite;
           "></div>
         ` : ''}
-        <svg width="${width}" height="${height}" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: relative; z-index: 2; filter: drop-shadow(0 3px 5px rgba(11,53,88,0.28));">
-          <path d="M16 1C7.7 1 1 7.5 1 15.6C1 25.7 16 39 16 39S31 25.7 31 15.6C31 7.5 24.3 1 16 1Z" fill="${color}" stroke="white" stroke-width="2"/>
-          <path d="M7.5 24.5V14L12.5 16.8V12.5L17.7 15.5V10.5L24 14.1V24.5H7.5Z" fill="white"/>
-          <path d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5" stroke="${detailColor}" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <img
+          src="${asset}"
+          width="${width}"
+          height="${height}"
+          alt=""
+          draggable="false"
+          style="position: relative; z-index: 2; display: block; filter: drop-shadow(0 3px 5px rgba(11,53,88,0.28));"
+        />
       </div>
     `,
     className: `custom-factory-marker ${isSelected ? 'selected' : ''} ${level}`,
@@ -147,46 +150,22 @@ const getFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = fals
   ];
 
 const FactoryLegendMarker: React.FC<{ level: HazardLevel }> = ({ level }) => {
-  const { color, detail: detailColor } = MARKER_STYLE[level];
-
   return (
-    <svg
-      width="24"
-      height="30"
-      viewBox="0 0 32 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <Box
+      as="img"
+      src={MARKER_STYLE[level].asset}
+      alt=""
       aria-hidden="true"
+      w="24px"
+      h="30px"
+      objectFit="contain"
       style={{ flex: "0 0 auto", filter: "drop-shadow(0 2px 3px rgba(11,53,88,0.18))" }}
-    >
-      <path
-        d="M16 1C7.7 1 1 7.5 1 15.6C1 25.7 16 39 16 39S31 25.7 31 15.6C31 7.5 24.3 1 16 1Z"
-        fill={color}
-        stroke="white"
-        strokeWidth="2"
-      />
-      <path d="M7.5 24.5V14L12.5 16.8V12.5L17.7 15.5V10.5L24 14.1V24.5H7.5Z" fill="white" />
-      <path
-        d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5"
-        stroke={detailColor}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    />
   );
 };
 
-const userLocationIcon = L.divIcon({
-  html: `
-    <div style="width: 40px; height: 48px; filter: drop-shadow(0 3px 6px rgba(11,53,88,0.3));">
-      <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="19" r="19" fill="#F05223" opacity="0.2"/>
-        <path d="M20 2C10.6 2 3 9.5 3 18.7C3 30.1 20 46 20 46S37 30.1 37 18.7C37 9.5 29.4 2 20 2Z" fill="#0B3558" stroke="white" stroke-width="2.5"/>
-        <path d="M11.5 19L20 12L28.5 19V28.2H22.5V22.2H17.5V28.2H11.5V19Z" fill="#F8FAFC"/>
-        <path d="M9.5 19L20 10.3L30.5 19" stroke="#F05223" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-  `,
+const userLocationIcon = L.icon({
+  iconUrl: "/assets/markers/home.svg",
   className: "custom-user-location-marker",
   iconSize: [40, 48],
   iconAnchor: [20, 46],
