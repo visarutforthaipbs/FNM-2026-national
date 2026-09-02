@@ -491,6 +491,19 @@ app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/admin/landsmaps-resolved
+ *
+ * Serves resolved land title deed coordinates to authenticated admins.
+ */
+app.get('/api/admin/landsmaps-resolved', requireAdmin, (req, res) => {
+    const filePath = path.join(__dirname, 'data', 'landsmaps_resolved.json');
+    if (!fs.existsSync(filePath)) {
+        return res.json([]);
+    }
+    res.sendFile(filePath);
+});
+
 const TH_LAT_RANGE = [5.3, 20.6];
 const TH_LNG_RANGE = [97.2, 105.7];
 

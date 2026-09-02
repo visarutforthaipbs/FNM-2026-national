@@ -99,8 +99,8 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
   const [resolvedDeeds, setResolvedDeeds] = useState<Record<string, { deed_no?: string; land_no?: string; lat?: number; lng?: number }>>({});
 
   useEffect(() => {
-    fetch("/data/landsmaps_resolved.json")
-      .then((res) => res.json())
+    if (!isOpen || Object.keys(resolvedDeeds).length > 0) return;
+    authFetch<Array<{ id: string; deed_no?: string; land_no?: string; lat?: number; lng?: number }>>("/api/admin/landsmaps-resolved")
       .then((data) => {
         if (Array.isArray(data)) {
           const map: Record<string, { deed_no?: string; land_no?: string; lat?: number; lng?: number }> = {};
@@ -111,7 +111,7 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
         }
       })
       .catch(() => {});
-  }, []);
+  }, [isOpen, authFetch, resolvedDeeds]);
 
   useEffect(() => {
     if (!isOpen) return;

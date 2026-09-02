@@ -67,6 +67,11 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
    * Pull the account's list from Firestore and fold anything starred while
    * logged out into it.
    */
+// Firestore document paths treat "/" as a collection delimiter. Thai factory IDs
+// frequently contain slashes (e.g. "3-105-116/62ปจ"), which causes invalid segment errors.
+const encodeDocId = (id: string) => encodeURIComponent(id).replace(/\./g, "%2E");
+const decodeDocId = (id: string) => decodeURIComponent(id);
+
   const syncWithRemote = useCallback(async () => {
     if (!user || !isFirebaseConfigured) return;
     setIsLoading(true);
@@ -79,14 +84,14 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
         getDocs(collection(db, "users", user.id, "industry_watchlist")),
       ]);
 
-      const remoteFactories = factoriesSnap.docs.map((d) => d.id);
+      const remoteFactories = factoriesSnap.docs.map((d) => (d.data().factoryId as string) || decodeDocId(d.id));
       const pendingFactories = localFactories.filter((id) => !remoteFactories.includes(id));
       let mergedFactories = pendingFactories;
 
       if (pendingFactories.length > 0) {
         const batch = writeBatch(db);
         for (const factoryId of pendingFactories) {
-          batch.set(doc(db, "users", user.id, "factory_watchlist", factoryId), {
+          batch.set(doc(db, "users", user.id, "factory_watchlist", encodeDocId(factoryId)), {
             factoryId,
             createdAt: serverTimestamp(),
           });
@@ -171,7 +176,7 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!isFirebaseConfigured) return;
 
       try {
-        const factoryDocRef = doc(db, "users", user.id, "factory_watchlist", factoryId);
+        const factoryDocRef = doc(db, "users", user.id, "factory_watchlist", encodeDocId(factoryId));
         if (wasWatched) {
           await deleteDoc(factoryDocRef);
         } else {
