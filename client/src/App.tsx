@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, lazy, Suspense } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Analytics } from "@vercel/analytics/react";
 import type {
@@ -29,6 +29,7 @@ const initialFactoryTypes = (initialParams.get("type") ?? "")
   .filter((t) => /^\d{1,3}$/.test(t));
 
 function App() {
+  const hasRequestedLocation = useRef(false);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isLocationLoading, setIsLocationLoading] = useState(true);
@@ -124,6 +125,12 @@ function App() {
 
   // Get user location with improved error handling
   useEffect(() => {
+    // React StrictMode intentionally re-runs effects in development. Geolocation
+    // is an external request, so issue it once rather than producing duplicate
+    // prompts, callbacks and console messages.
+    if (hasRequestedLocation.current) return;
+    hasRequestedLocation.current = true;
+
     const getLocation = () => {
       if (!navigator.geolocation) {
         console.log("Geolocation not supported, using fallback location");
@@ -200,7 +207,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <AuthProvider>
         <WatchlistProvider>
-          <Router>
+          <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Routes>
               <Route
                 path="/"

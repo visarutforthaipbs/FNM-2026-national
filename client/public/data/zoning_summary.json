@@ -1,20 +1,27 @@
 {
- "generated_at": "2026-09-02 03:09:14",
- "source": "DPT PLLU_ALL town-planning polygons",
+ "generated_at": "2026-09-02 15:24:20",
+ "source": "DPT PLLU_ALL (municipal) + TOWNPLAN/TP_MAIN (provincial), via dpt.plan_polygon",
  "factories_tested": 62656,
- "inside_a_dpt_zone": 14486,
- "no_dpt_plan_data": 48170,
+ "inside_a_dpt_zone": 46184,
+ "zoned_by_municipal_plan": 14486,
+ "zoned_by_province_plan": 31698,
+ "no_dpt_plan_data": 6428,
+ "inside_province_plan_only": 10044,
  "by_family": {
-  "residential": 5240,
-  "rural_agricultural": 4331,
-  "industrial": 3410,
-  "commercial": 977,
-  "other": 173,
-  "government": 151,
-  "open_space": 129,
-  "education": 36,
-  "religious": 29,
-  "warehouse": 10
+  "rural_agricultural": 22593,
+  "community": 9818,
+  "residential": 5265,
+  "industrial": 4777,
+  "conservation": 1878,
+  "commercial": 1004,
+  "open_space": 292,
+  "other": 184,
+  "government": 154,
+  "military": 125,
+  "education": 38,
+  "religious": 32,
+  "warehouse": 15,
+  "flood_risk": 9
  },
  "marker_fingerprints": {
   "amnat-charoen": "7dc076c89e1bad0a",
@@ -95,15 +102,5 @@
   "yala": "c54df5728a829101",
   "yasothon": "69723d81f9c5432b"
  },
- "provinces_without_dpt_coverage": [
-  "ชลบุรี",
-  "นครนายก",
-  "นครพนม",
-  "บึงกาฬ",
-  "บุรีรัมย์",
-  "พัทลุง",
-  "ยโสธร",
-  "ระยอง",
-  "สุรินทร์"
- ]
+ "provinces_without_dpt_coverage": []
 }

@@ -40,7 +40,30 @@ const ZoningSection: React.FC<ZoningSectionProps> = ({ factoryId, provinceTh, pr
   // A failed fetch is not the same as "no plan here", so say nothing at all.
   if (!hasLoaded) return null;
 
-  const display = zone ? zoneDisplay(zone.kind, zone.label, zone.color) : null;
+  // Two tiers carry a land use and one does not. A provincial *footprint* has
+  // no code, label or colour — rendering one would be inventing the very thing
+  // DPT does not publish in that layer.
+  const municipal = zone?.tier === "municipal" ? zone : null;
+  const provLandUse = zone?.tier === "province_landuse" ? zone : null;
+  const provincial = zone?.tier === "province" ? zone : null;
+
+  // The provincial tier is DPT's own published label and colour for its own
+  // plan, so it is passed through rather than remapped onto our municipal
+  // wording. zoneDisplay falls back to exactly that for a family it has no
+  // copy for, which is the honest rendering: DPT's words, DPT's colour.
+  const zoned = municipal ?? provLandUse;
+  const display = zoned ? zoneDisplay(zoned.kind, zoned.label, zoned.color) : null;
+
+  // The heading names the instrument this card is actually reading, so it may
+  // only claim one when there is one. An earlier version chose between the two
+  // plan names on `municipal ? … : …`, which meant every card with no zone at
+  // all — and every provincial *footprint* — was headed "ผังเมืองรวมจังหวัด"
+  // above the words "ไม่มีข้อมูลผังเมืองสำหรับตำแหน่งนี้". A header asserting a
+  // plan over a body denying one is worse than either alone.
+  const planLabel =
+    municipal ? "ผังเมืองรวม · กรมโยธาธิการและผังเมือง (DPT)"
+    : provLandUse || provincial ? "ผังเมืองรวมจังหวัด · กรมโยธาธิการและผังเมือง (DPT)"
+    : "ผังเมืองรวม · กรมโยธาธิการและผังเมือง (DPT)";
 
   return (
     <Box
@@ -56,20 +79,32 @@ const ZoningSection: React.FC<ZoningSectionProps> = ({ factoryId, provinceTh, pr
         <Flex align="center" gap={2} color="slate.600">
           <MapIcon />
           <Text fontSize="xs" fontWeight="700">
-            ผังเมืองรวม · กรมโยธาธิการและผังเมือง (DPT)
+            {planLabel}
           </Text>
         </Flex>
-        {zone?.code && (
+        {zoned && (
           <Badge bg="whiteAlpha.800" color="slate.600" fontSize="9px" borderRadius="full" px={2}>
-            รหัส {zone.code}
+            รหัส {zoned.code}
           </Badge>
         )}
       </Flex>
 
-      {zone && display ? (
+      {zoned && display ? (
         <>
           <Flex align="center" gap={2}>
-            <Box w="10px" h="10px" borderRadius="full" bg={display.color} flexShrink={0} />
+            <Box
+              w="10px"
+              h="10px"
+              borderRadius="full"
+              bg={display.color}
+              flexShrink={0}
+              /* DPT draws some classes as a hatch, not a solid fill. A ring
+                 rather than a dot keeps the chip honest about that instead of
+                 flattening a pattern into a block of colour. */
+              border={provLandUse?.patterned ? "2px solid" : undefined}
+              borderColor={provLandUse?.patterned ? display.color : undefined}
+              bgColor={provLandUse?.patterned ? "transparent" : display.color}
+            />
             <Text fontSize="sm" fontWeight="700" color="slate.800">
               {display.title}
             </Text>
@@ -78,11 +113,17 @@ const ZoningSection: React.FC<ZoningSectionProps> = ({ factoryId, provinceTh, pr
             {display.meaning}
           </Text>
           <Text fontSize="10px" color="slate.500" mt={2} lineHeight="1.7">
-            {[
-              zone.planName,
-              zone.block ? `บริเวณ ${zone.block}` : null,
-              zone.planYear ? `ผังปี ${zone.planYear}` : null,
-            ]
+            {(municipal
+              ? [
+                  municipal.planName,
+                  municipal.block ? `บริเวณ ${municipal.block}` : null,
+                  municipal.planYear ? `ผังปี ${municipal.planYear}` : null,
+                ]
+              : [
+                  "ผังเมืองรวมจังหวัด",
+                  provLandUse?.block ? `บริเวณ ${provLandUse.block}` : null,
+                ]
+            )
               .filter(Boolean)
               .join(" · ")}
           </Text>
@@ -93,6 +134,28 @@ const ZoningSection: React.FC<ZoningSectionProps> = ({ factoryId, provinceTh, pr
             ตำแหน่งโรงงานอยู่ในเขตผังเมืองนี้ตามการตรวจสอบพิกัดกับแปลงผังเมืองของ DPT —
             ส่วนโรงงานจะตั้งอยู่ได้หรือไม่ ขึ้นกับจำพวกโรงงาน ขนาดเครื่องจักร
             บัญชีแนบท้ายกฎกระทรวงของผังนั้น และวันที่ได้รับใบอนุญาตเทียบกับวันประกาศใช้ผัง
+          </Text>
+        </>
+      ) : provincial ? (
+        <>
+          {/* DPT's provincial layer publishes plan footprints and no land-use
+              attribute at all, so this branch may say that a plan covers the
+              point and must stop there. No colour dot, no category, no code —
+              there is nothing here to derive one from, and a grey pill that
+              looked like the zoned card would read as a finding we do not have. */}
+          <Text fontSize="sm" color="slate.700" fontWeight="600">
+            อยู่ในเขตผังเมืองรวมจังหวัด — ไม่ทราบประเภทการใช้ประโยชน์ที่ดิน
+          </Text>
+          {provincial.planName && (
+            <Text fontSize="10px" color="slate.500" mt={2} lineHeight="1.7">
+              {provincial.planName}
+            </Text>
+          )}
+          <Text fontSize="xs" color="slate.600" mt={1.5} lineHeight="1.6">
+            จุดนี้อยู่ในขอบเขตผังเมืองรวมระดับจังหวัดที่ DPT เผยแพร่
+            แต่ชั้นข้อมูลนั้นให้เฉพาะขอบเขตผัง ไม่มีรายละเอียดการใช้ประโยชน์ที่ดินรายแปลง
+            จึงยังไม่ทราบว่าจุดนี้ถูกกำหนดให้เป็นพื้นที่ประเภทใด
+            ตรวจสอบรายละเอียดได้ที่เว็บไซต์ DPT
           </Text>
         </>
       ) : (

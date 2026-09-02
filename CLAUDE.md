@@ -54,9 +54,9 @@ Run these inside `client/`:
 - `npm run lint` - Run ESLint
 - `npm run preview` - Preview production build
 
-Credentials go in `client/.env.local` — **two sets, one per database**: `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (government, sev01) and `VITE_CITIZEN_SUPABASE_URL`/`VITE_CITIZEN_SUPABASE_ANON_KEY` (citizen, cloud). See `client/.env.example`. Missing credentials degrade gracefully — detail fetches return null, sign-in and reporting are unavailable, the map still works.
+Credentials go in `client/.env.local` — **Government** (`VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY`, sev01) and **Citizen** (`VITE_FIREBASE_*` credentials for dedicated project `factory-near-me`). See `client/.env.example`. Missing credentials degrade gracefully — detail fetches return null, sign-in and reporting are unavailable, the map still works.
 
-The same two must be set in the Vercel project; the deployed bundle inlines them at build time, so a missing citizen pair silently disables sign-in in production. `server/.env` mirrors the pair as `DATABASE_URL` and `CITIZEN_DATABASE_URL`.
+The Firebase and Supabase variables must be configured in the Vercel project settings; the deployed Vite bundle inlines them at build time. `server/.env` connects to `DATABASE_URL` and uses `serviceAccountKey.json` for Firebase Admin moderation.
 
 ## Architecture
 

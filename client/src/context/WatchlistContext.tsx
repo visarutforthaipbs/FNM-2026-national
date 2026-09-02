@@ -1,6 +1,15 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useAuth } from "./useAuth";
-import { supabaseCitizen } from "../utils/supabaseClient";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  deleteDoc,
+  writeBatch,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db, isFirebaseConfigured } from "../utils/firebaseClient";
 import { WatchlistContext } from "./watchlistContextDefinition";
 
 const LOCAL_STORAGE_WATCHLIST_KEY = "fnm_local_watched_factories";
@@ -25,10 +34,8 @@ function writeLocal(key: string, value: unknown[]) {
 }
 
 /**
- * One shared watchlist for the whole app. This has to be a provider rather than
- * a plain hook: FactoryCard renders it once per card (up to 200 in a province),
- * and independent copies meant 200 duplicate fetches on sign-in plus a navbar
- * badge that disagreed with the star the user just clicked.
+ * One shared watchlist for the whole app backed by Cloud Firestore.
+ * Local localStorage stars merge seamlessly into the account on sign-in.
  */
 export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -57,96 +64,84 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   /**
-   * Pull the account's list and fold anything starred while logged out into it.
-   * The old code overwrote local state with the remote list, which silently
-   * threw away everything the user starred before signing in — the exact list
-   * the auth prompt promised to save.
+   * Pull the account's list from Firestore and fold anything starred while
+   * logged out into it.
    */
   const syncWithRemote = useCallback(async () => {
-    if (!user) return;
+    if (!user || !isFirebaseConfigured) return;
     setIsLoading(true);
     try {
       const localFactories = readLocal<string>(LOCAL_STORAGE_WATCHLIST_KEY);
       const localIndustries = readLocal<number>(LOCAL_STORAGE_INDUSTRY_KEY);
 
-      const [factoriesRes, industriesRes] = await Promise.all([
-        supabaseCitizen
-          .from("user_factory_watchlist")
-          .select("factory_id")
-          .eq("user_id", user.id),
-        supabaseCitizen
-          .from("user_industry_watchlist")
-          .select("industry_code")
-          .eq("user_id", user.id),
+      const [factoriesSnap, industriesSnap] = await Promise.all([
+        getDocs(collection(db, "users", user.id, "factory_watchlist")),
+        getDocs(collection(db, "users", user.id, "industry_watchlist")),
       ]);
 
-      if (factoriesRes.error) {
-        console.error("Could not load factory watchlist:", factoriesRes.error.message);
-      } else {
-        const remote = (factoriesRes.data ?? []).map((r) => r.factory_id as string);
-        const pending = localFactories.filter((id) => !remote.includes(id));
-        let merged = pending;
+      const remoteFactories = factoriesSnap.docs.map((d) => d.id);
+      const pendingFactories = localFactories.filter((id) => !remoteFactories.includes(id));
+      let mergedFactories = pendingFactories;
 
-        if (pending.length > 0) {
-          // One batch insert, so a single bad row (an id with no matching
-          // factory) fails the lot — fall back to the server's list rather
-          // than showing stars that were never saved.
-          const { error } = await supabaseCitizen.from("user_factory_watchlist").insert(
-            pending.map((factory_id) => ({ user_id: user.id, factory_id }))
-          );
-          if (error) {
-            console.error("Could not merge local factory watchlist:", error.message);
-            merged = [];
-          }
+      if (pendingFactories.length > 0) {
+        const batch = writeBatch(db);
+        for (const factoryId of pendingFactories) {
+          batch.set(doc(db, "users", user.id, "factory_watchlist", factoryId), {
+            factoryId,
+            createdAt: serverTimestamp(),
+          });
         }
-        setFactories([...remote, ...merged]);
-      }
-
-      if (industriesRes.error) {
-        console.error("Could not load industry watchlist:", industriesRes.error.message);
-      } else {
-        const remote = (industriesRes.data ?? []).map(
-          (r) => r.industry_code as number
-        );
-        const pending = localIndustries.filter((code) => !remote.includes(code));
-        let merged = pending;
-
-        if (pending.length > 0) {
-          const { error } = await supabaseCitizen.from("user_industry_watchlist").insert(
-            pending.map((industry_code) => ({ user_id: user.id, industry_code }))
-          );
-          if (error) {
-            console.error("Could not merge local industry watchlist:", error.message);
-            merged = [];
-          }
+        try {
+          await batch.commit();
+        } catch (err) {
+          console.error("Could not merge local factory watchlist:", err);
+          mergedFactories = [];
         }
-        setIndustries([...remote, ...merged]);
       }
+      setFactories([...remoteFactories, ...mergedFactories]);
+
+      const remoteIndustries = industriesSnap.docs.map((d) => Number(d.id)).filter((n) => !isNaN(n));
+      const pendingIndustries = localIndustries.filter((code) => !remoteIndustries.includes(code));
+      let mergedIndustries = pendingIndustries;
+
+      if (pendingIndustries.length > 0) {
+        const batch = writeBatch(db);
+        for (const code of pendingIndustries) {
+          batch.set(doc(db, "users", user.id, "industry_watchlist", String(code)), {
+            industryCode: code,
+            createdAt: serverTimestamp(),
+          });
+        }
+        try {
+          await batch.commit();
+        } catch (err) {
+          console.error("Could not merge local industry watchlist:", err);
+          mergedIndustries = [];
+        }
+      }
+      setIndustries([...remoteIndustries, ...mergedIndustries]);
     } catch (err) {
-      console.error("Error syncing watchlist:", err);
+      console.error("Error syncing watchlist with Firestore:", err);
     } finally {
       setIsLoading(false);
     }
   }, [user, setFactories, setIndustries]);
 
   useEffect(() => {
-    if (user) {
-      if (syncedUserId.current !== user.id) {
-        syncedUserId.current = user.id;
-        syncWithRemote();
+    if (!user) {
+      if (syncedUserId.current !== null) {
+        // Sign-out: reset memory to what was on this device originally
+        syncedUserId.current = null;
+        setWatchedFactories(readLocal<string>(LOCAL_STORAGE_WATCHLIST_KEY));
+        setWatchedIndustries(readLocal<number>(LOCAL_STORAGE_INDUSTRY_KEY));
       }
       return;
     }
 
-    // Signed out: drop the previous account's list from memory *and* from
-    // localStorage. Leaving it behind showed the next person on a shared
-    // device which factories the previous user was watching.
-    if (syncedUserId.current !== null) {
-      syncedUserId.current = null;
-      setFactories([]);
-      setIndustries([]);
-    }
-  }, [user, syncWithRemote, setFactories, setIndustries]);
+    if (syncedUserId.current === user.id) return;
+    syncedUserId.current = user.id;
+    syncWithRemote();
+  }, [user, syncWithRemote]);
 
   const isFactoryWatched = useCallback(
     (factoryId: string) => watchedFactories.includes(factoryId),
@@ -169,29 +164,25 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
       setFactories(next);
 
       if (!user) {
-        // Kept locally so the click is not lost; syncWithRemote folds it into
-        // the account on sign-in.
         openAuthModal();
         return;
       }
 
-      // supabase-js resolves with an `error` field rather than throwing, so a
-      // try/catch here would never fire — an RLS denial used to leave the star
-      // lit with nothing saved.
-      const { error } = wasWatched
-        ? await supabaseCitizen
-            .from("user_factory_watchlist")
-            .delete()
-            .eq("user_id", user.id)
-            .eq("factory_id", factoryId)
-        : await supabaseCitizen.from("user_factory_watchlist").insert({
-            user_id: user.id,
-            factory_id: factoryId,
-            notes: notes || null,
-          });
+      if (!isFirebaseConfigured) return;
 
-      if (error) {
-        console.error("Could not update factory watchlist:", error.message);
+      try {
+        const factoryDocRef = doc(db, "users", user.id, "factory_watchlist", factoryId);
+        if (wasWatched) {
+          await deleteDoc(factoryDocRef);
+        } else {
+          await setDoc(factoryDocRef, {
+            factoryId,
+            notes: notes || null,
+            createdAt: serverTimestamp(),
+          });
+        }
+      } catch (err) {
+        console.error("Could not update factory watchlist in Firestore:", err);
         setFactories(previous);
       }
     },
@@ -213,19 +204,26 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      const { error } = wasWatched
-        ? await supabaseCitizen
-            .from("user_industry_watchlist")
-            .delete()
-            .eq("user_id", user.id)
-            .eq("industry_code", industryCode)
-        : await supabaseCitizen.from("user_industry_watchlist").insert({
-            user_id: user.id,
-            industry_code: industryCode,
-          });
+      if (!isFirebaseConfigured) return;
 
-      if (error) {
-        console.error("Could not update industry watchlist:", error.message);
+      try {
+        const industryDocRef = doc(
+          db,
+          "users",
+          user.id,
+          "industry_watchlist",
+          String(industryCode)
+        );
+        if (wasWatched) {
+          await deleteDoc(industryDocRef);
+        } else {
+          await setDoc(industryDocRef, {
+            industryCode,
+            createdAt: serverTimestamp(),
+          });
+        }
+      } catch (err) {
+        console.error("Could not update industry watchlist in Firestore:", err);
         setIndustries(previous);
       }
     },
@@ -238,28 +236,31 @@ export const WatchlistProvider: React.FC<{ children: React.ReactNode }> = ({
     () => ({
       watchedFactories,
       watchedIndustries,
+      totalWatchedCount,
+      isLoading,
       isFactoryWatched,
       isIndustryWatched,
       toggleWatchFactory,
       toggleWatchIndustry,
-      totalWatchedCount,
-      isLoading,
       refresh: syncWithRemote,
+      refreshWatchlist: syncWithRemote,
     }),
     [
       watchedFactories,
       watchedIndustries,
+      totalWatchedCount,
+      isLoading,
       isFactoryWatched,
       isIndustryWatched,
       toggleWatchFactory,
       toggleWatchIndustry,
-      totalWatchedCount,
-      isLoading,
       syncWithRemote,
     ]
   );
 
   return (
-    <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>
+    <WatchlistContext.Provider value={value}>
+      {children}
+    </WatchlistContext.Provider>
   );
 };

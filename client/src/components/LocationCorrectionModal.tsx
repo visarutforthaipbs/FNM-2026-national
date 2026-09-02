@@ -21,6 +21,7 @@ import {
   TILE_ATTRIBUTIONS,
   SATELLITE_LABELS_URL,
   SATELLITE_MAX_NATIVE_ZOOM,
+  TILE_MAX_NATIVE_ZOOM,
 } from "../utils/tiles";
 
 // Leaflet maps inside a Chakra modal mount before the modal reaches its final
@@ -178,9 +179,9 @@ const LocationCorrectionModal: React.FC<LocationCorrectionModalProps> = ({
                   ) : (
                     <TileLayer
                       key="street"
-                      url={TILE_URLS.light}
-                      attribution={TILE_ATTRIBUTIONS.light}
-                      maxNativeZoom={19}
+                      url={TILE_URLS.openstreet}
+                      attribution={TILE_ATTRIBUTIONS.openstreet}
+                      maxNativeZoom={TILE_MAX_NATIVE_ZOOM.openstreet}
                       maxZoom={21}
                     />
                   )}

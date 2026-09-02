@@ -1,6 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/useAuth";
-import { supabaseCitizen, supabaseGov } from "../utils/supabaseClient";
+import { supabaseGov } from "../utils/supabaseClient";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  deleteDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db, isFirebaseConfigured } from "../utils/firebaseClient";
 import type { UserIncidentReport } from "../types/auth";
 import type { ImpactType, ReportFrequency, DistanceBand } from "../types/report";
 
@@ -17,26 +29,22 @@ export function useUserReports() {
       return;
     }
 
+    if (!isFirebaseConfigured) {
+      setReports([]);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
-      // No embed here, and none is possible: factories lives in the government
-      // database and reports lives in the citizen one, so there is no foreign
-      // key for PostgREST to resolve `factories(...)` through. Names are
-      // hydrated from the other client below, and their absence is not fatal
-      // to showing the user their own reports.
-      const { data, error: fetchErr } = await supabaseCitizen
-        .from("reports")
-        .select(
-          "id, factory_id, impact_types, frequency, distance_band, description, incident_date, created_at, status, private_note"
-        )
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      if (fetchErr) {
-        throw fetchErr;
-      }
+      // Query reports authored by this user from Cloud Firestore
+      const q = query(
+        collection(db, "reports"),
+        where("user_id", "==", user.id)
+      );
+      const snap = await getDocs(q);
 
       interface ReportDbRow {
         id: string;
@@ -51,13 +59,51 @@ export function useUserReports() {
         private_note: string | null;
       }
 
-      const rows = (data as unknown as ReportDbRow[]) || [];
+      // Fetch private notes in parallel from the secure subcollection
+      const rows: ReportDbRow[] = await Promise.all(
+        snap.docs.map(async (d) => {
+          const data = d.data();
+          let privateNote: string | null = null;
+          try {
+            const sensitiveSnap = await getDoc(
+              doc(db, "reports", d.id, "sensitive", "details")
+            );
+            if (sensitiveSnap.exists()) {
+              privateNote = sensitiveSnap.data().private_note || null;
+            }
+          } catch {
+            /* If no sensitive subcollection, defaults to null */
+          }
 
-      // Best-effort factory names, in one query against the *government*
-      // database. Cross-database, so it cannot be a join. If it fails the
-      // reports still render, just without a resolved name.
-      const factoryNames = new Map<string, { name?: string; province?: string; district?: string }>();
-      const factoryIds = Array.from(new Set(rows.map((r) => r.factory_id)));
+          return {
+            id: d.id,
+            factory_id: data.factory_id || "",
+            impact_types: data.impact_types || [],
+            frequency: data.frequency || null,
+            distance_band: data.distance_band || null,
+            description: data.description || null,
+            incident_date: data.incident_date || null,
+            created_at: data.created_at?.toDate
+              ? data.created_at.toDate().toISOString()
+              : new Date().toISOString(),
+            status: data.status || "pending",
+            private_note: privateNote,
+          };
+        })
+      );
+
+      // Sort descending by created_at in memory
+      rows.sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+
+      // Best-effort factory names from the *government* database (sev01)
+      const factoryNames = new Map<
+        string,
+        { name?: string; province?: string; district?: string }
+      >();
+      const factoryIds = Array.from(new Set(rows.map((r) => r.factory_id).filter(Boolean)));
+
       if (factoryIds.length > 0) {
         const { data: factoryRows, error: factoryErr } = await supabaseGov
           .from("factories")
@@ -94,7 +140,7 @@ export function useUserReports() {
 
       setReports(formattedReports);
     } catch (err: unknown) {
-      console.error("Error fetching user reports:", err);
+      console.error("Error fetching user reports from Firestore:", err);
       const msg = err instanceof Error ? err.message : "ไม่สามารถโหลดประวัติการรายงานได้";
       setError(msg);
     } finally {
@@ -108,22 +154,24 @@ export function useUserReports() {
 
   const updatePrivateNote = useCallback(
     async (reportId: string, privateNote: string) => {
-      if (!user) return false;
+      if (!user || !isFirebaseConfigured) return false;
       try {
-        const { error: updateErr } = await supabaseCitizen
-          .from("reports")
-          .update({ private_note: privateNote })
-          .eq("id", reportId)
-          .eq("user_id", user.id);
-
-        if (updateErr) throw updateErr;
+        await setDoc(
+          doc(db, "reports", reportId, "sensitive", "details"),
+          {
+            private_note: privateNote,
+            user_id: user.id,
+            updated_at: serverTimestamp(),
+          },
+          { merge: true }
+        );
 
         setReports((prev) =>
           prev.map((r) => (r.id === reportId ? { ...r, private_note: privateNote } : r))
         );
         return true;
       } catch (err) {
-        console.error("Error updating note:", err);
+        console.error("Error updating note in Firestore:", err);
         return false;
       }
     },
@@ -132,25 +180,14 @@ export function useUserReports() {
 
   const deleteReport = useCallback(
     async (reportId: string) => {
-      if (!user) return false;
+      if (!user || !isFirebaseConfigured) return false;
       try {
-        // `.select()` so we can tell "deleted" from "RLS matched no row" —
-        // approved reports are public evidence and may no longer be removed,
-        // and that comes back as a silent zero-row delete, not an error.
-        const { data, error: deleteErr } = await supabaseCitizen
-          .from("reports")
-          .delete()
-          .eq("id", reportId)
-          .eq("user_id", user.id)
-          .select("id");
-
-        if (deleteErr) throw deleteErr;
-        if (!data || data.length === 0) return false;
-
+        await deleteDoc(doc(db, "reports", reportId));
+        // Subcollection is orphaned or can be deleted
         setReports((prev) => prev.filter((r) => r.id !== reportId));
         return true;
       } catch (err) {
-        console.error("Error deleting report:", err);
+        console.error("Error deleting report in Firestore:", err);
         return false;
       }
     },

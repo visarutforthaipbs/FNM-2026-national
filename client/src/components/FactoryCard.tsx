@@ -62,8 +62,8 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
 
   return (
     <Box
-      as="button"
-      type="button"
+      role="button"
+      tabIndex={0}
       w="full"
       p={4}
       mb={2.5}
@@ -87,6 +87,12 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
         boxShadow: "0 0 0 3px rgba(240, 82, 35, 0.2)",
       }}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       aria-label={`ดูรายละเอียด ${props.ชื่อโรงงาน}`}
     >
       <Box

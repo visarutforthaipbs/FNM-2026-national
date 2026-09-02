@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
+import { TILE_URLS, TILE_ATTRIBUTIONS, TILE_MAX_NATIVE_ZOOM } from "../utils/tiles";
 
 const THAILAND_CENTER: [number, number] = [13.2, 101.0];
 
@@ -307,8 +308,10 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
               <MapResizer />
               <RecenterOnChange position={position} />
               <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-                attribution='© <a href="https://carto.com/">CARTO</a>'
+                url={TILE_URLS.openstreet}
+                attribution={TILE_ATTRIBUTIONS.openstreet}
+                maxNativeZoom={TILE_MAX_NATIVE_ZOOM.openstreet}
+                maxZoom={21}
               />
               <Marker
                 position={position}

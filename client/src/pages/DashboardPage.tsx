@@ -87,7 +87,21 @@ interface FactoryExplorerItem {
 
 interface ZoningSummary {
   factories_tested: number;
+  /** Inside any plan polygon that carries a land-use code — both zoned tiers. */
   inside_a_dpt_zone: number;
+  /** The ผังเมืองรวมเมือง/ชุมชน share of the above. Optional: pre-2026-09 summaries lack it. */
+  zoned_by_municipal_plan?: number;
+  /** The ผังเมืองรวมจังหวัด share of the above. */
+  zoned_by_province_plan?: number;
+  /**
+   * Inside a ผังเมืองรวมจังหวัด footprint only. Those footprints carry no
+   * land-use attribute, so these factories are covered by a plan whose zoning
+   * we do not hold — a different answer from both of the other two, and the
+   * reason the grid below has four mutually exclusive cards that sum to the
+   * total. Optional because a summary written before the provincial tier
+   * existed does not have it.
+   */
+  inside_province_plan_only?: number;
   no_dpt_plan_data: number;
   by_family: Record<string, number>;
   provinces_without_dpt_coverage: string[];
@@ -489,7 +503,7 @@ const DashboardPage = () => {
                 </Text>
               </Flex>
               <Badge colorScheme="gray" p={2} borderRadius="lg" fontSize="xs">
-                ตรวจสอบพิกัดกับแปลงผังเมือง 42,219 แปลง
+                ตรวจสอบพิกัดกับแปลงผังเมือง 42,219 แปลง และแปลงผังจังหวัด 32,187 แปลง
               </Badge>
             </Flex>
             <Text fontSize="xs" color="slate.500" mb={4} lineHeight="1.7">
@@ -508,19 +522,29 @@ const DashboardPage = () => {
               </Box>
 
               <Box bg="purple.50" p={4} borderRadius="xl" border="1px solid" borderColor="purple.200">
-                <Text fontSize="xs" color="purple.700" fontWeight="600">อยู่ในผังเมืองสีม่วง</Text>
+                <Text fontSize="xs" color="purple.700" fontWeight="600">ทราบประเภทการใช้ที่ดิน</Text>
                 <Text fontSize="xl" fontWeight="bold" color="purple.900">
-                  {(zoningSummary.by_family.industrial ?? 0).toLocaleString()}
+                  {zoningSummary.inside_a_dpt_zone.toLocaleString()}
                 </Text>
-                <Text fontSize="2xs" color="slate.600" mt={1}>เขตอุตสาหกรรมและคลังสินค้า</Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>
+                  ผังเมือง/ชุมชน {(zoningSummary.zoned_by_municipal_plan ?? 0).toLocaleString()} ·
+                  ผังจังหวัด {(zoningSummary.zoned_by_province_plan ?? 0).toLocaleString()}
+                </Text>
               </Box>
 
-              <Box bg="yellow.50" p={4} borderRadius="xl" border="1px solid" borderColor="yellow.200">
-                <Text fontSize="xs" color="yellow.800" fontWeight="600">อยู่ในเขตที่อยู่อาศัย</Text>
-                <Text fontSize="xl" fontWeight="bold" color="yellow.900">
-                  {(zoningSummary.by_family.residential ?? 0).toLocaleString()}
+              {/* The category that used to be counted as "no data". A
+                  ผังเมืองรวมจังหวัด footprint says a plan covers the point and
+                  carries no land use at all, so it is neither zoned nor
+                  unplanned — it is its own answer, and merging it into either
+                  neighbour is what made this figure wrong before. */}
+              <Box bg="blue.50" p={4} borderRadius="xl" border="1px solid" borderColor="blue.200">
+                <Text fontSize="xs" color="blue.700" fontWeight="600">มีผังครอบคลุม ยังไม่ทราบประเภท</Text>
+                <Text fontSize="xl" fontWeight="bold" color="blue.900">
+                  {(zoningSummary.inside_province_plan_only ?? 0).toLocaleString()}
                 </Text>
-                <Text fontSize="2xs" color="slate.600" mt={1}>ผังเมืองสีเหลือง/ส้ม</Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>
+                  อยู่ในขอบเขตผังจังหวัดที่ DPT เผยแพร่เฉพาะขอบเขต
+                </Text>
               </Box>
 
               <Box bg="slate.50" p={4} borderRadius="xl" border="1px solid" borderColor="slate.200">
@@ -532,15 +556,25 @@ const DashboardPage = () => {
                   </Text>
                 </Text>
                 <Text fontSize="2xs" color="slate.600" mt={1}>
-                  ไม่มีแปลงผังเมืองของ DPT ครอบคลุมจุดที่ตั้ง
+                  ไม่พบทั้งผังระดับเมือง/ชุมชน และระดับจังหวัด
                 </Text>
               </Box>
             </SimpleGrid>
 
+            {/* The land-use split is a breakdown OF the first card, not a
+                fifth category — stated as a subset so the four numbers above
+                keep summing to the total. */}
+            <Text fontSize="2xs" color="slate.600" mt={3} lineHeight="1.7">
+              ในกลุ่มที่ทราบประเภทการใช้ที่ดิน {zoningSummary.inside_a_dpt_zone.toLocaleString()} แห่ง —
+              ผังเมืองสีม่วง (อุตสาหกรรมและคลังสินค้า) {(zoningSummary.by_family.industrial ?? 0).toLocaleString()} แห่ง ·
+              เขตที่อยู่อาศัย {(zoningSummary.by_family.residential ?? 0).toLocaleString()} แห่ง ·
+              ชนบทและเกษตรกรรม {(zoningSummary.by_family.rural_agricultural ?? 0).toLocaleString()} แห่ง
+            </Text>
+
             <Text fontSize="2xs" color="slate.500" mt={3} lineHeight="1.7">
-              ที่มา: แปลงผังเมืองรวม กรมโยธาธิการและผังเมือง (PLLU_ALL) ·
-              ผังเมืองบางพื้นที่ออกโดยหน่วยงานอื่น เช่น ผังเมืองรวมกรุงเทพมหานคร และผังการใช้ประโยชน์ที่ดิน EEC
-              จึงไม่ปรากฏในชุดข้อมูลนี้
+              ที่มา: แปลงผังเมืองรวมเมือง/ชุมชน (PLLU_ALL) และแปลงผังเมืองรวมจังหวัด (PLLU_PROV)
+              กรมโยธาธิการและผังเมือง · จุดที่อยู่ในทั้งสองผัง นับตามผังเมือง/ชุมชนซึ่งเฉพาะเจาะจงกว่า
+              จึงไม่นำมาบวกกัน · กรุงเทพมหานครใช้ผังเมืองรวมกรุงเทพมหานครซึ่งออกโดย กทม.
             </Text>
           </Box>
         )}

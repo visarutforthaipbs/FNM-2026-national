@@ -47,13 +47,19 @@ def main():
             addr = row.get("address_full", "") or ""
             province = row.get("province", "") or ""
             district = row.get("district", "") or ""
-            text = f"{name} {addr}"
 
-            deed_info = collector.parse_deed_text(text)
-            if deed_info["deed_no"] or deed_info["land_no"]:
+            # The deed metadata lives in the address, never in the factory name;
+            # parsing the name invites false positives from human names like a
+            # director surnamed "โฉนด". Parse the address alone.
+            deed_info = collector.parse_deed_text(addr)
+
+            # A record is worth keeping if it carries any parcel-identifying
+            # attribute. deed_no is the primary key for GetParcelByParcelNo;
+            # utm_map + survey_no are resolvable via the anonymous GeoServer WFS.
+            if deed_info["deed_no"] or deed_info["land_no"] or deed_info["utm_map"]:
                 processed += 1
                 pvcode, amcode = collector.resolve_pv_am_codes(province, district)
-                
+
                 matched_records.append({
                     "id": row.get("id") or row.get("registration_display"),
                     "name": name.strip(),

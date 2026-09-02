@@ -268,11 +268,11 @@ const MapPage: React.FC<MapPageProps> = ({
           >
             {/* LAYER 1: Visual hook — icon communicates purpose (map/location) */}
             <Image
-              src="/assets/brand/brand-symbol.svg"
+              src="/assets/project-favicon.svg"
               alt="โรงงานใกล้ฉัน"
-              boxSize="72px"
-              borderRadius="18px"
-              boxShadow="0 10px 30px rgba(11, 53, 88, 0.18)"
+              h="76px"
+              w="auto"
+              maxW="120px"
             />
 
             {/* LAYER 2: One-sentence value prop — 8 words max */}

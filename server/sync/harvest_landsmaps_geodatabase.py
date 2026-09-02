@@ -37,6 +37,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 import sqlite3
 import sys
 import time
@@ -115,7 +116,9 @@ class Harvester:
             )}
 
     def save(self, item: dict, outcome: str, parcel: dict | None, raw) -> None:
-        key = f"{item['id']}_{item['pvcode']}_{item['amcode']}_{item['deed_no']}"
+        # one row per parcel number; factory+deed are the fan-out parents
+        parcel_no = item.get("parcel_no") or item.get("deed_no")
+        key = f"{item['id']}_{item['pvcode']}_{item['amcode']}_{parcel_no}"
         parcel = parcel or {}
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("""
@@ -130,7 +133,7 @@ class Harvester:
                     appraisal_price = excluded.appraisal_price,
                     raw_json = excluded.raw_json, outcome = excluded.outcome
             """, (
-                key, item["id"], item["pvcode"], item["amcode"], item["deed_no"],
+                key, item["id"], item["pvcode"], item["amcode"], parcel_no,
                 item.get("land_no"), item.get("survey_no"),
                 parcel.get("utm") or item.get("utm_map"),
                 item.get("province"), item.get("district"),
@@ -164,6 +167,39 @@ def _i(v) -> Optional[int]:
     return int(f) if f is not None else None
 
 
+def split_deed_no(deed_no: str) -> list[str]:
+    """Expand a parsed deed_no into individual parcel numbers.
+
+    A DIW address often carries *several* deeds: "โฉนดเลขที่ 22519,49904,49905"
+    or a range "22816-9" (= 22816…22819). GetParcelByParcelNo takes one parcel
+    path segment, so a raw comma/range string would return nothing. Return the
+    ordered list of concrete numbers; lookups fan out over them.
+
+    Ranges of the abbreviated kind ("22816-9" / "103886-9") share the leading
+    digits of the upper bound, so "22816-9" means 22816-22819, not 22816-9.
+    """
+    numbers: list[str] = []
+    for part in re.split(r"[,\s]+", (deed_no or "").strip()):
+        part = part.strip(" ,./-")
+        if not part:
+            continue
+        m = re.fullmatch(r"(\d+)-(\d+)", part)
+        if m:
+            lo, hi = m.group(1), m.group(2)
+            if len(hi) < len(lo):
+                # abbreviated upper bound: 22816-9 -> 22816..22819
+                hi = lo[: len(lo) - len(hi)] + hi
+            lo_i, hi_i = int(lo), int(hi)
+            if lo_i <= hi_i and hi_i - lo_i <= 200:
+                numbers.extend(str(n) for n in range(lo_i, hi_i + 1))
+            else:
+                numbers.append(lo)
+            continue
+        if re.fullmatch(r"\d+", part):
+            numbers.append(part)
+    return numbers
+
+
 def lookup(session, item) -> tuple[str, dict | None, object]:
     """
     One parcel lookup: GET with the identifiers in the path.
@@ -172,7 +208,7 @@ def lookup(session, item) -> tuple[str, dict | None, object]:
     not accept — one of the reasons it never returned anything.
     """
     url = (f"{BASE}/apiService/LandsMaps/GetParcelByParcelNo/"
-           f"{item['pvcode']}/{item['amcode']}/{item['deed_no']}")
+           f"{item['pvcode']}/{item['amcode']}/{item['parcel_no']}")
     r = session.get(url, timeout=45)
     ct = (r.headers.get("content-type") or "").lower()
 
@@ -200,9 +236,19 @@ def run(limit: int, rate: float, headless: bool, db_path: Path, input_path: Path
 
     harvester = Harvester(db_path)
     done = harvester.settled()
-    todo = [r for r in records
-            if r.get("pvcode") and r.get("amcode") and r.get("deed_no")
-            and r["id"] not in done]
+    # Expand each record's deed_no into one fetchable item per parcel number.
+    # A single address ("โฉนดเลขที่ 22519,49904,49905,49906") maps to several
+    # parcels; the endpoint takes one number per path segment.
+    todo: list[dict] = []
+    for r in records:
+        if not (r.get("pvcode") and r.get("amcode") and r.get("deed_no")):
+            continue
+        if r["id"] in done:
+            continue
+        for parcel_no in split_deed_no(r["deed_no"]):
+            item = dict(r)
+            item["parcel_no"] = parcel_no
+            todo.append(item)
     if limit > 0:
         todo = todo[:limit]
 

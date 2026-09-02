@@ -43,7 +43,43 @@ const citizenPool = new Pool({
 });
 
 if (!process.env.CITIZEN_DATABASE_URL) {
-    console.warn('⚠️  CITIZEN_DATABASE_URL is not set — the reports and corrections queues will fail.');
+    console.warn('⚠️  CITIZEN_DATABASE_URL is not set — falling back to Cloud Firestore for moderation.');
+}
+
+// ── Firebase Admin SDK (Cloud Firestore for Citizen data) ────────────────────
+const { initializeApp, cert, getApps } = require('firebase-admin/app');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+const fs = require('fs');
+
+let firestore = null;
+const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || path.join(__dirname, 'serviceAccountKey.json');
+
+if (fs.existsSync(serviceAccountPath)) {
+    try {
+        const serviceAccount = require(serviceAccountPath);
+        const fbApp = getApps().length
+            ? getApps()[0]
+            : initializeApp({
+                credential: cert(serviceAccount),
+                projectId: process.env.FIREBASE_PROJECT_ID || 'factory-near-me'
+            });
+        firestore = getFirestore(fbApp);
+        console.log('✅ Connected to Cloud Firestore for Citizen moderation (service account)');
+    } catch (e) {
+        console.warn('⚠️  Could not initialize Firebase Admin:', e.message);
+    }
+} else if (process.env.FIREBASE_PROJECT_ID) {
+    try {
+        const fbApp = getApps().length
+            ? getApps()[0]
+            : initializeApp({
+                projectId: process.env.FIREBASE_PROJECT_ID
+            });
+        firestore = getFirestore(fbApp);
+        console.log('✅ Connected to Cloud Firestore via project ID');
+    } catch (e) {
+        console.warn('⚠️  Could not initialize Firebase Admin:', e.message);
+    }
 }
 
 // Test DB connection
@@ -156,8 +192,47 @@ const MODERATION_STATUSES = ['pending', 'approved', 'rejected'];
 app.get('/api/admin/reports', requireAdmin, async (req, res) => {
     const status = MODERATION_STATUSES.includes(req.query.status) ? req.query.status : 'pending';
     try {
-        // Reports live in the citizen database, factory names in the
-        // government one, so this is two queries rather than a LEFT JOIN.
+        if (firestore) {
+            const snap = await firestore.collection('reports')
+                .where('status', '==', status)
+                .limit(200)
+                .get();
+
+            const rows = await Promise.all(snap.docs.map(async (d) => {
+                const data = d.data();
+                let reporter_contact = null;
+                try {
+                    const sensitiveSnap = await d.ref.collection('sensitive').doc('details').get();
+                    if (sensitiveSnap.exists) {
+                        reporter_contact = sensitiveSnap.data().reporter_contact || null;
+                    }
+                } catch (e) {
+                    /* optional */
+                }
+
+                return {
+                    id: d.id,
+                    factory_id: data.factory_id,
+                    impact_types: data.impact_types || [],
+                    frequency: data.frequency || null,
+                    distance_band: data.distance_band || null,
+                    description: data.description || null,
+                    incident_date: data.incident_date || null,
+                    reporter_contact,
+                    status: data.status || 'pending',
+                    reject_reason: data.reject_reason || null,
+                    created_at: data.created_at?.toDate ? data.created_at.toDate().toISOString() : (data.created_at || new Date().toISOString()),
+                    moderated_at: data.moderated_at?.toDate ? data.moderated_at.toDate().toISOString() : null,
+                };
+            }));
+
+            // Sort ascending by created_at in memory
+            rows.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+
+            return res.json(await withFactoryContext(rows));
+        }
+
+        // Fallback to Postgres citizenPool
         const result = await citizenPool.query(`
       SELECT r.id, r.factory_id,
              r.impact_types, r.frequency, r.distance_band, r.description,
@@ -214,6 +289,26 @@ app.post('/api/admin/reports/:id', requireAdmin, async (req, res) => {
         return res.status(400).json({ error: "action must be 'approve' or 'reject'" });
     }
     try {
+        if (firestore) {
+            const reportRef = firestore.collection('reports').doc(req.params.id);
+            const docSnap = await reportRef.get();
+            if (!docSnap.exists) {
+                return res.status(404).json({ error: 'Report not found' });
+            }
+            if (docSnap.data().status !== 'pending') {
+                return res.status(409).json({ error: 'Report already moderated' });
+            }
+
+            const newStatus = action === 'approve' ? 'approved' : 'rejected';
+            await reportRef.update({
+                status: newStatus,
+                reject_reason: reject_reason || null,
+                moderated_at: FieldValue.serverTimestamp()
+            });
+
+            return res.json({ id: req.params.id, status: newStatus });
+        }
+
         const result = await citizenPool.query(`
       UPDATE reports
       SET status = $1, moderated_at = now(), reject_reason = $2
@@ -238,8 +333,33 @@ app.post('/api/admin/reports/:id', requireAdmin, async (req, res) => {
 app.get('/api/admin/corrections', requireAdmin, async (req, res) => {
     const status = MODERATION_STATUSES.includes(req.query.status) ? req.query.status : 'pending';
     try {
-        // Corrections are citizen data; the factory's *current* position is
-        // government data. Two queries, not a join.
+        if (firestore) {
+            const snap = await firestore.collection('location_corrections')
+                .where('status', '==', status)
+                .limit(200)
+                .get();
+
+            const rows = snap.docs.map((d) => {
+                const data = d.data();
+                return {
+                    id: d.id,
+                    factory_id: data.factory_id,
+                    factory_name: data.factory_name || null,
+                    lat: data.lat,
+                    lng: data.lng,
+                    note: data.note || null,
+                    status: data.status || 'pending',
+                    reject_reason: data.reject_reason || null,
+                    created_at: data.created_at?.toDate ? data.created_at.toDate().toISOString() : (data.created_at || new Date().toISOString()),
+                    moderated_at: data.moderated_at?.toDate ? data.moderated_at.toDate().toISOString() : null,
+                };
+            });
+
+            rows.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+            return res.json(await withCurrentFactoryPositions(rows));
+        }
+
+        // Postgres fallback
         const result = await citizenPool.query(`
       SELECT c.id, c.factory_id, c.factory_name, c.lat, c.lng, c.note,
              c.status, c.reject_reason, c.created_at, c.moderated_at
@@ -249,29 +369,7 @@ app.get('/api/admin/corrections', requireAdmin, async (req, res) => {
       LIMIT 200
     `, [status]);
 
-        const ids = [...new Set(result.rows.map((r) => r.factory_id).filter(Boolean))];
-        let byId = new Map();
-        if (ids.length > 0) {
-            const facs = await pool.query(
-                `SELECT id, name, province, district, lat, lng, coord_source
-                   FROM factories WHERE id = ANY($1)`,
-                [ids]
-            );
-            byId = new Map(facs.rows.map((f) => [f.id, f]));
-        }
-
-        res.json(result.rows.map((c) => {
-            const f = byId.get(c.factory_id);
-            return {
-                ...c,
-                current_name: f?.name ?? null,
-                province: f?.province ?? null,
-                district: f?.district ?? null,
-                current_lat: f?.lat ?? null,
-                current_lng: f?.lng ?? null,
-                current_coord_source: f?.coord_source ?? null,
-            };
-        }));
+        res.json(await withCurrentFactoryPositions(result.rows));
     } catch (err) {
         console.error('Error listing corrections:', err);
         res.status(500).json({ error: 'Internal server error' });
@@ -282,19 +380,7 @@ app.get('/api/admin/corrections', requireAdmin, async (req, res) => {
  * POST /api/admin/corrections/:id  { action: 'approve' | 'reject', reject_reason? }
  *
  * Approving reads the correction from the citizen database and applies the
- * position to `factories` in the government one, so this can no longer be a
- * single transaction. The order below is the safe one:
- *
- *   1. claim the correction (pending -> in_review) in the citizen DB, so two
- *      reviewers cannot approve the same row concurrently
- *   2. apply the coordinate to the government DB
- *   3. mark the correction approved in the citizen DB
- *
- * If step 3 fails after step 2 succeeded, the coordinate is applied and the
- * correction stays claimed — re-approving is idempotent, since applying the
- * same lat/lng twice is a no-op. The reverse order would risk marking a
- * correction approved that was never applied, which is the version that
- * silently loses a citizen's contribution.
+ * position to `factories` in the government one.
  */
 app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
     const { action, reject_reason } = req.body || {};
@@ -303,6 +389,42 @@ app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
     }
 
     try {
+        if (firestore) {
+            const corrRef = firestore.collection('location_corrections').doc(req.params.id);
+            const docSnap = await corrRef.get();
+            if (!docSnap.exists) {
+                return res.status(404).json({ error: 'Correction not found' });
+            }
+            const data = docSnap.data();
+            if (data.status !== 'pending') {
+                return res.status(409).json({ error: 'Correction already moderated' });
+            }
+
+            if (action === 'approve') {
+                const { factory_id, lat, lng } = data;
+                const updated = await pool.query(`
+                    UPDATE factories
+                    SET lat = $1, lng = $2,
+                        coord_source = 'community', coord_precision = 'exact'
+                    WHERE id = $3
+                    RETURNING id
+                `, [lat, lng, factory_id]);
+                if (updated.rowCount === 0) {
+                    return res.status(409).json({ error: `Factory ${factory_id} not found` });
+                }
+            }
+
+            const newStatus = action === 'approve' ? 'approved' : 'rejected';
+            await corrRef.update({
+                status: newStatus,
+                reject_reason: reject_reason || null,
+                moderated_at: FieldValue.serverTimestamp()
+            });
+
+            return res.json({ id: req.params.id, status: newStatus });
+        }
+
+        // Postgres fallback
         const corr = await citizenPool.query(
             `SELECT * FROM location_corrections WHERE id = $1 AND status = 'pending'`,
             [req.params.id]
@@ -313,8 +435,6 @@ app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
 
         if (action === 'approve') {
             const { factory_id, lat, lng } = corr.rows[0];
-            // geom is maintained by tr_factories_set_geometry on lat/lng write
-            // (HANDOFF.md §10) — setting it here would be a no-op rewrite.
             const updated = await pool.query(`
         UPDATE factories
         SET lat = $1, lng = $2,
@@ -335,7 +455,6 @@ app.post('/api/admin/corrections/:id', requireAdmin, async (req, res) => {
     `, [action === 'approve' ? 'approved' : 'rejected', reject_reason || null, req.params.id]);
 
         if (result.rowCount === 0) {
-            // Applied to factories but another request moderated it first.
             return res.status(409).json({ error: 'Correction was moderated concurrently' });
         }
         res.json(result.rows[0]);
@@ -818,7 +937,6 @@ async function getDbdToken() {
     return dbdTokenCache;
 }
 
-const fs = require('fs');
 const NATIONS_CACHE_FILE = path.join(__dirname, 'data', 'dbd_nations_cache.json');
 
 /**

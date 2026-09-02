@@ -25,15 +25,15 @@ share an instance.
 
 |  | Government | Citizen |
 |---|---|---|
-| Host | `lighthouse-sev01`, self-hosted Supabase, Postgres 17.6 | cloud Supabase project, managed |
-| Size | **1,066 MB** | **20 MB** |
+| Host | `lighthouse-sev01`, self-hosted Supabase, Postgres 17.6 | Dedicated Firebase project `factory-near-me` (Singapore asia-southeast1) |
+| Size | **1,066 MB** | Cloud Firestore native |
 | Written by | the collectors, on a timer | people, through the app |
-| Rebuildable | yes, from the archives | **no** |
-| Backups | a convenience — the archive is the truth | the point |
-| In an export | that is what it is for | **never** |
-| Migrations | `supabase/migrations/` | `supabase/migrations-citizen/` |
-| Client | `supabaseGov` | `supabaseCitizen` |
-| Server pool | `pool` | `citizenPool` |
+| Rebuildable | yes, from the archives | **no** (Citizen contributions) |
+| Backups | a convenience — the archive is the truth | Managed cloud Firestore point-in-time |
+| In an export | that is what it is for | **never** (Reporter contact vault-isolated) |
+| Schema / Rules | `supabase/migrations/` | `firestore.rules` |
+| Client | `supabaseGov` | Firebase SDK (`auth`, `db`) |
+| Server pool | `pool` (Postgres on sev01) | `firestore` (Firebase Admin SDK) + fallback `citizenPool` |
 
 ### Government database
 
@@ -46,7 +46,41 @@ public                                        dbd
   sync_logs                   71   80 kB        company_nations   43,164   12 MB
   permits_staging              0                shareholder        6,883  4.9 MB
   factory_statistics_staging   0
+                                              dpt
+                                                plan_polygon      74,477  ~300 MB
+                                                landuse_class         50
+                                                plan_polygon_staging   0
 ```
+
+`dpt.plan_polygon` holds the town-planning polygons in three tiers:
+
+| tier | rows | says |
+|---|---:|---|
+| `municipal` | 42,219 | what a point is zoned, from ผังเมืองรวมเมือง/ชุมชน |
+| `province_landuse` | 32,187 | what a point is zoned, from ผังเมืองรวมจังหวัด |
+| `province` | 71 | only that a provincial plan covers the point — footprints, no land use |
+
+Consulted in that order and **never summed**: the tiers overlap by construction,
+since a provincial plan covers the whole province including its town-plan areas.
+`dpt.landuse_class` carries DPT's 50 published classes with the colour DPT
+actually renders each in — decoded from the legend swatch, because the service's
+own `drawingInfo.renderer` disagrees with its own map and calls two of the
+commonest rural classes solid white.
+
+The public map does not query DPT at runtime. `export_dpt_provincial_map.py`
+splits the downloaded SQLite artifact into static files in
+`client/public/data/dpt-province-landuse/`; the client lazy-loads only the
+province a reader selected. The export keeps unknown source codes grey and
+explicitly unknown, and resolves exact duplicate shapes deterministically by
+the highest DPT OBJECTID while preserving every raw row in the local archive.
+
+It was added 2026-09-02; before that the polygons existed only in a
+gitignored 398 MB SQLite file on two machines, with no archive — the same
+single-copy problem §6.1 records for the DBD archive, on the one dataset that
+had no way to replay a past harvest at all. PostGIS also turned the
+point-in-polygon from a Python ray-cast over a hand-rolled degree grid into an
+indexed spatial join: **14,486 municipal hits in 3 seconds, byte-identical to
+the Python result on all 14,486.**
 
 Views are the only surface the browser touches: `public.factory_dbd_profile`,
 `dbd.factory_owner`, `dbd.company_people`, `dbd.company_shareholders`. National
@@ -91,7 +125,7 @@ is unreachable from a browser. Verified, not assumed.
 |---|---|---|
 | **DIW** — factory registry | `server/collector/collect.py`, `server/sync/pipeline.py` | working, nightly |
 | **DBD** — company ownership | `server/collector/dbd_*.py` | working, weekly |
-| **DPT** — town-planning zones | `server/sync/download_dpt_geodatabase.py`, `export_zoning.py` | working, on release |
+| **DPT** — town-planning zones | `server/sync/download_dpt_geodatabase.py`, `load_dpt_polygons.py`, `export_zoning.py` | working; polygons reloaded by hand (plans change yearly), zoning re-exported nightly |
 | **DOL** — land deeds | `server/sync/harvest_landsmaps_geodatabase.py` | **blocked** behind hCaptcha |
 
 The read path matters more than the databases: **roughly 95% of what a visitor
@@ -101,7 +135,9 @@ sees is static JSON on a CDN**, not a live query.
 DIW ──► collect.py ──► diw-archive ──► NAS          (never touches a database)
         pipeline.py ──► gov database
 DBD ──► dbd_*.py ─────► dbd-archive ──► gov database (dbd schema)
-DPT ──► download_dpt ─► dpt_geodatabase.db (SQLite, 398 MB, gitignored)
+DPT ──► download_dpt ─► dpt_geodatabase.db (SQLite, 398 MB, gitignored) ─┐
+        TP_MAIN ─────► dpt-archive ─────────────────────────────────────┤
+                       load_dpt_polygons.py ──► gov database (dpt schema)┘
 
 gov database ──► export_markers / export_dashboard / export_zoning
                         └──► client/public/data/*.json ──► CDN ──► browser
@@ -167,6 +203,7 @@ Every guard below exists because the failure it prevents already happened.
 | 5% deactivation circuit breaker | A truncated CSV mass-deactivating the registry |
 | `MIN_EXPECTED_PERMITS` / `MIN_EXPECTED_STATISTICS` = 100,000 | Loading a degraded fetch over good data |
 | `DBD_MIN_OPERATORS` = 40,000 | A failed query blanking `operators.tsv` and no-opping every later run |
+| `dpt.promote_plan_polygons()` floors (30,000 municipal / 60 province) | A DPT service answering 200-with-no-features promoting an empty tier and un-zoning the country |
 | Test mode no-ops on destructive paths | A `--test` run wiping a table, as on 2026-08-08 |
 | `PROTECTED = (community, admin, repaired)` | The nightly sync overwriting human coordinate decisions |
 | `reports` trigger: forces `pending`, throttles 5/hour per IP hash | Clients self-approving; report flooding |
@@ -218,7 +255,12 @@ None is currently breaking the site. Each would cost something real if left.
 5. **`factories.status` is frozen.** Nothing writes it since the 2026-08-08
    corruption, because DIW's `FFLAG` and `STATUS` fields were never decoded. It
    drifts stale until someone resolves it with DIW.
-6. **Photo/video reporting needs EXIF stripping first.** A phone photo carries GPS
+6. **10,044 factories sit inside a provincial plan footprint with no land use.**
+   Down from 39,655 once `PLLU_PROV` was collected — these are the remainder
+   where DPT publishes a plan extent but no polygon. 6,428 more have no DPT plan
+   of any kind. Neither is a defect to fix on our side; both are what DPT
+   publishes.
+7. **Photo/video reporting needs EXIF stripping first.** A phone photo carries GPS
    to metre precision; someone photographing the factory beside their house would
    upload their home coordinates, defeating the coarse `distance_band` the whole
    reporting design rests on. Strip server-side, before storage — never

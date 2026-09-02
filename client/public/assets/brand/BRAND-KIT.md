@@ -4,8 +4,11 @@
 
 ## Core assets
 
-- `brand-symbol.svg` — app icon, favicon, compact navbar, map attribution
-- `brand-lockup.svg` — full horizontal signature for partners, about pages, and reports
+- `../project-favicon.svg` — current favicon, compact mobile navbar mark, and welcome mark
+- `../project-apple-touch-icon.png` — 180px iOS home-screen derivative of the current favicon
+- `../project-logo.svg` — current horizontal desktop navbar signature
+- `../thai-pbs-logo.svg` — current Thai PBS partner mark in the desktop navbar
+- `brand-symbol.svg` / `brand-lockup.svg` — legacy signatures; do not use in the live UI
 - `og-cover.svg` / `og-cover.png` — social sharing and link previews (1200 × 630)
 - `brand-pattern.svg` — low-attention background for section headers and campaign cards
 - `empty-search.svg` — empty search/filter state
