@@ -115,24 +115,42 @@ const AdminPage = () => {
         setToken("");
         throw new Error("Token ไม่ถูกต้อง หรือมีอักขระที่ไม่รองรับ (ต้องเป็น ASCII เท่านั้น)");
       }
-      const res = await fetch(`${API_BASE}${path}`, {
-        ...init,
-        headers: {
-          ...(init?.headers ?? {}),
-          Authorization: `Bearer ${cleanToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.status === 401) {
-        sessionStorage.removeItem(TOKEN_KEY);
-        setToken("");
-        throw new Error("Token ไม่ถูกต้อง");
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+      try {
+        const res = await fetch(`${API_BASE}${path}`, {
+          ...init,
+          signal: controller.signal,
+          headers: {
+            ...(init?.headers ?? {}),
+            Authorization: `Bearer ${cleanToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        clearTimeout(timeoutId);
+        if (res.status === 401) {
+          sessionStorage.removeItem(TOKEN_KEY);
+          setToken("");
+          throw new Error("Token ไม่ถูกต้อง");
+        }
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `HTTP ${res.status}`);
+        }
+        return res.json() as Promise<T>;
+      } catch (err: unknown) {
+        clearTimeout(timeoutId);
+        const errorObj = err as { name?: string; message?: string };
+        if (errorObj?.name === "AbortError") {
+          throw new Error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ sev01:4443 ได้ (หมดเวลา 8 วินาที) — กรุณาตรวจสอบว่าเปิด Tailscale หรือไม่");
+        }
+        if (errorObj?.message?.includes("Failed to fetch") || errorObj?.name === "TypeError") {
+          throw new Error("เชื่อมต่อเซิร์ฟเวอร์ sev01:4443 ไม่สำเร็จ — กรุณาตรวจสอบว่าเปิด Tailscale หรือไม่");
+        }
+        throw err;
       }
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `HTTP ${res.status}`);
-      }
-      return res.json() as Promise<T>;
     },
     [token]
   );
