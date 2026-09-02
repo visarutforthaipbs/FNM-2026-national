@@ -71,7 +71,14 @@ type Tab = "reports" | "corrections" | "unmapped" | "approx" | "mismatch" | "dbd
 const TOKEN_KEY = "factory-nearme-admin-token";
 
 const AdminPage = () => {
-  const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_KEY) ?? "");
+  const [token, setToken] = useState(() => {
+    const raw = sessionStorage.getItem(TOKEN_KEY) ?? "";
+    if (raw && !/^[\x20-\x7E]+$/.test(raw)) {
+      sessionStorage.removeItem(TOKEN_KEY);
+      return "";
+    }
+    return raw;
+  });
   const [tokenInput, setTokenInput] = useState("");
   const [tab, setTab] = useState<Tab>("reports");
   const [reports, setReports] = useState<AdminReport[]>([]);
@@ -102,11 +109,17 @@ const AdminPage = () => {
 
   const authFetch = useCallback(
     async <T,>(path: string, init?: RequestInit): Promise<T> => {
+      const cleanToken = token.trim();
+      if (!cleanToken || !/^[\x20-\x7E]+$/.test(cleanToken)) {
+        sessionStorage.removeItem(TOKEN_KEY);
+        setToken("");
+        throw new Error("Token ไม่ถูกต้อง หรือมีอักขระที่ไม่รองรับ (ต้องเป็น ASCII เท่านั้น)");
+      }
       const res = await fetch(`${API_BASE}${path}`, {
         ...init,
         headers: {
           ...(init?.headers ?? {}),
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cleanToken}`,
           "Content-Type": "application/json",
         },
       });
@@ -219,15 +232,28 @@ const AdminPage = () => {
             <Text fontWeight="700" color="slate.800">
               ผู้ดูแลระบบ
             </Text>
+            {error && (
+              <Text fontSize="xs" color="red.500" textAlign="center">
+                {error}
+              </Text>
+            )}
             <Input
               type="password"
-              placeholder="Admin token"
+              placeholder="Admin token (ASCII only)"
               value={tokenInput}
-              onChange={(e) => setTokenInput(e.target.value)}
+              onChange={(e) => {
+                setError(null);
+                setTokenInput(e.target.value);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && tokenInput.trim()) {
-                  sessionStorage.setItem(TOKEN_KEY, tokenInput.trim());
-                  setToken(tokenInput.trim());
+                  const clean = tokenInput.trim();
+                  if (!/^[\x20-\x7E]+$/.test(clean)) {
+                    setError("Token ต้องเป็นภาษาอังกฤษหรือตัวเลข (ASCII) เท่านั้น กรุณาตรวจสอบแป้นพิมพ์");
+                    return;
+                  }
+                  sessionStorage.setItem(TOKEN_KEY, clean);
+                  setToken(clean);
                 }
               }}
             />
@@ -238,8 +264,13 @@ const AdminPage = () => {
               _hover={{ bg: "primary.700" }}
               isDisabled={!tokenInput.trim()}
               onClick={() => {
-                sessionStorage.setItem(TOKEN_KEY, tokenInput.trim());
-                setToken(tokenInput.trim());
+                const clean = tokenInput.trim();
+                if (!/^[\x20-\x7E]+$/.test(clean)) {
+                  setError("Token ต้องเป็นภาษาอังกฤษหรือตัวเลข (ASCII) เท่านั้น กรุณาตรวจสอบแป้นพิมพ์");
+                  return;
+                }
+                sessionStorage.setItem(TOKEN_KEY, clean);
+                setToken(clean);
               }}
             >
               เข้าสู่ระบบ

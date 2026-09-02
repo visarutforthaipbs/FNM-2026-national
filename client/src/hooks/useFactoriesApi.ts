@@ -35,8 +35,8 @@ export async function fetchFactoryDetail(factoryId: string): Promise<Partial<Fac
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
-        console.warn("Missing Supabase credentials, cannot fetch detail");
+    if (!supabaseUrl || !supabaseKey || !/^[\x20-\x7E]+$/.test(supabaseKey)) {
+        console.warn("Missing or invalid Supabase credentials, cannot fetch detail");
         return null;
     }
 

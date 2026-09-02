@@ -183,8 +183,8 @@ const DashboardPage = () => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
-      setProvinceError("ระบบฐานข้อมูลไม่พร้อมใช้งาน (Missing credentials)");
+    if (!supabaseUrl || !supabaseKey || !/^[\x20-\x7E]+$/.test(supabaseKey)) {
+      setProvinceError("ระบบฐานข้อมูลไม่พร้อมใช้งาน (Missing or invalid credentials)");
       return;
     }
 
