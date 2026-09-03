@@ -1,0 +1,94 @@
+{
+  "registrationNo": "0105550097035",
+  "companyName": "ศูนย์การจัดการวัสดุเหลือใช้ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 9,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.แก้วกรุงไทย",
+      "shares": 16000,
+      "sharePercent": 32.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายศิริชัย   ปิตินทรางกูร",
+      "shares": 15000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกิตติธร   อัศวภัทร",
+      "shares": 3000,
+      "sharePercent": 6.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายบุญชู   สถิตมั่นในธรรม",
+      "shares": 1000,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ศุภลักษณ์   ไชยจันลา",
+      "shares": 2000,
+      "sharePercent": 4.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายกรุแก้ว   สถิตมั่นในธรรม",
+      "shares": 1000,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายดิเรก   ปานขวัญ",
+      "shares": 2000,
+      "sharePercent": 4.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.พรนภา   อริยกุลนิมิตร",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางจริยา   นิรุธนภาพันธ์",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:02:13.588673"
+}

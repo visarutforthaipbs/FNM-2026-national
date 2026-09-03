@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105560175896",
+  "companyName": "นภาเอ็นเทอร์ไพร์ส จำกัด",
+  "totalShares": 300000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธาดา   เลิศสินส่งเสริม",
+      "shares": 60000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางฟุ้นเข็ม   แซ่กว้าน",
+      "shares": 60000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางเลิศนภา   ปิตตะพันธุ์",
+      "shares": 60000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายภูมิ   เลิศสินส่งเสริม",
+      "shares": 60000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายสุชาติ   เลิศสินส่งเสริม",
+      "shares": 59700,
+      "sharePercent": 19.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.ทักษ์สุตา   ถิ่นสันติสุข",
+      "shares": 300,
+      "sharePercent": 0.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:35:34.241560"
+}

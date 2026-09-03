@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105534104171",
+  "companyName": "เค.วี.เอ็น.อิมปอร์ตเอกซ์ปอร์ต (1991) จำกัด",
+  "totalShares": 950000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางปัทมา   วงศ์วารี",
+      "shares": 489504,
+      "sharePercent": 51.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.วรางคณา   วงศ์วารี",
+      "shares": 153498,
+      "sharePercent": 16.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.นงนภา   วงศ์วารี",
+      "shares": 153498,
+      "sharePercent": 16.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกิจจา   วงศ์วารี",
+      "shares": 153500,
+      "sharePercent": 16.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:30.181538"
+}

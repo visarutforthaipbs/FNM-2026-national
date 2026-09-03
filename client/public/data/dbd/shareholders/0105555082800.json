@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105555082800",
+  "companyName": "วาย เค บี (ประเทศไทย) จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 5.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายบุญรอด   ลีละอมรวิเชษฐ์",
+      "shares": 65000,
+      "sharePercent": 65.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท โอซาก้า อุนยุ จำกัด",
+      "shares": 2500,
+      "sharePercent": 2.5,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท โยชิกาว่า อุนยุ จำกัด",
+      "shares": 2500,
+      "sharePercent": 2.5,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นางสาวศริยา   ลีละอมรวิเชษฐ์",
+      "shares": 15000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "บริษัท วินเนอร์ โลจิสติก แอนด์ สตีวีโตริ่ง จำกัด",
+      "shares": 15000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:30:35.221613"
+}

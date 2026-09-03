@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105566149315",
+  "companyName": "แอลเค อลูมินั่ม (ไทยแลนด์) จำกัด",
+  "totalShares": 100000,
+  "shareValue": 1000.0,
+  "holderCount": 4,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหย่งชง   โจว",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเจี้ยนหนิง   หลี่",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเจี้ยนหรง   ข่ง",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "แอลเค โฮลดิ้ง (ฮ่องกง)คอมปะนี ลิมิเต็ด",
+      "shares": 99994,
+      "sharePercent": 99.99,
+      "nationality": "ฮ่องกง",
+      "nationalityCode": "HK",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:48:14.795770"
+}

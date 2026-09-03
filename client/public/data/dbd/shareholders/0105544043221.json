@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105544043221",
+  "companyName": "แม็กซ์วอเตอร์ อินเตอร์เท็ค จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวีระชาติ   ตรีอมฤติกุล",
+      "shares": 25000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.สุชาดา   สิริวรรณวัฒน์",
+      "shares": 25000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:46:42.939972"
+}

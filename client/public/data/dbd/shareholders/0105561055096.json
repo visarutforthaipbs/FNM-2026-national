@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105561055096",
+  "companyName": "สยาม แคท รีไซคลิ่ง จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเคล์เมนท์   อเลน ลูคาส",
+      "shares": 24500,
+      "sharePercent": 49.0,
+      "nationality": "ฝรั่งเศส",
+      "nationalityCode": "FR",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.อรพรรณ   คำศักดิ์ดา",
+      "shares": 25500,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:37:09.767310"
+}

@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105527002520",
+  "companyName": "พีนัท ฟูดส์ จำกัด",
+  "totalShares": 1000,
+  "shareValue": 1000.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายไพโรจน์   เชิดชูวงศ์สกุล",
+      "shares": 320,
+      "sharePercent": 32.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.นภาพร   เชิดชูวงศ์สกุล",
+      "shares": 320,
+      "sharePercent": 32.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพนิต   เชิดชูวงศ์สกุล",
+      "shares": 120,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.เกวลิณ   เชิดชูวงศ์สกุล",
+      "shares": 120,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.วิภาวรรณ   เชิดชูวงศ์สกุล",
+      "shares": 120,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:31:46.407391"
+}

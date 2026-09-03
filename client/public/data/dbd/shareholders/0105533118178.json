@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105533118178",
+  "companyName": "ศิลามาศ เซอร์วิสเซส จำกัด",
+  "totalShares": 4700000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชมภู   กลิ่นภู่",
+      "shares": 2042000,
+      "sharePercent": 43.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธีรชัญ   ปิ่นประดับ",
+      "shares": 2000,
+      "sharePercent": 0.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวนัยน์ปพร   ห้วยหงษ์ทอง",
+      "shares": 1654000,
+      "sharePercent": 35.19,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายคณพล   กลิ่นภู่",
+      "shares": 1000000,
+      "sharePercent": 21.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาววิมล   ปิ่นประดับ",
+      "shares": 2000,
+      "sharePercent": 0.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:56:18.744872"
+}

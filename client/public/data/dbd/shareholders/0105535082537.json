@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105535082537",
+  "companyName": "ดีลิคัพ จำกัด",
+  "totalShares": 1910000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมคิด   มังกรหงษ์",
+      "shares": 1000000,
+      "sharePercent": 52.36,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางพรสุข   มังกรหงษ์",
+      "shares": 250000,
+      "sharePercent": 13.09,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายอาณัติ   มังกรหงษ์",
+      "shares": 400000,
+      "sharePercent": 20.94,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.กิตติวรรณ   สุวรรณสัญญา",
+      "shares": 140000,
+      "sharePercent": 7.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.อาคิรา   มังกรหงษ์",
+      "shares": 60000,
+      "sharePercent": 3.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "ด.ญ.อาเรรา   มังกรหงษ์",
+      "shares": 60000,
+      "sharePercent": 3.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:48.866123"
+}

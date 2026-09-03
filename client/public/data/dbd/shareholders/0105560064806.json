@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105560064806",
+  "companyName": "ซาร์นี่ส์ คอฟฟี่ จำกัด",
+  "totalShares": 5000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ฟอนเซน พร็อพเพอร์ตี้ส์ จำกัด (Fonsen Properties Co.,Ltd.)",
+      "shares": 2550,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายเบนจามิน   เจมส์ ลี (Mr.Benjamin James Lee)",
+      "shares": 1225,
+      "sharePercent": 24.5,
+      "nationality": "ออสเตรเลียน",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายอีริค ชาน   มุน โฮ (Mr.Eric Chan Mun Ho)",
+      "shares": 1225,
+      "sharePercent": 24.5,
+      "nationality": "มาเลเซีย",
+      "nationalityCode": "MY",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:18.823039"
+}

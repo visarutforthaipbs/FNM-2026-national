@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105559024499",
+  "companyName": "จ.ทวีโชค จำกัด",
+  "totalShares": 60000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายยศ   อนันต์หล่อพันธ์",
+      "shares": 34000,
+      "sharePercent": 56.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางประภา   อนันต์หล่อพันธ์",
+      "shares": 25000,
+      "sharePercent": 41.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสิทธิพงศ์   อนันต์หล่อพันธ์",
+      "shares": 1000,
+      "sharePercent": 1.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:16:10.480515"
+}

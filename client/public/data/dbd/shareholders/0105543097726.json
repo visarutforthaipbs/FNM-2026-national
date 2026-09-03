@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105543097726",
+  "companyName": "ดับเบิ้ลยูเอ็น แอสโซซิเอท จำกัด",
+  "totalShares": 1800000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพิชัย   จงสกุลชัย",
+      "shares": 900000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.วรภา   จงสกุลชัย",
+      "shares": 720000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสุวรรณา   บรีเมนแคมป",
+      "shares": 180000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:46:57.765347"
+}

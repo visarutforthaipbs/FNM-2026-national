@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105534059931",
+  "companyName": "ไมเนอร์ แดรี่ จำกัด",
+  "totalShares": 4360000,
+  "shareValue": 50.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวิลเลียม เอ็ลล์วู๊ด   ไฮเน็ค",
+      "shares": 3,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายจอห์น สก็อต   ไฮเน็ค",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บมจ.เดอะ ไมเนอร์ ฟู้ด กรุ๊ป จำกัด (มหาชน)",
+      "shares": 4359995,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:39:11.039226"
+}

@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105522020392",
+  "companyName": "ต้าหมิง เอ็นเตอร์ไพรส์ จำกัด",
+  "totalShares": 500000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสุนทรี   กิจก้องชัย",
+      "shares": 182500,
+      "sharePercent": 36.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเดชา   กิจก้องชัย",
+      "shares": 132500,
+      "sharePercent": 26.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายปอเยน   เซียะ",
+      "shares": 126250,
+      "sharePercent": 25.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสุวรรณา   อติรัตน์",
+      "shares": 58750,
+      "sharePercent": 11.75,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:29:12.448856"
+}

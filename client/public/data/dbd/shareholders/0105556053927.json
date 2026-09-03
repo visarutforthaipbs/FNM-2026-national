@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105556053927",
+  "companyName": "ไทยสตีลอินเตอร์เนชั่นแนล จำกัด",
+  "totalShares": 3250000,
+  "shareValue": 10.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายจิโรจน์   โรจน์รัตนวลี",
+      "shares": 650000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุชาติ   กาญจนโรจน์",
+      "shares": 2600000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:11:19.948339"
+}

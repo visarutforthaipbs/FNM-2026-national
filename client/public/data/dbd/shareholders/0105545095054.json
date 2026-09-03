@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105545095054",
+  "companyName": "ไลฟ์แพค จำกัด",
+  "totalShares": 3800000,
+  "shareValue": 10.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุพัทธ์   กฤษณาวารินทร์",
+      "shares": 3400000,
+      "sharePercent": 89.47,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.เพ็ญวิไล   ชุ่มแจ่ม",
+      "shares": 280000,
+      "sharePercent": 7.37,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ศิริพร   ผ่องฉวี",
+      "shares": 20000,
+      "sharePercent": 0.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสำเนียง   ฐานะ",
+      "shares": 10000,
+      "sharePercent": 0.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายชัยวัฒน์   ประชาพรพิสันต์",
+      "shares": 90000,
+      "sharePercent": 2.37,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:02.993138"
+}

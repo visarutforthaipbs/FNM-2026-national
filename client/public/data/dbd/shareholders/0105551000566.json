@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105551000566",
+  "companyName": "เทค ออล สเต็ป จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายฐานันดร์   หิรัญเลิศประเสริฐ",
+      "shares": 3500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางวิภาพร   กุลรัศมิ์",
+      "shares": 2500,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธีวิณ   หิรัญเลิศประเสริฐ",
+      "shares": 1800,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายพยุงศรี   หิรัญเลิศประเสริฐ",
+      "shares": 1800,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายธกร   กุลรัศมิ์",
+      "shares": 400,
+      "sharePercent": 4.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:39:38.549091"
+}

@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105538009610",
+  "companyName": "แอล.อาร์.ซี ไทยเมททอล จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายแก้ว   เก่งรุ่งเรืองชัย",
+      "shares": 9700,
+      "sharePercent": 97.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเปรมชัย   เก่งรุ่งเรืองชัย",
+      "shares": 100,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.อารยา   เก่งรุ่งเรืองชัย",
+      "shares": 100,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.กันยาพร   เก่งรุ่งเรืองชัย",
+      "shares": 100,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:24:00.451142"
+}

@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105537081198",
+  "companyName": "ตั้งซุ่ยเฮง จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางนญกร   หัตถกิจจำเริญ",
+      "shares": 6000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางภนิตา   หัตถกิจจำเริญ",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธนกฤต   หัตถกิจจำเริญ",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายคงเอก   หัตถกิจจำเริญ",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.รัสรินทร์   หัตถกิจจำเริญ",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:11:10.207481"
+}

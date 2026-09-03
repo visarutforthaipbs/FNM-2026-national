@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105558095643",
+  "companyName": "ภูพัฒน์ คอนสตรัคชั่น (2015) จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายถาปกรณ์   แซ่ลิ้ม",
+      "shares": 48800,
+      "sharePercent": 97.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายกันตชาติ   แซ่ลิ้ม",
+      "shares": 450,
+      "sharePercent": 0.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวขวัญจิตร   แซ่ลิ้ม",
+      "shares": 750,
+      "sharePercent": 1.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:13:27.730493"
+}

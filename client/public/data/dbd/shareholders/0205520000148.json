@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0205520000148",
+  "companyName": "บริษัท จิ้วฮวด จำกัด",
+  "totalShares": 2723,
+  "shareValue": 2000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายปราสาท   กาญจนวิสิษฐผล",
+      "shares": 172,
+      "sharePercent": 6.32,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธนกร   กาญจนวิสิษฐผล",
+      "shares": 80,
+      "sharePercent": 2.94,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเกียรติยศ   กาญจนวิสิษฐผล",
+      "shares": 132,
+      "sharePercent": 4.85,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเศรษฐี   กาญจนวิสิษฐผล",
+      "shares": 1928,
+      "sharePercent": 70.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวสมพร   กาญจนวิสิษฐผล",
+      "shares": 173,
+      "sharePercent": 6.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวรัตนาภรณ์   กาญจนวิสิษฐผล",
+      "shares": 92,
+      "sharePercent": 3.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวรวีวรรณ   กาญจนวิสิษฐผล",
+      "shares": 80,
+      "sharePercent": 2.94,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายประเวทย์   กาญจนวิสิษฐผล",
+      "shares": 31,
+      "sharePercent": 1.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายสมชาย   กานญจนวิสิษฐผล",
+      "shares": 31,
+      "sharePercent": 1.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นางสาวเพ็ญศิริ   กาญจนวิสิษฐผล",
+      "shares": 4,
+      "sharePercent": 0.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:45:55.838810"
+}

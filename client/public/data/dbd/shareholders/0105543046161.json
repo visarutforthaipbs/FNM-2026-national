@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105543046161",
+  "companyName": "อาร์ เอ็น อุตสาหกรรม จำกัด",
+  "totalShares": 78200,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุรศักดิ์   นันทวิริยกุล",
+      "shares": 46860,
+      "sharePercent": 59.92,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวศิริวรรณ   ชื่นชมสกุล",
+      "shares": 11150,
+      "sharePercent": 14.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายมงคล   กาญจนรักษ์",
+      "shares": 3000,
+      "sharePercent": 3.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายประยูร   ศิริวาณิชย์",
+      "shares": 2700,
+      "sharePercent": 3.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางพรรณทิพย์   โอฬารกุล",
+      "shares": 1710,
+      "sharePercent": 2.19,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวสุวิมล   นันทวิริยกุล",
+      "shares": 400,
+      "sharePercent": 0.51,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสุภร   จักรปาณิรักษ์",
+      "shares": 1200,
+      "sharePercent": 1.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายกำพล   กิจชนะชัย",
+      "shares": 180,
+      "sharePercent": 0.23,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายกำพล   วิจิตรพรกุล",
+      "shares": 10000,
+      "sharePercent": 12.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นางดวงจิตร์   จงวิไลเกษม",
+      "shares": 1000,
+      "sharePercent": 1.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:59.878313"
+}

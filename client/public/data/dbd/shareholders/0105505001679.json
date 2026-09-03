@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105505001679",
+  "companyName": "โตโยต้า มอเตอร์ ประเทศไทย จำกัด",
+  "totalShares": 7478355,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 86.93,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.โตโยต้า มอเตอร์ คอร์ปอเรชั่น",
+      "shares": 6501072,
+      "sharePercent": 86.93,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บมจ.ปูนซิเมนต์ไทย",
+      "shares": 752000,
+      "sharePercent": 10.06,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บมจ.ธนาคารกรุงเทพ",
+      "shares": 98247,
+      "sharePercent": 1.31,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "บจ.โตโยต้าอุดรธานี ผู้จำหน่ายโตโยต้า",
+      "shares": 1664,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 5,
+      "name": "บจ.วรจักร์ยนต์",
+      "shares": 101231,
+      "sharePercent": 1.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 6,
+      "name": "บจ.พาราวินเซอร์",
+      "shares": 4900,
+      "sharePercent": 0.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 7,
+      "name": "บจ.เจริญไทยมอเตอร์ เซลส์",
+      "shares": 4900,
+      "sharePercent": 0.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 8,
+      "name": "บจ.โตโยต้ากรุงเทพยนต์ ผู้จำหน่ายโตโยต้า",
+      "shares": 3500,
+      "sharePercent": 0.05,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 9,
+      "name": "บจ.โตโยต้าเชียงใหม่",
+      "shares": 5241,
+      "sharePercent": 0.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 10,
+      "name": "บจ.พิธานพาณิชย์",
+      "shares": 5600,
+      "sharePercent": 0.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:27:46.388914"
+}

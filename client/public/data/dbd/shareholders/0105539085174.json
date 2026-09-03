@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105539085174",
+  "companyName": "เฮืองนำพลาสติก (ไทยแลนด์) จำกัด",
+  "totalShares": 140000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 15.79,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายยูน   เฮืองคิว",
+      "shares": 22100,
+      "sharePercent": 15.79,
+      "nationality": "เกาหลีใต้",
+      "nationalityCode": "KR",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุนันท์   รัตนบุรี",
+      "shares": 1304,
+      "sharePercent": 0.93,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเอกศักดิ์   ล้วนมณี",
+      "shares": 116596,
+      "sharePercent": 83.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:18.117202"
+}

@@ -1,9 +1,11 @@
-import { useState, useCallback } from "react";
-import { Box, Flex, IconButton, Icon, Text, Button, VStack, Image, useBreakpointValue } from "@chakra-ui/react";
+import { useState, useCallback, useEffect } from "react";
+import { Box, Flex, IconButton, Icon, Text, Button, VStack, Image, useBreakpointValue, Badge, HStack } from "@chakra-ui/react";
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { point } from "@turf/helpers";
 import type { FactoryGeoJSON, UserLocation, FactoryFeature, FilterState } from "../types/factory";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
+import { getHazardLevel, HAZARD_COLORS, HAZARD_LABELS } from "../utils/hazard";
+import { haversineKm, formatDistanceTh } from "../utils/geo";
 import Sidebar from "../components/Sidebar";
 import MapWrapper from "../components/MapWrapper";
 import Navbar from "../components/Navbar";
@@ -57,6 +59,37 @@ const MapPage: React.FC<MapPageProps> = ({
     return !localStorage.getItem("factory-nearme-visited");
   });
   const [isLocating, setIsLocating] = useState(false);
+
+  // Keyboard shortcuts: '/' to focus search, 'Esc' to deselect/close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        if (e.key === "Escape") {
+          target.blur();
+        }
+        return;
+      }
+
+      if (e.key === "/") {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[placeholder*="ค้นหาชื่อโรงงาน"]') as HTMLInputElement;
+        if (searchInput) {
+          if (isMobile) setIsMobileSidebarOpen(true);
+          searchInput.focus();
+        }
+      } else if (e.key === "Escape") {
+        if (selectedFactory) {
+          setSelectedFactory(null);
+        } else if (isMobileSidebarOpen) {
+          setIsMobileSidebarOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedFactory, isMobileSidebarOpen, isMobile, setSelectedFactory, setIsMobileSidebarOpen]);
 
   // Auto-detect province from user coordinates
   const detectAndSelectProvince = useCallback(async (lat: number, lng: number) => {
@@ -217,11 +250,6 @@ const MapPage: React.FC<MapPageProps> = ({
             selectedFactory={selectedFactory}
             onFactorySelect={(factory) => {
               setSelectedFactory(factory);
-              // On mobile, a marker tap opens the detail panel — otherwise the
-              // selection would be invisible (the sidebar is closed by default).
-              if (isMobile && factory) {
-                setIsMobileSidebarOpen(true);
-              }
             }}
             filters={filters}
             onProvinceSelect={onProvinceSelect}
@@ -231,6 +259,115 @@ const MapPage: React.FC<MapPageProps> = ({
             isLoading={isApiLoading}
             hideChrome={isMobile && isMobileSidebarOpen}
           />
+
+          {/* Mobile Floating Peek Card — preserves geographic context while showing Layer 1/2 attributes */}
+          {isMobile && selectedFactory && !isMobileSidebarOpen && (
+            <Box
+              position="absolute"
+              bottom="calc(env(safe-area-inset-bottom, 0px) + 16px)"
+              left="16px"
+              right="16px"
+              zIndex={1050}
+              bg="white"
+              p={3.5}
+              borderRadius="2xl"
+              boxShadow="0 10px 30px rgba(15, 23, 42, 0.18)"
+              border="1px solid"
+              borderColor="slate.200"
+            >
+              <Flex align="flex-start" justify="space-between" gap={2}>
+                <Flex align="center" gap={2.5} minW={0} flex="1">
+                  <Box
+                    w="9px"
+                    h="9px"
+                    borderRadius={getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท) === "hazard" ? "none" : "full"}
+                    transform={getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท) === "hazard" ? "rotate(45deg)" : undefined}
+                    bg={HAZARD_COLORS[getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท)]}
+                    flexShrink={0}
+                  />
+                  <Box minW={0} flex="1">
+                    <Text fontSize="sm" fontWeight="700" color="slate.800" isTruncated>
+                      {selectedFactory.properties.ชื่อโรงงาน}
+                    </Text>
+                    <HStack spacing={1.5} mt={0.5}>
+                      <Badge
+                        fontSize="10px"
+                        fontWeight="600"
+                        bg={
+                          getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท) === "hazard"
+                            ? "red.50"
+                            : getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท) === "type3"
+                            ? "orange.50"
+                            : "green.50"
+                        }
+                        color={
+                          getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท) === "hazard"
+                            ? "red.700"
+                            : getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท) === "type3"
+                            ? "orange.700"
+                            : "green.700"
+                        }
+                        borderRadius="full"
+                        px={2}
+                      >
+                        {HAZARD_LABELS[getHazardLevel(selectedFactory.properties.เลขทะเบียน, selectedFactory.properties.ประเภท)]}
+                      </Badge>
+                      {userLocation && (
+                        <Text fontSize="11px" fontWeight="700" color="primary.600">
+                          {formatDistanceTh(
+                            haversineKm(
+                              userLocation.lat,
+                              userLocation.lng,
+                              selectedFactory.geometry.coordinates[1],
+                              selectedFactory.geometry.coordinates[0]
+                            )
+                          )}
+                        </Text>
+                      )}
+                      <Text fontSize="11px" color="slate.500" isTruncated>
+                        {[selectedFactory.properties.อำเภอ, selectedFactory.properties.จังหวัด].filter(Boolean).join(" · ")}
+                      </Text>
+                    </HStack>
+                  </Box>
+                </Flex>
+                <IconButton
+                  aria-label="ปิดการเลือกโรงงาน"
+                  size="xs"
+                  minW="32px"
+                  minH="32px"
+                  variant="ghost"
+                  color="slate.400"
+                  borderRadius="full"
+                  icon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    </Icon>
+                  }
+                  onClick={() => setSelectedFactory(null)}
+                  _hover={{ bg: "slate.100", color: "slate.600" }}
+                />
+              </Flex>
+              <Button
+                mt={2.5}
+                w="full"
+                size="sm"
+                bg="primary.600"
+                color="white"
+                fontWeight="600"
+                borderRadius="xl"
+                _hover={{ bg: "primary.700" }}
+                _active={{ bg: "primary.800" }}
+                onClick={() => setIsMobileSidebarOpen(true)}
+                rightIcon={
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                    <path d="M9 18l6-6-6-6" />
+                  </Icon>
+                }
+              >
+                ดูข้อมูลโรงงานแบบเต็ม
+              </Button>
+            </Box>
+          )}
         </Box>
       </Flex>
 

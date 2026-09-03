@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105545115349",
+  "companyName": "ซีเค รีเจน ซิสเต็มส์ จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.คาร์โบกาญจน์",
+      "shares": 149994,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.เฮคาร์บ",
+      "shares": 3,
+      "sharePercent": 0.0,
+      "nationality": "ศรีลังกา",
+      "nationalityCode": "OT",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นายประศาสก์   กาญจนบัตร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเบญจะ   กาญจนบัตร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายกฤษฏ์   กาญจนบัตร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:54:37.113670"
+}

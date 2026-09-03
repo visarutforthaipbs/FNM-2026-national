@@ -285,7 +285,10 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
       React.useState<keyof typeof TILE_URLS>(getPreferredTile);
 
     // DPT Local Industrial Purple Zones layer state
-    const [showPurpleZones, setShowPurpleZones] = useState<boolean>(true);
+    // Keep the first phone viewport focused on the factory signal. Zoning stays
+    // one tap away in the layer sheet, while desktop keeps the established
+    // always-on planning context.
+    const [showPurpleZones, setShowPurpleZones] = useState<boolean>(() => !isMobile);
     // Separate municipal/town-community plan layer from DPT's existing tile
     // service. This is not the downloaded PLLU_PROV dataset below.
     const [showTownPlan, setShowTownPlan] = useState<boolean>(false);
@@ -600,7 +603,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {showChrome && isMobile && (
-          <Box position="absolute" top="16" right="3" zIndex="1000">
+          <Box position="absolute" top="3" right="3" zIndex="1000">
             <Popover placement="bottom-end" isLazy closeOnBlur>
               <PopoverTrigger>
                 <Button
@@ -762,6 +765,79 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                         />
                       </Flex>
                     )}
+
+                    {/* Mobile legends live with the controls they explain. Keeping
+                        them out of the map viewport preserves the geographic signal
+                        until the user explicitly asks for this detail. */}
+                    <Box borderTop="1px solid" borderColor="slate.100" pt={2.5}>
+                      <Text fontSize="xs" fontWeight="700" color="slate.500" mb={2}>
+                        คำอธิบายสัญลักษณ์
+                      </Text>
+
+                      {isProvinceMode ? (
+                        <VStack spacing={1.5} align="stretch">
+                          <Flex align="center" gap={2.5} minH="32px">
+                            <FactoryLegendMarker level="hazard" />
+                            <Text color="slate.600" fontSize="xs">อุตสาหกรรมเสี่ยงสูง</Text>
+                          </Flex>
+                          <Flex align="center" gap={2.5} minH="32px">
+                            <FactoryLegendMarker level="type3" />
+                            <Text color="slate.600" fontSize="xs">จำพวก 3 ทั่วไป</Text>
+                          </Flex>
+                          <Flex align="center" gap={2.5} minH="32px">
+                            <FactoryLegendMarker level="general" />
+                            <Text color="slate.600" fontSize="xs">จำพวก 1–2 / ขนาดเล็ก</Text>
+                          </Flex>
+                        </VStack>
+                      ) : (
+                        <Box bg="slate.50" borderRadius="lg" px={3} py={2.5}>
+                          <Flex gap={0} aria-label="สีเข้มขึ้นหมายถึงจังหวัดที่มีโรงงานหนาแน่นขึ้น">
+                            {["#E8F1F4", "#D5E5EA", "#B9D2DA", "#8FB9C9", "#5D91A8", "#2F6987", "#0B3558"].map((color, index) => (
+                              <Box
+                                key={color}
+                                flex="1"
+                                h="10px"
+                                bg={color}
+                                borderLeftRadius={index === 0 ? "2px" : 0}
+                                borderRightRadius={index === 6 ? "2px" : 0}
+                              />
+                            ))}
+                          </Flex>
+                          <Flex justify="space-between" mt={1}>
+                            <Text color="slate.500" fontSize="2xs">น้อยกว่า 10</Text>
+                            <Text color="slate.500" fontSize="2xs">3,000+</Text>
+                          </Flex>
+                          <Text color="slate.500" fontSize="2xs" mt={1.5}>
+                            แตะจังหวัดเพื่อดูโรงงาน
+                          </Text>
+                        </Box>
+                      )}
+
+                      {(showPurpleZones || showTownPlan || (showProvincePlans && isProvinceMode)) && (
+                        <VStack spacing={1.5} align="stretch" mt={2.5}>
+                          {showPurpleZones && (
+                            <Flex align="center" gap={2}>
+                              <Box w="12px" h="12px" borderRadius="2px" bg="#4D004D" flex="none" />
+                              <Text color="slate.600" fontSize="2xs">เขตอุตสาหกรรมและคลังสินค้า DPT</Text>
+                            </Flex>
+                          )}
+                          {showTownPlan && (
+                            <Flex align="center" gap={2}>
+                              <Box w="12px" h="12px" borderRadius="2px" bg="orange.300" flex="none" />
+                              <Text color="slate.600" fontSize="2xs">ผังเมืองรวมเมือง/ชุมชน</Text>
+                            </Flex>
+                          )}
+                          {showProvincePlans && isProvinceMode && (
+                            <Flex align="center" gap={2}>
+                              <Box w="12px" h="12px" borderRadius="2px" bg="green.400" flex="none" />
+                              <Text color="slate.600" fontSize="2xs">
+                                ผังเมืองรวมจังหวัด · {filters.selectedProvince}
+                              </Text>
+                            </Flex>
+                          )}
+                        </VStack>
+                      )}
+                    </Box>
                   </VStack>
                 </PopoverBody>
               </PopoverContent>
@@ -773,12 +849,15 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         {showChrome && isProvinceMode && (
           <Box
             position="absolute"
-            top={isMobile ? "16" : "4"}
-            left={isMobile ? "14" : "4"}
+            top={isMobile ? "3" : "4"}
+            left={isMobile ? "16" : "4"}
             zIndex="1000"
           >
             <Button
               size="sm"
+              minW={isMobile ? "44px" : undefined}
+              minH={isMobile ? "44px" : undefined}
+              px={isMobile ? 0 : undefined}
               bg="white"
               color="slate.700"
               boxShadow="lg"
@@ -787,13 +866,18 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               borderColor="slate.100"
               _hover={{ bg: "slate.50" }}
               onClick={handleBackToOverview}
-              leftIcon={
+              leftIcon={isMobile ? undefined :
                 <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
                   <path d="M19 12H5M12 19l-7-7 7-7" />
                 </Icon>
               }
+              aria-label={isMobile ? "กลับสู่ภาพรวมทั้งประเทศ" : undefined}
             >
-              ภาพรวมทั้งประเทศ
+              {isMobile ? (
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={5}>
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </Icon>
+              ) : "ภาพรวมทั้งประเทศ"}
             </Button>
           </Box>
         )}
@@ -829,7 +913,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* Legend (province detail mode) - SIGNAL 39 Layer 1 color key */}
-        {showChrome && isProvinceMode && (
+        {showChrome && !isMobile && isProvinceMode && (
           <Box
             position="absolute"
             bottom={4}
@@ -866,7 +950,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* Legend (overview mode) */}
-        {showChrome && !isProvinceMode && (
+        {showChrome && !isMobile && !isProvinceMode && (
           <Box
             position="absolute"
             bottom={4}
@@ -929,7 +1013,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             overlay dropped its legend on top of the first — and on the density
             legend, which owns the bottom-left. Stacking them keeps any
             combination of overlays legible without hand-tuned offsets. */}
-        {showChrome && (showPurpleZones || (showProvincePlans && isProvinceMode)) && (
+        {showChrome && !isMobile && (showPurpleZones || (showProvincePlans && isProvinceMode)) && (
         <VStack
           position="absolute"
           bottom={isMobile ? "140px" : 4}
@@ -1252,12 +1336,13 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               {filters.showOnlyInRadius && (
                 <Circle
                   center={[userLocation.lat, userLocation.lng]}
-                  radius={10000}
+                  radius={(filters.radiusKm ?? 10) * 1000}
                   pathOptions={{
-                    color: "#3b82f6",
-                    fillColor: "#3b82f6",
-                    fillOpacity: 0.1,
-                    weight: 1,
+                    color: "#F05223",
+                    fillColor: "#F05223",
+                    fillOpacity: 0.08,
+                    weight: 1.5,
+                    dashArray: "4 4",
                   }}
                 />
               )}

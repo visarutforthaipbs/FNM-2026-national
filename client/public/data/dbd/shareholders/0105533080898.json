@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105533080898",
+  "companyName": "ทีมพลาส จำกัด",
+  "totalShares": 70000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุรพงษ์   อติชาดศรีสกุล",
+      "shares": 32000,
+      "sharePercent": 45.71,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางศิริพร   อติชาดศรีสกุล",
+      "shares": 34000,
+      "sharePercent": 48.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพงศกร   อติชาดศรีสกุล",
+      "shares": 2000,
+      "sharePercent": 2.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายณัฐกร   อติชาดศรีสกุล",
+      "shares": 2000,
+      "sharePercent": 2.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:08.971021"
+}

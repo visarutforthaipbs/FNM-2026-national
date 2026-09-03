@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105549038471",
+  "companyName": "สุวรรณภูมิ เวสต์ รีคัฟเวอรี่ จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายจิรกร   วัชราคม",
+      "shares": 17000,
+      "sharePercent": 85.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายมาโนชย์   นวลสระ",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเกียรติศักดิ์   วัชราคม",
+      "shares": 2900,
+      "sharePercent": 14.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:35:04.389595"
+}

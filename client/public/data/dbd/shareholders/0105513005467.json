@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105513005467",
+  "companyName": "ไทยรุ่งเรือง คอร์ปอเรชั่น จำกัด",
+  "totalShares": 100846,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมเกียรติ   อัษฎาธร",
+      "shares": 300,
+      "sharePercent": 0.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายณัฐพล   อัษฎาธร",
+      "shares": 18186,
+      "sharePercent": 18.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายภูสิต   อัษฎาธร",
+      "shares": 18186,
+      "sharePercent": 18.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.เบ็ญจพร   อัษฎาธร",
+      "shares": 9092,
+      "sharePercent": 9.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.รัชดาพร   อัษฎาธร",
+      "shares": 9092,
+      "sharePercent": 9.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายสุทิน   อัษฎาธร",
+      "shares": 10522,
+      "sharePercent": 10.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางชนิดา   อัษฎาธร",
+      "shares": 8867,
+      "sharePercent": 8.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายทิฐิกร   อัษฎาธร",
+      "shares": 8867,
+      "sharePercent": 8.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายทินกร   อัษฎาธร",
+      "shares": 8867,
+      "sharePercent": 8.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายธนากร   อัษฎาธร",
+      "shares": 8867,
+      "sharePercent": 8.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:29:48.425359"
+}

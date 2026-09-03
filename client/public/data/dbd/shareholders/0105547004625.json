@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105547004625",
+  "companyName": "สยาม ลูป ออยล์ จำกัด",
+  "totalShares": 560000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายนิติ   รัตนภัณฑ์พาณิชย์",
+      "shares": 256100,
+      "sharePercent": 45.73,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายไปรธวัช   กุยยกานนท์",
+      "shares": 256100,
+      "sharePercent": 45.73,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกฤษณ์   บุญพรหมมา",
+      "shares": 47800,
+      "sharePercent": 8.54,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:45:29.615164"
+}

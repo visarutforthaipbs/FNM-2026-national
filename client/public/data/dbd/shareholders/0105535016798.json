@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105535016798",
+  "companyName": "เอส.เอช.เปเปอร์ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุรชัย   กรมณีแสง",
+      "shares": 4500,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายทรงกลด   กรมณีแสง",
+      "shares": 4500,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางธันยนันท์   ภัคซีรเศรษฐี",
+      "shares": 200,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางณฐมน   กรมณีแสง",
+      "shares": 200,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ณัฐนรินทร์   ธีรหิรัญพิพัฒน",
+      "shares": 200,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางศิริลักษณ์   ธีรหิรัญพิพัฒน",
+      "shares": 200,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.นุชนาฎ   บูรณตระกูล",
+      "shares": 200,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:10:55.532238"
+}

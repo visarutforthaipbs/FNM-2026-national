@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105556072794",
+  "companyName": "เอเชีย บราเทอร์ เทคโนโลยี จำกัด",
+  "totalShares": 10000,
+  "shareValue": 1000.0,
+  "holderCount": 4,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายจาง ไป่ จุ้น",
+      "shares": 4900,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวประณิตา   เพชรประกอบ",
+      "shares": 1300,
+      "sharePercent": 13.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสุมิตรา   ลิ้มมั่นจริง",
+      "shares": 1400,
+      "sharePercent": 14.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "ว่าที่ร้อยตรีสินีนาฎ   เรืองพรหม",
+      "shares": 2400,
+      "sharePercent": 24.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:02.277795"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0115563007889",
+  "companyName": "เอ็นไวรอนพาวเวอร์ จำกัด",
+  "totalShares": 250000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุชาติ   ศรีวิทิตกุล",
+      "shares": 137500,
+      "sharePercent": 55.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุวิมล   ศรีวิทิตกุล",
+      "shares": 112500,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:44:02.865072"
+}

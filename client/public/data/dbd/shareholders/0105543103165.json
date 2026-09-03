@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105543103165",
+  "companyName": "ทีเออาร์เอฟ จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เอ็นซิส จำกัด",
+      "shares": 103320,
+      "sharePercent": 51.66,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายชุมพล   ปทานุคม",
+      "shares": 8340,
+      "sharePercent": 4.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวฐิติพร   พันธุ์นิล",
+      "shares": 40000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายมนต์ชัย   พูนภักดี",
+      "shares": 48340,
+      "sharePercent": 24.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:42:16.524214"
+}

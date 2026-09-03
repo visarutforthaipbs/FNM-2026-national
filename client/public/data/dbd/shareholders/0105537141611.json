@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105537141611",
+  "companyName": "ขอนแก่น บริวเวอรี่ จำกัด",
+  "totalShares": 81139,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวุฒา   ภิรมย์ภักดี",
+      "shares": 54468,
+      "sharePercent": 67.13,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวาปี   ภิรมย์ภักดี",
+      "shares": 1100,
+      "sharePercent": 1.36,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายวันชัย   ธนาบริบูรณ์",
+      "shares": 600,
+      "sharePercent": 0.74,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสันติ   ภิรมย์ภักดี",
+      "shares": 17526,
+      "sharePercent": 21.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายจุฑาเกียรติ   เจียรพันธุ์",
+      "shares": 1200,
+      "sharePercent": 1.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายมงคล   อึ้งตระกูล",
+      "shares": 700,
+      "sharePercent": 0.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวิวัฒน์   สุขเพสน์",
+      "shares": 600,
+      "sharePercent": 0.74,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายบรรลือ   กุลละวณิชย์",
+      "shares": 1675,
+      "sharePercent": 2.06,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายสุวัฒน์   ฟ้าประทานชัย",
+      "shares": 1930,
+      "sharePercent": 2.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายชัยสิทธิ์   ชัยกุล",
+      "shares": 1340,
+      "sharePercent": 1.65,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:02:40.662853"
+}

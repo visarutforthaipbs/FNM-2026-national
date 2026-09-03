@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105543028503",
+  "companyName": "เบสท์ เพอฟอร์แมนซ์ เอ็นจิเนียริ่ง จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางธีราลักษณ์   กฤศรา",
+      "shares": 60000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายบุรินพัฒน์   กฤศรา",
+      "shares": 19000,
+      "sharePercent": 19.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพิชัย   ตรีสุทธามาศ",
+      "shares": 2000,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายภูริภัสร์   ธีรคุณวงศ์",
+      "shares": 19000,
+      "sharePercent": 19.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:52:26.563854"
+}

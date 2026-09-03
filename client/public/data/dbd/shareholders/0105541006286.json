@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105541006286",
+  "companyName": "บอลลูน คอนเฟคชั่นเนอรี่ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวีระพงษ์   อุดมเลิศประเสริฐ",
+      "shares": 25000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวีระเกียรติ์   อุดมเลิศประเสริฐ",
+      "shares": 25000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:20.157634"
+}

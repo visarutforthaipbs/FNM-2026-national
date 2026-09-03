@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105562026341",
+  "companyName": "นิวโซลูชั่นส์ (ไทยแลนด์) จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 8,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกันตพิชญ์   ธนเลิศลาภ",
+      "shares": 100000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายกันตพิชญ์   ธนเลิศลาภ",
+      "shares": 500000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ภัทรกร   ธนเลิศลาภ",
+      "shares": 10000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกิตติพศ   ธนเลิศลาภ",
+      "shares": 10000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางอรุณรักษ์   ธนเลิศลาภ",
+      "shares": 20000,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายกันตพิชญ์   ธนเลิศลาภ",
+      "shares": 70000,
+      "sharePercent": 7.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางอรุณรักษ์   ธนเลิศลาภ",
+      "shares": 180000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางศิริมาศ   ธนเลิศลาภ",
+      "shares": 110000,
+      "sharePercent": 11.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:58:00.971675"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105541068630",
+  "companyName": "ปูนซิเมนต์ไทย (ท่าหลวง) จำกัด",
+  "totalShares": 75750000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ผลิตภัณฑ์และวัตถุก่อสร้าง",
+      "shares": 75749999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "น.ส.แก้วสวรรค์   อมตชีวิน",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:38:52.859132"
+}

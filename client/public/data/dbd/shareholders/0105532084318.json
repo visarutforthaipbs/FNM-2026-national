@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105532084318",
+  "companyName": "เควายเอช.อินเตอร์เนชั่นแนล คอร์ปอเรชั่น จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจก.โค้วยู่ฮะลำปาง",
+      "shares": 800000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายจิรวุฒิ   คุวานันท์",
+      "shares": 99000,
+      "sharePercent": 9.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายนววิธ   คุวานันท์",
+      "shares": 1000,
+      "sharePercent": 0.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสุวิทย์   คุวานันท์",
+      "shares": 100000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:33:18.897903"
+}

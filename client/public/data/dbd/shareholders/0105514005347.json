@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105514005347",
+  "companyName": "น้ำตาลรีไฟน์ชัยมงคล จำกัด",
+  "totalShares": 237299,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสุณีย์   ว่องไวพาณิชย์",
+      "shares": 7000,
+      "sharePercent": 2.95,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางเพ็ญงาม   ประกฤติมงคล",
+      "shares": 1000,
+      "sharePercent": 0.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายชุมพร   ว่องไวพาณิชย์",
+      "shares": 2000,
+      "sharePercent": 0.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.เบ็ญจมาศ   ว่องไวพาณิชย์",
+      "shares": 1000,
+      "sharePercent": 0.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายพงษ์พัฒน์   ว่องไวพาณิชย์",
+      "shares": 2000,
+      "sharePercent": 0.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายพงษ์ศักดิ์   ว่องไวพาณิชย์",
+      "shares": 2000,
+      "sharePercent": 0.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวิชัย   สวาทยานนท์",
+      "shares": 500,
+      "sharePercent": 0.21,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายอารีย์   ชุ้นฟุ้ง",
+      "shares": 220799,
+      "sharePercent": 93.05,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายชูเกียรติ   พัฒนกุลเกียรติ",
+      "shares": 600,
+      "sharePercent": 0.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายรุ่งเรือง   เหลืองวรารัตน์",
+      "shares": 400,
+      "sharePercent": 0.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:27:24.808886"
+}

@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105518002938",
+  "companyName": "ป.เจริญพันธ์อาหารสัตว์ จำกัด",
+  "totalShares": 7500000,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวนิสา   ศิริมงคลเกษม",
+      "shares": 471000,
+      "sharePercent": 6.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายขจร   ศิริมงคลเกษม",
+      "shares": 936000,
+      "sharePercent": 12.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาววิภาวดี   ศิริมงคลเกษม",
+      "shares": 471000,
+      "sharePercent": 6.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเจษฎา   ศิริมงคลเกษม",
+      "shares": 936000,
+      "sharePercent": 12.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายกิตติชัย   ศิริมงคลเกษม",
+      "shares": 936000,
+      "sharePercent": 12.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายวิรัช   ศิริมงคลเกษม",
+      "shares": 150000,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวปภิญญา   ศิริมงคลเกษม",
+      "shares": 700000,
+      "sharePercent": 9.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางสาววริสรา   ศิริมงคลเกษม",
+      "shares": 700000,
+      "sharePercent": 9.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "น.ส.วิวรรยา   ศิริมงคลเกษม",
+      "shares": 700000,
+      "sharePercent": 9.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายวงศกร   ศิริมงคลเกษม",
+      "shares": 1500000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:08.682349"
+}

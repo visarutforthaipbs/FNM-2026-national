@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105541074133",
+  "companyName": "ซีโนไทย มารีน โปรดักส์ จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 46.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเฉิน   จุ้นสง",
+      "shares": 91990,
+      "sharePercent": 46.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุมาลี   อู๋",
+      "shares": 108010,
+      "sharePercent": 54.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:58:50.721408"
+}

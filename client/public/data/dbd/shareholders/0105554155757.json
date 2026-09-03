@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105554155757",
+  "companyName": "วายซี รีไซคลิ่ง จำกัด",
+  "totalShares": 140000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 44.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายซอง   อิว วอน (Mr.Sung il won)",
+      "shares": 27300,
+      "sharePercent": 19.5,
+      "nationality": "เกาหลีใต้",
+      "nationalityCode": "KR",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายซอง   มิน วอน (Mr.Sung min won)",
+      "shares": 34300,
+      "sharePercent": 24.5,
+      "nationality": "เกาหลีใต้",
+      "nationalityCode": "KR",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ณฤดี   รอดเฉี่ยว",
+      "shares": 35000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.เบญจพร   ยืนประโคน",
+      "shares": 21000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ณฤดี   รอดเฉี่ยว",
+      "shares": 22400,
+      "sharePercent": 16.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:09:04.409414"
+}

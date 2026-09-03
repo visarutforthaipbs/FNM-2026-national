@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105533107532",
+  "companyName": "ผลิตภัณฑ์หมีเหรียญทองพลาสติก จำกัด",
+  "totalShares": 1000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางอ้อมน้อย   สิงโตทอง",
+      "shares": 100,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.กมลชนก   หงส์ไพศาลวิวัฒน์",
+      "shares": 450,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.อรจิรา   หงส์ไพศาลวิวัฒน์",
+      "shares": 450,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:45:54.556358"
+}

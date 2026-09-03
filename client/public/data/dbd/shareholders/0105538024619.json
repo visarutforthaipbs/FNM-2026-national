@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105538024619",
+  "companyName": "กิจเจริญอุตสาหกรรมพลาสติก จำกัด",
+  "totalShares": 22000,
+  "shareValue": 1000.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายศุภชัย   วงศ์รัตนวิจิตร",
+      "shares": 4250,
+      "sharePercent": 19.32,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสมชัย   วงศ์รัตนวิจิตร",
+      "shares": 6700,
+      "sharePercent": 30.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางวิไลพร   รัตนเมธานนท์",
+      "shares": 7250,
+      "sharePercent": 32.95,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.วรรณี   วงศ์รัตนวิจิตร",
+      "shares": 3000,
+      "sharePercent": 13.64,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางปัทมา   วงศ์รัตนวิจิตร",
+      "shares": 400,
+      "sharePercent": 1.82,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.อังสนา   วงศ์รัตนวิจิตร",
+      "shares": 200,
+      "sharePercent": 0.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.ภิญญา   วงศ์รัตนวิจิตร",
+      "shares": 200,
+      "sharePercent": 0.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:23.170529"
+}

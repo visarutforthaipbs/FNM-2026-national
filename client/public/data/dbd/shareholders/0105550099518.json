@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105550099518",
+  "companyName": "แซนด์ซอร์ จำกัด",
+  "totalShares": 95000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกว้างไกล   เรืองสุขวัฒนา",
+      "shares": 38950,
+      "sharePercent": 41.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.วรวลัญช์   กองสุข",
+      "shares": 9500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายไต้ ซินโจ   DAI, XINZHOU",
+      "shares": 46550,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:04:27.247659"
+}

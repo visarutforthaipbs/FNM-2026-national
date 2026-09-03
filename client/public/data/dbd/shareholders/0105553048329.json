@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105553048329",
+  "companyName": "น้ำตาลไทยอุดรธานี จำกัด",
+  "totalShares": 22560000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวกนกวรรณ   ว่องวัฒนะสิน",
+      "shares": 4512428,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายบัณฑิต   ว่องวัฒนะสิน",
+      "shares": 4512428,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายนพพร   ว่องวัฒนะสิน",
+      "shares": 4510288,
+      "sharePercent": 19.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเจษฎา   ว่องวัฒนะสิน",
+      "shares": 4512428,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางอุมาพร   ว่องวัฒนะสิน ดูพรีเอ",
+      "shares": 4512428,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:28:48.543457"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105548147071",
+  "companyName": "โคโคโร่เบฟเวอร์เรจ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายนิรันดร์   ทับทิมคุณา",
+      "shares": 9900,
+      "sharePercent": 99.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางธัญญาณี   ทับทิมคุณา",
+      "shares": 100,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:00.457510"
+}

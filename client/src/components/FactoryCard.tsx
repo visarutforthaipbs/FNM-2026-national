@@ -134,19 +134,22 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
               {props.ชื่อโรงงาน || "ไม่ระบุชื่อโรงงาน"}
             </Text>
             
-            <HStack spacing={1} flexShrink={0}>
+            <HStack spacing={1.5} flexShrink={0} onClick={(e) => e.stopPropagation()}>
               <IconButton
                 aria-label={isWatched ? "เลิกติดตาม" : "ติดตามโรงงานนี้"}
                 title={isWatched ? "ติดตามอยู่ (คลิกเพื่อยกเลิก)" : "ติดตามโรงงานนี้"}
                 icon={<StarIcon filled={isWatched} />}
-                size="xs"
+                size="sm"
+                minW="36px"
+                minH="36px"
                 variant="ghost"
                 borderRadius="full"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleWatchFactory(factoryId);
                 }}
-                _hover={{ bg: "slate.100" }}
+                _hover={{ bg: isWatched ? "amber.50" : "slate.100" }}
+                _focusVisible={{ outline: "none", boxShadow: "0 0 0 2px #F59E0B" }}
               />
               {distance !== null && (
                 <Text
@@ -161,7 +164,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
             </HStack>
           </Flex>
 
-          <Text fontSize="xs" color="slate.500" mt={1} noOfLines={1}>
+          <Text fontSize="xs" color="slate.600" mt={1} noOfLines={1}>
             {contextLine}
           </Text>
         </Box>
@@ -177,10 +180,19 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
         gap={3}
       >
         <Flex align="center" gap={1.5} minW={0}>
-          <Box w="5px" h="5px" borderRadius="full" bg={riskDetailColor} flexShrink={0} />
+          <Box
+            w="6px"
+            h="6px"
+            borderRadius={hazardLevel === "hazard" ? "none" : "full"}
+            transform={hazardLevel === "hazard" ? "rotate(45deg)" : undefined}
+            bg={riskDetailColor}
+            flexShrink={0}
+            title={hazardLevel === "hazard" ? "ความเสี่ยงสูง" : hazardLevel === "type3" ? "จำพวก 3" : "ทั่วไป"}
+          />
           <Text
-            fontSize="10px"
-            color="slate.400"
+            fontSize="xs"
+            fontWeight="500"
+            color="slate.500"
             fontFamily="'Inter', 'IBM Plex Sans Thai', sans-serif"
             noOfLines={1}
           >
@@ -190,7 +202,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
             <Flex
               align="center"
               gap={1}
-              px={1.5}
+              px={2}
               py={0.5}
               bg="primary.50"
               borderRadius="full"
@@ -201,7 +213,7 @@ const FactoryCard: React.FC<FactoryCardProps> = ({
                 <path d="M3 11v3a1 1 0 0 0 1 1h2l3.5 4a1 1 0 0 0 1.5-.9V6.9a1 1 0 0 0-1.5-.9L6 10H4a1 1 0 0 0-1 1Z" />
                 <path d="M14 8.5a4 4 0 0 1 0 7" />
               </Icon>
-              <Text fontSize="10px" fontWeight="700" color="primary.700" fontFamily="'Inter', sans-serif">
+              <Text fontSize="xs" fontWeight="700" color="primary.700" fontFamily="'Inter', sans-serif">
                 {reportCount}
               </Text>
             </Flex>

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105559024430",
+  "companyName": "พี พี ซอร์ทติ้ง จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายยศ   อนันต์หล่อพันธ์",
+      "shares": 109000,
+      "sharePercent": 72.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวมลฤดี   พันธ์พีระพิชย์",
+      "shares": 40000,
+      "sharePercent": 26.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสิทธิพงศ์   อนันต์หล่อพันธ์",
+      "shares": 1000,
+      "sharePercent": 0.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:01.283817"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105532097690",
+  "companyName": "ครอมัลลอย (ประเทศไทย) จำกัด",
+  "totalShares": 35000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.01,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ครอมัลลอย โฮลดิ้ง (ประเทศไทย) จำกัด",
+      "shares": 34998,
+      "sharePercent": 99.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "ครอมัลลอย จีทีอี ซับ I แอลแอลซี",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "อเมริกัน",
+      "nationalityCode": "US",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "ครอมัลลอย จีทีอี ซับ II แอลแอลซี",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "อเมริกัน",
+      "nationalityCode": "US",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:33:55.668694"
+}

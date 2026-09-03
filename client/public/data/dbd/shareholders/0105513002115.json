@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105513002115",
+  "companyName": "ไทยกูลิโกะ จำกัด",
+  "totalShares": 240000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "กูลิโกะ เอเชีย แปซิฟิค พีทีอี ลิมิเต็ด",
+      "shares": 239998,
+      "sharePercent": 100.0,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท เอซากิ กูลิโกะ จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท กูลิโกะ นูทรีชั่น จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:32.973589"
+}

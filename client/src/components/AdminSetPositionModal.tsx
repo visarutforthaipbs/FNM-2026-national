@@ -208,9 +208,15 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
               <Box bg="purple.50" p={3.5} borderRadius="xl" border="1px solid" borderColor="purple.200" my={2}>
                 <Flex align="center" justify="space-between" wrap="wrap" gap={2} mb={suggestedLat ? 2 : 0}>
                   <Box>
-                    <Text fontSize="xs" fontWeight="700" color="purple.900">
-                      📍 เอกสารสิทธิ์ที่ดิน & ค่าพิกัดแปลง (กรมที่ดิน DOL)
-                    </Text>
+                    <Flex align="center" gap={1.5}>
+                      <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5} color="purple.700">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </Icon>
+                      <Text fontSize="xs" fontWeight="700" color="purple.900">
+                        เอกสารสิทธิ์ที่ดิน & ค่าพิกัดแปลง (กรมที่ดิน DOL)
+                      </Text>
+                    </Flex>
                     <Text fontSize="xs" color="purple.700">
                       {deedNo ? `โฉนดที่ดินเลขที่ ${deedNo}` : ""} {landNo ? `เลขที่ดิน ${landNo}` : ""}
                     </Text>
@@ -226,8 +232,16 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
                     borderRadius="lg"
                     fontWeight="600"
                     _hover={{ bg: "purple.700", textDecoration: "none" }}
+                    display="inline-flex"
+                    alignItems="center"
+                    gap={1}
                   >
-                    เปิดค้นหาใน LandsMaps ↗
+                    <span>เปิดค้นหาใน LandsMaps</span>
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </Icon>
                   </Link>
                 </Flex>
 
@@ -249,8 +263,14 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
                         setLatInput(suggestedLat.toFixed(6));
                         setLngInput(suggestedLng.toFixed(6));
                       }}
+                      leftIcon={
+                        <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </Icon>
+                      }
                     >
-                      นำพิกัดแปลงปักบนแผนที่ 📍
+                      นำพิกัดแปลงปักบนแผนที่
                     </Button>
                   </Flex>
                 )}

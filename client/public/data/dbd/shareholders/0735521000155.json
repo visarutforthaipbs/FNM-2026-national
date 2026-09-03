@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0735521000155",
+  "companyName": "นครหลวงกลูโคส จำกัด",
+  "totalShares": 135000,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 16.67,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอภิวิชญ์   แต้มคงคา",
+      "shares": 28500,
+      "sharePercent": 21.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.นุดา   แต้มคงคา",
+      "shares": 13500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายชานน   แต้มคงคา",
+      "shares": 13500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายยศสรัล   แต้มคงคา",
+      "shares": 13500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ริศร์สุ   แต้มคงคา",
+      "shares": 13500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายยง เชา โฮ",
+      "shares": 7500,
+      "sharePercent": 5.56,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายยง เชา ฮัว",
+      "shares": 7500,
+      "sharePercent": 5.56,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายชัย ยง",
+      "shares": 7500,
+      "sharePercent": 5.56,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายญาณทัสน์   แต้มคงคา",
+      "shares": 15000,
+      "sharePercent": 11.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายชัย   แต้มคงคา",
+      "shares": 15000,
+      "sharePercent": 11.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:49:10.204809"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105567244028",
+  "companyName": "ไท่ เฮง ซิ้ง จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเจริญ   แซ่จาง",
+      "shares": 17500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.มยุรฉัตร   ใจเย็น",
+      "shares": 32500,
+      "sharePercent": 65.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:33:28.106258"
+}

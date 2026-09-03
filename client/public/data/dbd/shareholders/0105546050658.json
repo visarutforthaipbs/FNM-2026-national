@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105546050658",
+  "companyName": "อาร์.ดี.แหล่ง กรีน เคมี จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 10.0,
+  "holderCount": 4,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเฉิน   เฉิน ซ่อ เย่อ",
+      "shares": 490000,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางณิชาดา   ณิชาดา เกตุกิติพงศฺ์",
+      "shares": 300000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายปรินทร   คชรัตน์",
+      "shares": 100000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายธนเดช   เกตุกิติพงศ์",
+      "shares": 110000,
+      "sharePercent": 11.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:34:37.422735"
+}

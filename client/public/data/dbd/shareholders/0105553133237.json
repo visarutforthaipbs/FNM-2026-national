@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105553133237",
+  "companyName": "มิตรเกษตร อุทัยธานี จำกัด",
+  "totalShares": 16500000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายณรงค์   เจนลาภวัฒนกุล",
+      "shares": 25000,
+      "sharePercent": 0.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายประพัทธ์   เจนลาภวัฒนกุล",
+      "shares": 25000,
+      "sharePercent": 0.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายประยูร   เจนลาภวัฒนกุล",
+      "shares": 25000,
+      "sharePercent": 0.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายมุ   เจนลาภวัฒนกุล",
+      "shares": 25000,
+      "sharePercent": 0.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "บจ.อุตสาหกรรมมิตรเกษตร",
+      "shares": 9600000,
+      "sharePercent": 58.18,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 6,
+      "name": "บจ.อุทัยธานี ไบโอ เอเนอยี่",
+      "shares": 6800000,
+      "sharePercent": 41.21,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:30:14.249399"
+}

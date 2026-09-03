@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105539085611",
+  "companyName": "สวนอุตสาหกรรม อินทรา จำกัด",
+  "totalShares": 5000000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท สายไฟฟ้าบางกอกเคเบิ้ล จำกัด",
+      "shares": 2599994,
+      "sharePercent": 52.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางทิพพา   นครศรี",
+      "shares": 450003,
+      "sharePercent": 9.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางกรรติกา   ปรีชาหาญ",
+      "shares": 650001,
+      "sharePercent": 13.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวฐิตินันท์   นครศรี",
+      "shares": 650001,
+      "sharePercent": 13.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายทิศพล   นครศรี",
+      "shares": 650001,
+      "sharePercent": 13.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:37:38.052452"
+}

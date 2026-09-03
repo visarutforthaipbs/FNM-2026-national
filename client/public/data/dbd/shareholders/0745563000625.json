@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0745563000625",
+  "companyName": "แกรนด์ เรียลตี้ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.แจ่มใส   พงศ์ปริตร",
+      "shares": 25500,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายลี ฮอร์   พิง",
+      "shares": 20000,
+      "sharePercent": 40.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเจา เซียน   ลี",
+      "shares": 4500,
+      "sharePercent": 9.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:51:08.178091"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105555155475",
+  "companyName": "ทีอาร์ ระยอง (ไทยแลนด์) จำกัด",
+  "totalShares": 12000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายปัณณทัต   ศรีสกุลวนิชย์",
+      "shares": 11760,
+      "sharePercent": 98.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวเพชรรัตน์   แซ่โซ้ง",
+      "shares": 120,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "พล.ต.ท.เจตนากร   นภีตะภัฏ",
+      "shares": 120,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:10:15.486077"
+}

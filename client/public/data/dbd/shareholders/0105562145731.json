@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105562145731",
+  "companyName": "นอร์เต้ จำกัด",
+  "totalShares": 120000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท สิงห์ปาร์ค เชียงราย จำกัด",
+      "shares": 85699,
+      "sharePercent": 71.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายสันติ   ภิรมย์ภักดี",
+      "shares": 34300,
+      "sharePercent": 28.58,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพงษ์รัตน์   เหลืองธำรงเจริญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:40:51.385664"
+}

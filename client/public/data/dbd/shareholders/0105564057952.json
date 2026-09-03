@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105564057952",
+  "companyName": "กรีน เอ็นไวรอนเม้นท์ เทคโนโลยี่ จำกัด",
+  "totalShares": 10500000,
+  "shareValue": 10.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวสมพิศ   ภูผิวเงิน",
+      "shares": 4200000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวปิยะฉัตร   เพชรสงคราม",
+      "shares": 3150000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายไชยา   พิสิฐพิทยเสรี",
+      "shares": 525000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายไพบูลย์   ทนสิงห์",
+      "shares": 525000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายวัชรินทร์   สินถั่ว",
+      "shares": 525000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวพัชรพร   หงษ์วิไล",
+      "shares": 525000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวพิมลภัทร์   อาจคำ",
+      "shares": 1050000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:33:52.116354"
+}

@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105542036723",
+  "companyName": "โบตั๋น รีไซเคิล จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมโภชน์   ชยุติแสงไพศาล",
+      "shares": 50000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางฟ้าหม่น   เพ็ชรธูป",
+      "shares": 60000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายมนู   ชยุติแสงไพศาล",
+      "shares": 50000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.รัชนู   ชยุติแสงไพศาล",
+      "shares": 40000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:24:26.881852"
+}

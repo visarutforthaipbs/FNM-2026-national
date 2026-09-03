@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105564165674",
+  "companyName": "ไทย กรีน เอนไวรอนเมนท์ อินเตอร์เนชั่นนอล กรุ๊ป จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหวัง   ปินฉวน",
+      "shares": 600000,
+      "sharePercent": 60.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายหลิว   ยู่เจิ้น",
+      "shares": 400000,
+      "sharePercent": 40.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:42:28.897848"
+}

@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105567109040",
+  "companyName": "เซิ่งไท่ นิว แมททีเรียล เทคโนโลยี จำกัด",
+  "totalShares": 120000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 45.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ไท้ซิงหัว อินเตอร์เนชั่นแนล(ประเทศไทย) จำกัด",
+      "shares": 11000,
+      "sharePercent": 9.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางสาวDONGMEI   CHEN",
+      "shares": 5000,
+      "sharePercent": 4.17,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายGUOGEN   ZHANG",
+      "shares": 4000,
+      "sharePercent": 3.33,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "บริษัท ไท้ซิงหัว อินเตอร์เนชั่นแนล(ประเทศไทย) จำกัด",
+      "shares": 55000,
+      "sharePercent": 45.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 5,
+      "name": "นางสาวDONGMEI   CHEN",
+      "shares": 25000,
+      "sharePercent": 20.83,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายGUOGEN   ZHANG",
+      "shares": 20000,
+      "sharePercent": 16.67,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:07.016166"
+}

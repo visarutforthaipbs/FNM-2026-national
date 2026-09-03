@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105527034189",
+  "companyName": "ยอดกาแฟไทย จำกัด",
+  "totalShares": 170000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.ปิยะธิดา   มังกรกาญจน์",
+      "shares": 9401,
+      "sharePercent": 5.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายก้อง   มังกรกาญจน์",
+      "shares": 9401,
+      "sharePercent": 5.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกฤตศร   มังกรกาญจน์",
+      "shares": 9401,
+      "sharePercent": 5.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.วินิดา   มังกรกาญจน์",
+      "shares": 108297,
+      "sharePercent": 63.7,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางปรียาจิต   สุกแจ่มใส",
+      "shares": 16250,
+      "sharePercent": 9.56,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางวารี   สดประเสริฐ",
+      "shares": 16250,
+      "sharePercent": 9.56,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.สายรุ้ง   สุภัทรกุล",
+      "shares": 1000,
+      "sharePercent": 0.59,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:00.191871"
+}

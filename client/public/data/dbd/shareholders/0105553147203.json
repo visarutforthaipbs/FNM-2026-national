@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105553147203",
+  "companyName": "เค.ไอ. คอร์ปอเรชั่น จำกัด",
+  "totalShares": 100,
+  "shareValue": 10000.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวอรพิน   ทองผาชะวาก",
+      "shares": 90,
+      "sharePercent": 90.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางคำพอง   บัวสา",
+      "shares": 10,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:22:03.738327"
+}

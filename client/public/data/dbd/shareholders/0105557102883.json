@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105557102883",
+  "companyName": "ไบโอเทค อินดัสทรีส์ จำกัด",
+  "totalShares": 12200000,
+  "shareValue": 5.0,
+  "holderCount": 4,
+  "foreignPercent": 39.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายลีคัวหยวน   เลโอเนต",
+      "shares": 4758000,
+      "sharePercent": 39.0,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวอนงค์ภัทร์   เหลืองอิงคสุต",
+      "shares": 4392000,
+      "sharePercent": 36.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวญาดา นิโคล   ซือ ฉี ลี",
+      "shares": 1220000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอริย์ธัช   พรสุขอนันต์",
+      "shares": 1830000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:32:26.298841"
+}

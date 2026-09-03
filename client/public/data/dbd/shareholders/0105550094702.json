@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105550094702",
+  "companyName": "ชัยยะ นารา จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายศราวุฒิ   ป้อมเรือง",
+      "shares": 40000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวศุภรัตน์   สวนแก้ว",
+      "shares": 7500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวกิร์ตยา   สวนแก้ว",
+      "shares": 2500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:46:26.116550"
+}

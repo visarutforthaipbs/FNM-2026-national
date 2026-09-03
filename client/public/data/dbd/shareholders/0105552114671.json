@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105552114671",
+  "companyName": "คิวเอ็ม แอดดิทีฟ จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายมังกร   เกียงวัฒนา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.บุษบา   ชัยวาระนนท์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายมนตรี   เกียงวัฒนา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "บมจ.ควอลิตี้ มิเนอรัล",
+      "shares": 99997,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:36:18.298476"
+}

@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105543059310",
+  "companyName": "โมโนอินเตอร์โปรดักส์ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมชัย   อรรถวุฒิศิลป์",
+      "shares": 7000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางกัญญา   อรรถวุฒิศิลป์",
+      "shares": 2995,
+      "sharePercent": 29.95,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางวิมาลี   ศุภโชติ",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกิตติ   ศุภโชติ",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางชูจิต   วิโรจน์แสงทอง",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายประวิทย์   สิริวัลย์",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางวิไล   สิริวัลย์",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:39:48.823856"
+}

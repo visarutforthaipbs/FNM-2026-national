@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105531086805",
+  "companyName": "ยูเนี่ยนนิฟโก้ จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 50.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ยูเนี่ยนพลาสติก จำกัด (มหาชน)",
+      "shares": 199976,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท นิฟโก้ อิงค์",
+      "shares": 500000,
+      "sharePercent": 50.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท สหยูเนี่ยน จำกัด (มหาชน)",
+      "shares": 300024,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:33:20.626669"
+}

@@ -1,0 +1,94 @@
+{
+  "registrationNo": "0105506000722",
+  "companyName": "โรงงานลูกกวาดเม่งเซ้ง จำกัด",
+  "totalShares": 7000,
+  "shareValue": 10000.0,
+  "holderCount": 9,
+  "foreignPercent": 25.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวริศร์สุ   แต้มคงคา",
+      "shares": 1943,
+      "sharePercent": 27.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายยศสรัล   แต้มคงคา",
+      "shares": 647,
+      "sharePercent": 9.24,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวนวรัตน์   แต้มคงคา",
+      "shares": 1260,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายยง เชา โฮ",
+      "shares": 350,
+      "sharePercent": 5.0,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายยง เชา ฮัว",
+      "shares": 350,
+      "sharePercent": 5.0,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายชัย ยง",
+      "shares": 350,
+      "sharePercent": 5.0,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายญาณทัสน์   แต้มคงคา",
+      "shares": 700,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายพรสรรฐ   แต้มคงคา",
+      "shares": 700,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางสาวไลล่า   ซาเลห์ โมฮาหมัด อัล ซัควา นี",
+      "shares": 700,
+      "sharePercent": 10.0,
+      "nationality": "โอมาน",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:50.142097"
+}

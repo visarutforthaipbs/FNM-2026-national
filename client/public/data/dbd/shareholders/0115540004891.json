@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0115540004891",
+  "companyName": "เขตประกอบการอุตสาหกรรมฟอกหนัง กม.30 จำกัด",
+  "totalShares": 896,
+  "shareValue": 12050.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บมจ.ชัยวัฒนา แทนเนอรี่ กรุ๊ป",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายพิสิษฐ์   เกียรติสมุทรธารา",
+      "shares": 128,
+      "sharePercent": 14.29,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธงชัย   ทวีโชคทรัพย์สิน",
+      "shares": 256,
+      "sharePercent": 28.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสามารถ   ศรีศักดิ์วรากุล",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายวีระกิจ   ศรีศักดิ์วรากุล",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายเจริญ   ศรีศักดิ์วรากุล",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายเจษฎา   ทรัพย์เปี่ยมลาภ",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.สุนทรียา   ครุฑบิน",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "บจ.ไทยพัฒนาแทนเนอรี่",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 10,
+      "name": "นายสันติ   คูณเอนกสิน",
+      "shares": 64,
+      "sharePercent": 7.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:42:54.776691"
+}

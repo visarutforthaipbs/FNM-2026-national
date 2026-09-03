@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105549116731",
+  "companyName": "ธนดล รีไซเคิล จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายทวี   โตแย้ม",
+      "shares": 15000,
+      "sharePercent": 75.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวอนัญญา   ปรีดาวงศ์",
+      "shares": 4500,
+      "sharePercent": 22.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเด่น   ปรีดาวงศ์",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางจิตรา   ปรีดาวงศ์",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายเฉลี่ย   ปิยะชน",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายสมชาย   ปิยะชน",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวันชัย   โตแย้ม",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:19:17.708653"
+}

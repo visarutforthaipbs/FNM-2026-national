@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0525537000518",
+  "companyName": "ปูนซิเมนต์ไทย (ลำปาง) จำกัด",
+  "totalShares": 94270000,
+  "shareValue": 6.25,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.สยามอุตสาหกรรมวัสดุทนไฟ",
+      "shares": 70000001,
+      "sharePercent": 74.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.ผลิตภัณฑ์และวัตถุก่อสร้าง",
+      "shares": 24269999,
+      "sharePercent": 25.75,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:47:54.069755"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105558062427",
+  "companyName": "ฟ้าจิน หัวช่วง เซอร์วิส จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 40.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.หยุ๋น   เย่า",
+      "shares": 8000,
+      "sharePercent": 40.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางอาทิตยา   หวง",
+      "shares": 12000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:30:51.625430"
+}

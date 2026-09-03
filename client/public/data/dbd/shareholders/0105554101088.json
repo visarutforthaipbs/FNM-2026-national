@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105554101088",
+  "companyName": "ซีเอ็นพี พลาสติกอุตสาหกรรม จำกัด",
+  "totalShares": 350000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายปกครอง   โชคนันทิพร",
+      "shares": 262500,
+      "sharePercent": 75.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายไพโรจน์   โชคนันทิพร",
+      "shares": 43750,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ภัณฑิลา   โชคนันทิพร",
+      "shares": 43750,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:53.039182"
+}

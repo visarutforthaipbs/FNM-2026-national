@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105561156941",
+  "companyName": "เซปโก อินดัสตรีส์ จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัทมหาชนเซปโก เอเชีย กรุ๊ป",
+      "shares": 100000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายวีรพันธุ์   ชยางกูร ณ อยุธยา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเมตตา   วิเศษสมบัติ",
+      "shares": 849999,
+      "sharePercent": 85.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเฉลิม   เทร็ลล์",
+      "shares": 50000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:52:54.131347"
+}

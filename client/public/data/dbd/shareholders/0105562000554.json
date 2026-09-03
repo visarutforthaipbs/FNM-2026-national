@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105562000554",
+  "companyName": "เอ-เทค พลาสแมท จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายยงยุทธ   ตั้งประสิทธิผล",
+      "shares": 45000,
+      "sharePercent": 90.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางเมธ์วดี   ตั้งประสิทธิผล",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:31:30.985429"
+}

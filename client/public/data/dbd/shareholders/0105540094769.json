@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105540094769",
+  "companyName": "เจ เอส บี แคนดี้ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสัญภูมิ   วิเศรษฐาวงศ์",
+      "shares": 47000,
+      "sharePercent": 94.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุชามาศ   วิเศรษฐาวงศ์",
+      "shares": 2000,
+      "sharePercent": 4.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเมธ์ธวัช   วิเศรษฐาวงศ์",
+      "shares": 1000,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:07.150236"
+}

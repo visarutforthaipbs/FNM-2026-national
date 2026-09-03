@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0115543000358",
+  "companyName": "เขตประกอบการอุตสาหกรรมฟอกหนัง ก.ม.34 จำกัด",
+  "totalShares": 2469,
+  "shareValue": 10000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธีรพล   ศิริวัชรไพบูลย์",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายชัชวาล   ศิริวัชรไพบูลย์",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "ห้างหุ้นส่วนสามัญนิติบุคคล โรงงานฟอกหนังเจริญสิน",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "ห้างหุ้นส่วนสามัญนิติบุคคล พี่น้องจุงหว่าง",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 5,
+      "name": "บริษัท โรงงานฟอกหนัง ชัยยิ่งเจริญ จำกัด",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 6,
+      "name": "นายสมศักดิ์   ชัยตฤณธวัช",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "บริษัท เชษฐ์ชัย แทนเนอรี่ จำกัด",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 8,
+      "name": "ห้างหุ้นส่วนจำกัด ช่วงเจริญแทนเนอรี่",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 9,
+      "name": "บริษัท ซี.พี.แอล.กรุ๊ป จำกัด",
+      "shares": 255,
+      "sharePercent": 10.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 10,
+      "name": "ห้างหุ้นส่วนจำกัด โรงงานฟอกหนังไทยยงสิน",
+      "shares": 246,
+      "sharePercent": 9.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:54:25.731223"
+}

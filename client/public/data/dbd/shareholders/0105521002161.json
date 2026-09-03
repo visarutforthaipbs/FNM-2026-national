@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105521002161",
+  "companyName": "บีสไพพ์ฟิตติ้งอินดัสตรี จำกัด",
+  "totalShares": 2800000,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอนันต์   ประสพรัตน์",
+      "shares": 504000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายอภิชาติ   ประสพรัตน์",
+      "shares": 560000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายอภิเชษฐ์   ประสพรัตน์",
+      "shares": 560000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอภิชิต   ประสพรัตน์",
+      "shares": 560000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.จุตินาถ   ประสพรัตน์",
+      "shares": 140000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.วทันยา   ประสพรัตน์",
+      "shares": 140000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสุจิตรา   โลหสุทธยังกูร",
+      "shares": 84000,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.สุธิดา   ประสพรัตน์",
+      "shares": 35000,
+      "sharePercent": 1.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางอภิวรรณ   ประสพรัตน์",
+      "shares": 35000,
+      "sharePercent": 1.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายจักรภพ   ประสพรัตน์",
+      "shares": 182000,
+      "sharePercent": 6.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:55:34.838602"
+}

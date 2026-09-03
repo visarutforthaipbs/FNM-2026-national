@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105544038570",
+  "companyName": "เอ็น.พี.เอ็น.เมทัลเวิร์ค จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายนิพนธ์   จรัญนฤมล",
+      "shares": 30000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางชูศรี   จรัญนฤมล",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.นพรัตน์   จรัญนฤมล",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:12:20.313210"
+}

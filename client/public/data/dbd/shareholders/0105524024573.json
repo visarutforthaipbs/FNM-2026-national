@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105524024573",
+  "companyName": "วัฒนพันธุ์แพคเกจจิ้งซิสเท็ม จำกัด",
+  "totalShares": 2970,
+  "shareValue": 10000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมบูรณ์   ลิมเกรียงไกร",
+      "shares": 1650,
+      "sharePercent": 55.56,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายปรัชญา   ลิมเกรียงไกร",
+      "shares": 150,
+      "sharePercent": 5.05,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ธนาภรณ์   ลิมเกรียงไกร",
+      "shares": 150,
+      "sharePercent": 5.05,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอรุณ   ลิมเกรียงไกร",
+      "shares": 300,
+      "sharePercent": 10.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.วิรัลพัชร   ลิมเกรียงไกร",
+      "shares": 150,
+      "sharePercent": 5.05,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางยุพเรศ   พิริยะพันธุ์",
+      "shares": 330,
+      "sharePercent": 11.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายสิทธัตถ์   ลิมเกรียงไกร",
+      "shares": 75,
+      "sharePercent": 2.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.จิตรสุดา   ลิมเกรียงไกร",
+      "shares": 75,
+      "sharePercent": 2.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "น.ส.นริศรา   ลิมเกรียงไกร",
+      "shares": 30,
+      "sharePercent": 1.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายธันว์   ลิมเกรียงไกร",
+      "shares": 60,
+      "sharePercent": 2.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:24.447431"
+}

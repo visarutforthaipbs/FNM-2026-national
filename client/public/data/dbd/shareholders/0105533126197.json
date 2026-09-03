@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105533126197",
+  "companyName": "ย่งไทยรับเบอร์ จำกัด",
+  "totalShares": 400000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเสถียร   เตชะปัญญารักษ์",
+      "shares": 160000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางชญานุช   เตชะปัญญารักษ์",
+      "shares": 80000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพันธ์วริศ   เตชะปัญญารักษ์",
+      "shares": 80000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายวรงค์พัทธ์   เตชะปัญญารักษ์",
+      "shares": 80000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:34.534056"
+}

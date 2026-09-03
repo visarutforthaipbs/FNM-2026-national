@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105555129121",
+  "companyName": "นภา เอ็นเนอร์ยี่ จำกัด",
+  "totalShares": 400000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายประวิทย์   นภานุรักษ์",
+      "shares": 399999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.อารยา   สงวนทรัพย์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:57:12.163842"
+}

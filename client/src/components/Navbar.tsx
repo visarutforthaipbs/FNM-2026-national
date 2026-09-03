@@ -35,7 +35,6 @@ const Navbar = () => {
     const Links = [
         { name: 'แผนที่', path: '/' },
         { name: 'ภาพรวม', path: '/dashboard' },
-        { name: 'เฝ้าระวังกากฯ', path: '/waste-monitor' },
         { name: 'สมุดบันทึกผลกระทบ', path: '/diary' },
     ];
 
@@ -60,8 +59,8 @@ const Navbar = () => {
                             onClick={isOpen ? onClose : onOpen}
                             variant="ghost"
                             color="slate.500"
-                            minW="40px"
-                            minH="40px"
+                            minW="44px"
+                            minH="44px"
                         />
 
                         {/* Product signature */}

@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105552012983",
+  "companyName": "ที แกลเลอรี่ กรุ๊ป (ประเทศไทย) จำกัด",
+  "totalShares": 172000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวสุวลี   เกียรติ์กรัณย์",
+      "shares": 34400,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวรัชนี   โลกายุทธ์",
+      "shares": 8600,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท เวลเนส ไลฟ์ เซ็นเตอร์ จำกัด",
+      "shares": 87720,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นางสาวสิริรัตน์   จันทเนตร",
+      "shares": 8600,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวญาดา   มหาวงศนันท์",
+      "shares": 8600,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวชนิกานต์   เกียรติ์กรัณย์",
+      "shares": 24080,
+      "sharePercent": 14.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:06.606255"
+}

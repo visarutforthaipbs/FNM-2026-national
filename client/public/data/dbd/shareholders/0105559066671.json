@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105559066671",
+  "companyName": "พานาคอฟฟี่ จำกัด",
+  "totalShares": 500000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพีระ   พนาสุภน",
+      "shares": 245000,
+      "sharePercent": 49.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายคมพิชญ์   พนาสุภน",
+      "shares": 100000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสุภา   พานิชกิจ",
+      "shares": 77000,
+      "sharePercent": 15.4,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวภรณ์ชยา   พนาสุภน",
+      "shares": 75000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวภรณ์ศมน   จรีเวฬุโรจน์",
+      "shares": 3000,
+      "sharePercent": 0.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:48.317336"
+}

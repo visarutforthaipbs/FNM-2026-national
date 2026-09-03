@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105543014308",
+  "companyName": "สยาม เซอร์วิส แอนด์ คอนซัลแทนซี่ จำกัด",
+  "totalShares": 600000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายคริสโตเฟอร์   ริชาร์ด เฮิร์ท",
+      "shares": 294000,
+      "sharePercent": 49.0,
+      "nationality": "อังกฤษ",
+      "nationalityCode": "GB",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางจันทร์   วงศาสตร์",
+      "shares": 288000,
+      "sharePercent": 48.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.อภิชญา   วงศาสตร์",
+      "shares": 18000,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:24:44.107625"
+}

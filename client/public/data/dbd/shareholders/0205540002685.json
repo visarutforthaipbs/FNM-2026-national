@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0205540002685",
+  "companyName": "รีไซเคิล เอ็นจิเนียริ่ง จำกัด",
+  "totalShares": 9000000,
+  "shareValue": 10.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท พี.เอส.พี.สเปเชียลตี้ส์ จำกัด (มหาชน)",
+      "shares": 8999999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายเสกสรร   ครองพาณิชย์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:46:23.745708"
+}

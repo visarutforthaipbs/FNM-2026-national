@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556101816",
+  "companyName": "โฟคัส เวก บางนา จำกัด",
+  "totalShares": 810000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท โฟคัส เวก คอร์ปอเรชั่น จำกัด",
+      "shares": 809998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายอนุชา   สิหนาทกถากุล",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายอัลบอง   การิม โคลัค กาสตอง กาซิเมีย",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ฝรั่งเศส",
+      "nationalityCode": "FR",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:48:00.548017"
+}

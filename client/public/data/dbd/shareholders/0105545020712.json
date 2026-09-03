@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105545020712",
+  "companyName": "ควอลิตี้ เอ็กซ์ทรูชั่น จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายทนงค์   หว้าหวัด",
+      "shares": 47105,
+      "sharePercent": 47.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวสุทัศนีย์   วิณวันก์",
+      "shares": 52466,
+      "sharePercent": 52.47,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกรุงศรี   เอกผล",
+      "shares": 399,
+      "sharePercent": 0.4,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสัญชัย   เอกผล",
+      "shares": 10,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางวรรณี   เอกผล",
+      "shares": 10,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสุชีรา   เอกผล",
+      "shares": 10,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:01.349698"
+}

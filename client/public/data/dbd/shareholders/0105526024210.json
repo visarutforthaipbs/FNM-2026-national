@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105526024210",
+  "companyName": "คิงไว จำกัด",
+  "totalShares": 800000,
+  "shareValue": 100.0,
+  "holderCount": 8,
+  "foreignPercent": 37.01,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางเฉิน   เอทเฮล",
+      "shares": 200779,
+      "sharePercent": 25.1,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายซิวปั๊กมาน   โจอาคิม",
+      "shares": 40000,
+      "sharePercent": 5.0,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายตัน เหงียน เฉียว",
+      "shares": 41269,
+      "sharePercent": 5.16,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางพูลสุข   แน๊กส์",
+      "shares": 375728,
+      "sharePercent": 46.97,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายปัญญา   แช่มเชื้อ",
+      "shares": 48000,
+      "sharePercent": 6.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายโดมินิค จอน   เพนตัน",
+      "shares": 14000,
+      "sharePercent": 1.75,
+      "nationality": "อังกฤษ",
+      "nationalityCode": "GB",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางเรเชล   เพ็นตัน",
+      "shares": 40112,
+      "sharePercent": 5.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางซาราห์   ทิมส์",
+      "shares": 40112,
+      "sharePercent": 5.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:36.784550"
+}

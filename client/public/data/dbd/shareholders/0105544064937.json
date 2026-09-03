@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105544064937",
+  "companyName": "ไทย ซิง ไฮโดรคาร์บอน จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 43.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายโชคชัย   เชิญเจริญ",
+      "shares": 113992,
+      "sharePercent": 57.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวCHANG, CHIN-LIN",
+      "shares": 44000,
+      "sharePercent": 22.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายCHANG, CHENG-HUNG",
+      "shares": 42000,
+      "sharePercent": 21.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวรัตนวิมล   ชลศิริพงษ์",
+      "shares": 4,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายธีรพจน์   บุญคล้าย",
+      "shares": 4,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:01:22.570574"
+}

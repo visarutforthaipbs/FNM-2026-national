@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105558188498",
+  "companyName": "บางปะอิน เวสต์ เมเนจเมนท์ จำกัด",
+  "totalShares": 5250000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เอนเนอร์จี แอนด์ เอนไวรอนเมนทัล คอนซัลติ้ง กรุ๊ป (โฮลดิ้ง) จำกัด",
+      "shares": 5145000,
+      "sharePercent": 98.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายณัฎฐวัฒน์   วุฒิ",
+      "shares": 52500,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายบัณฑิต   รัตนศิริทรัพย์",
+      "shares": 52500,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:31:32.464017"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105564095161",
+  "companyName": "เมธีกรีนพลัส จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางภัคธนัทกันต์   รุจิศักดิ์เมธี",
+      "shares": 30000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายอธิศกิตติ์   รุจิศักดิ์เมธี",
+      "shares": 15000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ภัคณพัชร์   รุจิศักดิ์เมธี",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:45:56.689638"
+}

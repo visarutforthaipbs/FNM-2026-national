@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105554129934",
+  "companyName": "อุบลซันฟลาวเวอร์ จำกัด",
+  "totalShares": 1440000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท อุบล ไบโอ เอทานอล จำกัด (มหาชน)",
+      "shares": 1439998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท ไทยออยล์ เอทานอล จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท บีบีจีไอ จำกัด (มหาชน)",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:41:24.286170"
+}

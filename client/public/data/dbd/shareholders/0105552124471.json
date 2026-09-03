@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105552124471",
+  "companyName": "เพชรพูล อินเตอร์เทรด จำกัด",
+  "totalShares": 45000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวรัตนภัณฑ์   พิทักษ์พลางกูล",
+      "shares": 44996,
+      "sharePercent": 99.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายกนกพันธ์   ทองประกาย",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพยนต์   กิตติพิชัย",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:35.673867"
+}

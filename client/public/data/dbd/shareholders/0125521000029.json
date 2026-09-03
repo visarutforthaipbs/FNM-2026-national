@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0125521000029",
+  "companyName": "จอมธนา จำกัด",
+  "totalShares": 15183608,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 99.98,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ฮ่องกง จิงอัง เทรด โฮลดิ้ง คัมปะนี ลิมิเต็ด",
+      "shares": 15179229,
+      "sharePercent": 99.97,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายชี เลียง สอ",
+      "shares": 750,
+      "sharePercent": 0.0,
+      "nationality": "มาเลเซีย",
+      "nationalityCode": "MY",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางวรรณทิพย์   กาลกฤษณ์",
+      "shares": 315,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสุรินทร์   โกสิยางกูร",
+      "shares": 1260,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายเทพ   คณาศักดิ์",
+      "shares": 200,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางเพ็ญจันทร์   คำเมืองปลูก",
+      "shares": 131,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.ฆรณี   จันทรปรรณิก",
+      "shares": 418,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายพงศ์ธร   ใจสำราญ",
+      "shares": 180,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางพงษ์ศิริ   ใจสำราญ",
+      "shares": 180,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "ด.ญ.เอมกมล   ใจสำราญ",
+      "shares": 945,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:44:14.998800"
+}

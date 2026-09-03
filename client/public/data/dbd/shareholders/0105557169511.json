@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105557169511",
+  "companyName": "เอ็นเนอจี ซัพพลาย แอนด์ แมเนจเมนท์ จำกัด",
+  "totalShares": 80000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกิติวิช   สุวรรณะสกุน",
+      "shares": 26668,
+      "sharePercent": 33.34,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธนัทเสฏฐ์   สุวรรณะพชร",
+      "shares": 26666,
+      "sharePercent": 33.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายศักดิ์พงศ์   พชรสุวรรณะ",
+      "shares": 26666,
+      "sharePercent": 33.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:12:49.029884"
+}

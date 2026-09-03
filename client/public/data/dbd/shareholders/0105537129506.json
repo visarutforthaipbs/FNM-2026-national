@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105537129506",
+  "companyName": "ซุ่นฮวดค้าเศษกระดาษ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเพิ่มศักดิ์   พงษ์สุขเวชกุล",
+      "shares": 7000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวณภัค   พงษ์สุขเวชกุล",
+      "shares": 3000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:11:27.962731"
+}

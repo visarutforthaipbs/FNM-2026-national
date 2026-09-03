@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105541073439",
+  "companyName": "เจ แอนด์ เค อินเตอร์ เนเชอรัล จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสรวิชญ์   ประยูรพัฒน์",
+      "shares": 3500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางกัญญา   ประยูรพัฒน์",
+      "shares": 3500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวแก้วทิพย์   ประยูรพัฒน์",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวทิพย์นรินทร์   ประยูรพัฒน์",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวสุรียทิพย์   ประยูรพัฒน์",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:58:31.975458"
+}

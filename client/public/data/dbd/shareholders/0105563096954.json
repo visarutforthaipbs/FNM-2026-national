@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105563096954",
+  "companyName": "กิจรุ่งเรืองถาวร จำกัด",
+  "totalShares": 180000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 8.89,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวอาภัสรา   ภักดีวัฒนานิกุล",
+      "shares": 164000,
+      "sharePercent": 91.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวเฉิน   ฮัวฟาง",
+      "shares": 2500,
+      "sharePercent": 1.39,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเฉิน   ฮัวซิน",
+      "shares": 13500,
+      "sharePercent": 7.5,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:01:21.894125"
+}

@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105550087935",
+  "companyName": "กำจัดของเสียไทย จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพศิน   วีระสัย",
+      "shares": 128900,
+      "sharePercent": 64.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางรัชกร   พานทอง",
+      "shares": 1000,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "ร.อ.ณภดล   ปิ่นทอง",
+      "shares": 1000,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาววริศนันท์   พรเชี่ยวชาญ",
+      "shares": 500,
+      "sharePercent": 0.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางทัศนวรรณ   หิรัญสรงค์",
+      "shares": 2000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายพิสุทธิ์   ขจรเวศิน",
+      "shares": 66600,
+      "sharePercent": 33.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:19:56.707962"
+}

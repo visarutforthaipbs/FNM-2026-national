@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105547052565",
+  "companyName": "แคลกอน คาร์บอน (ประเทศไทย) จำกัด",
+  "totalShares": 360000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 20.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ซี.ไจ แกนติคคาร์บอน",
+      "shares": 287993,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายอนุวัฒน์   ฤทัยยานนท์",
+      "shares": 3,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางดวงพร   ฤทัยยานนท์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.อโนชา   ฤทัยยานนท์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายนิพนธ์   มหกฤติยากร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายสมพล   ริ้วทอง",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "บจ.CALGON CARBON DRIVE CORPOTATION",
+      "shares": 72000,
+      "sharePercent": 20.0,
+      "nationality": "อเมริกัน",
+      "nationalityCode": "US",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:53:11.580711"
+}

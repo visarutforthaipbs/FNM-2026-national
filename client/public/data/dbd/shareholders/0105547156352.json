@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105547156352",
+  "companyName": "แอดเทค ดีไวซ์เซส (ประเทศไทย) จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.ศุชญา   พงศ์พฤกษา",
+      "shares": 48500,
+      "sharePercent": 97.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.สรัญภร   พงศ์พฤกษา",
+      "shares": 500,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.สุปรียา   พงศ์พฤกษา",
+      "shares": 500,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายบุญยง   ชัยชูสอน",
+      "shares": 500,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:29:01.738189"
+}

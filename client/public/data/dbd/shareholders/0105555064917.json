@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105555064917",
+  "companyName": "เอชเจเค กรุ๊ป จำกัด",
+  "totalShares": 80000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 19.5,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายจำรัส   พลายกระสินธิ์",
+      "shares": 64400,
+      "sharePercent": 80.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายจาง หง",
+      "shares": 8000,
+      "sharePercent": 10.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวหวง ชาง",
+      "shares": 7600,
+      "sharePercent": 9.5,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:47:32.047589"
+}

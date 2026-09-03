@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105565025728",
+  "companyName": "พี.ที.เค. ออยล์เทค จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวสุคัคคณา   กองสุดใจ",
+      "shares": 35000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายพรชัย   เลิศเวชกุล",
+      "shares": 15000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:51:58.329735"
+}

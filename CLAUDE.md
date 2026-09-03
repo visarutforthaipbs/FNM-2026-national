@@ -63,7 +63,8 @@ The Firebase and Supabase variables must be configured in the Vercel project set
 ### Routes (`client/src/App.tsx`, react-router)
 - **`/` — MapPage**: main map with sidebar. Overview mode shows a province choropleth; selecting a province loads its markers.
 - **`/dashboard` — DashboardPage** (lazy-loaded): nationwide stats from `dashboard_stats.json` plus a per-province factory explorer querying Supabase directly (search, sort, pagination).
-- **`/waste-monitor` — WasteMonitorPage** (lazy-loaded): waste-handling factories (DIW types 101/105/106) across DIW watch provinces.
+- **`/diary` — UserDiaryPage** (lazy-loaded): community impact reports diary and user watchlist.
+- **`/admin` — AdminPage** (lazy-loaded): moderation UI for pending reports and location corrections.
 
 ### Core Components
 - **App.tsx**: state for user location, selected factory, filters; shareable URL sync (`?province=`, `?factory=`, `?type=` query params)

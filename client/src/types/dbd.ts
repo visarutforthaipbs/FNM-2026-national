@@ -8,6 +8,7 @@ export interface DbdOwner {
   nationality: string | null;
   shareAmount: number | null;
   sharePercent: number | null;
+  isCorporate?: boolean;
 }
 
 export interface DbdFinancialSnapshot {
@@ -52,6 +53,20 @@ export interface DbdFactoryProfile {
    * fetched when the reader asks for them.
    */
   hasDetail: boolean;
+  /** Whether official individual shareholder registry (บอจ.5 / SHC) has been verified */
+  hasShareholderCheck?: boolean;
+  /** DBD registered business objective (วัตถุประสงค์นิติบุคคล) */
+  businessObjective?: string | null;
+  /** Thailand Standard Industrial Classification (TSIC 2009) code */
+  tsicCode?: string | null;
+}
+
+export interface DbdShareholderMeta {
+  totalShares: number;
+  shareValue: number;
+  foreignPercent: number;
+  hasOffshore: boolean;
+  offshoreEntities?: string[];
 }
 
 /** Loaded on disclosure, from /data/dbd/{province}.detail.json. */
@@ -59,4 +74,7 @@ export interface DbdFactoryDetail {
   directors: DbdDirector[];
   owners: DbdOwner[];
   financial: DbdFinancialSnapshot | null;
+  shareholderMeta?: DbdShareholderMeta | null;
+  businessObjective?: string | null;
+  tsicCode?: string | null;
 }

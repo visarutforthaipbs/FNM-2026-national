@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105533086250",
+  "companyName": "สยามคราฟท์ เฮ้าส์ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมชาย   แซ่อู่",
+      "shares": 3000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายบุญชู   แซ่อู่",
+      "shares": 5000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายชัชวาลย์   อังวิบูลย์",
+      "shares": 250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.วลัย   ทวีทรัพย์มงคล",
+      "shares": 250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายพรชัย   รัตนลิขิต",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.สีนวล   แซ่อู่",
+      "shares": 250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายแมนชัย   แซ่อู่",
+      "shares": 250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:10:41.600883"
+}

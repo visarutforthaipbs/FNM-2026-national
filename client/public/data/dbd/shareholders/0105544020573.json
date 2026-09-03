@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105544020573",
+  "companyName": "โอเอ็ม เทคโนส จำกัด",
+  "totalShares": 51200,
+  "shareValue": 1000.0,
+  "holderCount": 2,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายฮิโรโนบุ   มิซูโนะ",
+      "shares": 25000,
+      "sharePercent": 48.83,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัทโอโนมิจิ ไคฮัทสึ จำกัด",
+      "shares": 26200,
+      "sharePercent": 51.17,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:39:04.139689"
+}

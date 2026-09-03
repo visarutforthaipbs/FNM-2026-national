@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105542094791",
+  "companyName": "304 อินดัสเตรียล ปาร์ค 19 จำกัด",
+  "totalShares": 51834000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายปิยะชัย   สงวนชีพ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท สินสุขใจ จำกัด",
+      "shares": 4853382,
+      "sharePercent": 9.36,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท ไอทาวน์ โฮลดิ้ง จำกัด (มหาชน)",
+      "shares": 46980617,
+      "sharePercent": 90.64,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:59:44.951422"
+}

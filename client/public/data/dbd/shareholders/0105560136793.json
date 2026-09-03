@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105560136793",
+  "companyName": "ฮุยหาง เทคโนโลยี อุตสาหกรรม (ไทยแลนด์) จำกัด",
+  "totalShares": 5315000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 46.5,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.จงเฉิน อุตสาหกรรม",
+      "shares": 2710650,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายเจี้ยนจง   (Mr.Jianzhong Lyu)",
+      "shares": 2365175,
+      "sharePercent": 44.5,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายยี่หัน หวัง   (Mr.Yihan Wang)",
+      "shares": 106300,
+      "sharePercent": 2.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายวีรกิตติ์   ชัยกุลวราพันธ์",
+      "shares": 106300,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายเจริญ   ยกย่องประเสริฐ",
+      "shares": 26575,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:51:42.122466"
+}

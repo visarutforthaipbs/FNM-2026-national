@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105549023708",
+  "companyName": "คอมพาส คอร์ปอเรชั่น จำกัด",
+  "totalShares": 250000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.จักรภพสินทรัพย์",
+      "shares": 187500,
+      "sharePercent": 75.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายพิทยา   อังกินันทน์",
+      "shares": 20000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายวิรัช   สุทธิโรจน์พัฒนา",
+      "shares": 20000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเกรียงศักดิ์   หวังเสต",
+      "shares": 15000,
+      "sharePercent": 6.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายศิลชัย   หวังเจริญเวทย์",
+      "shares": 7500,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:03:25.050857"
+}

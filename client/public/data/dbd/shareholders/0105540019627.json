@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105540019627",
+  "companyName": "เอเซีย แปซิฟิค ปิโตรเคมิคอล จำกัด",
+  "totalShares": 10000000,
+  "shareValue": 10.0,
+  "holderCount": 8,
+  "foreignPercent": 77.61,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางณพสรา   สาธิตเกษม",
+      "shares": 900000,
+      "sharePercent": 9.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายพงษ์ศักดิ์   ตังหงษ์",
+      "shares": 77000,
+      "sharePercent": 0.77,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายไพศิลป์   ลิมป์ทองทิพย์",
+      "shares": 600000,
+      "sharePercent": 6.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกมล   อรรถกร",
+      "shares": 100000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "UNIPAC COLORS (S) PTE LTD",
+      "shares": 6223000,
+      "sharePercent": 62.23,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "Toyota Tsusho Corporation",
+      "shares": 1538000,
+      "sharePercent": 15.38,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 7,
+      "name": "นายชูชีพ   ลิมปนาวรวงศ์",
+      "shares": 300000,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายจรูญโรจน์   สาธิตเกษม",
+      "shares": 262000,
+      "sharePercent": 2.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:39:08.640585"
+}

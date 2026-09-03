@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105537046473",
+  "companyName": "วิทย์คอร์ป โปรดักส์ จำกัด",
+  "totalShares": 31015343,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ดับบลิวทีเอช",
+      "shares": 19097865,
+      "sharePercent": 61.58,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายวิทย์   วุฒิพุธนันท์",
+      "shares": 1958200,
+      "sharePercent": 6.31,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสมใจ   วุฒิพุธนันท์",
+      "shares": 5153200,
+      "sharePercent": 16.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.วรมน   วุฒิพุธนันท์",
+      "shares": 1811585,
+      "sharePercent": 5.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายธนัท   วุฒิพุธนันท์",
+      "shares": 1811585,
+      "sharePercent": 5.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.กนกรัตน์   แต้ไพสิฐพงษ์",
+      "shares": 234381,
+      "sharePercent": 0.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวนัส   แต้ไพสิฐพงษ์",
+      "shares": 234373,
+      "sharePercent": 0.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายวรัญ   แต้ไพสิฐพงษ์",
+      "shares": 234373,
+      "sharePercent": 0.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายวสิษฐ   แต้ไพสิฐพงษ์",
+      "shares": 234373,
+      "sharePercent": 0.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "น.ส.กิตติวรรณ   แต้ไพสิฐพงษ์",
+      "shares": 245408,
+      "sharePercent": 0.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:59:54.538188"
+}

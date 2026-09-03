@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105538057509",
+  "companyName": "โลหะไทยสเตนเลส จำกัด",
+  "totalShares": 20000,
+  "shareValue": 10000.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายบริบูรณ์   เก่งรุ่งเรืองชัย",
+      "shares": 10000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวสุวรรณา   เก่งรุ่งเรืองชัย",
+      "shares": 10000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:30:37.542258"
+}

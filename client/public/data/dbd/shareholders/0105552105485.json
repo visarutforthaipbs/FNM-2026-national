@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105552105485",
+  "companyName": "เจริญ อินเตอร์ สตาร์ช จำกัด",
+  "totalShares": 453827,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ชลเจริญกรุ๊ป จำกัด",
+      "shares": 200,
+      "sharePercent": 0.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายชุมพล   ขจรเฉลิมศักดิ์",
+      "shares": 72800,
+      "sharePercent": 16.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเกรียงไกร   ขจรเฉลิมศักดิ์",
+      "shares": 72800,
+      "sharePercent": 16.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางภาวิณี   ขจรเฉลิมศักดิ์",
+      "shares": 72800,
+      "sharePercent": 16.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายจามิกร   ขจรเฉลิมศักดิ์",
+      "shares": 72800,
+      "sharePercent": 16.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางจุฑารัตน์   แซ่อึ๊ง",
+      "shares": 36000,
+      "sharePercent": 7.93,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายธราธร   ขจรเฉลิมศักดิ์",
+      "shares": 73000,
+      "sharePercent": 16.09,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายสุรเชษฐ์   ขจรเฉลิมศักดิ์",
+      "shares": 28420,
+      "sharePercent": 6.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายชิดชัย   มุตตานันทกุล",
+      "shares": 22849,
+      "sharePercent": 5.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายพรภวิษย์   ศิริวงศ์ชัย",
+      "shares": 2158,
+      "sharePercent": 0.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:41:07.146101"
+}

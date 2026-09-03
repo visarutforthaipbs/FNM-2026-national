@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105549035617",
+  "companyName": "สมูธ อินเตอร์เนชั่นแนล จำกัด",
+  "totalShares": 2000000,
+  "shareValue": 50.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมเกียรติ   ลิมปศิลป์",
+      "shares": 954607,
+      "sharePercent": 47.73,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท บาเอเว่น",
+      "shares": 609384,
+      "sharePercent": 30.47,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นายสิทธิเดช   ชวนะเวสน์",
+      "shares": 216009,
+      "sharePercent": 10.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเอกภพ   หริ่มเจริญ",
+      "shares": 2500,
+      "sharePercent": 0.12,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายชำนาญ   ภูริปัญญวานิช",
+      "shares": 100000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายวสันต์   โชติวิจิตรรัตน์",
+      "shares": 62500,
+      "sharePercent": 3.12,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายสนั่น   อำนวยเรืองศรี",
+      "shares": 25000,
+      "sharePercent": 1.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายวิบูลย์   กิจนันทวิวัฒน์",
+      "shares": 15000,
+      "sharePercent": 0.75,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายอัครวินท์   ทันตวงษ์",
+      "shares": 10000,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายพสยุ   อิศรเสนา ณ อยุธยา",
+      "shares": 5000,
+      "sharePercent": 0.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:03:36.520466"
+}

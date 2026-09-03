@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105531085485",
+  "companyName": "ลัคกี้แคนเนอรี่ จำกัด",
+  "totalShares": 322000,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายณัฐพงษ์   ศรีเสาวกุล",
+      "shares": 62000,
+      "sharePercent": 19.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายณัฎฐพงษ์   ศรีเสาวกุล",
+      "shares": 46500,
+      "sharePercent": 14.44,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายนพดล   ศรีเสาวกุล",
+      "shares": 43500,
+      "sharePercent": 13.51,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวสุภาวดี   ศรีเสาวกุล",
+      "shares": 19500,
+      "sharePercent": 6.06,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "ศิรินธร   ศรีเสาวกุล",
+      "shares": 19500,
+      "sharePercent": 6.06,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวภณชนก   ศรีเสาวกุล",
+      "shares": 19500,
+      "sharePercent": 6.06,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายณภัทรวัฒน์   ศาศวัดตระกูล",
+      "shares": 1500,
+      "sharePercent": 0.47,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายนพดล   ศรีเสาวกุล",
+      "shares": 58000,
+      "sharePercent": 18.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางสาวสุภาวดี   ศรีเสาวกุล",
+      "shares": 26000,
+      "sharePercent": 8.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นางสาวศิริธร   ศรีเสาวกุล",
+      "shares": 26000,
+      "sharePercent": 8.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:31:54.465700"
+}

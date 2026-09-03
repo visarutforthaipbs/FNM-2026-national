@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105523005117",
+  "companyName": "เกรทฟู๊ด (ดิไฮเดรชั่น) จำกัด",
+  "totalShares": 40000,
+  "shareValue": 1000.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางมณี   แซ่ลิ้ม",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.วราวรรณ   แซ่ลิ้ม",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.วาริณี   แซ่ลิ้ม",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "บจ.วีเอ็มวี ฟู๊ด",
+      "shares": 39997,
+      "sharePercent": 99.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:29:24.931457"
+}

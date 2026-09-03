@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105545045090",
+  "companyName": "นีค อินเตอร์ คอร์ปอเรชั่น จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายณัฐวุฒิ   หวังธนาโชติ",
+      "shares": 18000,
+      "sharePercent": 36.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายณัฐพล   หวังธนาโชติ",
+      "shares": 16000,
+      "sharePercent": 32.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ณัฐณิช   หวังธนาโชติ",
+      "shares": 16000,
+      "sharePercent": 32.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:01:39.883147"
+}

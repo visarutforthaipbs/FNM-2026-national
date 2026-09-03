@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105531064143",
+  "companyName": "เอ็ม - พีอี อินดัสทรี จำกัด",
+  "totalShares": 5000,
+  "shareValue": 1000.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เอ็ม-พีอี อินซูเลชั่น จำกัด",
+      "shares": 1340,
+      "sharePercent": 26.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางไพเราะห์   พึ่งทอง",
+      "shares": 1000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.วิริยา   พึ่งทอง",
+      "shares": 530,
+      "sharePercent": 10.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายไชยวุฒิ์   พึ่งทอง",
+      "shares": 1599,
+      "sharePercent": 31.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางอัมภิณี   โรจนเสนา",
+      "shares": 530,
+      "sharePercent": 10.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางน้ำค้าง   พึ่งทอง",
+      "shares": 1,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:32:42.903253"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105557088252",
+  "companyName": "ลี ฟุง รีไซเคิล จำกัด",
+  "totalShares": 80000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวกันยารัตน์   พรรษไพศาล",
+      "shares": 800,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวธิดารัตน์   ปัญภูชนะ",
+      "shares": 40000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายโปวา   เอ็นจิ",
+      "shares": 39200,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:32:53.847261"
+}

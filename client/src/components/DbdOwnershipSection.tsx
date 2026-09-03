@@ -17,10 +17,16 @@ import { useDbdDetail, useDbdProfile } from "../hooks/useDbdProfile";
 import { summarizeNationalities } from "../utils/nationality";
 import type { NationalityShare } from "../utils/nationality";
 
+import { evaluateObjectiveMatch, getTsicDescription } from "../utils/tsic";
+
 interface DbdOwnershipSectionProps {
   factoryId: string;
   /** English province name — selects which static ownership file to load. */
   provinceEn: string | null;
+  /** Factory operation permitted by DIW (ประกอบกิจการ) */
+  factoryObjective?: string | null;
+  /** Factory industry type/class (จำพวก/ประเภทโรงงาน) */
+  factoryType?: string | null;
 }
 
 const compactBaht = new Intl.NumberFormat("th-TH", {
@@ -82,6 +88,35 @@ const GlobeIcon = () => (
   </Icon>
 );
 
+const PersonIcon = () => (
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </Icon>
+);
+
+const CheckCircleIcon = () => (
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3}>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <polyline points="22 4 12 14.01 9 11.01" />
+  </Icon>
+);
+
+const AlertTriangleIcon = () => (
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+    <line x1="12" y1="9" x2="12" y2="13" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </Icon>
+);
+
+const BriefcaseIcon = () => (
+  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
+    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  </Icon>
+);
+
 /**
  * Section shell. Every state — loading, error, unmatched, loaded — renders
  * inside it, so this panel never reads as one more DIW field: DIW says what the
@@ -110,7 +145,12 @@ const DbdShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </Box>
 );
 
-const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, provinceEn }) => {
+const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({
+  factoryId,
+  provinceEn,
+  factoryObjective,
+  factoryType,
+}) => {
   const { profile, isLoading, hasLoaded, error, retry } = useDbdProfile(factoryId, provinceEn);
   const [isExpanded, setIsExpanded] = useState(false);
   // Directors, shareholders and financials are half the exported bytes and
@@ -219,12 +259,137 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
         </SimpleGrid>
       )}
 
+      {/* BUSINESS TYPE & PERMIT COMPARISON (วัตถุประสงค์นิติบุคคล DBD เทียบกับใบอนุญาต DIW) */}
+      {(() => {
+        const objectiveText = profile.businessObjective || detail?.businessObjective;
+        const tsic = profile.tsicCode || detail?.tsicCode;
+        const tsicDesc = getTsicDescription(tsic);
+        const matchResult = evaluateObjectiveMatch(factoryObjective, objectiveText, tsic);
+
+        return (
+          <Box mt={3.5} pt={3.5} borderTop="1px solid" borderColor="#E4EDF1">
+            <Flex align="center" justify="space-between" mb={2} wrap="wrap" gap={1.5}>
+              <Flex align="center" gap={1.5} color="slate.600">
+                <BriefcaseIcon />
+                <Text fontSize="xs" fontWeight="700">ประเภทธุรกิจ (DBD)</Text>
+              </Flex>
+              <Flex align="center" gap={1.5}>
+                {tsic && (
+                  <Badge
+                    bg="blue.50"
+                    color="blue.700"
+                    borderRadius="full"
+                    px={2}
+                    py={0.2}
+                    fontSize="9px"
+                    fontWeight="700"
+                  >
+                    TSIC {tsic}
+                  </Badge>
+                )}
+                {objectiveText && (
+                  <Badge
+                    bg={
+                      matchResult.status === "match"
+                        ? "green.50"
+                        : matchResult.status === "discrepancy"
+                        ? "amber.50"
+                        : "slate.100"
+                    }
+                    color={
+                      matchResult.status === "match"
+                        ? "green.700"
+                        : matchResult.status === "discrepancy"
+                        ? "amber.800"
+                        : "slate.600"
+                    }
+                    border="1px solid"
+                    borderColor={
+                      matchResult.status === "match"
+                        ? "green.200"
+                        : matchResult.status === "discrepancy"
+                        ? "amber.300"
+                        : "slate.200"
+                    }
+                    borderRadius="full"
+                    px={2}
+                    py={0.2}
+                    fontSize="9px"
+                    fontWeight="700"
+                  >
+                    {matchResult.label}
+                  </Badge>
+                )}
+              </Flex>
+            </Flex>
+
+            {/* DBD Objective Content */}
+            <Box p={2.5} bg="slate.50" borderRadius="lg" border="1px solid" borderColor="slate.200">
+              <Text fontSize="xs" color="slate.800" fontWeight="500" lineHeight="1.5">
+                {objectiveText || (
+                  tsicDesc ? (
+                    <Text as="span" color="slate.700">{tsicDesc}</Text>
+                  ) : (
+                    <Text as="span" color="slate.400" fontStyle="italic">
+                      อยู่ระหว่างรวบรวมข้อมูลวัตถุประสงค์ DBD
+                    </Text>
+                  )
+                )}
+              </Text>
+            </Box>
+
+            {/* Comparison against DIW Permit */}
+            {factoryObjective && (
+              <Box mt={2} p={2.5} bg="white" borderRadius="lg" border="1px dashed" borderColor="#CBD5E1">
+                <Flex align="center" justify="space-between" mb={1} wrap="wrap" gap={1}>
+                  <Text fontSize="10px" fontWeight="700" color="slate.500">
+                    เทียบกับประเภทกิจการตามใบอนุญาตโรงงาน (DIW)
+                  </Text>
+                  {factoryType && (
+                    <Badge fontSize="9px" colorScheme="gray" variant="subtle" borderRadius="full" px={1.5}>
+                      {factoryType.startsWith("ลำดับ") ? factoryType : `จำพวก/ลำดับที่ ${factoryType}`}
+                    </Badge>
+                  )}
+                </Flex>
+                <Text fontSize="xs" color="slate.700" lineHeight="1.5">
+                  {factoryObjective}
+                </Text>
+                {matchResult.reason && objectiveText && (
+                  <Text fontSize="10px" color={matchResult.status === "discrepancy" ? "amber.700" : "slate.400"} mt={1}>
+                    หมายเหตุ: {matchResult.reason}
+                  </Text>
+                )}
+              </Box>
+            )}
+          </Box>
+        );
+      })()}
+
       {/* LAYER 2: Minimal Visual Shareholder Nationality Breakdown */}
       <Box mt={4} pt={4} borderTop="1px solid" borderColor="#E4EDF1">
-        <Flex align="center" justify="space-between" mb={2.5}>
+        <Flex align="center" justify="space-between" mb={2.5} wrap="wrap" gap={2}>
           <Flex align="center" gap={2} color="slate.600">
             <GlobeIcon />
             <Text fontSize="xs" fontWeight="700">สัญชาติผู้ถือหุ้น</Text>
+            {profile.hasShareholderCheck && (
+              <Badge
+                bg="teal.50"
+                color="teal.700"
+                border="1px solid"
+                borderColor="teal.200"
+                borderRadius="full"
+                px={2}
+                py={0.5}
+                fontSize="9px"
+                fontWeight="700"
+                display="inline-flex"
+                alignItems="center"
+                gap={1}
+              >
+                <CheckCircleIcon />
+                บอจ.5 ตรวจสอบแล้ว
+              </Badge>
+            )}
           </Flex>
           {nationalities.hasForeign && (
             <Badge bg="#0B3558" color="white" borderRadius="full" px={2.5} py={0.5} fontSize="10px" fontWeight="700">
@@ -360,6 +525,116 @@ const DbdOwnershipSection: React.FC<DbdOwnershipSectionProps> = ({ factoryId, pr
           </Box>
 
           <Divider borderColor="#E4EDF1" />
+
+          {/* SHAREHOLDERS LIST (บอจ.5 / รายชื่อผู้ถือหุ้น) */}
+          {detail?.owners && detail.owners.length > 0 && (
+            <>
+              <Box>
+                <Flex align="center" justify="space-between" mb={2.5}>
+                  <Flex align="center" gap={2} color="slate.600">
+                    <PeopleIcon />
+                    <Text fontSize="xs" fontWeight="700">
+                      {profile.hasShareholderCheck ? "รายชื่อผู้ถือหุ้น (บอจ.5)" : "รายชื่อผู้มีอำนาจ / หุ้นส่วน"}
+                    </Text>
+                  </Flex>
+                  {detail.shareholderMeta?.totalShares ? (
+                    <Text fontSize="10px" color="slate.400">
+                      {detail.shareholderMeta.totalShares.toLocaleString()} หุ้น
+                    </Text>
+                  ) : null}
+                </Flex>
+
+                {detail.shareholderMeta?.hasOffshore && (
+                  <Box mb={3} p={2.5} bg="amber.50" border="1px solid" borderColor="amber.200" borderRadius="lg">
+                    <Flex align="flex-start" gap={2}>
+                      <Box color="amber.600" mt={0.5} flexShrink={0}>
+                        <AlertTriangleIcon />
+                      </Box>
+                      <Box>
+                        <Text fontSize="xs" fontWeight="700" color="amber.900">
+                          ตรวจพบนิติบุคคลจดทะเบียนต่างแดน / แดนภาษี (Offshore)
+                        </Text>
+                        <Text fontSize="10px" color="amber.800" mt={0.5}>
+                          {detail.shareholderMeta.offshoreEntities?.join(", ")}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                )}
+
+                <VStack align="stretch" spacing={2}>
+                  {detail.owners.map((owner, idx) => (
+                    <Box
+                      key={`${owner.name}-${idx}`}
+                      p={2.5}
+                      bg="white"
+                      borderRadius="lg"
+                      border="1px solid"
+                      borderColor="#E4EDF1"
+                    >
+                      <Flex justify="space-between" align="center" gap={2} mb={1}>
+                        <Flex align="center" gap={1.5} minW={0}>
+                          <Box color={owner.isCorporate ? "#0B3558" : "slate.500"} flexShrink={0}>
+                            {owner.isCorporate ? <BuildingIcon /> : <PersonIcon />}
+                          </Box>
+                          <Text fontSize="xs" fontWeight="700" color="slate.800" noOfLines={1} title={owner.name}>
+                            {owner.name}
+                          </Text>
+                        </Flex>
+                        <Flex align="center" gap={1.5} flexShrink={0}>
+                          <Badge
+                            fontSize="9px"
+                            borderRadius="full"
+                            px={1.5}
+                            py={0.2}
+                            bg={owner.isCorporate ? "blue.50" : "gray.100"}
+                            color={owner.isCorporate ? "blue.700" : "slate.600"}
+                          >
+                            {owner.isCorporate ? "นิติบุคคล" : "บุคคลธรรมดา"}
+                          </Badge>
+                          {owner.nationality && (
+                            <Badge
+                              fontSize="9px"
+                              borderRadius="full"
+                              px={1.5}
+                              py={0.2}
+                              bg={owner.nationality === "ไทย" ? "primary.50" : "#0B3558"}
+                              color={owner.nationality === "ไทย" ? "primary.700" : "white"}
+                            >
+                              {owner.nationality}
+                            </Badge>
+                          )}
+                        </Flex>
+                      </Flex>
+
+                      <Flex justify="space-between" align="center" mt={1}>
+                        <Text fontSize="10px" color="slate.500">
+                          {owner.shareAmount ? `${owner.shareAmount.toLocaleString()} หุ้น` : "—"}
+                        </Text>
+                        {owner.sharePercent !== null && (
+                          <Text fontSize="10px" fontWeight="700" color="#0B3558">
+                            {formatPercent(owner.sharePercent)}
+                          </Text>
+                        )}
+                      </Flex>
+
+                      {owner.sharePercent !== null && (
+                        <Box h="3px" bg="slate.100" borderRadius="full" overflow="hidden" mt={1}>
+                          <Box
+                            h="full"
+                            bg={owner.nationality === "ไทย" ? "primary.500" : "#0B3558"}
+                            w={`${Math.min(owner.sharePercent, 100)}%`}
+                          />
+                        </Box>
+                      )}
+                    </Box>
+                  ))}
+                </VStack>
+              </Box>
+
+              <Divider borderColor="#E4EDF1" />
+            </>
+          )}
 
           <Box>
             <Text fontSize="xs" color="slate.600" fontWeight="700" mb={2}>

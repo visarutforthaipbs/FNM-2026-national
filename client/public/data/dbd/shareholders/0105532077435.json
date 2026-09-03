@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105532077435",
+  "companyName": "เซิ่งไท่ บราซแวร์ (ประเทศไทย) จำกัด",
+  "totalShares": 3056854,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางเอ เม่ย   หวง",
+      "shares": 217754,
+      "sharePercent": 7.12,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเจีย จิ้น   พาน",
+      "shares": 310500,
+      "sharePercent": 10.16,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายหยู่ ฟงส์   พาน",
+      "shares": 197500,
+      "sharePercent": 6.46,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายหยง ไท่   พาน",
+      "shares": 197500,
+      "sharePercent": 6.46,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายเซิ่ง หยาง   พาน",
+      "shares": 197500,
+      "sharePercent": 6.46,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวเหม่ย หวี้   จ้าว",
+      "shares": 713000,
+      "sharePercent": 23.32,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายหลี่ ฮุ่ย   หลง",
+      "shares": 369000,
+      "sharePercent": 12.07,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายเฉินฝู    เหวิน",
+      "shares": 381400,
+      "sharePercent": 12.48,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายเจิ้ง เทียน   ไท่",
+      "shares": 255300,
+      "sharePercent": 8.35,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นางเดอโบร่าห์   ซิมมอนส์",
+      "shares": 217400,
+      "sharePercent": 7.11,
+      "nationality": "อเมริกัน",
+      "nationalityCode": "US",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:32:50.563957"
+}

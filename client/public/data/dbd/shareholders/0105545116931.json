@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105545116931",
+  "companyName": "เอ.ที.อี. เทเลคอม คอนสตรัคชั่น จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายณรงค์   ปิยะโลหะวัฒน์",
+      "shares": 43000,
+      "sharePercent": 86.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวุฒิชัย   ปิยะโลหะวัฒน์",
+      "shares": 7000,
+      "sharePercent": 14.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:12:47.473575"
+}

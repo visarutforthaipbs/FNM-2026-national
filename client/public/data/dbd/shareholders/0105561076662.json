@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105561076662",
+  "companyName": "ไพร์ม สแตนเลส สยาม จำกัด",
+  "totalShares": 300000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ลักซ์ซอร์ อินเวสต์แอสเซ็ทซ์ ลิมิเต็ด (Luxor Invest Assets)",
+      "shares": 299997,
+      "sharePercent": 100.0,
+      "nationality": "ไอซ์แลนด์",
+      "nationalityCode": "OT",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายใจ การันต์   ซิงห์ (Mr.Jai Karan Singh)",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "อินเดีย",
+      "nationalityCode": "IN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายราจัท กุมาร์   กุบต้า (Mr.Rajat Kumar Gupta)",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "อินเดีย",
+      "nationalityCode": "IN",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายซูชิล กุมาร์   บันซาล (Mr.Sushil Kumar Bansal)",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "อินเดีย",
+      "nationalityCode": "IN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:23:16.951891"
+}

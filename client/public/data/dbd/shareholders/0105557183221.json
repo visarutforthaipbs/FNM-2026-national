@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105557183221",
+  "companyName": "อีบีพี เมทอล 2014 จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายณัชพล   เขื่อนสกุล",
+      "shares": 14400,
+      "sharePercent": 72.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.จินห์นิภัส   เกตน์ธนศักดิ์",
+      "shares": 5600,
+      "sharePercent": 28.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:13:04.159493"
+}

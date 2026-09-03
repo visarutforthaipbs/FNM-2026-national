@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553135736",
+  "companyName": "ไทยซินเซีย พลาสติก จำกัด",
+  "totalShares": 400000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายทรงชัย   ตรงสุจริตสิน",
+      "shares": 284760,
+      "sharePercent": 71.19,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายปิยณัฐ   ตรงสุจริตสิน",
+      "shares": 57620,
+      "sharePercent": 14.41,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายณัฐชวิน   ตรงสุจริตสิน",
+      "shares": 57620,
+      "sharePercent": 14.41,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:38.739452"
+}

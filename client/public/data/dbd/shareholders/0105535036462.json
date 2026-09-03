@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105535036462",
+  "companyName": "เพค อินดัสทรีส์ จำกัด",
+  "totalShares": 14000,
+  "shareValue": 1000.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมมาต   ขุนเศษฐ",
+      "shares": 1517,
+      "sharePercent": 10.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท แพนเอเซียฟุตแวร์ จำกัด (มหาชน)",
+      "shares": 10308,
+      "sharePercent": 73.63,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท แอดแวนเทจ ฟุตแวร์ จำกัด",
+      "shares": 1585,
+      "sharePercent": 11.32,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นายวิชิต   ประยูรวิวัฒน์",
+      "shares": 140,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายธนกร   ตรีพลอักษร",
+      "shares": 150,
+      "sharePercent": 1.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวสุนทรา   ฐิติวร",
+      "shares": 300,
+      "sharePercent": 2.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:46:19.670621"
+}

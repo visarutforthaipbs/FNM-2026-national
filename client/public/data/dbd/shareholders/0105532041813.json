@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105532041813",
+  "companyName": "กานาไทย อินดัสเทรียล จำกัด",
+  "totalShares": 400000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเฉียน-ซู   ชิว",
+      "shares": 201700,
+      "sharePercent": 50.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.ณธิดา   ชิว",
+      "shares": 2300,
+      "sharePercent": 0.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.เหว่ย ถิง   ชิว",
+      "shares": 196000,
+      "sharePercent": 49.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:33:34.263815"
+}

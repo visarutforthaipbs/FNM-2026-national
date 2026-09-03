@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105544067243",
+  "companyName": "เมทเทิลคอม จำกัด",
+  "totalShares": 4500000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายถกล   ธนเลิศลาภ",
+      "shares": 2250000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางอรุณรักษ์   ธนเลิศลาภ",
+      "shares": 900000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางอรุณรักษ์   ธนเลิศลาภ",
+      "shares": 450000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกิตติพศ   ธนเลิศลาภ",
+      "shares": 450000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ภัทรกร   ธนเลิศลาภ",
+      "shares": 450000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:25:25.039072"
+}

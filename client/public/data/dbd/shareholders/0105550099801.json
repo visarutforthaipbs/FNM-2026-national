@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105550099801",
+  "companyName": "ทีเอ็มซี เมททัล (ไทยแลนด์) จำกัด",
+  "totalShares": 40000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเชา   ซี เหลียง",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเชา   ซี หมิง",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท ทีเอ็มซี (เคเมน) โฮลดิ้ง คอร์ปอเรชั่น จำกัด",
+      "shares": 39998,
+      "sharePercent": 100.0,
+      "nationality": "ไอซ์แลนด์",
+      "nationalityCode": "OT",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:04:42.897558"
+}

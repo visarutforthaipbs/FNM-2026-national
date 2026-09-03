@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0145551000663",
+  "companyName": "เอ็นเอ็มบี-มินีแบ ไทย จำกัด",
+  "totalShares": 174553636,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท มินีแบ มิตซูมิ อิงค์",
+      "shares": 174553634,
+      "sharePercent": 100.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "น.ส.สุนี   เชิดชูชาติ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท มิตซูมิ(ไทยแลนด์)จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:45:03.300200"
+}

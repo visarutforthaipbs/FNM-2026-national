@@ -29,12 +29,18 @@ type RawProfile = {
   v?: number;                    // human-verified
   nat?: RawNationality[];        // aggregate nationality split
   hd?: number;                   // a detail record exists
+  shc?: number;                  // verified shareholder check (SHC / บอจ.5)
+  obj?: string;                  // registered business objective
+  tsic?: string;                 // TSIC 2009 code
 };
 
 type RawDetail = {
   d?: string[];                  // directors
-  o?: RawOwner[];                // named shareholders (partnerships only)
+  o?: RawOwner[];                // named shareholders
   f?: { y: string; r: number | null; p: number | null; a: number | null };
+  sh?: { tot: number; val: number; for_pct: number; offshore: boolean; offshore_list?: string[] };
+  obj?: string;                  // registered business objective
+  tsic?: string;                 // TSIC 2009 code
 };
 
 interface UseDbdProfileResult {
@@ -97,6 +103,9 @@ function normalize(factoryId: string, raw: RawProfile): DbdFactoryProfile {
     humanVerified: raw.v === 1,
     nationalities,
     hasDetail: raw.hd === 1,
+    hasShareholderCheck: raw.shc === 1,
+    businessObjective: raw.obj ?? null,
+    tsicCode: raw.tsic ?? null,
   };
 }
 
@@ -208,12 +217,28 @@ async function loadProvinceDetail(slug: string): Promise<Record<string, RawDetai
 function normalizeDetail(raw: RawDetail): DbdFactoryDetail {
   return {
     directors: (raw.d ?? []).map((name) => ({ name, role: "กรรมการ" })),
-    owners: (raw.o ?? []).map((o) => ({
-      name: o.n,
-      nationality: o.c ?? null,
-      shareAmount: o.a ?? null,
-      sharePercent: o.p ?? null,
-    })),
+    owners: (raw.o ?? []).map((o) => {
+      const name = o.n || "";
+      const isCorp = Boolean(
+        name.startsWith("บริษัท") ||
+          name.startsWith("บจ.") ||
+          name.startsWith("บมจ.") ||
+          name.startsWith("หจก.") ||
+          name.includes("จำกัด") ||
+          name.includes("Holding") ||
+          name.includes("Corp") ||
+          name.includes("Ltd") ||
+          name.includes("การเคหะแห่งชาติ") ||
+          name.includes("Double coin")
+      );
+      return {
+        name,
+        nationality: o.c ?? null,
+        shareAmount: o.a ?? null,
+        sharePercent: o.p ?? null,
+        isCorporate: isCorp,
+      };
+    }),
     financial: raw.f
       ? {
           year: raw.f.y,
@@ -224,6 +249,17 @@ function normalizeDetail(raw: RawDetail): DbdFactoryDetail {
           netProfit: raw.f.p,
         }
       : null,
+    shareholderMeta: raw.sh
+      ? {
+          totalShares: raw.sh.tot,
+          shareValue: raw.sh.val,
+          foreignPercent: raw.sh.for_pct,
+          hasOffshore: raw.sh.offshore,
+          offshoreEntities: raw.sh.offshore_list,
+        }
+      : null,
+    businessObjective: raw.obj ?? null,
+    tsicCode: raw.tsic ?? null,
   };
 }
 

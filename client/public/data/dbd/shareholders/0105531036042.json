@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105531036042",
+  "companyName": "เอ็ม.ไทย เอสเตท จำกัด",
+  "totalShares": 29999700,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัทธนาคารทหารไทยธนชาต จำกัด(มหาชน)",
+      "shares": 3000000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางสุภาภรณ์   วีระเมธีกุล",
+      "shares": 23997600,
+      "sharePercent": 79.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัทเอส.ที.เค.ลิสซิ่ง จำกัด",
+      "shares": 3000000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นายประชัย   เลี่ยวไพรัตน์",
+      "shares": 1000,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายนิวัฒน์   โตอมรพันธุ์",
+      "shares": 400,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายสุวิทย์   ธนียวัน",
+      "shares": 100,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายประฉิม   ทาปัญญา",
+      "shares": 100,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายประภาส   จักกะพาก",
+      "shares": 100,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายปกรณ์   บุญเยี่ยม",
+      "shares": 100,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายเชาวรัตน์   เชาวน์ชวานิล",
+      "shares": 300,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:30:48.286603"
+}

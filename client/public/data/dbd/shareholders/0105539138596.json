@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105539138596",
+  "companyName": "เอ็น.วี. เนวารา จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพิภพ   ไตรพัชรพัฒน์",
+      "shares": 81000,
+      "sharePercent": 81.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.ชุติมน   บัวสุวรรณ",
+      "shares": 15000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายปองคุณ   บัวสุวรรณ",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาธนี   บัวสุวรรณ",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางวชิรารัตน์   ตุลย์ไตรรักษ์",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.กัลยา   เต็มพลาธินนท์",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:47:15.582061"
+}

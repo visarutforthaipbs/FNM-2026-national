@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0305531000500",
+  "companyName": "พี.ซี.เอส.เอสเตท จำกัด",
+  "totalShares": 2200000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางวรรณา   เรามานะชัย",
+      "shares": 330000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายภาคภูมิ   รุ่งโรจน์กิติยศ",
+      "shares": 110000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายบัลลังก์   รุ่งโรจน์กิติยศ",
+      "shares": 440000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายศิริพงษ์   รุ่งโรจน์กิติยศ",
+      "shares": 440000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายอังกฤษ   รุ่งโรจน์กิติยศ",
+      "shares": 440000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายพลเอก   รุ่งโรจน์กิติยศ",
+      "shares": 440000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:47:37.027065"
+}

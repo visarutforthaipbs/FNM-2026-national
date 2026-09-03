@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105535133760",
+  "companyName": "ซี.เอ็ม.กัมมี่ จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเฉลิมกิจ   จตุรงคสัมฤทธิ์",
+      "shares": 55000,
+      "sharePercent": 27.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.อิรพร   อรรถศิวานนท์",
+      "shares": 55000,
+      "sharePercent": 27.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ยุพคุณ   จตุรงคสัมฤทธิ์",
+      "shares": 45000,
+      "sharePercent": 22.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.ศุภนิจ   จตุรงคสัมฤทธิ์",
+      "shares": 45000,
+      "sharePercent": 22.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:33:25.945443"
+}

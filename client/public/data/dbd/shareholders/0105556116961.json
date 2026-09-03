@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556116961",
+  "companyName": "ที.พี.สหมิตร กรุ๊ป จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายนันทวุฒิ   รูปคม",
+      "shares": 990000,
+      "sharePercent": 99.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายบรรลือ   ศรีสุข",
+      "shares": 5000,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางอัญชลี   ศรีสุข",
+      "shares": 5000,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:15:32.683989"
+}

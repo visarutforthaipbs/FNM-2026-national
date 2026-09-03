@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105541068613",
+  "companyName": "ปูนซิเมนต์ไทย (ทุ่งสง) จำกัด",
+  "totalShares": 35000000,
+  "shareValue": 20.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ผลิตภัณฑ์และวัตถุก่อสร้าง",
+      "shares": 34999999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "น.ส.แก้วสวรรค์   อมตชีวิน",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:38:21.268478"
+}

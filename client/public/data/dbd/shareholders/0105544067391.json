@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105544067391",
+  "companyName": "บางปู เอนไวรอนเมนทอล คอมเพล็กซ์ จำกัด",
+  "totalShares": 4200000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท โดวะ เมทัลเทค (ไทยแลนด์) จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท โดวะ อีโค ซิสเต็ม จำกัด",
+      "shares": 4199998,
+      "sharePercent": 100.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท โดวะ เทอร์โมเทค (ประเทศไทย) จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:39:58.235937"
+}

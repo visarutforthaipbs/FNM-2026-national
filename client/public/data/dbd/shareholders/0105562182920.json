@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105562182920",
+  "companyName": "หวง ไท่ ไทร์ (ไทยแลนด์) จำกัด",
+  "totalShares": 40000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายตงฮุย   หม่า",
+      "shares": 19600,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสินชัย   เปรื่องค้า",
+      "shares": 6800,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวจันทรา   ประทุมมา",
+      "shares": 6800,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวสุภาภรณ์   ทิพมนต์",
+      "shares": 6800,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:52:15.030266"
+}

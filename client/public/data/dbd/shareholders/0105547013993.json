@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105547013993",
+  "companyName": "เอ็ม.เอ็ม.สตีล จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพิเชษฐ   วิสุทธิชีพ",
+      "shares": 6000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวมาธินี   พัฒนสิริเจริญ",
+      "shares": 4000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวจุฑามาศ   วิสุทธิชีพ",
+      "shares": 4000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายณัฐวุฒิ   วิสุทธิชีพ",
+      "shares": 36000,
+      "sharePercent": 72.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:27:28.576729"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105567049934",
+  "companyName": "สตาริเวอร์ เอ็นไวรอนเมนทอล โพรเทคชั่น เทคโนโลยี (ไทยแลนด์) จำกัด",
+  "totalShares": 2500000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เอชซี เมทัลส์ จำกัด",
+      "shares": 975000,
+      "sharePercent": 39.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "STARIVER ENVIRONMENT (HONGKONG) CO., LIMITED",
+      "shares": 1225000,
+      "sharePercent": 49.0,
+      "nationality": "ฮ่องกง",
+      "nationalityCode": "HK",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาววันเพ็ญ   วราโชติเดชากร",
+      "shares": 300000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:49:18.123784"
+}

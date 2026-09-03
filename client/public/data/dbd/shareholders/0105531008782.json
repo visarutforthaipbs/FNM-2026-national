@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105531008782",
+  "companyName": "ทัศนีย์ภัณฑ์ จำกัด",
+  "totalShares": 20000,
+  "shareValue": 1000.0,
+  "holderCount": 4,
+  "foreignPercent": 31.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวยู่ ถิง   เฉิน",
+      "shares": 6200,
+      "sharePercent": 31.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางยี่ เจิน   เฉิน",
+      "shares": 7200,
+      "sharePercent": 36.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวนรลักษณ์   จิรเมธี",
+      "shares": 3600,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวยู่ หวง   เฉิน",
+      "shares": 3000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:31:41.121571"
+}

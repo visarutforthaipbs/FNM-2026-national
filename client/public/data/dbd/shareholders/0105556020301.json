@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556020301",
+  "companyName": "สยามคราฟท์อุตสาหกรรม จำกัด",
+  "totalShares": 34500000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บมจ.บริษัทเอสซีจี แพคเกจจิ้ง จำกัด (มหาชน)",
+      "shares": 34499998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางภัทรวรรณ   ตุ้นสกุล",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ประพาฬรัตน์   ตั้งวิริยะไพบูลย์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:32:05.663608"
+}

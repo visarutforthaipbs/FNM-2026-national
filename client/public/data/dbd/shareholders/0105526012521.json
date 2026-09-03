@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105526012521",
+  "companyName": "เยเนอรัลแคนดี้ จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายไพศาล   อังคเศกวิไล",
+      "shares": 480000,
+      "sharePercent": 48.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางอมรรัตน์   อังคเศกวิไล",
+      "shares": 399995,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางจิตรดี   พูลวรลักษณ์",
+      "shares": 30001,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.จิตราภา   อังคเศกวิไล",
+      "shares": 30002,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.จิราภรณ์   อังคเศกวิไล",
+      "shares": 30001,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.จินตวีร์   อังคเศกวิไล",
+      "shares": 30001,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:31.852422"
+}

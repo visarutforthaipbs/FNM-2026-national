@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105562196050",
+  "companyName": "โกลเด้นไทย รับเบอร์ เทค จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 9.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเอนก   เสริมไพรวัลย์",
+      "shares": 49000,
+      "sharePercent": 49.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.ทัศนีย์วรรณ   เอี่ยมละออ",
+      "shares": 21000,
+      "sharePercent": 21.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.นิธิพร   สุดก้องไพร",
+      "shares": 21000,
+      "sharePercent": 21.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเฉียวเฟย   ซ่ง",
+      "shares": 9000,
+      "sharePercent": 9.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:58:16.078002"
+}

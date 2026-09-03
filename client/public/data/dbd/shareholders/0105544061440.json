@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105544061440",
+  "companyName": "โออิชิ เทรดดิ้ง จำกัด",
+  "totalShares": 4200000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท โออิชิ กรุ๊ป จำกัด (มหาชน)",
+      "shares": 4199990,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท กฤตยบุญ จำกัด",
+      "shares": 6,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท ไทยดริ้งค์ จำกัด",
+      "shares": 4,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:39:21.722959"
+}

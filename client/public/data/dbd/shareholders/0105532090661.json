@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105532090661",
+  "companyName": "บริษัท อุตสาหกรรมกระดาษคราฟท์ไทย จำกัด",
+  "totalShares": 20000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัทบริษัท เอสซีจี เปเปอร์ จำกัด (มหาชน)",
+      "shares": 19999998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางพรเพ็ญ   นามวงษ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวประพาฬรัตน์   ตั้งวิริยะไพบูลย์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:33:43.753282"
+}

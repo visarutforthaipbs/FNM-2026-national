@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105533002803",
+  "companyName": "นิว สราญรมย์ ไอศกรีม จำกัด",
+  "totalShares": 4000,
+  "shareValue": 1000.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชุมพล   แม้นสุขมณี",
+      "shares": 2000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางปณิตา   แม้นสุขมณี",
+      "shares": 1150,
+      "sharePercent": 28.75,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายปัณณทัต   แม้นสุขมณี",
+      "shares": 250,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายวรธนัท   แม้นสุขมณี",
+      "shares": 250,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายณิชพน   แม้นสุขมณี",
+      "shares": 250,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายพศิน   แม้นสุขมณี",
+      "shares": 50,
+      "sharePercent": 1.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายกสานดิ์   บุตตะโยธี",
+      "shares": 50,
+      "sharePercent": 1.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:50.318659"
+}

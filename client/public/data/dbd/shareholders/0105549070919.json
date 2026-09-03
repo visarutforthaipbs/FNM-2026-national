@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105549070919",
+  "companyName": "ฟูเกน (ประเทศไทย) จำกัด",
+  "totalShares": 575000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ฟูเกน คอร์ปอเรชั่น",
+      "shares": 281750,
+      "sharePercent": 49.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายรัฐพงศ์   รัตนภุมมะ",
+      "shares": 283250,
+      "sharePercent": 49.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บจ.เอ็มยูเอฟจี โฮลดิ้ง (ประเทศไทย)",
+      "shares": 10000,
+      "sharePercent": 1.74,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:22.341416"
+}

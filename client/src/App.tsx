@@ -15,7 +15,6 @@ import { AuthProvider } from "./context/AuthContext";
 import { WatchlistProvider } from "./context/WatchlistContext";
 
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
-const WasteMonitorPage = lazy(() => import("./pages/WasteMonitorPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const UserDiaryPage = lazy(() => import("./pages/UserDiaryPage"));
 
@@ -235,14 +234,6 @@ function App() {
                 element={
                   <Suspense fallback={null}>
                     <DashboardPage />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/waste-monitor"
-                element={
-                  <Suspense fallback={null}>
-                    <WasteMonitorPage />
                   </Suspense>
                 }
               />

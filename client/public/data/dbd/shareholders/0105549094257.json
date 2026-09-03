@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105549094257",
+  "companyName": "ดับเบิลยูที รีไซเคิล จำกัด",
+  "totalShares": 100,
+  "shareValue": 10000.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางโสภา   อ่างแก้ว",
+      "shares": 7,
+      "sharePercent": 7.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเกียรติศักดิ์   เอี่ยมพงษ์",
+      "shares": 40,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสายหยุด   เอี่ยมพงษ์",
+      "shares": 4,
+      "sharePercent": 4.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายวิทูล   เอี่ยมพงษ์",
+      "shares": 49,
+      "sharePercent": 49.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:13.755561"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553122189",
+  "companyName": "น้ำตาลทิพย์สุโขทัย จำกัด",
+  "totalShares": 14000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.อุตสาหกรรมน้ำตาลสุพรรณบุรี",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.น้ำตาลทิพย์กำแพงเพชร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บจ.น้ำตาล คริสตอลลา",
+      "shares": 13999998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:27:11.258792"
+}

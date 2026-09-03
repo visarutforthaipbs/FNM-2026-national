@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105564088955",
+  "companyName": "รีไซเคิลเดย์ จำกัด",
+  "totalShares": 460000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชนัมภ์   ชวนิชย์",
+      "shares": 128700,
+      "sharePercent": 27.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายพรธวัช   เพ่งศรี",
+      "shares": 25200,
+      "sharePercent": 5.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท เด็พธเพิร์สท จำกัด",
+      "shares": 111600,
+      "sharePercent": 24.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นายจามร   แซ่เบ๊",
+      "shares": 109500,
+      "sharePercent": 23.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.พันธิตรา   ใหม่โสภา",
+      "shares": 41000,
+      "sharePercent": 8.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.พรทิพา   พรล้ำฟ้า",
+      "shares": 44000,
+      "sharePercent": 9.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:17:41.029963"
+}

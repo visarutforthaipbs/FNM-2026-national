@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105547010986",
+  "companyName": "โอทีที อินเตอร์ เทคโนโลยี จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพีรพล   คงราศรี",
+      "shares": 8750,
+      "sharePercent": 87.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายอัฒรุต   คงราศรี",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางชษินี   คงราศรี",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางกัณฑกานต์   จันทร์เดิม",
+      "shares": 250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:54:19.179139"
+}

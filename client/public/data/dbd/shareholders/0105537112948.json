@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105537112948",
+  "companyName": "โลตัส พลาสติก จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.จารุณา   วัดเข้าหลาม",
+      "shares": 9500,
+      "sharePercent": 95.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.พรเพ็ญ   จินดาวานิชสกุล",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:48:00.302420"
+}
