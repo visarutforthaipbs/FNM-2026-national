@@ -1,20 +1,10 @@
 {
  "factories_checked": 62656,
- "inside_tagged_province": 61961,
+ "inside_tagged_province": 61964,
  "within_border_tolerance": 486,
  "border_tolerance_km": 2.0,
- "mismatched": 209,
+ "mismatched": 206,
  "rows": [
-  {
-   "id": "จ3-34(1)-18/49อด",
-   "name": "ห้างหุ้นส่วนจำกัด ทรัพย์เจริญค้าไม้ 99",
-   "tagged": "อุดรธานี",
-   "actual": "กระบี่",
-   "lng": 99.08661,
-   "lat": 8.10595,
-   "km_outside": 1052.24,
-   "coord_quality": "gov"
-  },
   {
    "id": "3-34(4)-30/55ชย",
    "name": "บริษัท อะกรอไทย ไบโอแมส ซอสซิ่ง จำกัด",
@@ -23,16 +13,6 @@
    "lng": 99.149452323677,
    "lat": 8.8680688088923,
    "km_outside": 754.74,
-   "coord_quality": "gov"
-  },
-  {
-   "id": "3-52(3)-22/56สก",
-   "name": "บริษัท ศรีตรังแอโกรอินดัสทรี จำกัด (มหาชน)",
-   "tagged": "สระแก้ว",
-   "actual": "ตรัง",
-   "lng": 99.578189805198,
-   "lat": 7.4977385594005,
-   "km_outside": 689.73,
    "coord_quality": "gov"
   },
   {
@@ -83,16 +63,6 @@
    "lng": 99.18776,
    "lat": 9.114154,
    "km_outside": 594.93,
-   "coord_quality": "gov"
-  },
-  {
-   "id": "จ3-37-230/53ชร",
-   "name": "เรือนจำกลางเชียงราย",
-   "tagged": "เชียงราย",
-   "actual": "นนทบุรี",
-   "lng": 100.489312,
-   "lat": 13.849442,
-   "km_outside": 581.18,
    "coord_quality": "gov"
   },
   {

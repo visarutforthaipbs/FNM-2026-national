@@ -512,12 +512,12 @@
     }
   },
   "countByCoordSource": {
-    "geocoded": 3044,
-    "gov": 39035,
+    "geocoded": 3043,
+    "gov": 39031,
     "sibling": 568,
-    "community": 1,
+    "community": 3,
     "centroid": 19960,
-    "admin": 36,
+    "admin": 39,
     "none": 728,
     "repaired": 12
   }
