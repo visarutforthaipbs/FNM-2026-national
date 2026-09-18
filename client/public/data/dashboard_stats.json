@@ -1,8 +1,8 @@
 {
   "total": 63384,
   "highRiskCount": 57163,
-  "totalCapital": 7760057368566.199,
-  "totalWorkers": 3347235,
+  "totalCapital": 7760106668566.199,
+  "totalWorkers": 3347464,
   "countByType": {
     "1": 47,
     "2": 3287,
@@ -513,11 +513,11 @@
   },
   "countByCoordSource": {
     "geocoded": 3043,
-    "gov": 39031,
+    "gov": 39021,
     "sibling": 568,
     "community": 3,
     "centroid": 19960,
-    "admin": 39,
+    "admin": 49,
     "none": 728,
     "repaired": 12
   }
