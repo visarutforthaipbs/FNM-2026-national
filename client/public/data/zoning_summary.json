@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-17 03:16:16",
+ "generated_at": "2026-10-18 03:09:55",
  "source": "DPT PLLU_ALL (municipal) + PLLU_VIEW/PLLU_PROV (provincial land use) + TOWNPLAN/TP_MAIN (provincial extents), via dpt.plan_polygon",
  "factories_tested": 62656,
  "inside_a_dpt_zone": 46186,
