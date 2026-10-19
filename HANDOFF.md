@@ -1173,3 +1173,100 @@ thousands.
   factories missing from the map.
 - The `/admin` drift queue and publish-visibility work (steps 3 and 4 of the
   plan) were not started.
+
+## 13. Session — 2026-10-19: the feed was never broken — the guard latched onto a FULL night
+
+Opened as "diw-collector failing nightly since Aug 12 — investigate
+truncation". Ended with the premise corrected and §12.3's oscillation pinned
+to a population, a mechanism and a dashboard comparison. Every number below
+was re-verified on 2026-10-19 by re-running the archived probes on sev01; the
+full command log is `INVESTIGATION-2026-10-19-DIW-FEED.md` in this repo.
+
+### 13.1 The premise was wrong: 11 failure days, not nightly since Aug 12
+
+`journalctl -u diw-collector --since 2026-08-01` shows exactly **11** failed
+runs: **Aug 12** (one-off) and **Oct 10 – Oct 19** (ten consecutive).
+
+Aug 12 was a genuine transport truncation — `IncompleteRead` on
+Business_Location, 4/5 endpoints collected — the failure mode we feared, and
+it surfaced loudly as `fetch_error`. Aug 13 – Oct 9 were 66–68 accepted
+collections per endpoint (`~/diw-archive/manifest.jsonl`: 0 rejections before
+Oct). Oct 10–19 are something else: ten consecutive `truncated` rejections
+from the row-ratio guard, and nothing else wrong.
+
+### 13.2 The guard caught a FULL snapshot, and the baseline latched onto it
+
+`collect.py`'s 0.90 floor is computed against the *previous accepted* run. On
+**2026-10-09 02:31 ICT** the collector happened to catch the FULL state —
+`Factory_Data` 274,437 (+39,679) — so the floor jumped to **246,993** and the
+`Sum_*` floor to 195,894. Every run since has served the NARROW state
+(234,026–234,546, −14.7 %; `Sum_*` 179,063–179,558, −17.7 %) and has been
+correctly rejected. `MIN_ROW_RATIO` and `collect.py` remain unchanged; the
+archive's last accepted blob is still that 2026-10-09 02:31 FULL snapshot.
+
+The two states are not on a daily cadence — they are served **minutes apart
+inside one run** (2026-10-19: NARROW at 02:38 and 03:04, then FULL 274,436 /
+217,660 at 03:05–03:07, then NARROW for all 31 daytime samples 11:16–11:44).
+Both states carry the same `last_update=2026-10-18`, so the FULL payload is
+fresh, not a stale cache. A registry cannot lose and regain 40,410 factories
+in 27 minutes. §12.3's "~33,000" now measures at **40,409** ids.
+
+### 13.3 NARROW hides 40,409 factories — 90.3 % of them operating
+
+NARROW ⊂ FULL (40,409 ids absent, 1 extra) and membership is stable: 39,679
+of the missing were also absent from the 2026-10-07 low snapshot; 730 out, 1
+in, over 12 days. Of the missing **36,501 are `FFLAG=1` (ดำเนินการ) = 90.3 %**
+and 39,826 are `FACTYPE=3` (จำพวก 3) = 98.6 %. The excluded rows are the
+*better documented* ones — LAT/LNG on 63.3 % vs 27.3 % of the kept, STARTDATE
+94.3 % vs 67.0 % — i.e. the operating fleet, not dead records.
+
+Against DIW's own executive dashboard
+(`reg.diw.go.th/executive/thailand3.asp`, "ณ วันที่ 18 พ.ค. 69", re-fetched
+2026-10-19: นอกนิคมฯ 47 + 3,347 + 67,179 = **70,573 ดำเนินการ**):
+
+| view | จำพวก 1 | จำพวก 2 | จำพวก 3 | `FFLAG=1` total | vs 70,573 |
+|---|---:|---:|---:|---:|---:|
+| FULL (274,437) | **47** | 3,293 | 60,464 | 63,804 | **90.4 %** |
+| NARROW (234,026) | 40 | 2,729 | 24,532 | 27,303 | **38.7 %** |
+
+จำพวก 1 matches exactly on FULL (47 vs 47). So the guard is rejecting the
+view that agrees with DIW's own published totals — a statement about DIW's
+export quality, not about our floor. (HANDOFF §4's 33,696 = 47 % on
+2026-08-13 was also a NARROW night.)
+
+### 13.4 Downstream: pipeline.py ingests both states, and the tables swap nightly
+
+`pipeline.py`'s floors are absolute (`MIN_EXPECTED_PERMITS = 100_000`,
+`MIN_EXPECTED_STATISTICS = 100_000`) — both states pass them, so whichever
+population arrives gets promoted:
+
+```
+2026-10-13  permits 234,401  statistics 179,418
+2026-10-15  permits 234,269  statistics 179,293
+2026-10-17  permits 234,027  statistics 179,064
+2026-10-18  permits 234,027  statistics 214,531   <- neither state: mid-rebuild read
+2026-10-19  permits 274,436  statistics 217,660   <- FULL
+```
+
+(No promote lines exist in the 2026-10-14 sync log.) The 214,531 is neither
+NARROW nor FULL — a read of the export table while it is being rebuilt, the
+strongest single piece of evidence for the nightly ~03:00 ICT rebuild
+hypothesis. `factories` itself is safe (upsert + `last_seen_in_feed`, §12.3);
+`permits` and `factory_statistics` are the tables oscillating.
+
+### 13.5 Still open
+
+- **DIW semantics — owner escalation.** Why does the steady-state export drop
+  ~40,000 factories that DIW's own dashboard counts as operating? Not ours to
+  answer; the dashboard publishes the contact for exactly this case:
+  **02-430-6316 ต่อ 2504** (กรณีข้อมูลไม่ถูกต้อง).
+- **The rebuild window is still a hypothesis.** A canary (`~/app/diw_canary.sh`
+  on sev01, self-removing crontab line) samples `Sum_Factory_Local` every
+  180 s from 02:10 → 03:45 ICT on 2026-10-20 into
+  `~/app/logs/diw-canary-2026-10-20.log` (~29 samples). Its harvest, and the
+  window it pins, get appended here.
+- **Fix options** — move `diw-collector.timer` into the measured window, or a
+  two-state baseline in `collect.py` (which is by definition changing the
+  floor and needs the owner's sign-off) — are written up in
+  `INVESTIGATION-2026-10-19-DIW-FEED.md` §11. Recommended first step: leave
+  the guard alone until the canary has spoken.
