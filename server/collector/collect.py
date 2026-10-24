@@ -134,6 +134,24 @@ def read_manifest() -> list[dict]:
     return entries
 
 
+# The truncation floor is computed from the MEDIAN of the last N accepted
+# snapshots, not from the single latest one. 2026-10-24: DIW published a
+# one-day batch of 39,679 extra rows (LAST_UPDATE 2026-10-07) on 2026-10-09
+# and withdrew it the next day; a latest-only reference turned that spike into
+# the baseline and rejected every normal night for two weeks. A median of 7
+# cannot be moved by one outlier in either direction.
+REFERENCE_WINDOW = 7
+
+
+def reference_rows(endpoint: str, entries: list[dict]) -> int:
+    ok = [e.get("rows") or 0 for e in entries if e.get("endpoint") == endpoint and e.get("status") == "ok"]
+    window = sorted(ok[-REFERENCE_WINDOW:])
+    if not window:
+        return 0
+    m = len(window) // 2
+    return window[m] if len(window) % 2 else (window[m - 1] + window[m]) // 2
+
+
 def last_accepted(endpoint: str, entries: list[dict] | None = None) -> dict | None:
     entries = read_manifest() if entries is None else entries
     matches = [e for e in entries if e.get("endpoint") == endpoint and e.get("status") == "ok"]
@@ -244,10 +262,11 @@ def collect_one(name: str, spec: dict, dry_run: bool = False) -> dict:
         # Truncation, by contrast, is rejected. A short file is not evidence of
         # anything except a bad transfer, and archiving it would poison the
         # baseline that every later collection is compared against.
-        floor = int((previous.get("rows") or 0) * MIN_ROW_RATIO)
+        ref = reference_rows(name, entries) or (previous.get("rows") or 0)
+        floor = int(ref * MIN_ROW_RATIO)
         if rows < floor:
             logger.error(
-                f"❌ {name}: {rows:,} records vs {previous['rows']:,} previously "
+                f"❌ {name}: {rows:,} records vs reference {ref:,} (median of last {REFERENCE_WINDOW} accepted; latest {previous['rows']:,}) "
                 f"(floor {floor:,}). Looks truncated — rejected, archive untouched."
             )
             staging.unlink(missing_ok=True)
