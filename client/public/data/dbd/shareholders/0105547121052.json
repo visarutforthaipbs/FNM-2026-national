@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105547121052",
+  "companyName": "อรักษ เชียงใหม่ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายประสงค์   ภัทรประสิทธิ์",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางชนัญญา   ภัทรประสิทธิ์",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ศริยา   ภัทรประสิทธิ์",
+      "shares": 7500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.ภัณฑิลา   ภัทรประสิทธิ์",
+      "shares": 7500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายพีราวิชญ์   ภัทรประสิทธิ์",
+      "shares": 7500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายกนกภัทร   ภัทรประสิทธิ์",
+      "shares": 7500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:53.174664"
+}

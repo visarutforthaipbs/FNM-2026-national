@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105550005301",
+  "companyName": "ชัยริส สตีล จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "ว่าที่ ร.ต.ชัยวัฒน์   ชัยโรจน์ธนาดล",
+      "shares": 20000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางวริสนันท์   โอพรสวัสดิ์",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางมาลิณีย์   ชัยโรจน์ธนาดล",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายไพโรจน์   ชัยโรจน์ธนาดล",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวเพ็ญสิริ   ชัยโรจน์ธนาดล",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:19:45.373480"
+}

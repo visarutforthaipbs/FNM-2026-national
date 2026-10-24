@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553153521",
+  "companyName": "เอ็ม.เอ.ไอ.เอฟ.เทรดดิ้ง จำกัด",
+  "totalShares": 100000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางอรุณศรี   ถนอมเกียรติ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวาริช   ถนอมเกียรติ",
+      "shares": 60000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ชุติมา   ภูชฎาภิรมย์",
+      "shares": 39999,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:53.399600"
+}

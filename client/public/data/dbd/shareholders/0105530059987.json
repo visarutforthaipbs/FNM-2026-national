@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105530059987",
+  "companyName": "นิปโป เม็คคาทรอนิกส์ (ไทยแลนด์) จำกัด",
+  "totalShares": 2500000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 99.98,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.นิปโป ลิมิเต็ด",
+      "shares": 2499599,
+      "sharePercent": 99.98,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "น.ส.วิรุฬ   ลิ้มศิริโสภณ",
+      "shares": 400,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายยูจิ   โอกาจิมา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:31:00.146255"
+}

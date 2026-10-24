@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105560184666",
+  "companyName": "สยาม สตีล 2009 จำกัด",
+  "totalShares": 5500000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุทธิวัฒน์   เลื่อนผลเจริญชัย",
+      "shares": 1800000,
+      "sharePercent": 32.73,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.นพรส   ภูแข่งหมอก",
+      "shares": 3050000,
+      "sharePercent": 55.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.กุลศิริ   ภูแข่งหมอก",
+      "shares": 650000,
+      "sharePercent": 11.82,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:00:08.461184"
+}

@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0745533000236",
+  "companyName": "อันดามันซูริมิ อินดัสทรีส์ จำกัด",
+  "totalShares": 1700000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอนุชา   เตชะนิธิสวัสดิ์",
+      "shares": 345668,
+      "sharePercent": 20.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสิริกร   เตชะนิธิสวัสดิ์",
+      "shares": 238000,
+      "sharePercent": 14.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพัทธวิชญ์   เตชะนิธิสวัสดิ์",
+      "shares": 204000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอดิศร   เตชะนิธิสวัสดิ์",
+      "shares": 204000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายอนุเทพ   เตชะนิธิสวัสดิ์",
+      "shares": 143334,
+      "sharePercent": 8.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวทิพวัลย์   เตชะนิธิสวัสดิ์",
+      "shares": 224999,
+      "sharePercent": 13.24,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายอนุชาติ   เตชะนิธิสวัสดิ์",
+      "shares": 339999,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:50:30.875422"
+}

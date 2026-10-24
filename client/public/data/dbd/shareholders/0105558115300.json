@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105558115300",
+  "companyName": "สมุทรสาคร เนเชอรัล คลีนเอนเนอร์จี จำกัด",
+  "totalShares": 28000000,
+  "shareValue": 5.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เอนเนอร์จี แอนด์ เอนไวรอนเมนท์ คอนซัลติ้ง กรุ๊ป จำกัด",
+      "shares": 27999580,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท พีบีเอ็น โกลบอลไลซ์ จำกัด",
+      "shares": 140,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นายณัฎฐวัฒน์   วุฒิ",
+      "shares": 140,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกฤษณ์   ฉายาวสันต์",
+      "shares": 140,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:59:25.213131"
+}

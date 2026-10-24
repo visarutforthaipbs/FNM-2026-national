@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105532069998",
+  "companyName": "มหาจักรออโตพาร์ท จำกัด",
+  "totalShares": 5000000,
+  "shareValue": 100.0,
+  "holderCount": 8,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.มหาจักรอุตสาหกรรม",
+      "shares": 1250000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.มหาจักรเอ็นเตอร์ไพรซ์",
+      "shares": 700000,
+      "sharePercent": 14.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นายชวลิต   กาญจนชัยภูมิ",
+      "shares": 622980,
+      "sharePercent": 12.46,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายชนะ   กาญจนชัยภูมิ",
+      "shares": 622980,
+      "sharePercent": 12.46,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายชัชวาลย์   กาญจนชัยภูมิ",
+      "shares": 530000,
+      "sharePercent": 10.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายชำนาญ   กาญจนชัยภูมิ",
+      "shares": 214000,
+      "sharePercent": 4.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายชลัมภ์   กาญจนชัยภูมิ",
+      "shares": 530040,
+      "sharePercent": 10.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายชูศักดิ์   กาญจนชัยภูมิ",
+      "shares": 530000,
+      "sharePercent": 10.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:32:20.471880"
+}

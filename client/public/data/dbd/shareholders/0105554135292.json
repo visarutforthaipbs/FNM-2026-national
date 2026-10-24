@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105554135292",
+  "companyName": "ฮั้วไทยเฮง ใยสังเคราะห์ จำกัด",
+  "totalShares": 600000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวสุภานันท์   ลีฬหาบวรกุล",
+      "shares": 306000,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวเกา   เซ้าวเสียวน",
+      "shares": 294000,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:08:37.005702"
+}

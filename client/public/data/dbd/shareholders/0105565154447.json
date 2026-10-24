@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105565154447",
+  "companyName": "บีเอสจีเอฟ จำกัด",
+  "totalShares": 845000000,
+  "shareValue": 10.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บมจ.บางจาก คอร์ปอเรชั่น",
+      "shares": 676000000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บมจ.บีบีจีไอ",
+      "shares": 169000000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:42:52.242778"
+}

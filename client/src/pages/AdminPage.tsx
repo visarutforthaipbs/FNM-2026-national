@@ -71,7 +71,14 @@ type Tab = "reports" | "corrections" | "unmapped" | "approx" | "mismatch" | "dbd
 const TOKEN_KEY = "factory-nearme-admin-token";
 
 const AdminPage = () => {
-  const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_KEY) ?? "");
+  const [token, setToken] = useState(() => {
+    const raw = sessionStorage.getItem(TOKEN_KEY) ?? "";
+    if (raw && !/^[\x20-\x7E]+$/.test(raw)) {
+      sessionStorage.removeItem(TOKEN_KEY);
+      return "";
+    }
+    return raw;
+  });
   const [tokenInput, setTokenInput] = useState("");
   const [tab, setTab] = useState<Tab>("reports");
   const [reports, setReports] = useState<AdminReport[]>([]);
@@ -102,24 +109,48 @@ const AdminPage = () => {
 
   const authFetch = useCallback(
     async <T,>(path: string, init?: RequestInit): Promise<T> => {
-      const res = await fetch(`${API_BASE}${path}`, {
-        ...init,
-        headers: {
-          ...(init?.headers ?? {}),
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.status === 401) {
+      const cleanToken = token.trim();
+      if (!cleanToken || !/^[\x20-\x7E]+$/.test(cleanToken)) {
         sessionStorage.removeItem(TOKEN_KEY);
         setToken("");
-        throw new Error("Token ไม่ถูกต้อง");
+        throw new Error("Token ไม่ถูกต้อง หรือมีอักขระที่ไม่รองรับ (ต้องเป็น ASCII เท่านั้น)");
       }
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `HTTP ${res.status}`);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+      try {
+        const res = await fetch(`${API_BASE}${path}`, {
+          ...init,
+          signal: controller.signal,
+          headers: {
+            ...(init?.headers ?? {}),
+            Authorization: `Bearer ${cleanToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        clearTimeout(timeoutId);
+        if (res.status === 401) {
+          sessionStorage.removeItem(TOKEN_KEY);
+          setToken("");
+          throw new Error("Token ไม่ถูกต้อง");
+        }
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `HTTP ${res.status}`);
+        }
+        return res.json() as Promise<T>;
+      } catch (err: unknown) {
+        clearTimeout(timeoutId);
+        const errorObj = err as { name?: string; message?: string };
+        if (errorObj?.name === "AbortError") {
+          throw new Error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ sev01:4443 ได้ (หมดเวลา 8 วินาที) — กรุณาตรวจสอบว่าเปิด Tailscale หรือไม่");
+        }
+        if (errorObj?.message?.includes("Failed to fetch") || errorObj?.name === "TypeError") {
+          throw new Error("เชื่อมต่อเซิร์ฟเวอร์ sev01:4443 ไม่สำเร็จ — กรุณาตรวจสอบว่าเปิด Tailscale หรือไม่");
+        }
+        throw err;
       }
-      return res.json() as Promise<T>;
     },
     [token]
   );
@@ -219,15 +250,28 @@ const AdminPage = () => {
             <Text fontWeight="700" color="slate.800">
               ผู้ดูแลระบบ
             </Text>
+            {error && (
+              <Text fontSize="xs" color="red.500" textAlign="center">
+                {error}
+              </Text>
+            )}
             <Input
               type="password"
-              placeholder="Admin token"
+              placeholder="Admin token (ASCII only)"
               value={tokenInput}
-              onChange={(e) => setTokenInput(e.target.value)}
+              onChange={(e) => {
+                setError(null);
+                setTokenInput(e.target.value);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && tokenInput.trim()) {
-                  sessionStorage.setItem(TOKEN_KEY, tokenInput.trim());
-                  setToken(tokenInput.trim());
+                  const clean = tokenInput.trim();
+                  if (!/^[\x20-\x7E]+$/.test(clean)) {
+                    setError("Token ต้องเป็นภาษาอังกฤษหรือตัวเลข (ASCII) เท่านั้น กรุณาตรวจสอบแป้นพิมพ์");
+                    return;
+                  }
+                  sessionStorage.setItem(TOKEN_KEY, clean);
+                  setToken(clean);
                 }
               }}
             />
@@ -238,8 +282,13 @@ const AdminPage = () => {
               _hover={{ bg: "primary.700" }}
               isDisabled={!tokenInput.trim()}
               onClick={() => {
-                sessionStorage.setItem(TOKEN_KEY, tokenInput.trim());
-                setToken(tokenInput.trim());
+                const clean = tokenInput.trim();
+                if (!/^[\x20-\x7E]+$/.test(clean)) {
+                  setError("Token ต้องเป็นภาษาอังกฤษหรือตัวเลข (ASCII) เท่านั้น กรุณาตรวจสอบแป้นพิมพ์");
+                  return;
+                }
+                sessionStorage.setItem(TOKEN_KEY, clean);
+                setToken(clean);
               }}
             >
               เข้าสู่ระบบ

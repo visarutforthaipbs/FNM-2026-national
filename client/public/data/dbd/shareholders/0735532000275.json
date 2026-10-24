@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0735532000275",
+  "companyName": "แหลมทองอุตสาหกรรมอาหาร จำกัด",
+  "totalShares": 650000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมเกียรติ   แต้มไพโรจน์",
+      "shares": 100,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางอรวรรณ   ชิงชัยฤทธิ์",
+      "shares": 100,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวจันตรี   แต้มไพโรจน์",
+      "shares": 324900,
+      "sharePercent": 49.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวปมิตตา   แต้มไพโรจน์",
+      "shares": 324900,
+      "sharePercent": 49.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:49:26.776516"
+}

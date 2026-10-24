@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105546077891",
+  "companyName": "รวมทิพย์ รีเทค จำกัด",
+  "totalShares": 4000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวธิรดา   คล้ายจริง",
+      "shares": 1600,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธนกร   ศรีบัณฑิต",
+      "shares": 1200,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวอนันญา   ศรีบัณฑิต",
+      "shares": 1200,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:27:02.820609"
+}

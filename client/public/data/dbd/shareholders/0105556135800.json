@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105556135800",
+  "companyName": "พีพีที.ไบโอเทรด จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.ภรภัทร   นาทวนพงศา",
+      "shares": 19900,
+      "sharePercent": 99.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวีระพล   โพธิ์ทองคำพันธุ์",
+      "shares": 100,
+      "sharePercent": 0.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:11:58.179523"
+}

@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105560172714",
+  "companyName": "โยซิตา เทคโนโลยี (ไทยแลนด์) จำกัด",
+  "totalShares": 600000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายนายออง จู แซง /MR.ONG JOO SENG",
+      "shares": 88200,
+      "sharePercent": 14.7,
+      "nationality": "มาเลเซีย",
+      "nationalityCode": "MY",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเซีย หานเฟย /MR.XIA , HANFEI",
+      "shares": 205800,
+      "sharePercent": 34.3,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายจักรพงษ์   ศรีศักดิ์ดา",
+      "shares": 102000,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.อัศนีพร   จิรวัฒน์ธัญญา",
+      "shares": 102000,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ชลธิชา   สายไหม",
+      "shares": 102000,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:50:10.807973"
+}

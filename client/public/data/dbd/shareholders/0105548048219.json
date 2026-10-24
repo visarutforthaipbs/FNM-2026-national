@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105548048219",
+  "companyName": "ช.ธนวัฒน์ สตีล เวิร์ค (ประเทศไทย) จำกัด",
+  "totalShares": 500000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชวน   กรณีย์",
+      "shares": 469000,
+      "sharePercent": 93.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวณัฐชา   กรณีย์",
+      "shares": 30000,
+      "sharePercent": 6.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางพะเยาว์   กรณีย์",
+      "shares": 1000,
+      "sharePercent": 0.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:29:13.250699"
+}

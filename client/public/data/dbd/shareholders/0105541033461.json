@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105541033461",
+  "companyName": "คิมแพ็ค จำกัด",
+  "totalShares": 2022600,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชวลิต   ลิ่มอติบูลย์",
+      "shares": 386392,
+      "sharePercent": 19.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุรางค์   ลิ่มอติบูลย์",
+      "shares": 73140,
+      "sharePercent": 3.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายมงคล   ลิ่มอติบูลย์",
+      "shares": 71556,
+      "sharePercent": 3.54,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอมร   ลิ่มอติบูลย์",
+      "shares": 71556,
+      "sharePercent": 3.54,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายมรุธร   ลิ่มอติบูลย์",
+      "shares": 71556,
+      "sharePercent": 3.54,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายสุเมธ   ลิ่มอติบูลย์",
+      "shares": 300025,
+      "sharePercent": 14.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางพาสินี   ลิ่มอติบูลย์",
+      "shares": 138341,
+      "sharePercent": 6.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.สุรัชนี   ลิ่มอติบูลย์",
+      "shares": 110417,
+      "sharePercent": 5.46,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายสุรภาพ   ลิ่มอติบูลย์",
+      "shares": 125417,
+      "sharePercent": 6.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายสุธี   ลิ่มอติบูลย์",
+      "shares": 674200,
+      "sharePercent": 33.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:33.278084"
+}

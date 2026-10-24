@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105550040599",
+  "companyName": "รวยมหาศาล จำกัด",
+  "totalShares": 30000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายศักดิ์สิทธิ์   ลุสำเร็จ",
+      "shares": 17250,
+      "sharePercent": 57.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.ฐณอรกนกภร   ณวฐนพงศธร",
+      "shares": 12250,
+      "sharePercent": 40.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางศรีพร   แก้วขอนแก่น",
+      "shares": 250,
+      "sharePercent": 0.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอาทิตย์   ลุสำเร็จ",
+      "shares": 250,
+      "sharePercent": 0.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:04:02.367167"
+}

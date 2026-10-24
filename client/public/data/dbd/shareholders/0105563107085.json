@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105563107085",
+  "companyName": "คอร์สแอร์ แบงคอก จำกัด",
+  "totalShares": 800000,
+  "shareValue": 5.0,
+  "holderCount": 5,
+  "foreignPercent": 12.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท คอร์สแอร์ เอเชีย โฮลดิ้ง จำกัด",
+      "shares": 696000,
+      "sharePercent": 87.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายดราเซน   คราโทฟิล",
+      "shares": 40000,
+      "sharePercent": 5.0,
+      "nationality": "โครเอเชีย",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท NEOGON HOLDING FZE",
+      "shares": 48000,
+      "sharePercent": 6.0,
+      "nationality": "เอมิเรียน",
+      "nationalityCode": "OT",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นายยูสซี่ เว็คโค   ซาโลรานตา",
+      "shares": 8000,
+      "sharePercent": 1.0,
+      "nationality": "ฟินนิช",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายคาเรด   นิลสง่า",
+      "shares": 8000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:35:19.956212"
+}

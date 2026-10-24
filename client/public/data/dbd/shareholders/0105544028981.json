@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105544028981",
+  "companyName": "สยาม เอ็นไวรอนเม้นท์ สแค็พส์ จำกัด",
+  "totalShares": 37500,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.พิมประภัส   ชื่นชีวเจริญ",
+      "shares": 30000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายกัณฐพันธ์   ชื่นชีวเจริญ",
+      "shares": 3750,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.กรกมล   ชื่นชีวเจริญ",
+      "shares": 3750,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:19.131960"
+}

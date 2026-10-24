@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553093901",
+  "companyName": "เจริญวัฒน์ รีไซเคิล แอนด์ เวสต์ แมเนจเม้นท์ จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางดรุณี   สุขกิจสมโภชน์",
+      "shares": 18000,
+      "sharePercent": 90.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายประวัติ   สุขกิจสมโภชน์",
+      "shares": 1000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายนายอนันตศักดิ์   อุษณะประหาส",
+      "shares": 1000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:40:28.639649"
+}

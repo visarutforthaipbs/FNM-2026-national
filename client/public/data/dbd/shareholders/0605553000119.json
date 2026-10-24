@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0605553000119",
+  "companyName": "โชติฐกรณ์พิบูลย์ จำกัด",
+  "totalShares": 1088000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางศิรินพัชญ์   สมบูรณ์กิตติกร",
+      "shares": 1043000,
+      "sharePercent": 95.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายโชติฐกรณ์   สมบูรณ์กิตติกร",
+      "shares": 15000,
+      "sharePercent": 1.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ฐิตากาญจน์   สมบูรณ์กิตติกร",
+      "shares": 15000,
+      "sharePercent": 1.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.ณัฎฐ์ชุตา   สมบูรณ์กิตติกร",
+      "shares": 15000,
+      "sharePercent": 1.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:48:17.003802"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105551106291",
+  "companyName": "ทองรุ่งแสง พลาสติก แอนด์ รับเบอร์ จำกัด",
+  "totalShares": 350000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 40.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวกัญญาภัทร   ล้ออุดมกุล",
+      "shares": 200000,
+      "sharePercent": 57.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายหลอ   หยวน เซียน",
+      "shares": 140000,
+      "sharePercent": 40.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสมศักดิ์   ล้ออุดมกุล",
+      "shares": 10000,
+      "sharePercent": 2.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:20.908765"
+}

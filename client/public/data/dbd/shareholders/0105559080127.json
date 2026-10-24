@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105559080127",
+  "companyName": "กิมไป๊ บอทเทิล จำกัด",
+  "totalShares": 45000,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุธี   ลิ่มอติบูลย์",
+      "shares": 11250,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุรภาพ   ลิ่มอติบูลย์",
+      "shares": 5625,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายบุญชู   ลื่มอติบูลย์",
+      "shares": 2250,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายบุญชัย   ลิ่มอติบูลย์",
+      "shares": 2250,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.จันทนา   ลิ่มอติบูลย์",
+      "shares": 4500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.ธีรารัตน์   ลิ่มอติบูลย์",
+      "shares": 2250,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.สุรัชนี   ลิ่มอติบูลย์",
+      "shares": 5625,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายมงคล   ลิ่มอติบูลย์",
+      "shares": 3750,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายอมร   ลิ่มอติบูลย์",
+      "shares": 3750,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายมรุธร   ลิ่มอติบูลย์",
+      "shares": 3750,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:42:50.922960"
+}

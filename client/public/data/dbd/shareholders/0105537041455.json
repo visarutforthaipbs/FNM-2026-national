@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105537041455",
+  "companyName": "หวาไถ้ รับเบอร์ จำกัด",
+  "totalShares": 37000000,
+  "shareValue": 10.0,
+  "holderCount": 2,
+  "foreignPercent": 83.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัทดับเบอร์คอยไทย กรุ๊ป Double coin Tire Group",
+      "shares": 30710000,
+      "sharePercent": 83.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท ไทยแมคเอสทีอาร์ จำกัด",
+      "shares": 6290000,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:36:32.652607"
+}

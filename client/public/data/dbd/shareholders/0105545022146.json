@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105545022146",
+  "companyName": "บริษัท บางกอก แอดวานซ์ เทรดดิ้ง จำกัด",
+  "totalShares": 40000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวอัจณรีย์   วัฒนะวิรุณ",
+      "shares": 10,
+      "sharePercent": 0.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายนินพจน์   วัฒนะโยธิน",
+      "shares": 10,
+      "sharePercent": 0.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวเบญจา   แซ่โค้ว",
+      "shares": 10,
+      "sharePercent": 0.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวภัชช   วัฒนะวิรุณ",
+      "shares": 2470,
+      "sharePercent": 6.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวสุพร   วัฒนะวิรุณ",
+      "shares": 2500,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวนฤมล   วัฒนะวิรุณ",
+      "shares": 12500,
+      "sharePercent": 31.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวสุวิมล   วัฒนะวิรุณ",
+      "shares": 22500,
+      "sharePercent": 56.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:16.815241"
+}

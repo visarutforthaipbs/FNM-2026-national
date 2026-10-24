@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105559037582",
+  "companyName": "เอนเนอร์จี รีพับบลิค จำกัด",
+  "totalShares": 1200000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอาคม   ลิ่วเฉลิมวงศ์",
+      "shares": 100,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บจ.เซียร์ร่า อินฟราสตรัคเจอร์ โฮลดิ้ง",
+      "shares": 1199800,
+      "sharePercent": 99.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "น.ส.วิสนา   อัศวโสภณ",
+      "shares": 100,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:51:14.965639"
+}

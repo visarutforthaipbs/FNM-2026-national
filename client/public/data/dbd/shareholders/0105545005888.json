@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105545005888",
+  "companyName": "เอส.วี.ซี.เอ็นจิเนียริ่ง แอนด์ เซอร์วิส จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสรศักดิ์   เมฆประยูร",
+      "shares": 25500,
+      "sharePercent": 25.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเจริญ   ปิยะกิจ",
+      "shares": 25500,
+      "sharePercent": 25.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายชาญชัย   สุขะวัชรานนท์",
+      "shares": 25000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายมนตรี   เอกรินทรากุล",
+      "shares": 8000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายประจักษ์   สิงหกฤตเวทิน",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายธัชชัย   พ่วงตามพงษ์",
+      "shares": 6000,
+      "sharePercent": 6.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:25:49.574233"
+}

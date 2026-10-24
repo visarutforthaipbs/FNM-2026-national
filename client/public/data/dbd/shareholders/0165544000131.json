@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0165544000131",
+  "companyName": "โกลเด้น ไลน์ บิสซิเนส จำกัด",
+  "totalShares": 2325000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายปัญญา   โชติเทวัญ",
+      "shares": 1000,
+      "sharePercent": 0.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางมนูญศรี   โชติเทวัญ",
+      "shares": 1000,
+      "sharePercent": 0.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท โชติเทวัญ จำกัด",
+      "shares": 2323000,
+      "sharePercent": 99.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:45:37.687961"
+}

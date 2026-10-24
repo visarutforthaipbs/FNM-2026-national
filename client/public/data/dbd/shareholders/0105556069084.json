@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556069084",
+  "companyName": "อาร์แอลซี รีไซคลิ่ง จำกัด",
+  "totalShares": 60000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวีดัส   โนวีคาส",
+      "shares": 29400,
+      "sharePercent": 49.0,
+      "nationality": "ลิทัวเนีย",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.เกสรา   นารถถนอม",
+      "shares": 15600,
+      "sharePercent": 26.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.พรนภา   สันติวิริยธาดา",
+      "shares": 15000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:11:32.052742"
+}

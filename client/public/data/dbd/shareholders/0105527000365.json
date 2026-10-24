@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105527000365",
+  "companyName": "สยามยูไนเต็ดรับเบอร์ จำกัด",
+  "totalShares": 150000,
+  "shareValue": 1000.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.สุพัตรา   วิโมกข์เจริญสุข",
+      "shares": 3480,
+      "sharePercent": 2.32,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุวิทย์   แซ่กิม",
+      "shares": 48640,
+      "sharePercent": 32.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสุวัฒน์   กอบกาญจน์สกุล",
+      "shares": 48640,
+      "sharePercent": 32.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสุวงศ์   กอบกาญจน์สกุล",
+      "shares": 48640,
+      "sharePercent": 32.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสุวรรณี   กอบกาญจน์สกุล",
+      "shares": 100,
+      "sharePercent": 0.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสุภาพร   แซ่กิม",
+      "shares": 100,
+      "sharePercent": 0.07,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางจำเรียง   เขียวนาวาวงษ์ศา",
+      "shares": 400,
+      "sharePercent": 0.27,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:28.837937"
+}

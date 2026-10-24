@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105560195340",
+  "companyName": "เอ็ม เอส ดี เม็ททัล จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายมนตรี   สุดกังวาฬ",
+      "shares": 4500,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายอธิสันต์   พงศ์ภัคพุฒิพร",
+      "shares": 4000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางอุษา   โรจนวิภาต",
+      "shares": 1000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเชาวลิตร์   อวยสวัสดิ์",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:29.167452"
+}

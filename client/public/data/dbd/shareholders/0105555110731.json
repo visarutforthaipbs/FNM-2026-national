@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105555110731",
+  "companyName": "เอ.ซี.พลาส จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสิริชัย   กระโจมทอง",
+      "shares": 83439,
+      "sharePercent": 83.44,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางวิภา   กระโจมทอง",
+      "shares": 12500,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวมนัสนันท์   โชติอัครธรรศ",
+      "shares": 1957,
+      "sharePercent": 1.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวสิริลักษณ์   กระโจมทอง",
+      "shares": 2104,
+      "sharePercent": 2.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:42:10.604564"
+}

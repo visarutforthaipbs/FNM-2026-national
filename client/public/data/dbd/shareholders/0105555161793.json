@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105555161793",
+  "companyName": "ก.สยาม พลาสติก จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมชาย   กิตติวิริยะกุล",
+      "shares": 5100,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสมหมาย   กิตติวิริยะกุล",
+      "shares": 1900,
+      "sharePercent": 19.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกฤตยชญ์   กิตติวิริยะกุล",
+      "shares": 3000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:23:00.830479"
+}

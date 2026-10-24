@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105561084771",
+  "companyName": "โอ.เอ็ม.เอส.พรอสเพอร์ริตี้ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวสุปรียา   เล็กละมุด",
+      "shares": 9990,
+      "sharePercent": 99.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเลอศักดิ์   ศรีงามผ่อง",
+      "shares": 10,
+      "sharePercent": 0.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:33:11.108494"
+}

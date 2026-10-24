@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105533137920",
+  "companyName": "เค้ก แอนด์ เบเกอรี่ จำกัด",
+  "totalShares": 300000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท อินเตอร์เนชั่นแนล แลบบอราทอรีส์ จำกัด",
+      "shares": 57000,
+      "sharePercent": 19.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท วิทยาสิทธิ์ จำกัด",
+      "shares": 241700,
+      "sharePercent": 80.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นางจิตราภรณ์   วิกิตเศรษฐ์",
+      "shares": 700,
+      "sharePercent": 0.23,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางแก้วตา   องค์สรณะคม",
+      "shares": 600,
+      "sharePercent": 0.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:32:28.556425"
+}

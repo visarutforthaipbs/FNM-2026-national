@@ -1,0 +1,42 @@
+{
+  "registrationNo": "0105537056894",
+  "companyName": "ยูนิ-เพรสซิเดนท์ (ประเทศไทย) จำกัด",
+  "totalShares": 183000000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": true,
+  "offshoreEntities": [
+    "บจ.ยูนิ-เพรสซิเดนท์เซาวอีส เอเชีย โฮลดิ้ง ลิมิเต็ด (หมู่เกาะเคย์แมน)"
+  ],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหลัว   จื้อเซียน",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางหลิน   จวิ้นเซิง",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บจ.ยูนิ-เพรสซิเดนท์เซาวอีส เอเชีย โฮลดิ้ง ลิมิเต็ด",
+      "shares": 182999998,
+      "sharePercent": 100.0,
+      "nationality": "หมู่เกาะเคย์แมน",
+      "nationalityCode": "KY",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:36:45.768190"
+}

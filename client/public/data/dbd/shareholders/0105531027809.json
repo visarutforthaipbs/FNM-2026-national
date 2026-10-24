@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105531027809",
+  "companyName": "มณีมงคล อิมปอร์ต-เอ็กซปอร์ต จำกัด",
+  "totalShares": 15000000,
+  "shareValue": 10.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายมนัส   ปิยะตรึงส์",
+      "shares": 9550000,
+      "sharePercent": 63.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวจุไรรัตน์   พงษ์สอน",
+      "shares": 1500000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายภาคภูมิ   เลิศวรวนิช",
+      "shares": 950000,
+      "sharePercent": 6.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายกิตติ   ปิยะตรึงส์",
+      "shares": 1000000,
+      "sharePercent": 6.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาววศินี   ปิยะตรึงส์",
+      "shares": 1000000,
+      "sharePercent": 6.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวศิริพร   ปิยะตรึงส์",
+      "shares": 1000000,
+      "sharePercent": 6.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:32:27.334012"
+}

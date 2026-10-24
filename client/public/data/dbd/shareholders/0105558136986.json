@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105558136986",
+  "companyName": "ฮีดากา เวสต์ แมนเนจเมนท์ จำกัด",
+  "totalShares": 30000,
+  "shareValue": 1000.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ฮีดากา โฮลดิ้งส์ (2008) จำกัด",
+      "shares": 9000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายยาซูโอะ   อาทิตย์เรืองสิริ",
+      "shares": 21000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:30:53.357687"
+}

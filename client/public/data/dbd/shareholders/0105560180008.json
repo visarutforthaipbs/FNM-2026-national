@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105560180008",
+  "companyName": "เว้ลธ์ ฟิวชั่น อินเตอร์-เทค(ประเทศไทย) จำกัด",
+  "totalShares": 2200000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 10.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวเฉินเข่อ   แซ่ตัน",
+      "shares": 1712410,
+      "sharePercent": 77.84,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเฉิงเจี๋ย   แซ่ตัน",
+      "shares": 267590,
+      "sharePercent": 12.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัทหงส์ซิ่น ฮ่องกง เทรดดิ้ง จำกัด",
+      "shares": 220000,
+      "sharePercent": 10.0,
+      "nationality": "ฮ่องกง",
+      "nationalityCode": "HK",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:52:39.862700"
+}

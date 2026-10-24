@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105555122143",
+  "companyName": "ผลพาณิชย์ จำกัด",
+  "totalShares": 30000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวขวัญตา   คณิตานุพันธุ์",
+      "shares": 1000,
+      "sharePercent": 3.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายนพพร   ผลกังวาน",
+      "shares": 28000,
+      "sharePercent": 93.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวกมลชนก   โพธิประดิษฐ",
+      "shares": 1000,
+      "sharePercent": 3.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:43:59.408167"
+}

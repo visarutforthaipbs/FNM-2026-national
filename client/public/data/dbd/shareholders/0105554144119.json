@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105554144119",
+  "companyName": "เฉิง ชาง เอ็นเตอร์ไพรส์ จำกัด",
+  "totalShares": 140000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางดาหวัลย์   เดือดสันเทียะ",
+      "shares": 71400,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายลี เหวิน จาง",
+      "shares": 29000,
+      "sharePercent": 20.71,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายลี เสว เฉิง",
+      "shares": 19800,
+      "sharePercent": 14.14,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายลี เสว เฟิง",
+      "shares": 19800,
+      "sharePercent": 14.14,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:08:53.178248"
+}

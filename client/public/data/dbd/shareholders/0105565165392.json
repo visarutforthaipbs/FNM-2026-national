@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105565165392",
+  "companyName": "โกลด์ไซเคิล จำกัด",
+  "totalShares": 66000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายณัฏฐวัจน์   เชี้ยวบางยาง",
+      "shares": 36000,
+      "sharePercent": 54.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท ออโต้ อินฟินิตี้ จำกัด",
+      "shares": 5000,
+      "sharePercent": 7.58,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นายวสุเชษฐ์   โสภณเสเถียร",
+      "shares": 2500,
+      "sharePercent": 3.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางจันท์นิภา   สถิรปัญญา",
+      "shares": 2500,
+      "sharePercent": 3.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางจีริบุษยา   เธียรมนตรี",
+      "shares": 7500,
+      "sharePercent": 11.36,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายสุรัตน์   ศรีเบญจโชติ",
+      "shares": 2500,
+      "sharePercent": 3.79,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายสัญญา   ภัทรทรัพย์",
+      "shares": 10000,
+      "sharePercent": 15.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:55.662113"
+}

@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105536048821",
+  "companyName": "อินดัสเทรียล ฟู้ด ซัพพลาย จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 35.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางกรรณิการ์   นิลพันธุ์",
+      "shares": 8000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเฮนดริก   ไฟเฟอร์",
+      "shares": 7000,
+      "sharePercent": 35.0,
+      "nationality": "เนเธอร์แลนด์แอนทิลลีส",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.พรชนก   พิศาลสงคราม",
+      "shares": 2500,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.พรพธู   พิศาลสงคราม",
+      "shares": 2500,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:33:54.641912"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105537055693",
+  "companyName": "เอส ซี ไอ อีโค่ เซอร์วิสเซส จำกัด",
+  "totalShares": 1870000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ผลิตภัณฑ์และวัตถุก่อสร้าง",
+      "shares": 1869999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "น.ส.แก้วสวรรค์   อมตชีวิน",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:41:17.874600"
+}

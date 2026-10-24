@@ -1,0 +1,94 @@
+{
+  "registrationNo": "0105528039907",
+  "companyName": "ไพโอเนียอินดัสเตรียล จำกัด",
+  "totalShares": 3200000,
+  "shareValue": 100.0,
+  "holderCount": 9,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายประสาน   พึ่งชาญชัยกุล",
+      "shares": 340000,
+      "sharePercent": 10.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายณัชเมธินทร์   พึ่งชาญชัยกุล",
+      "shares": 586667,
+      "sharePercent": 18.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสุดาพร   พึ่งชาญชัยกุล",
+      "shares": 140000,
+      "sharePercent": 4.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายฤทธิศักดิ์   พึ่งชาญชัยกุล",
+      "shares": 533333,
+      "sharePercent": 16.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายวิโรจน์   พึ่งชาญชัยกุล",
+      "shares": 186671,
+      "sharePercent": 5.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางวราพร   พึ่งชาญชัยกุล",
+      "shares": 93332,
+      "sharePercent": 2.92,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายชาญชัย   พึ่งชาญชัยกุล",
+      "shares": 693332,
+      "sharePercent": 21.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายชาญศักดิ์   พึ่งชาญชัยกุล",
+      "shares": 93332,
+      "sharePercent": 2.92,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายพณธกร   พึ่งชาญชัยกุล",
+      "shares": 533333,
+      "sharePercent": 16.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:30:44.233651"
+}

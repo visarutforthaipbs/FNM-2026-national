@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105559024405",
+  "companyName": "เจ พี เปเปอร์ จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสิทธิพงศ์   อนันต์หล่อพันธ์",
+      "shares": 115000,
+      "sharePercent": 76.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวมลฤดี   พันธ์พีระพิชย์",
+      "shares": 25000,
+      "sharePercent": 16.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางประภา   อนันต์หล่อพันธ์",
+      "shares": 10000,
+      "sharePercent": 6.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:15:44.202972"
+}

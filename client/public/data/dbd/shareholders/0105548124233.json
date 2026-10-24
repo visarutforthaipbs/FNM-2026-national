@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105548124233",
+  "companyName": "วิศวกรรมและการโยธา สยามเทคนิค กรุ๊ป จำกัด",
+  "totalShares": 100000,
+  "shareValue": 200.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพงษ์ศักดิ์   แก้วรักศรี",
+      "shares": 94900,
+      "sharePercent": 94.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายดุลย์   แก้วรักศรี",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ทองสุข   แก้วรักศรี",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.เยาวลักษณ์   แดงเทศ",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายบุญรอด   พูลสวัสดิ์",
+      "shares": 100,
+      "sharePercent": 0.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายเดียว   แก้วรักศรี",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.วิภา   เฉยกลาง",
+      "shares": 1000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:42:32.848357"
+}

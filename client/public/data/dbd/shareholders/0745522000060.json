@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0745522000060",
+  "companyName": "ยูเนี่ยนโฟรเซนโปรดักส์ จำกัด",
+  "totalShares": 96524200,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุมิตร   ธาวนพงษ์",
+      "shares": 1819800,
+      "sharePercent": 1.89,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธงชัย   ธาวนพงษ์",
+      "shares": 81485400,
+      "sharePercent": 84.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวอัจฉรา   ธาวนพงษ์",
+      "shares": 2462700,
+      "sharePercent": 2.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวอรสา   ธาวนพงษ์",
+      "shares": 4972700,
+      "sharePercent": 5.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางพรรณเพ็ญ   ธาวนพงษ์",
+      "shares": 534900,
+      "sharePercent": 0.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางเกื้อจิต   บูรณะโอสถ",
+      "shares": 325200,
+      "sharePercent": 0.34,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายประเทือง   ลีลามณี",
+      "shares": 193400,
+      "sharePercent": 0.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายสายเมธ   ธาวนพงษ์",
+      "shares": 267800,
+      "sharePercent": 0.28,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางนิตยา   ธาวนพงษ์",
+      "shares": 4248300,
+      "sharePercent": 4.4,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นางอุษณา   ลุวีระ",
+      "shares": 214000,
+      "sharePercent": 0.22,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:49:38.106427"
+}

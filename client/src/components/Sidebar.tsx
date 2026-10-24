@@ -43,6 +43,9 @@ import DbdOwnershipSection from "./DbdOwnershipSection";
 import { useReportCounts } from "../hooks/useReports";
 
 import { useWatchlist } from "../hooks/useWatchlist";
+import { PROVINCE_TO_REGION, REGIONS_ORDER, TOP_INDUSTRIAL_PROVINCES } from "../utils/regions";
+import { IndustryTypeModal } from "./IndustryTypeModal";
+import { DossierPrintModal } from "./DossierPrintModal";
 
 // Inline Icons
 const SearchIcon = (props: IconProps) => (
@@ -117,7 +120,7 @@ const CoordinateBlock: React.FC<{
 
   return (
     <Box pt={3} borderTop="1px solid" borderColor="slate.100">
-      <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>
+      <Text fontSize="xs" color="slate.500" fontWeight="600" mb={1}>
         พิกัด
       </Text>
       <Box
@@ -221,12 +224,49 @@ const Sidebar: React.FC<SidebarProps> = ({
     onOpen: onCorrectionOpen,
     onClose: onCorrectionClose,
   } = useDisclosure();
+  const {
+    isOpen: isIndustryModalOpen,
+    onOpen: onIndustryModalOpen,
+    onClose: onIndustryModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isPrintOpen,
+    onOpen: onPrintOpen,
+    onClose: onPrintClose,
+  } = useDisclosure();
   const { counts: reportCounts } = useReportCounts();
   const { isFactoryWatched, toggleWatchFactory, watchedFactories } = useWatchlist();
   const [showWatchedOnly, setShowWatchedOnly] = useState(false);
   const [manualLat, setManualLat] = useState<string>("13.7563");
   const [manualLng, setManualLng] = useState<string>("100.5018");
   const hasReliableLocation = Boolean(userLocation && !locationError);
+
+  // Group provinces by region and top industrial hubs for chunked navigation
+  const groupedProvinces = useMemo(() => {
+    const map: Record<string, ProvinceCount[]> = {};
+    for (const reg of REGIONS_ORDER) {
+      map[reg] = [];
+    }
+    for (const pc of provinceCounts) {
+      const reg = PROVINCE_TO_REGION[pc.name_th] || "ภาคกลาง";
+      if (!map[reg]) map[reg] = [];
+      map[reg].push(pc);
+    }
+    for (const reg of REGIONS_ORDER) {
+      map[reg].sort((a, b) => b.count - a.count);
+    }
+    return map;
+  }, [provinceCounts]);
+
+  const topProvinces = useMemo(() => {
+    return provinceCounts
+      .filter((pc) => TOP_INDUSTRIAL_PROVINCES.includes(pc.name_th))
+      .sort((a, b) => b.count - a.count);
+  }, [provinceCounts]);
+
+  const totalNationwideCount = useMemo(() => {
+    return provinceCounts.reduce((s, p) => s + p.count, 0);
+  }, [provinceCounts]);
 
   // Filtering (province/search/high-risk/radius) happens in useFactoriesApi —
   // the features received here are already filtered
@@ -299,11 +339,12 @@ const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
-  const handleRadiusToggle = () => {
-    onFiltersChange({
-      ...filters,
-      showOnlyInRadius: !filters.showOnlyInRadius,
-    });
+  const handleRadiusSelect = (km: number) => {
+    if (filters.showOnlyInRadius && (filters.radiusKm ?? 10) === km) {
+      onFiltersChange({ ...filters, showOnlyInRadius: false });
+    } else {
+      onFiltersChange({ ...filters, showOnlyInRadius: true, radiusKm: km });
+    }
   };
 
   const handleHighRiskToggle = () => {
@@ -355,7 +396,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* LAYER 2: Chunked Gateway — Search & Filters */}
       {/* Generous padding (p-6) for cognitive breathing room */}
       <Box
-        p={6}
+        p={isMobile ? 4 : 6}
         bg="white"
         zIndex={10}
       >
@@ -410,6 +451,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             if (onProvinceSelect) onProvinceSelect(val);
           }}
           size="md"
+          minH={isMobile ? "44px" : undefined}
           bg="slate.50"
           border="none"
           _focus={{
@@ -418,22 +460,32 @@ const Sidebar: React.FC<SidebarProps> = ({
           }}
           borderRadius="xl"
           fontWeight="medium"
-          color={filters.selectedProvince ? "slate.800" : "slate.500"}
+          color={filters.selectedProvince ? "slate.800" : "slate.600"}
         >
-          <option value="">ทุกจังหวัด ({provinceCounts.reduce((s, p) => s + p.count, 0).toLocaleString()})</option>
-          {[...provinceCounts]
-            .sort((a, b) => b.count - a.count)
-            .map((pc) => (
-              <option key={pc.name_th} value={pc.name_th}>
+          <option value="">ทุกจังหวัด ({totalNationwideCount.toLocaleString()})</option>
+          <optgroup label="จังหวัดอุตสาหกรรมหลัก">
+            {topProvinces.map((pc) => (
+              <option key={`top-${pc.name_th}`} value={pc.name_th}>
                 {pc.name_th} ({pc.count.toLocaleString()})
               </option>
             ))}
+          </optgroup>
+          {REGIONS_ORDER.map((region) => (
+            <optgroup key={region} label={`${region} (${groupedProvinces[region]?.length || 0} จังหวัด)`}>
+              {groupedProvinces[region]?.map((pc) => (
+                <option key={pc.name_th} value={pc.name_th}>
+                  {pc.name_th} ({pc.count.toLocaleString()})
+                </option>
+              ))}
+            </optgroup>
+          ))}
         </Select>
 
         {/* Filter Chips — Rule of Three: max 3 action chunks */}
         <HStack spacing={2} mt={4} flexWrap="wrap">
           <Button
             size="sm"
+            minH={isMobile ? "44px" : undefined}
             borderRadius="full"
             variant="ghost"
             bg={filters.showHighRisk ? "red.50" : "slate.50"}
@@ -447,26 +499,61 @@ const Sidebar: React.FC<SidebarProps> = ({
           </Button>
 
           {hasReliableLocation && (
-            <Button
-              size="sm"
-              borderRadius="full"
-              variant="ghost"
-              bg={filters.showOnlyInRadius ? "primary.50" : "slate.50"}
-              color={filters.showOnlyInRadius ? "primary.600" : "slate.500"}
-              fontWeight={filters.showOnlyInRadius ? "600" : "400"}
-              onClick={handleRadiusToggle}
-              flexShrink={0}
-              _hover={{ bg: filters.showOnlyInRadius ? "primary.100" : "slate.100" }}
-            >
-              {filters.showOnlyInRadius && "●  "}10 กม.
-            </Button>
+            <HStack spacing={0.5} bg="slate.50" p={0.5} borderRadius="full" border="1px solid" borderColor="slate.200">
+              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3} color="slate.500" ml={2} mr={0.5}>
+                <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" />
+              </Icon>
+              {[3, 5, 10].map((km) => {
+                const isSelected = filters.showOnlyInRadius && (filters.radiusKm ?? 10) === km;
+                return (
+                  <Button
+                    key={`radius-${km}`}
+                    size="xs"
+                    minH="28px"
+                    px={2}
+                    borderRadius="full"
+                    variant={isSelected ? "solid" : "ghost"}
+                    bg={isSelected ? "primary.600" : "transparent"}
+                    color={isSelected ? "white" : "slate.600"}
+                    fontWeight={isSelected ? "700" : "500"}
+                    onClick={() => handleRadiusSelect(km)}
+                    _hover={{ bg: isSelected ? "primary.700" : "slate.100" }}
+                  >
+                    {km} กม.
+                  </Button>
+                );
+              })}
+            </HStack>
           )}
+
+          {/* Button to open Industry Type Picker Modal */}
+          <Button
+            size="sm"
+            minH={isMobile ? "44px" : undefined}
+            borderRadius="full"
+            variant="outline"
+            borderColor={filters.factoryTypes.length > 0 ? "primary.300" : "slate.200"}
+            bg={filters.factoryTypes.length > 0 ? "primary.50" : "white"}
+            color={filters.factoryTypes.length > 0 ? "primary.700" : "slate.600"}
+            fontWeight={filters.factoryTypes.length > 0 ? "700" : "500"}
+            onClick={onIndustryModalOpen}
+            flexShrink={0}
+            _hover={{ bg: "primary.50", borderColor: "primary.300" }}
+            leftIcon={
+              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+              </Icon>
+            }
+          >
+            ประเภทโรงงาน {filters.factoryTypes.length > 0 ? `(${filters.factoryTypes.length})` : ""}
+          </Button>
 
           {/* Industry-type filter chip (set from the dashboard / ?type= URL) */}
           {filters.factoryTypes.map((code) => (
             <Button
               key={code}
               size="sm"
+              minH={isMobile ? "44px" : undefined}
               borderRadius="full"
               variant="ghost"
               bg="primary.50"
@@ -494,6 +581,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {watchedFactories.length > 0 && (
             <Button
               size="sm"
+              minH={isMobile ? "44px" : undefined}
               borderRadius="full"
               variant="ghost"
               bg={showWatchedOnly ? "amber.100" : "amber.50"}
@@ -511,6 +599,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {hasActiveFilters && (
             <Button
               size="sm"
+              minH={isMobile ? "44px" : undefined}
               variant="ghost"
               color="slate.400"
               onClick={clearFilters}
@@ -527,50 +616,79 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* LAYER 1: Subconscious Hook — Location + Count signal */}
       {/* Minimal info bar: location dot + result count. No reading required for hierarchy */}
       <Flex
-        px={6}
-        py={3}
-        bg="slate.50"
+        px={isMobile ? 4 : 6}
+        py={2.5}
+        bg={locationError ? "orange.50" : "slate.50"}
         align="center"
         justify="space-between"
         borderTop="1px solid"
         borderBottom="1px solid"
-        borderColor="slate.100"
+        borderColor={locationError ? "orange.200" : "slate.100"}
       >
-        {/* Location indicator — pre-attentive color dot */}
-        <Flex align="center" gap={2}>
-          <Box w="6px" h="6px" borderRadius="full" bg={hasReliableLocation ? "accent.green" : "slate.300"} />
+        {/* Location indicator — Home icon + clear citizen label */}
+        <Flex align="center" gap={2} minW={0} flex="1">
+          <Flex
+            align="center"
+            justify="center"
+            w="24px"
+            h="24px"
+            borderRadius="md"
+            bg={hasReliableLocation ? "green.50" : locationError ? "orange.100" : "slate.100"}
+            color={hasReliableLocation ? "accent.green" : locationError ? "orange.600" : "slate.500"}
+            flexShrink={0}
+            title="บ้าน / ตำแหน่งของคุณ"
+          >
+            <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={3.5}>
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </Icon>
+          </Flex>
           {isLocationLoading ? (
-            <Text fontSize="xs" color="slate.400">ระบุตำแหน่ง...</Text>
+            <Text fontSize="xs" color="slate.600">ระบุตำแหน่ง...</Text>
           ) : hasReliableLocation && userLocation ? (
-            <Text fontSize="xs" color="slate.400" fontFamily="'Inter', monospace">
-              {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
-            </Text>
+            <Box minW={0} isTruncated>
+              <Text fontSize="xs" fontWeight="600" color="slate.700" isTruncated>
+                ตำแหน่งของคุณ
+                <Text as="span" ml={1.5} fontSize="11px" fontWeight="normal" color="slate.500" fontFamily="'Inter', monospace">
+                  ({userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)})
+                </Text>
+              </Text>
+            </Box>
           ) : locationError ? (
-            <Text fontSize="xs" color="slate.400">ยังไม่ใช้ตำแหน่งของคุณ</Text>
+            <Box minW={0} isTruncated>
+              <Text fontSize="xs" color="orange.800" fontWeight="600" isTruncated>
+                พิกัดจำลอง (ปราจีนบุรี)
+              </Text>
+            </Box>
           ) : (
-            <Text fontSize="xs" color="slate.400">ไม่พบตำแหน่ง</Text>
+            <Text fontSize="xs" color="slate.500">ไม่พบตำแหน่ง</Text>
           )}
           <Button
             size="xs"
-            variant="ghost"
-            color="slate.400"
+            variant="outline"
+            borderColor={locationError ? "orange.300" : "slate.200"}
+            color={locationError ? "orange.800" : "slate.600"}
+            bg="white"
             onClick={onOpen}
             px={2}
-            minH="32px"
+            minH={isMobile ? "36px" : "28px"}
             minW="auto"
             fontSize="xs"
-            _hover={{ color: "primary.500" }}
+            fontWeight="600"
+            borderRadius="md"
+            flexShrink={0}
+            _hover={{ color: "primary.600", borderColor: "primary.300" }}
           >
             แก้ไข
           </Button>
         </Flex>
 
         {/* Result count — key metric, bold for signal */}
-        <Text fontSize="xs" fontWeight="600" color="slate.500">
+        <Text fontSize="xs" fontWeight="700" color={locationError ? "orange.900" : "slate.600"} flexShrink={0} ml={2}>
           {displayedCount < totalCount
             ? `${displayedCount.toLocaleString()} / ${totalCount.toLocaleString()}`
             : totalCount.toLocaleString()
-          }
+          } แห่ง
         </Text>
       </Flex>
 
@@ -627,6 +745,24 @@ const Sidebar: React.FC<SidebarProps> = ({
                 >
                   {shareCopied ? "คัดลอกแล้ว" : "แชร์"}
                 </Button>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  color="slate.600"
+                  fontWeight="600"
+                  onClick={onPrintOpen}
+                  title="พิมพ์สรุปข้อมูลโรงงาน (A4 / PDF)"
+                  leftIcon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                      <polyline points="6 9 6 2 18 2 18 9" />
+                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                      <rect x="6" y="14" width="12" height="8" />
+                    </Icon>
+                  }
+                  _hover={{ bg: "slate.100" }}
+                >
+                  พิมพ์สรุป
+                </Button>
               </HStack>
             </Flex>
 
@@ -681,13 +817,83 @@ const Sidebar: React.FC<SidebarProps> = ({
               )}
             </Flex>
 
+            {/* Quick Jump Section Pills */}
+            <HStack
+              spacing={1.5}
+              mb={4}
+              overflowX="auto"
+              py={1}
+              sx={{
+                scrollbarWidth: "none",
+                "&::-webkit-scrollbar": { display: "none" }
+              }}
+            >
+              <Button
+                size="xs"
+                borderRadius="full"
+                bg="slate.100"
+                color="slate.700"
+                fontWeight="600"
+                fontSize="11px"
+                px={2.5}
+                py={1}
+                flexShrink={0}
+                _hover={{ bg: "primary.50", color: "primary.700" }}
+                onClick={() => document.getElementById("section-diw")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                DIW โรงงาน
+              </Button>
+              <Button
+                size="xs"
+                borderRadius="full"
+                bg="slate.100"
+                color="slate.700"
+                fontWeight="600"
+                fontSize="11px"
+                px={2.5}
+                py={1}
+                flexShrink={0}
+                _hover={{ bg: "primary.50", color: "primary.700" }}
+                onClick={() => document.getElementById("section-dbd")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                DBD ผู้ถือหุ้น
+              </Button>
+              <Button
+                size="xs"
+                borderRadius="full"
+                bg="slate.100"
+                color="slate.700"
+                fontWeight="600"
+                fontSize="11px"
+                px={2.5}
+                py={1}
+                flexShrink={0}
+                _hover={{ bg: "primary.50", color: "primary.700" }}
+                onClick={() => document.getElementById("section-zoning")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                DPT ผังเมือง
+              </Button>
+              <Button
+                size="xs"
+                borderRadius="full"
+                bg="slate.100"
+                color="slate.700"
+                fontWeight="600"
+                fontSize="11px"
+                px={2.5}
+                py={1}
+                flexShrink={0}
+                _hover={{ bg: "primary.50", color: "primary.700" }}
+                onClick={() => document.getElementById("section-citizen")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                ภาคประชาชน
+              </Button>
+            </HStack>
+
             <VStack spacing={5} align="stretch">
-              {/* SOURCE GROUP 1 — the DIW factory licence record. Grouped under
-                  its own agency label because the DBD company record below makes
-                  different claims from a different registry; a reader must always
-                  be able to tell which agency said what. */}
-              <Box as="section" aria-label="ข้อมูลโรงงานจากกรมโรงงานอุตสาหกรรม">
-                <Flex align="center" gap={2} mb={3} color="slate.500">
+              {/* SOURCE GROUP 1 — the DIW factory licence record */}
+              <Box as="section" id="section-diw" aria-label="ข้อมูลโรงงานจากกรมโรงงานอุตสาหกรรม">
+                <Flex align="center" gap={2} mb={3} color="slate.600">
                   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={4}>
                     <path d="M2 20h20M4 20V10l5 3V10l5 3V7l5 3v10" />
                   </Icon>
@@ -699,27 +905,27 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <VStack spacing={4} align="stretch">
                   {/* Operator */}
                   <Box>
-                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ผู้ประกอบการ</Text>
+                    <Text fontSize="xs" color="slate.500" fontWeight="600" mb={1}>ผู้ประกอบการ</Text>
                     <Text fontSize="sm" color="slate.700" fontWeight="medium">
                       {selectedFactory.properties.ผู้ประกอบก || (
-                        <Text as="span" color="slate.300">กำลังโหลด...</Text>
+                        <Text as="span" color="slate.400">กำลังโหลด...</Text>
                       )}
                     </Text>
                   </Box>
 
                   {/* Business type */}
                   <Box>
-                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ประเภทกิจการ</Text>
+                    <Text fontSize="xs" color="slate.500" fontWeight="600" mb={1}>ประเภทกิจการ</Text>
                     <Text fontSize="sm" color="slate.700" fontWeight="medium">
                       {selectedFactory.properties.ประกอบกิจก || (
-                        <Text as="span" color="slate.300">กำลังโหลด...</Text>
+                        <Text as="span" color="slate.400">กำลังโหลด...</Text>
                       )}
                     </Text>
                   </Box>
 
                   {/* Registration */}
                   <Box>
-                    <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>เลขทะเบียน</Text>
+                    <Text fontSize="xs" color="slate.500" fontWeight="600" mb={1}>เลขทะเบียน</Text>
                     <Text fontSize="sm" color="slate.700" fontFamily="'Inter', monospace">
                       {selectedFactory.properties.เลขทะเบียน}
                     </Text>
@@ -728,7 +934,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   {/* Address */}
                   {selectedFactory.properties.ที่อยู่ && (
                     <Box>
-                      <Text fontSize="xs" color="slate.400" fontWeight="500" mb={1}>ที่อยู่</Text>
+                      <Text fontSize="xs" color="slate.500" fontWeight="600" mb={1}>ที่อยู่</Text>
                       <Text fontSize="sm" color="slate.700">
                         {selectedFactory.properties.ที่อยู่}
                       </Text>
@@ -740,7 +946,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <Flex wrap="wrap" gap={4} pt={3} borderTop="1px solid" borderColor="slate.100">
                       {selectedFactory.properties.เงินลงทุน ? (
                         <Box>
-                          <Text fontSize="xs" color="slate.400">เงินลงทุน</Text>
+                          <Text fontSize="xs" color="slate.500" fontWeight="600">เงินลงทุน</Text>
                           <Text fontSize="sm" fontWeight="bold" color="green.600">
                             {selectedFactory.properties.เงินลงทุน.toLocaleString()} บาท
                           </Text>
@@ -748,7 +954,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       ) : null}
                       {selectedFactory.properties.แรงม้า ? (
                         <Box>
-                          <Text fontSize="xs" color="slate.400">เครื่องจักร</Text>
+                          <Text fontSize="xs" color="slate.500" fontWeight="600">เครื่องจักร</Text>
                           <Text fontSize="sm" fontWeight="bold" color="orange.600">
                             {selectedFactory.properties.แรงม้า.toLocaleString()} HP
                           </Text>
@@ -756,7 +962,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       ) : null}
                       {(selectedFactory.properties.คนงานชาย || selectedFactory.properties.คนงานหญิง) ? (
                         <Box>
-                          <Text fontSize="xs" color="slate.400">คนงาน</Text>
+                          <Text fontSize="xs" color="slate.500" fontWeight="600">คนงาน</Text>
                           <Text fontSize="sm" fontWeight="bold" color="blue.600">
                             {((selectedFactory.properties.คนงานชาย || 0) + (selectedFactory.properties.คนงานหญิง || 0)).toLocaleString()} คน
                           </Text>
@@ -794,39 +1000,33 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </VStack>
               </Box>
 
-              {/* SOURCE GROUP 2 — the DBD company record: who legally owns this
-                  factory, and the nationality of the shareholders DBD lists.
-                  Placed directly after ผู้ประกอบการ's group so the DIW operator
-                  name and the DBD juristic entity can be read against each other. */}
-              <DbdOwnershipSection
-                factoryId={selectedFactory.properties.เลขทะเบียน}
-                provinceEn={
-                  provinceCounts.find((p) => p.name_th === selectedFactory.properties.จังหวัด)
-                    ?.name_en ?? null
-                }
-              />
+              {/* SOURCE GROUP 2 — the DBD company record */}
+              <Box id="section-dbd">
+                <DbdOwnershipSection
+                  factoryId={selectedFactory.properties.เลขทะเบียน}
+                  provinceEn={
+                    provinceCounts.find((p) => p.name_th === selectedFactory.properties.จังหวัด)
+                      ?.name_en ?? null
+                  }
+                  factoryObjective={selectedFactory.properties.ประกอบกิจก}
+                  factoryType={selectedFactory.properties.ประเภท}
+                />
+              </Box>
 
-              {/* SOURCE GROUP 2.5 — town planning, as DPT publishes it.
-                  This card states which zone the factory's coordinates fall in
-                  and stops there. Whether a given factory may lawfully operate
-                  in that zone turns on its จำพวก, its machinery, the annex
-                  schedules of the specific ministerial regulation and whether
-                  it predates the plan — so the card describes and does not
-                  adjudicate. */}
-              <ZoningSection
-                factoryId={selectedFactory.properties.เลขทะเบียน}
-                provinceTh={selectedFactory.properties.จังหวัด}
-                provinceEn={
-                  provinceCounts.find((p) => p.name_th === selectedFactory.properties.จังหวัด)
-                    ?.name_en ?? null
-                }
-              />
+              {/* SOURCE GROUP 2.5 — town planning */}
+              <Box id="section-zoning">
+                <ZoningSection
+                  factoryId={selectedFactory.properties.เลขทะเบียน}
+                  provinceTh={selectedFactory.properties.จังหวัด}
+                  provinceEn={
+                    provinceCounts.find((p) => p.name_th === selectedFactory.properties.จังหวัด)
+                      ?.name_en ?? null
+                  }
+                />
+              </Box>
 
-              {/* SOURCE GROUP 3 — citizen participation: community impact reports
-                  and crowd-sourced location corrections. Kept last and under its
-                  own header so it reads as the public's contribution, distinct
-                  from the two government registries above. */}
-              <Box as="section" aria-label="ข้อมูลจากภาคประชาชน" pt={2} borderTop="1px solid" borderColor="slate.100">
+              {/* SOURCE GROUP 3 — citizen participation */}
+              <Box as="section" id="section-citizen" aria-label="ข้อมูลจากภาคประชาชน" pt={2} borderTop="1px solid" borderColor="slate.100">
                 <Flex align="center" gap={2} mb={3} color="slate.500">
                   <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" boxSize={4}>
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
@@ -964,16 +1164,50 @@ const Sidebar: React.FC<SidebarProps> = ({
                 alignItems="center"
                 justifyContent="center"
               >
-                <Icon viewBox="0 0 24 24" fill="currentColor" color="primary.600" boxSize={5}>
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" color="primary.600" boxSize={5}>
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
                 </Icon>
               </Box>
-              <Text fontSize="lg" fontWeight="bold">กำหนดตำแหน่ง</Text>
+              <Box>
+                <Text fontSize="md" fontWeight="bold" color="slate.800">
+                  กำหนดบ้าน / ตำแหน่งของคุณ
+                </Text>
+                <Text fontSize="xs" color="slate.500">
+                  ใช้สำหรับคำนวณระยะห่างและค้นหาโรงงานรอบตัวคุณ
+                </Text>
+              </Box>
             </Flex>
           </ModalHeader>
           <ModalBody pt={0} pb={4}>
-            {/* LAYER 2: Chunked form — 2 inputs max, clear labels */}
             <VStack spacing={3}>
+              {navigator.geolocation && (
+                <Button
+                  w="full"
+                  size="sm"
+                  variant="outline"
+                  borderColor="slate.200"
+                  color="primary.600"
+                  borderRadius="xl"
+                  _hover={{ bg: "primary.50", borderColor: "primary.300" }}
+                  leftIcon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
+                      <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" />
+                    </Icon>
+                  }
+                  onClick={() => {
+                    navigator.geolocation.getCurrentPosition(
+                      (pos) => {
+                        setManualLat(pos.coords.latitude.toFixed(6));
+                        setManualLng(pos.coords.longitude.toFixed(6));
+                      },
+                      (err) => console.warn(err)
+                    );
+                  }}
+                >
+                  ใช้พิกัดจาก GPS ปัจจุบัน
+                </Button>
+              )}
               <FormControl>
                 <FormLabel fontSize="sm" fontWeight="600" color="slate.700" mb={1}>Latitude</FormLabel>
                 <Input
@@ -1013,6 +1247,37 @@ const Sidebar: React.FC<SidebarProps> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Industry Type Picker Modal */}
+      <IndustryTypeModal
+        isOpen={isIndustryModalOpen}
+        onClose={onIndustryModalClose}
+        selectedTypes={filters.factoryTypes}
+        onChangeTypes={(types) => onFiltersChange({ ...filters, factoryTypes: types })}
+      />
+
+      {/* Factory Dossier Print / Summary Modal */}
+      {selectedFactory && (
+        <DossierPrintModal
+          isOpen={isPrintOpen}
+          onClose={onPrintClose}
+          reports={[]}
+          factoryMeta={{
+            id: selectedFactory.properties.เลขทะเบียน,
+            name: selectedFactory.properties.ชื่อโรงงาน,
+            address: selectedFactory.properties.ที่อยู่,
+            province: selectedFactory.properties.จังหวัด,
+            district: selectedFactory.properties.อำเภอ,
+            factory_type: selectedFactory.properties.ประเภท,
+            horsepower: selectedFactory.properties.แรงม้า,
+            capital_investment: selectedFactory.properties.เงินลงทุน,
+            total_workers: (selectedFactory.properties.คนงานชาย || 0) + (selectedFactory.properties.คนงานหญิง || 0),
+            juristic_name: selectedFactory.properties.ผู้ประกอบก,
+            lat: selectedFactory.geometry.coordinates[1],
+            lng: selectedFactory.geometry.coordinates[0],
+          }}
+        />
+      )}
     </Box>
   );
 };

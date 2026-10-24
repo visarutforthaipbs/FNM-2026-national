@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105545037500",
+  "companyName": "ไทยเจริญพัฒนาการพิมพ์ จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเจริญชัย   มงคลเจริญโชติ",
+      "shares": 180000,
+      "sharePercent": 90.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายฉัตรมงคล   มงคลเจริญโชติ",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:26:27.914721"
+}

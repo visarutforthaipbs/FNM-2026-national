@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105549049707",
+  "companyName": "ซีเอ็มเค คอร์ปอเรชั่น (ประเทศไทย) จำกัด",
+  "totalShares": 9007300,
+  "shareValue": 1000.0,
+  "holderCount": 2,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "ซีเอ็มเค คอร์ปอเรชั่น",
+      "shares": 9007299,
+      "sharePercent": 100.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายโยชิฮิสะ    ยามากูจิ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:34:52.022880"
+}

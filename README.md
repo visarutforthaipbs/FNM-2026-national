@@ -129,7 +129,7 @@ client/                          React 18 + TypeScript + Vite — the deployed a
     context/                     auth + watchlist providers (one shared store each)
     components/                  map, sidebar, report form, dossier, admin modals
     hooks/                       useFactoriesApi, useReports, useWatchlist, useZoning
-    pages/                       MapPage · DashboardPage · WasteMonitorPage
+    pages/                       MapPage · DashboardPage
                                  UserDiaryPage · AdminPage
     utils/                       hazard classification, geo, the two Supabase clients
   public/data/                   generated — markers/ zoning/ dbd/ + aggregates

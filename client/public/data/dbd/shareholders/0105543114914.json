@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105543114914",
+  "companyName": "บี.จี.เอส.อินเตอร์เนชั่นแนล จำกัด",
+  "totalShares": 120000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.ชลธิชา   บรรดาประณีต",
+      "shares": 119996,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางธาราภรณ์   บรรดาประณีต",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.พร้อมพรรณ   จันที",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:00:20.466765"
+}

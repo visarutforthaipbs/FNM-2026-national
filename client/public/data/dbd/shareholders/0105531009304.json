@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105531009304",
+  "companyName": "ไทยโคโพลีอุตสาหกรรมพลาสติก จำกัด",
+  "totalShares": 712500,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชัชวาลย์   เจียรวนนท์",
+      "shares": 150000,
+      "sharePercent": 21.05,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุภกิต   เจียรวนนท์",
+      "shares": 97500,
+      "sharePercent": 13.68,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางวรรณี   เจียรวนนท์ รอสส์",
+      "shares": 60000,
+      "sharePercent": 8.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายณรงค์   เจียรวนนท์",
+      "shares": 60000,
+      "sharePercent": 8.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายศุภชัย   เจียรวนนท์",
+      "shares": 60000,
+      "sharePercent": 8.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางทิพพาภรณ์   อริยวรารมย์",
+      "shares": 60000,
+      "sharePercent": 8.42,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายนพดล   เจียรวนนท์",
+      "shares": 37500,
+      "sharePercent": 5.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายสุนทร   อรุณานนท์ชัย",
+      "shares": 37500,
+      "sharePercent": 5.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายสุเมธ   เจียรวนนท์",
+      "shares": 100000,
+      "sharePercent": 14.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายเบนจามิน   เจียรวนนท์",
+      "shares": 50000,
+      "sharePercent": 7.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:32:10.320198"
+}

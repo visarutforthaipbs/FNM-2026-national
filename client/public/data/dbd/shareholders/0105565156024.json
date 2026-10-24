@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105565156024",
+  "companyName": "ทง เซิ่ง ไท่ จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหลี่   เว่ยเบียว MR LI WEIBIAO",
+      "shares": 49000,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาววรปภา   บุญพันธ์",
+      "shares": 51000,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:49:59.198600"
+}

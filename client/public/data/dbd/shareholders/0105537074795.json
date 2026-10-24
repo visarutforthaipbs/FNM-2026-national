@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105537074795",
+  "companyName": "จี.เค.แลนด์ จำกัด",
+  "totalShares": 2000000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท สยามอีสเทิร์นอินดัสเตรียลพาร์ค จำกัด",
+      "shares": 1802000,
+      "sharePercent": 90.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายอนันตชัย   คุณานันทกุล",
+      "shares": 126000,
+      "sharePercent": 6.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเอกสิทธิ์   คุณานันทกุล",
+      "shares": 36000,
+      "sharePercent": 1.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.กัลยา   คุณานันทกุล",
+      "shares": 36000,
+      "sharePercent": 1.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:37:19.855088"
+}

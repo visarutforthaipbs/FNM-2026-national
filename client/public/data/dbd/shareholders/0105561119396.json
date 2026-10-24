@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105561119396",
+  "companyName": "เค็มไซเคิล จำกัด",
+  "totalShares": 400000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอดิเรก   สกุลลัม",
+      "shares": 136000,
+      "sharePercent": 34.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายบวรรัตน์   กาญจนรัตน์",
+      "shares": 132000,
+      "sharePercent": 33.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท เอ็นเนอร์ยี่ คอร์ป อินโนเวชั่น จำกัด",
+      "shares": 132000,
+      "sharePercent": 33.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:00:50.200255"
+}

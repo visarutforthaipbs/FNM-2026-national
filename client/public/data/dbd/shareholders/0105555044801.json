@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105555044801",
+  "companyName": "จงเป่า เอ็นเตอร์ไพรส์ จำกัด",
+  "totalShares": 390000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวอำไพ   ครองยุทธ",
+      "shares": 387300,
+      "sharePercent": 99.31,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเตวิช   โพธิ์ทอง",
+      "shares": 2700,
+      "sharePercent": 0.69,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:09:20.751974"
+}

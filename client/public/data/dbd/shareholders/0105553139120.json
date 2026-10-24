@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553139120",
+  "companyName": "บริษัท ชางฮง เอ็นเตอร์ไพรส์ จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 48.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายโจว   จง ซวี่",
+      "shares": 9600,
+      "sharePercent": 48.0,
+      "nationality": "สาธารณรัฐประชาชนจีน",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสวัสดิ์   พ่วงเพ็ชรสวัสดิ์",
+      "shares": 8400,
+      "sharePercent": 42.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายทวีศักดิ์   ประทุมชาติ",
+      "shares": 2000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:06:20.223398"
+}

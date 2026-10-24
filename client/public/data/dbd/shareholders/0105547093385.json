@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105547093385",
+  "companyName": "พี เค เอเซีย (ประเทศไทย) จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพงศธร   ธารีไทย",
+      "shares": 9996,
+      "sharePercent": 49.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายขวัญชัย   เขียววิลัย",
+      "shares": 6000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเลอพันธุ์   วงศ์เจริญ",
+      "shares": 4000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางทรายคำ   ธารีไทย",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายลีลวัธน์   สุทธิพร",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายนรินทร์   เสนีย์วงศ์ ณ อยุธยา",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวสันต์   กัณธาทรัพย์",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:32.389545"
+}

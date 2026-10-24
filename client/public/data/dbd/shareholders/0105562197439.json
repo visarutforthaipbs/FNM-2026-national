@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105562197439",
+  "companyName": "ไคฮวดจั่น หทัยราษฎร์ จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพงศกร   ฉัตรพิริยะพันธ์",
+      "shares": 10000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายชาญยุทธ   ฉัตรพิริยะพันธ์",
+      "shares": 9998,
+      "sharePercent": 49.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางรุ่งนภา   วรุณโชติกุล",
+      "shares": 2,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:17:05.986536"
+}

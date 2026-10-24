@@ -31,9 +31,12 @@ import {
   ModalCloseButton
 } from '@chakra-ui/react';
 import type { IconProps } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import DbdOwnershipSection from '../components/DbdOwnershipSection';
 import { factoryTypeName } from '../utils/factoryTypes';
 import { parseFactoryTypeCode } from '../utils/hazard';
+import { PROVINCE_TO_REGION, REGIONS_ORDER, TOP_INDUSTRIAL_PROVINCES } from '../utils/regions';
 
 interface DashboardStats {
   total: number;
@@ -87,7 +90,21 @@ interface FactoryExplorerItem {
 
 interface ZoningSummary {
   factories_tested: number;
+  /** Inside any plan polygon that carries a land-use code — both zoned tiers. */
   inside_a_dpt_zone: number;
+  /** The ผังเมืองรวมเมือง/ชุมชน share of the above. Optional: pre-2026-09 summaries lack it. */
+  zoned_by_municipal_plan?: number;
+  /** The ผังเมืองรวมจังหวัด share of the above. */
+  zoned_by_province_plan?: number;
+  /**
+   * Inside a ผังเมืองรวมจังหวัด footprint only. Those footprints carry no
+   * land-use attribute, so these factories are covered by a plan whose zoning
+   * we do not hold — a different answer from both of the other two, and the
+   * reason the grid below has four mutually exclusive cards that sum to the
+   * total. Optional because a summary written before the provincial tier
+   * existed does not have it.
+   */
+  inside_province_plan_only?: number;
   no_dpt_plan_data: number;
   by_family: Record<string, number>;
   provinces_without_dpt_coverage: string[];
@@ -169,8 +186,8 @@ const DashboardPage = () => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
-      setProvinceError("ระบบฐานข้อมูลไม่พร้อมใช้งาน (Missing credentials)");
+    if (!supabaseUrl || !supabaseKey || !/^[\x20-\x7E]+$/.test(supabaseKey)) {
+      setProvinceError("ระบบฐานข้อมูลไม่พร้อมใช้งาน (Missing or invalid credentials)");
       return;
     }
 
@@ -241,6 +258,35 @@ const DashboardPage = () => {
     if (!stats || !stats.countByProvince) return [];
     return Object.keys(stats.countByProvince).sort((a, b) => a.localeCompare(b, 'th'));
   }, [stats]);
+
+  // Group provinces by region and top industrial hubs for chunked navigation
+  const groupedProvinces = useMemo(() => {
+    const map: Record<string, string[]> = {};
+    for (const reg of REGIONS_ORDER) {
+      map[reg] = [];
+    }
+    for (const prov of provincesList) {
+      const reg = PROVINCE_TO_REGION[prov] || "ภาคกลาง";
+      if (!map[reg]) map[reg] = [];
+      map[reg].push(prov);
+    }
+    for (const reg of REGIONS_ORDER) {
+      map[reg].sort((a, b) => a.localeCompare(b, 'th'));
+    }
+    return map;
+  }, [provincesList]);
+
+  const topProvincesList = useMemo(() => {
+    return provincesList
+      .filter((p) => TOP_INDUSTRIAL_PROVINCES.includes(p))
+      .sort((a, b) => {
+        const countA = stats?.countByProvince?.[a] || 0;
+        const countB = stats?.countByProvince?.[b] || 0;
+        return countB - countA;
+      });
+  }, [provincesList, stats]);
+
+  const hasActiveExplorerFilters = Boolean(explorerSearch || explorerDistrict || explorerType || explorerIndustry);
 
   // Extract unique districts from province data
   const districts = useMemo(() => {
@@ -355,6 +401,44 @@ const DashboardPage = () => {
     setCurrentPage(1);
   };
 
+  const handleExportCsv = () => {
+    if (!filteredFactories.length) return;
+    const headers = [
+      "เลขทะเบียน",
+      "ชื่อโรงงาน",
+      "จำพวก",
+      "อำเภอ",
+      "จังหวัด",
+      "เงินลงทุน (บาท)",
+      "แรงม้า",
+      "คนงาน",
+      "ที่อยู่",
+      "สถานะ"
+    ];
+    const rows = filteredFactories.map((f) => [
+      `"${f.id || ''}"`,
+      `"${(f.name || '').replace(/"/g, '""')}"`,
+      `"${f.factory_type || ''}"`,
+      `"${f.district || ''}"`,
+      `"${f.province || ''}"`,
+      f.capital_investment || 0,
+      f.horsepower || 0,
+      f.total_workers || 0,
+      `"${(f.address_full || '').replace(/"/g, '""')}"`,
+      `"${f.status || ''}"`
+    ]);
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `โรงงาน_${selectedProvince || 'รายชื่อ'}_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const SortIndicator = ({ field }: { field: keyof FactoryExplorerItem }) => {
     if (sortField !== field) return null;
     return (
@@ -414,18 +498,36 @@ const DashboardPage = () => {
             <Select
               placeholder="ภาพรวมทั้งประเทศ"
               value={selectedProvince}
-              onChange={(e) => setSelectedProvince(e.target.value)}
+              onChange={(e) => {
+                setSelectedProvince(e.target.value);
+                setExplorerSearch("");
+                setExplorerDistrict("");
+                setExplorerType("");
+                setExplorerIndustry("");
+                setCurrentPage(1);
+              }}
               bg="white"
               borderColor="slate.200"
               borderRadius="xl"
               fontWeight="600"
-              color={selectedProvince ? "primary.500" : "slate.600"}
+              color={selectedProvince ? "primary.600" : "slate.600"}
               _focus={{ borderColor: "primary.500", boxShadow: "0 0 0 2px rgba(240, 82, 35, 0.15)" }}
             >
-              {provincesList.map((p) => (
-                <option key={p} value={p}>
-                  จังหวัด{p}
-                </option>
+              <optgroup label="จังหวัดอุตสาหกรรมหลัก">
+                {topProvincesList.map((p) => (
+                  <option key={`top-${p}`} value={p}>
+                    จังหวัด{p} ({stats?.countByProvince?.[p]?.toLocaleString() || 0} แห่ง)
+                  </option>
+                ))}
+              </optgroup>
+              {REGIONS_ORDER.map((region) => (
+                <optgroup key={region} label={`${region} (${groupedProvinces[region]?.length || 0} จังหวัด)`}>
+                  {groupedProvinces[region]?.map((p) => (
+                    <option key={p} value={p}>
+                      จังหวัด{p} ({stats?.countByProvince?.[p]?.toLocaleString() || 0} แห่ง)
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </Select>
           </Box>
@@ -489,7 +591,7 @@ const DashboardPage = () => {
                 </Text>
               </Flex>
               <Badge colorScheme="gray" p={2} borderRadius="lg" fontSize="xs">
-                ตรวจสอบพิกัดกับแปลงผังเมือง 42,219 แปลง
+                ตรวจสอบพิกัดกับแปลงผังเมือง 42,219 แปลง และแปลงผังจังหวัด 32,187 แปลง
               </Badge>
             </Flex>
             <Text fontSize="xs" color="slate.500" mb={4} lineHeight="1.7">
@@ -508,19 +610,29 @@ const DashboardPage = () => {
               </Box>
 
               <Box bg="purple.50" p={4} borderRadius="xl" border="1px solid" borderColor="purple.200">
-                <Text fontSize="xs" color="purple.700" fontWeight="600">อยู่ในผังเมืองสีม่วง</Text>
+                <Text fontSize="xs" color="purple.700" fontWeight="600">ทราบประเภทการใช้ที่ดิน</Text>
                 <Text fontSize="xl" fontWeight="bold" color="purple.900">
-                  {(zoningSummary.by_family.industrial ?? 0).toLocaleString()}
+                  {zoningSummary.inside_a_dpt_zone.toLocaleString()}
                 </Text>
-                <Text fontSize="2xs" color="slate.600" mt={1}>เขตอุตสาหกรรมและคลังสินค้า</Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>
+                  ผังเมือง/ชุมชน {(zoningSummary.zoned_by_municipal_plan ?? 0).toLocaleString()} ·
+                  ผังจังหวัด {(zoningSummary.zoned_by_province_plan ?? 0).toLocaleString()}
+                </Text>
               </Box>
 
-              <Box bg="yellow.50" p={4} borderRadius="xl" border="1px solid" borderColor="yellow.200">
-                <Text fontSize="xs" color="yellow.800" fontWeight="600">อยู่ในเขตที่อยู่อาศัย</Text>
-                <Text fontSize="xl" fontWeight="bold" color="yellow.900">
-                  {(zoningSummary.by_family.residential ?? 0).toLocaleString()}
+              {/* The category that used to be counted as "no data". A
+                  ผังเมืองรวมจังหวัด footprint says a plan covers the point and
+                  carries no land use at all, so it is neither zoned nor
+                  unplanned — it is its own answer, and merging it into either
+                  neighbour is what made this figure wrong before. */}
+              <Box bg="blue.50" p={4} borderRadius="xl" border="1px solid" borderColor="blue.200">
+                <Text fontSize="xs" color="blue.700" fontWeight="600">มีผังครอบคลุม ยังไม่ทราบประเภท</Text>
+                <Text fontSize="xl" fontWeight="bold" color="blue.900">
+                  {(zoningSummary.inside_province_plan_only ?? 0).toLocaleString()}
                 </Text>
-                <Text fontSize="2xs" color="slate.600" mt={1}>ผังเมืองสีเหลือง/ส้ม</Text>
+                <Text fontSize="2xs" color="slate.600" mt={1}>
+                  อยู่ในขอบเขตผังจังหวัดที่ DPT เผยแพร่เฉพาะขอบเขต
+                </Text>
               </Box>
 
               <Box bg="slate.50" p={4} borderRadius="xl" border="1px solid" borderColor="slate.200">
@@ -532,38 +644,115 @@ const DashboardPage = () => {
                   </Text>
                 </Text>
                 <Text fontSize="2xs" color="slate.600" mt={1}>
-                  ไม่มีแปลงผังเมืองของ DPT ครอบคลุมจุดที่ตั้ง
+                  ไม่พบทั้งผังระดับเมือง/ชุมชน และระดับจังหวัด
                 </Text>
               </Box>
             </SimpleGrid>
 
+            {/* The land-use split is a breakdown OF the first card, not a
+                fifth category — stated as a subset so the four numbers above
+                keep summing to the total. */}
+            <Text fontSize="2xs" color="slate.600" mt={3} lineHeight="1.7">
+              ในกลุ่มที่ทราบประเภทการใช้ที่ดิน {zoningSummary.inside_a_dpt_zone.toLocaleString()} แห่ง —
+              ผังเมืองสีม่วง (อุตสาหกรรมและคลังสินค้า) {(zoningSummary.by_family.industrial ?? 0).toLocaleString()} แห่ง ·
+              เขตที่อยู่อาศัย {(zoningSummary.by_family.residential ?? 0).toLocaleString()} แห่ง ·
+              ชนบทและเกษตรกรรม {(zoningSummary.by_family.rural_agricultural ?? 0).toLocaleString()} แห่ง
+            </Text>
+
             <Text fontSize="2xs" color="slate.500" mt={3} lineHeight="1.7">
-              ที่มา: แปลงผังเมืองรวม กรมโยธาธิการและผังเมือง (PLLU_ALL) ·
-              ผังเมืองบางพื้นที่ออกโดยหน่วยงานอื่น เช่น ผังเมืองรวมกรุงเทพมหานคร และผังการใช้ประโยชน์ที่ดิน EEC
-              จึงไม่ปรากฏในชุดข้อมูลนี้
+              ที่มา: แปลงผังเมืองรวมเมือง/ชุมชน (PLLU_ALL) และแปลงผังเมืองรวมจังหวัด (PLLU_PROV)
+              กรมโยธาธิการและผังเมือง · จุดที่อยู่ในทั้งสองผัง นับตามผังเมือง/ชุมชนซึ่งเฉพาะเจาะจงกว่า
+              จึงไม่นำมาบวกกัน · กรุงเทพมหานครใช้ผังเมืองรวมกรุงเทพมหานครซึ่งออกโดย กทม.
             </Text>
           </Box>
         )}
 
-        {/* Callout to select province when view is national overview */}
-        {!selectedProvince && (
+        {/* Quick-Pick Hotspot Chips on National View / Active Province Bar */}
+        {!selectedProvince ? (
           <Box 
             bg="primary.50" 
             border="1px dashed" 
             borderColor="primary.200" 
-            p={6} 
+            p={{ base: 4, md: 6 }} 
             borderRadius="2xl" 
             textAlign="center" 
             mb={8}
             boxShadow="sm"
           >
-            <Text fontSize="lg" fontWeight="semibold" color="primary.700" mb={1}>
-              ต้องการสำรวจข้อมูลเชิงลึกเป็นรายโรงงาน?
+            <Flex align="center" justify="center" gap={2} mb={1}>
+              <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4} color="primary.600">
+                <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </Icon>
+              <Text fontSize="md" fontWeight="bold" color="primary.700">
+                สำรวจข้อมูลเชิงลึกเป็นรายโรงงาน
+              </Text>
+            </Flex>
+            <Text fontSize="xs" color="slate.600" maxW="540px" mx="auto" mb={3.5}>
+              เลือกจังหวัดอุตสาหกรรมหลักด้านล่างเพื่อสืบค้นรายชื่อโรงงาน รายอำเภอ หรือจัดอันดับเงินลงทุนและแรงงานทันที
             </Text>
-            <Text fontSize="sm" color="slate.500" mb={4}>
-              เลือกจังหวัดที่ท่านสนใจในมุมขวาบน เพื่อสืบค้นข้อมูลรายอำเภอ ค้นหาชื่อโรงงาน เรียงข้อมูลตามเงินลงทุน หรือพนักงานได้ทันที
-            </Text>
+            <HStack spacing={2} justify="center" wrap="wrap">
+              {TOP_INDUSTRIAL_PROVINCES.slice(0, 8).map((prov) => (
+                <Button
+                  key={`quick-${prov}`}
+                  size="sm"
+                  borderRadius="full"
+                  variant="outline"
+                  bg="white"
+                  borderColor="primary.300"
+                  color="primary.700"
+                  fontWeight="600"
+                  _hover={{ bg: "primary.100", borderColor: "primary.400", transform: "translateY(-1px)" }}
+                  transition="all 0.15s ease"
+                  onClick={() => {
+                    setSelectedProvince(prov);
+                    setExplorerSearch("");
+                    setExplorerDistrict("");
+                    setExplorerType("");
+                    setExplorerIndustry("");
+                    setCurrentPage(1);
+                  }}
+                  leftIcon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
+                    </Icon>
+                  }
+                >
+                  {prov}
+                </Button>
+              ))}
+            </HStack>
           </Box>
+        ) : (
+          <Flex align="center" justify="space-between" bg="white" px={4} py={2.5} borderRadius="xl" border="1px solid" borderColor="slate.200" mb={6} wrap="wrap" gap={2}>
+            <HStack spacing={2}>
+              <Text fontSize="xs" fontWeight="600" color="slate.500">มุมมองปัจจุบัน:</Text>
+              <Badge colorScheme="primary" fontSize="xs" px={2} py={0.5} borderRadius="md">
+                จังหวัด{selectedProvince} ({filteredFactories.length.toLocaleString()} โรงงาน)
+              </Badge>
+            </HStack>
+            <Button
+              size="xs"
+              variant="ghost"
+              color="slate.600"
+              fontWeight="600"
+              onClick={() => {
+                setSelectedProvince("");
+                setExplorerSearch("");
+                setExplorerDistrict("");
+                setExplorerType("");
+                setExplorerIndustry("");
+                setCurrentPage(1);
+              }}
+              leftIcon={
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                  <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                </Icon>
+              }
+              _hover={{ bg: "slate.100" }}
+            >
+              กลับสู่ภาพรวมทั้งประเทศ
+            </Button>
+          </Flex>
         )}
 
         <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={{ base: 5, lg: 8 }}>
@@ -571,17 +760,38 @@ const DashboardPage = () => {
           {selectedProvince ? (
             /* Left side: Interactive Data Grid */
             <Box bg="white" p={{ base: 4, md: 6 }} borderRadius="xl" boxShadow="sm" border="1px solid" borderColor="slate.200" gridColumn={{ lg: "span 2" }}>
-              <Box mb={6}>
-                <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="slate.800">
-                  เครื่องมือสืบค้นและสำรวจข้อมูลโรงงาน
-                </Text>
-                <Text fontSize="xs" color="slate.400" mt={1}>
-                  พบ {filteredFactories.length.toLocaleString()} โรงงานที่ตรงตามเงื่อนไข (คลิกเพื่อดูรายละเอียดเชิงลึก)
-                </Text>
+              <Box mb={6} display="flex" justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap={3}>
+                <Box>
+                  <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="slate.800">
+                    เครื่องมือสืบค้นและสำรวจข้อมูลโรงงาน
+                  </Text>
+                  <Text fontSize="xs" color="slate.500" mt={1}>
+                    พบ {filteredFactories.length.toLocaleString()} โรงงานที่ตรงตามเงื่อนไข (คลิกเพื่อดูรายละเอียดเชิงลึก)
+                  </Text>
+                </Box>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  borderColor="slate.200"
+                  color="slate.700"
+                  borderRadius="lg"
+                  onClick={handleExportCsv}
+                  isDisabled={filteredFactories.length === 0}
+                  _hover={{ bg: "slate.50", borderColor: "slate.300" }}
+                  leftIcon={
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </Icon>
+                  }
+                >
+                  ดาวน์โหลด CSV
+                </Button>
               </Box>
 
               {/* Grid Filter controls */}
-              <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={4} mb={6}>
+              <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={4} mb={hasActiveExplorerFilters ? 3 : 6}>
                 <Box>
                   <Text fontSize="xs" fontWeight="600" color="slate.500" mb={1.5}>สืบค้นข้อความ</Text>
                   <InputGroup size={{ base: "md", md: "sm" }}>
@@ -659,6 +869,31 @@ const DashboardPage = () => {
                 </Box>
               </SimpleGrid>
 
+              {hasActiveExplorerFilters && (
+                <Flex justify="flex-end" mb={4}>
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    color="slate.500"
+                    _hover={{ color: "primary.600", bg: "slate.100" }}
+                    onClick={() => {
+                      setExplorerSearch("");
+                      setExplorerDistrict("");
+                      setExplorerType("");
+                      setExplorerIndustry("");
+                      setCurrentPage(1);
+                    }}
+                    leftIcon={
+                      <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                      </Icon>
+                    }
+                  >
+                    ล้างตัวกรองทั้งหมด
+                  </Button>
+                </Flex>
+              )}
+
               {/* Data Table */}
               {isProvinceLoading ? (
                 <Flex direction="column" align="center" justify="center" py={16} gap={3}>
@@ -676,7 +911,75 @@ const DashboardPage = () => {
                 </Flex>
               ) : (
                 <>
-                  <TableContainer border="1px solid" borderColor="slate.100" borderRadius="lg" overflowY="auto" overflowX="auto" maxH="600px">
+                  {/* Mobile Card List View (<md) */}
+                  <VStack spacing={3} align="stretch" display={{ base: "flex", md: "none" }}>
+                    {paginatedFactories.map((factory) => {
+                      const code = parseFactoryTypeCode(factory.id);
+                      const industry = code !== null ? `${code} · ${factoryTypeName(code)}` : "";
+                      return (
+                        <Box
+                          key={`card-${factory.id}`}
+                          bg="white"
+                          p={3.5}
+                          borderRadius="xl"
+                          border="1px solid"
+                          borderColor="slate.200"
+                          boxShadow="sm"
+                          _hover={{ borderColor: "primary.300" }}
+                          _active={{ bg: "slate.50" }}
+                          onClick={() => {
+                            setSelectedExplorerFactory(factory);
+                            onDetailsOpen();
+                          }}
+                          cursor="pointer"
+                        >
+                          <Flex justify="space-between" align="flex-start" gap={2}>
+                            <Box minW={0} flex="1">
+                              <Text fontWeight="700" color="slate.800" fontSize="sm" lineHeight="1.4">
+                                {factory.name || "—"}
+                              </Text>
+                              <Text fontSize="xs" color="slate.500" mt={0.5} noOfLines={1}>
+                                {industry || "โรงงานทั่วไป"}
+                              </Text>
+                            </Box>
+                            <Badge
+                              bg={factory.factory_type === "3" ? "red.50" : "green.50"}
+                              color={factory.factory_type === "3" ? "red.700" : "green.700"}
+                              px={2}
+                              py={0.5}
+                              fontSize="10px"
+                              fontWeight="bold"
+                              borderRadius="full"
+                              flexShrink={0}
+                            >
+                              จำพวก {factory.factory_type || "—"}
+                            </Badge>
+                          </Flex>
+
+                          <Flex mt={2.5} pt={2.5} borderTop="1px solid" borderColor="slate.100" justify="space-between" align="center">
+                            <Text fontSize="xs" fontWeight="500" color="slate.600">
+                              {factory.district ? `อ.${factory.district}` : "ไม่ระบุอำเภอ"}
+                            </Text>
+                            <HStack spacing={3}>
+                              {factory.capital_investment ? (
+                                <Text fontSize="xs" color="slate.600">
+                                  <Text as="span" fontWeight="700" color="slate.800">{factory.capital_investment.toLocaleString()}</Text> บาท
+                                </Text>
+                              ) : null}
+                              {factory.total_workers ? (
+                                <Text fontSize="xs" color="slate.600">
+                                  <Text as="span" fontWeight="700" color="slate.800">{factory.total_workers.toLocaleString()}</Text> คน
+                                </Text>
+                              ) : null}
+                            </HStack>
+                          </Flex>
+                        </Box>
+                      );
+                    })}
+                  </VStack>
+
+                  {/* Desktop Table View (>=md) */}
+                  <TableContainer display={{ base: "none", md: "block" }} border="1px solid" borderColor="slate.100" borderRadius="lg" overflowY="auto" overflowX="auto" maxH="600px">
                     <Table variant="simple" size="sm">
                       <Thead bg="slate.50" position="sticky" top={0} zIndex={1}>
                         <Tr>
@@ -715,7 +1018,7 @@ const DashboardPage = () => {
                                 const code = parseFactoryTypeCode(factory.id);
                                 const industry = code !== null ? `${code} · ${factoryTypeName(code)}` : "";
                                 return (
-                                  <Text fontSize="2xs" color="slate.400" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                                  <Text fontSize="2xs" color="slate.500" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                                     {industry}
                                     <Text as="span" display={{ base: "inline", md: "none" }}>
                                       {industry && factory.district ? " · " : ""}{factory.district ? `อ.${factory.district}` : ""}
@@ -751,12 +1054,13 @@ const DashboardPage = () => {
 
                   {/* Pagination control block */}
                   <Flex justify="space-between" align="center" mt={4} wrap="wrap" gap={3}>
-                    <Text fontSize="xs" color="slate.400">
+                    <Text fontSize="xs" fontWeight="500" color="slate.600">
                       แสดง {(currentPage - 1) * itemsPerPage + 1} – {Math.min(currentPage * itemsPerPage, filteredFactories.length)} จาก {filteredFactories.length.toLocaleString()} โรงงาน
                     </Text>
                     <HStack spacing={1}>
                       <Button 
-                        size="xs" 
+                        size={{ base: "sm", md: "xs" }} 
+                        minH={{ base: "36px", md: "24px" }}
                         onClick={() => { setCurrentPage(prev => Math.max(1, prev - 1)); }}
                         isDisabled={currentPage === 1}
                         variant="outline"
@@ -774,7 +1078,9 @@ const DashboardPage = () => {
                         return (
                           <Button
                             key={pageNum}
-                            size="xs"
+                            size={{ base: "sm", md: "xs" }}
+                            minH={{ base: "36px", md: "24px" }}
+                            minW={{ base: "36px", md: "24px" }}
                             onClick={() => setCurrentPage(pageNum)}
                             variant={currentPage === pageNum ? "solid" : "outline"}
                             bg={currentPage === pageNum ? "primary.500" : "white"}
@@ -786,7 +1092,8 @@ const DashboardPage = () => {
                         );
                       })}
                       <Button 
-                        size="xs" 
+                        size={{ base: "sm", md: "xs" }} 
+                        minH={{ base: "36px", md: "24px" }}
                         onClick={() => { setCurrentPage(prev => Math.min(totalPages, prev + 1)); }}
                         isDisabled={currentPage === totalPages}
                         variant="outline"
@@ -805,16 +1112,49 @@ const DashboardPage = () => {
                 15 จังหวัดที่มีปริมาณโรงงานสูงสุด
               </Text>
               
-              <VStack spacing={4} align="stretch">
+              <VStack spacing={2} align="stretch">
                 {stats.topProvinces.map(([province, count]: [string, number], idx: number) => {
                   const max = stats.topProvinces[0]?.[1] || 1;
                   const percentage = (count / max) * 100;
                   return (
-                    <Box key={province}>
-                      <Flex justify="space-between" mb={1}>
-                        <Text fontSize="sm" fontWeight="semibold" color="slate.700">
-                          {idx + 1}. {province}
-                        </Text>
+                    <Box
+                      key={province}
+                      as="button"
+                      onClick={() => {
+                        setSelectedProvince(province);
+                        setExplorerSearch("");
+                        setExplorerDistrict("");
+                        setExplorerType("");
+                        setExplorerIndustry("");
+                        setCurrentPage(1);
+                      }}
+                      textAlign="left"
+                      w="full"
+                      p={2}
+                      borderRadius="lg"
+                      _hover={{ bg: "primary.50" }}
+                      transition="all 0.15s ease"
+                      role="group"
+                    >
+                      <Flex justify="space-between" align="center" mb={1}>
+                        <HStack spacing={1.5}>
+                          <Text fontSize="sm" fontWeight="semibold" color="slate.700" _groupHover={{ color: "primary.700" }}>
+                            {idx + 1}. {province}
+                          </Text>
+                          <Icon
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            boxSize={3}
+                            color="slate.400"
+                            opacity={0}
+                            _groupHover={{ opacity: 1, color: "primary.600" }}
+                            transition="opacity 0.15s ease"
+                          >
+                            <polyline points="9 18 15 12 9 6" />
+                          </Icon>
+                        </HStack>
                         <Text fontSize="sm" fontWeight="bold" color="primary.600">
                           {count.toLocaleString()}
                         </Text>
@@ -822,12 +1162,12 @@ const DashboardPage = () => {
                       <Progress 
                         value={percentage} 
                         colorScheme="primary" 
-                        size="sm" 
+                        size="xs" 
                         borderRadius="full" 
                         bg="slate.100"
                       />
                     </Box>
-                  )
+                  );
                 })}
               </VStack>
             </Box>
@@ -1024,6 +1364,37 @@ const DashboardPage = () => {
                     </Text>
                   </Box>
                 </SimpleGrid>
+
+                <Box w="full" pt={2}>
+                  <DbdOwnershipSection
+                    factoryId={selectedExplorerFactory.id}
+                    provinceEn={selectedExplorerFactory.province || selectedProvince}
+                    factoryObjective={selectedExplorerFactory.businesses?.objective}
+                    factoryType={selectedExplorerFactory.factory_type}
+                  />
+                </Box>
+
+                <Box pt={3}>
+                  <Button
+                    as={RouterLink}
+                    to={`/?province=${encodeURIComponent(selectedExplorerFactory.province || selectedProvince)}&factory=${encodeURIComponent(selectedExplorerFactory.id)}`}
+                    w="full"
+                    size="md"
+                    bg="primary.600"
+                    color="white"
+                    _hover={{ bg: "primary.700" }}
+                    borderRadius="xl"
+                    fontWeight="600"
+                    leftIcon={
+                      <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
+                        <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+                        <line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" />
+                      </Icon>
+                    }
+                  >
+                    ดูตำแหน่งโรงงานบนแผนที่
+                  </Button>
+                </Box>
               </VStack>
             </ModalBody>
           </ModalContent>
@@ -1264,12 +1635,27 @@ const IndustryRanking = ({
             </Badge>
             <Box flex="1" minW={0}>
               <Flex justify="space-between" align="center" mb={0.5} gap={2}>
-                <Text fontSize="sm" fontWeight="500" color="slate.700" noOfLines={1}>
+                <Text fontSize="sm" fontWeight="500" color="slate.700" noOfLines={1} _groupHover={{ color: "primary.700" }}>
                   {factoryTypeName(code)}
                 </Text>
-                <Text fontSize="xs" fontWeight="700" color="primary.600" flexShrink={0}>
-                  {count.toLocaleString()}
-                </Text>
+                <HStack spacing={1.5} flexShrink={0}>
+                  <Text fontSize="xs" fontWeight="700" color="primary.600">
+                    {count.toLocaleString()}
+                  </Text>
+                  <Icon
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    boxSize={3}
+                    color="slate.400"
+                    opacity={0}
+                    _groupHover={{ opacity: 1, color: "primary.600" }}
+                    transition="opacity 0.15s ease"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </Icon>
+                </HStack>
               </Flex>
               <Progress
                 value={(count / max) * 100}

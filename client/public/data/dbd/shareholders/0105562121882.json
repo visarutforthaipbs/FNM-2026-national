@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105562121882",
+  "companyName": "บางกอก อินเตอร์เนชั่นแนล เมทัล จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธนาวัฒน์   จริยวงศ์ศิริ",
+      "shares": 46500,
+      "sharePercent": 31.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.เติ้ง เยว่ ฉวิน   (MS. DENG, YUEQUN)",
+      "shares": 51000,
+      "sharePercent": 34.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.อู๋ ตานเฟิง   (MS. WU, DANFENG)",
+      "shares": 22500,
+      "sharePercent": 15.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอัฐพร   พุนดี",
+      "shares": 15000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายโกศล   แดงชาติ",
+      "shares": 15000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:34:19.430489"
+}

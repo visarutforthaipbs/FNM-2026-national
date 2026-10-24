@@ -68,6 +68,7 @@ export type FilterState = {
   factoryTypes: string[];
   districts: string[];
   showOnlyInRadius: boolean;
+  radiusKm?: number; // 3, 5, or 10 km (defaults to 10)
   showHighRisk: boolean;
   selectedProvince: string; // "" means all provinces
 };

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105555169891",
+  "companyName": "เอสเอสพี พรีซิชั่น ทูลลิ่ง จำกัด",
+  "totalShares": 55000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุพัฒน์   ศรีนนท์",
+      "shares": 10500,
+      "sharePercent": 19.09,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.สายทิพย์   สิงห์คู่",
+      "shares": 44500,
+      "sharePercent": 80.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:38:54.601071"
+}

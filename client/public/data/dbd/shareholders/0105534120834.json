@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105534120834",
+  "companyName": "ซิงเฮ้าส์ จำกัด",
+  "totalShares": 3500000,
+  "shareValue": 10.0,
+  "holderCount": 5,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหลี่   ชง หมิง",
+      "shares": 1050000,
+      "sharePercent": 30.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางหลี่   หวัง หง เหลียน",
+      "shares": 890000,
+      "sharePercent": 25.43,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางโจว   หวัง ฉี เหลียน",
+      "shares": 160000,
+      "sharePercent": 4.57,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายหลี่   ซู ฮัว",
+      "shares": 700000,
+      "sharePercent": 20.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวหลี่   ซู่ เจีย",
+      "shares": 700000,
+      "sharePercent": 20.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:33.577940"
+}

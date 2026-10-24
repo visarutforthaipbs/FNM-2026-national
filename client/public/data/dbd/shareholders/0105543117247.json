@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105543117247",
+  "companyName": "ชัยเมธี จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสวิส   จิรเมธี",
+      "shares": 18660,
+      "sharePercent": 93.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวภัทธนัน   รัศมิทัต",
+      "shares": 500,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวศศิธร   จิรเมธี",
+      "shares": 500,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวเสาวนีย์   จิรเมธี",
+      "shares": 170,
+      "sharePercent": 0.85,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายซากัรตา   สาแม",
+      "shares": 170,
+      "sharePercent": 0.85,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:25:00.941926"
+}

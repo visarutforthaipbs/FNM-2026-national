@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105545028209",
+  "companyName": "พี เอส รีไซเคิล จำกัด",
+  "totalShares": 7300000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ทีซีซี แคปปิตอล แลนด์ จำกัด",
+      "shares": 7299999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท ยอดกิจธุรกิจ จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:56.155164"
+}

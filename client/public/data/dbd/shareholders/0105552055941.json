@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105552055941",
+  "companyName": "ชัย เวสต์ แมนเน็จเม้นท์ จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวศิริเนตร   คำสมาน",
+      "shares": 70000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวธิติพร   ประชานันท์",
+      "shares": 15000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวพรประจักษ์   ประชานันท์",
+      "shares": 15000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:20:45.109336"
+}

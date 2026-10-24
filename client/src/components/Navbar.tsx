@@ -8,7 +8,6 @@ import {
     Stack,
     Text,
     Image,
-    VStack,
     Button,
     Avatar,
     Menu,
@@ -36,7 +35,6 @@ const Navbar = () => {
     const Links = [
         { name: 'แผนที่', path: '/' },
         { name: 'ภาพรวม', path: '/dashboard' },
-        { name: 'เฝ้าระวังกากฯ', path: '/waste-monitor' },
         { name: 'สมุดบันทึกผลกระทบ', path: '/diary' },
     ];
 
@@ -61,52 +59,38 @@ const Navbar = () => {
                             onClick={isOpen ? onClose : onOpen}
                             variant="ghost"
                             color="slate.500"
-                            minW="40px"
-                            minH="40px"
+                            minW="44px"
+                            minH="44px"
                         />
 
                         {/* Product signature */}
                         <RouterLink to="/" style={{ textDecoration: 'none' }}>
                             <Flex alignItems="center" gap={3}>
                                 <Image
-                                    src="/thai-pbs-logo.svg"
-                                    alt="Thai PBS Logo"
+                                    src="/assets/thai-pbs-logo.svg"
+                                    alt="ไทยพีบีเอส"
                                     h="32px"
                                     w="auto"
-                                    fallbackSrc="https://upload.wikimedia.org/wikipedia/commons/d/d3/Thai_PBS_Logo_2016.svg"
                                     flexShrink={0}
                                     display={{ base: 'none', sm: 'block' }}
                                 />
                                 <Box h="20px" w="1px" bg="slate.200" flexShrink={0} display={{ base: 'none', sm: 'block' }} />
                                 <Image
-                                    src="/assets/brand/brand-symbol.svg"
-                                    alt=""
-                                    aria-hidden="true"
-                                    boxSize="32px"
+                                    src="/assets/project-favicon.svg"
+                                    alt="โรงงานใกล้ฉัน"
+                                    h="34px"
+                                    w="auto"
                                     flexShrink={0}
+                                    display={{ base: 'block', sm: 'none' }}
                                 />
-                                <VStack align="start" spacing={0} flexShrink={0}>
-                                    <Text
-                                        fontSize="sm"
-                                        fontWeight="800"
-                                        letterSpacing="tight"
-                                        color="slate.800"
-                                        lineHeight="1.1"
-                                    >
-                                        โรงงานใกล้ฉัน
-                                    </Text>
-                                    <Text
-                                        fontSize="8px"
-                                        fontWeight="700"
-                                        color="slate.500"
-                                        letterSpacing="1.1px"
-                                        lineHeight="1.1"
-                                        mt="3px"
-                                        display={{ base: 'none', sm: 'block' }}
-                                    >
-                                        FACTORY NEAR ME
-                                    </Text>
-                                </VStack>
+                                <Image
+                                    src="/assets/project-logo.svg"
+                                    alt="โรงงานใกล้ฉัน"
+                                    h="32px"
+                                    w="auto"
+                                    flexShrink={0}
+                                    display={{ base: 'none', sm: 'block' }}
+                                />
                             </Flex>
                         </RouterLink>
                     </HStack>

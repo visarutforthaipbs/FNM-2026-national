@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105516001721",
+  "companyName": "ซันยางอุตสาหกรรมอาหาร จำกัด",
+  "totalShares": 30000,
+  "shareValue": 1000.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางปณิตา   ปัญญาดิลก",
+      "shares": 100,
+      "sharePercent": 0.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวิโรจน์   ปัญญาดิลก",
+      "shares": 10450,
+      "sharePercent": 34.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายวิบูลย์   ปัญญาดิลก",
+      "shares": 10450,
+      "sharePercent": 34.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางอัมพร   จิตะพันธ์กุล",
+      "shares": 3000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวจันทนา   ปัญญาดิลก",
+      "shares": 3000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาววิลาวัณย์   ปัญญาดิลก",
+      "shares": 3000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:28:16.334391"
+}

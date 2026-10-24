@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105533107061",
+  "companyName": "อันชิ่ง อินดัสทรี จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 40.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอุดม   ติรกนกสถิตย์",
+      "shares": 120000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเจิ้งฝู   เฉิน",
+      "shares": 80000,
+      "sharePercent": 40.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:56:01.040536"
+}

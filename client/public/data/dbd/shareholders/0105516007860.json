@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105516007860",
+  "companyName": "น้ำตาลสิงห์บุรี จำกัด",
+  "totalShares": 689723,
+  "shareValue": 250.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกมล   ว่องกุศลกิจ",
+      "shares": 161742,
+      "sharePercent": 23.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุนทร   ว่องกุศลกิจ",
+      "shares": 138358,
+      "sharePercent": 20.06,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายวิฑูรย์   ว่องกุศลกิจ",
+      "shares": 114907,
+      "sharePercent": 16.66,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายอิสระ   ว่องกุศลกิจ",
+      "shares": 94424,
+      "sharePercent": 13.69,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางวิมล   กาญจนกำเนิด",
+      "shares": 26555,
+      "sharePercent": 3.85,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ท.หญิงลักษมี   ว่องกุศลกิจ",
+      "shares": 24761,
+      "sharePercent": 3.59,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายชนินท์   ว่องกุศลกิจ",
+      "shares": 61387,
+      "sharePercent": 8.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายทวีวัฒน์   ทวีปิยมาภรณ์",
+      "shares": 67587,
+      "sharePercent": 9.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายบรรเทิง   ว่องกุศลกิจ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายจิรศักดิ์   ว่องกุศลกิจ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:26:56.829211"
+}

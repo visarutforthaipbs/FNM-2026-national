@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105554101550",
+  "companyName": "ไทย สิงห์ ทอง จำกัด",
+  "totalShares": 210000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหวินชาง   หวู",
+      "shares": 209980,
+      "sharePercent": 99.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางศิริพร   ชาญชัยสิทธิ์",
+      "shares": 10,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายทศพล   เตชะมงคลชัย",
+      "shares": 10,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:07:42.573932"
+}

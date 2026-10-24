@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0205558034601",
+  "companyName": "ไทยอีสเทิร์น อินดัสเตรียล แลนด์ จำกัด",
+  "totalShares": 5100000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมชาย   โกกนุทาภรณ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางกัลยา   โกกนุทาภรณ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บจ.ทีอีจี แอสเซท จำกัด",
+      "shares": 5099998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:46:55.236293"
+}

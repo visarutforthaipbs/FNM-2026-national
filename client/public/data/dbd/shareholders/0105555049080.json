@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105555049080",
+  "companyName": "เกียร์ คอนเอ็นจิเนียริ่ง จำกัด",
+  "totalShares": 49000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุเชาว์   มัคสิงห์",
+      "shares": 24000,
+      "sharePercent": 48.98,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาววิไลลักษณ์   จีนนุ่น",
+      "shares": 4000,
+      "sharePercent": 8.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายอดิศักดิ์   จีนนุ่น",
+      "shares": 1000,
+      "sharePercent": 2.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสุเชาว์   มัคสิงห์",
+      "shares": 20000,
+      "sharePercent": 40.82,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:40:45.676245"
+}

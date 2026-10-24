@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105537143398",
+  "companyName": "ศิวลัย รียูสเอเบิ้ล จำกัด",
+  "totalShares": 4000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายจิรัฎฐ์   ชีวชื่น",
+      "shares": 396,
+      "sharePercent": 9.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุชาดา   ชีวชื่น",
+      "shares": 1800,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ปุณยวีร์   ชีวชื่น",
+      "shares": 1804,
+      "sharePercent": 45.1,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:11:45.479634"
+}

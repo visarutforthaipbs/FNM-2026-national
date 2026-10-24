@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105559168750",
+  "companyName": "เวสต์ 2 เอ็นเนอร์ยี่ จำกัด",
+  "totalShares": 26940000,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 6.94,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวรายุทธ   ลออพันธ์พล",
+      "shares": 19800000,
+      "sharePercent": 73.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวอรศศิพัชร์   ศิริวรรณพร",
+      "shares": 170000,
+      "sharePercent": 0.63,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเสรีชล   พิสิฐพิทยเสรี",
+      "shares": 1700000,
+      "sharePercent": 6.31,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายชิว กิม บ๊อค",
+      "shares": 1700000,
+      "sharePercent": 6.31,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายปิติพันธ์   ธนศรีวนิชชัย",
+      "shares": 850000,
+      "sharePercent": 3.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายณรงค์   ลิมปสนธิพงษ์",
+      "shares": 510000,
+      "sharePercent": 1.89,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวกุมารี   หงษ์วิไล",
+      "shares": 1700000,
+      "sharePercent": 6.31,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายพัทธ์ชลิต   กลิ่นหอม",
+      "shares": 170000,
+      "sharePercent": 0.63,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางสาวสุจิตตราภรณ์   ศิริวรรณพร",
+      "shares": 170000,
+      "sharePercent": 0.63,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายนาโอกิ   มินามิ",
+      "shares": 170000,
+      "sharePercent": 0.63,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:34:06.208056"
+}

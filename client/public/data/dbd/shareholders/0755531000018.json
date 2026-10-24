@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0755531000018",
+  "companyName": "สหชัยซีฟู้ด จำกัด",
+  "totalShares": 4545000,
+  "shareValue": 10.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกำชัย   รังสิยานันต์",
+      "shares": 750000,
+      "sharePercent": 16.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสมชัย   ไกรถิ่น",
+      "shares": 700000,
+      "sharePercent": 15.4,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางปานทิพย์   ฉัตรเสถียรพงศ์",
+      "shares": 650000,
+      "sharePercent": 14.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางประพิศ   ไกรถิ่น",
+      "shares": 450000,
+      "sharePercent": 9.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายชูชัย   รังสิยานันต์",
+      "shares": 425000,
+      "sharePercent": 9.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.นารีทิพย์   รังสิยานันต์",
+      "shares": 350000,
+      "sharePercent": 7.7,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวรพจน์   ฉัตรเสถียรพงศ์",
+      "shares": 320000,
+      "sharePercent": 7.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางบุญเหลือ   ไกรถิ่น",
+      "shares": 300000,
+      "sharePercent": 6.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางอัญชลี   รังสิยานันต์",
+      "shares": 300000,
+      "sharePercent": 6.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นางวัชรีย์   ฉันทภัทรางกูล",
+      "shares": 300000,
+      "sharePercent": 6.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:51:23.314407"
+}

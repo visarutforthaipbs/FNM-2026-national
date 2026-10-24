@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105556056551",
+  "companyName": "เพิ่มสยาม เทรดดิ้ง จำกัด",
+  "totalShares": 4600000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสนอง   สวยพริ้ง",
+      "shares": 2174548,
+      "sharePercent": 47.27,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวเรณู   สวยพริ้ง",
+      "shares": 662726,
+      "sharePercent": 14.41,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวสุกัญญา   ศักดาพยากรณ์",
+      "shares": 662726,
+      "sharePercent": 14.41,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "บริษัท เอเชีย อินดัสตรี้ กรุ๊ป จำกัด",
+      "shares": 1100000,
+      "sharePercent": 23.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:43:09.807833"
+}

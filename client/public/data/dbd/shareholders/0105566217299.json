@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105566217299",
+  "companyName": "แบ้สี จำกัด",
+  "totalShares": 320000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 45.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกมลชัย   ศิริมณีวัชร",
+      "shares": 80000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวุฒิกร   ศิริมณีวัชร",
+      "shares": 48000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวสุดา   ศิริมณีวัชร",
+      "shares": 48000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายMa   Mengzhong",
+      "shares": 32000,
+      "sharePercent": 10.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายWU   WENLIN",
+      "shares": 32000,
+      "sharePercent": 10.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายZHOU   HUAJIANG",
+      "shares": 32000,
+      "sharePercent": 10.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายCHEN   SHAORONG",
+      "shares": 48000,
+      "sharePercent": 15.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:36:42.873898"
+}

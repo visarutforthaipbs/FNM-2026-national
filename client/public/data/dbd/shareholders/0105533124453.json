@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105533124453",
+  "companyName": "เอส.ที.อาร์. (1990) จำกัด",
+  "totalShares": 450000,
+  "shareValue": 100.0,
+  "holderCount": 8,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.แสงไทย กรุ๊ป โฮลดิ้ง",
+      "shares": 360000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายสิทธิชัย   สิทธิเสถียรชัย",
+      "shares": 22499,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสินชัย   สิทธิเสถียรชัย",
+      "shares": 22500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสรรจิต   บรรดรศักดิ์",
+      "shares": 11250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางแวววรรณ   สุขพงษ์",
+      "shares": 11250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสุชาดา   สิทธิเสถียรชัย",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายนิพัทธ์   สิทธิเสถียรชัย",
+      "shares": 11250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.โชติกา   สิทธิเสถียรชัย",
+      "shares": 11250,
+      "sharePercent": 2.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:57:37.777615"
+}

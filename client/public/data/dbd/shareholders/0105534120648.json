@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105534120648",
+  "companyName": "ไทย บี บี ฟรุท จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายมั่นเศรษฐ์   ธนุสุทธิยาภรณ์",
+      "shares": 3000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวพิมลพัชร์   ธนุสุทธิยาภรณ์",
+      "shares": 6000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางกนิษฐรินทร์   อารีเจริญเลิศ",
+      "shares": 1000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางนลินทิพย์   ธนุสุทธิยาภรณ์",
+      "shares": 3000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายสุกฤษฎิ์   ธนุสุทธิยาภรณ์",
+      "shares": 1000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางภวีรักษ์   รังนกใต้",
+      "shares": 6000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:32:43.846317"
+}

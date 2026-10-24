@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105535160830",
+  "companyName": "จรัญธุรกิจ 52 จำกัด",
+  "totalShares": 1218000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บมจ.ไทยเบฟเวอเรจ",
+      "shares": 1217998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.ไทยเบฟเวอเรจ รีไซเคิล",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บจ.แพนอินเตอร์เนชั่นแนล (ประเทศไทย)",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:41:33.708720"
+}

@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105540004492",
+  "companyName": "สยามโพลี (ไทยแลนด์) จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 8,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกังวาล   เจียรพันธ์ุ",
+      "shares": 49000,
+      "sharePercent": 49.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวกนกวรรณ   เจียรพันธุ์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวกรวรรณ   เจียรพันธุ์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายจิรายุส   เจียรพันธุ์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวทิพอาภา   เจียรพันธุ์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายชาญวิทย์   เจียรพันธุ์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวมามี่   สาริยามา",
+      "shares": 200,
+      "sharePercent": 0.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางสาวจตุพร   เกิดโต",
+      "shares": 800,
+      "sharePercent": 0.8,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:40.819961"
+}

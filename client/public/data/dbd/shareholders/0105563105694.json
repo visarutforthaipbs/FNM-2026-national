@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105563105694",
+  "companyName": "เอเชีย เมทัล คอปเปอร์ เทรดดิ้ง จำกัด",
+  "totalShares": 2800000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสนอง   สวยพริ้ง",
+      "shares": 1740000,
+      "sharePercent": 62.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายนวพล   สวยพริ้ง",
+      "shares": 530000,
+      "sharePercent": 18.93,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวรัตนาภรณ์   สวยพริ้ง",
+      "shares": 530000,
+      "sharePercent": 18.93,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:43:21.332879"
+}

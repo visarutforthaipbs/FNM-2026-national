@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105551122149",
+  "companyName": "ไฮ-ตรอน แพ็คเกจจิ้ง จำกัด",
+  "totalShares": 30000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวนภัสภรณ์   มิ่งแก้ว",
+      "shares": 12000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายไชยวรรธน์   จันทร์เติบ",
+      "shares": 10500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายประสิทธิ์   จันทร์เติบ",
+      "shares": 7500,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:40:43.591609"
+}

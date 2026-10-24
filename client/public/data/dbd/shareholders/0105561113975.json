@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105561113975",
+  "companyName": "อีสเทิร์น กรีน ดีเวลลอปเมนท์ จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บมจ.เวล แมนเนจเม้นท์ คอร์ปอเรชั่น",
+      "shares": 999999,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายสุธี   เหลืองรัตนเจริญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:31:48.231586"
+}

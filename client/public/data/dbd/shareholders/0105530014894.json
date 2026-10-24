@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105530014894",
+  "companyName": "โมเดอร์น ฟู้ด อินดัสตรี้ จำกัด",
+  "totalShares": 224174,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสิทธิบูรณ์   พงษ์วัชรารักษ์",
+      "shares": 7514,
+      "sharePercent": 3.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธันณัช   ภัคชัยรัชกุล",
+      "shares": 19166,
+      "sharePercent": 8.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพิชิต   พงษ์วัชรารักษ์",
+      "shares": 134166,
+      "sharePercent": 59.85,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายพิชิต   พงษ์วัชรารักษ์",
+      "shares": 4793,
+      "sharePercent": 2.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายณัฐพงศ์   พงษ์วัชรารักษ์",
+      "shares": 4793,
+      "sharePercent": 2.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายณัฐพล   พงษ์วัชรารักษ์",
+      "shares": 4791,
+      "sharePercent": 2.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายณัฐธนา   พงษ์วัชรารักษ์",
+      "shares": 4791,
+      "sharePercent": 2.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "น.ส.สวลี   พงษ์วัชรารักษ์",
+      "shares": 19166,
+      "sharePercent": 8.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายไพศาล   พงษ์วัชรารักษ์",
+      "shares": 19168,
+      "sharePercent": 8.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายพงศ์ภีระ   พงษ์วัชรารักษ์",
+      "shares": 5826,
+      "sharePercent": 2.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:44:34.984104"
+}

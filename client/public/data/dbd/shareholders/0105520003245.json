@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105520003245",
+  "companyName": "ไทยซัมมิท โอโตพาร์ท อินดัสตรี จำกัด",
+  "totalShares": 400000,
+  "shareValue": 1000.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท จึงพัฒนา โฮลดิ้ง จำกัด",
+      "shares": 396000,
+      "sharePercent": 99.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางสมพร   จึงรุ่งเรืองกิจ",
+      "shares": 4000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:28:32.522844"
+}

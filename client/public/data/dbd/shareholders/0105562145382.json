@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105562145382",
+  "companyName": "อีโค่เทรด กรุ๊ป (ประเทศไทย) จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท อีโค่เทรด กรุ๊ป โฮลดิ้ง จำกัด",
+      "shares": 147000,
+      "sharePercent": 98.0,
+      "nationality": "ฝรั่งเศส",
+      "nationalityCode": "FR",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายวาลีรี่   ฮาเมอเลท",
+      "shares": 1500,
+      "sharePercent": 1.0,
+      "nationality": "ฝรั่งเศส",
+      "nationalityCode": "FR",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายแม็กซิม   เลอ เบอดอน",
+      "shares": 1500,
+      "sharePercent": 1.0,
+      "nationality": "ฝรั่งเศส",
+      "nationalityCode": "FR",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:56:02.795380"
+}

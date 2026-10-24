@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
+import { TILE_URLS, TILE_ATTRIBUTIONS, TILE_MAX_NATIVE_ZOOM } from "../utils/tiles";
 
 const THAILAND_CENTER: [number, number] = [13.2, 101.0];
 
@@ -98,8 +99,8 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
   const [resolvedDeeds, setResolvedDeeds] = useState<Record<string, { deed_no?: string; land_no?: string; lat?: number; lng?: number }>>({});
 
   useEffect(() => {
-    fetch("/data/landsmaps_resolved.json")
-      .then((res) => res.json())
+    if (!isOpen || Object.keys(resolvedDeeds).length > 0) return;
+    authFetch<Array<{ id: string; deed_no?: string; land_no?: string; lat?: number; lng?: number }>>("/api/admin/landsmaps-resolved")
       .then((data) => {
         if (Array.isArray(data)) {
           const map: Record<string, { deed_no?: string; land_no?: string; lat?: number; lng?: number }> = {};
@@ -110,7 +111,7 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
         }
       })
       .catch(() => {});
-  }, []);
+  }, [isOpen, authFetch, resolvedDeeds]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -207,9 +208,15 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
               <Box bg="purple.50" p={3.5} borderRadius="xl" border="1px solid" borderColor="purple.200" my={2}>
                 <Flex align="center" justify="space-between" wrap="wrap" gap={2} mb={suggestedLat ? 2 : 0}>
                   <Box>
-                    <Text fontSize="xs" fontWeight="700" color="purple.900">
-                      📍 เอกสารสิทธิ์ที่ดิน & ค่าพิกัดแปลง (กรมที่ดิน DOL)
-                    </Text>
+                    <Flex align="center" gap={1.5}>
+                      <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5} color="purple.700">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </Icon>
+                      <Text fontSize="xs" fontWeight="700" color="purple.900">
+                        เอกสารสิทธิ์ที่ดิน & ค่าพิกัดแปลง (กรมที่ดิน DOL)
+                      </Text>
+                    </Flex>
                     <Text fontSize="xs" color="purple.700">
                       {deedNo ? `โฉนดที่ดินเลขที่ ${deedNo}` : ""} {landNo ? `เลขที่ดิน ${landNo}` : ""}
                     </Text>
@@ -225,8 +232,16 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
                     borderRadius="lg"
                     fontWeight="600"
                     _hover={{ bg: "purple.700", textDecoration: "none" }}
+                    display="inline-flex"
+                    alignItems="center"
+                    gap={1}
                   >
-                    เปิดค้นหาใน LandsMaps ↗
+                    <span>เปิดค้นหาใน LandsMaps</span>
+                    <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </Icon>
                   </Link>
                 </Flex>
 
@@ -248,8 +263,14 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
                         setLatInput(suggestedLat.toFixed(6));
                         setLngInput(suggestedLng.toFixed(6));
                       }}
+                      leftIcon={
+                        <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3}>
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </Icon>
+                      }
                     >
-                      นำพิกัดแปลงปักบนแผนที่ 📍
+                      นำพิกัดแปลงปักบนแผนที่
                     </Button>
                   </Flex>
                 )}
@@ -307,8 +328,10 @@ const AdminSetPositionModal: React.FC<AdminSetPositionModalProps> = ({
               <MapResizer />
               <RecenterOnChange position={position} />
               <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-                attribution='© <a href="https://carto.com/">CARTO</a>'
+                url={TILE_URLS.openstreet}
+                attribution={TILE_ATTRIBUTIONS.openstreet}
+                maxNativeZoom={TILE_MAX_NATIVE_ZOOM.openstreet}
+                maxZoom={21}
               />
               <Marker
                 position={position}

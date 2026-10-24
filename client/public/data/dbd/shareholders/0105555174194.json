@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105555174194",
+  "companyName": "ชนะชัย รีไซเคิล กรุ๊ป จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาววลัยพร   เสริมวราพันธ์",
+      "shares": 100000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวพนิดา   เสริมวราพันธ์",
+      "shares": 50000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธเนศ   เสริมวราพันธ์",
+      "shares": 50000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:14:56.664313"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105537032707",
+  "companyName": "เมโทรโพลีแซ็ค จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกวี   ชาติกิจเจริญ",
+      "shares": 51999,
+      "sharePercent": 52.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางวริยา   ชาติกิจเจริญ",
+      "shares": 48000,
+      "sharePercent": 48.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวเตือนใจ   ชาติกิจเจริญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:47:35.666444"
+}

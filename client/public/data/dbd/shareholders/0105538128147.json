@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105538128147",
+  "companyName": "ไดโด้ แมนูแฟคเจอริ่ง (ประเทศไทย) จำกัด",
+  "totalShares": 2500000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัทไดโด้ โค เงียว จำกัด",
+      "shares": 1225000,
+      "sharePercent": 49.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางจิตราธร   ฟูกะซาวะ",
+      "shares": 1275000,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:01.094310"
+}

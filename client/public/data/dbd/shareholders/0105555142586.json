@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105555142586",
+  "companyName": "เอส.เอส.อิมปอร์ต เอ็กปอร์ต อินเตอร์เนชั่นแนล จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 99.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางวิจิตรา   เยตส์",
+      "shares": 10000,
+      "sharePercent": 1.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายจี้ฟง ลี",
+      "shares": 1000,
+      "sharePercent": 0.1,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเต็ก ซูน   อึ้ง",
+      "shares": 989000,
+      "sharePercent": 98.9,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:10:01.905167"
+}

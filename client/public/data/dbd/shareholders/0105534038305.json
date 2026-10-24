@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105534038305",
+  "companyName": "ทีมพลาส เคมีคอล จำกัด",
+  "totalShares": 600000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.เอสเอ็มเอช",
+      "shares": 305999,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.ทีมพลาส",
+      "shares": 274000,
+      "sharePercent": 45.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บจ.โตโยต้า ทูโช (ไทยแลนด์)",
+      "shares": 20000,
+      "sharePercent": 3.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "นางภัทรวรรณ   ตุ้นสกุล",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:19.859207"
+}

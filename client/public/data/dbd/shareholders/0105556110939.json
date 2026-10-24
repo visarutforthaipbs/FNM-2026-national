@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556110939",
+  "companyName": "ท็อป ซีเคร็ต ด็อกคิวเมนท์ ดิสทรัคชั่น จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอิทธิกร   ศรีจันบาล",
+      "shares": 7000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายถนอมศักดิ์   ศรีจันบาล",
+      "shares": 1500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธนิช   ศรีจันบาล",
+      "shares": 1500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:15:17.855627"
+}

@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0925522000106",
+  "companyName": "อุตสาหกรรมห้องเย็นกันตัง จำกัด",
+  "totalShares": 130000,
+  "shareValue": 1000.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสุบรรณ   เศรษฐวรพันธุ์",
+      "shares": 91000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสุภัทร   เศรษฐวรพันธุ์",
+      "shares": 13000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ปริญา   นิลยนิมิต",
+      "shares": 13000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.ชนันดา   ยังพุฒิกุล",
+      "shares": 13000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:51:36.860221"
+}

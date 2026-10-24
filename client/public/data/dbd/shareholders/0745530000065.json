@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0745530000065",
+  "companyName": "ซีรอเยลอาหารทะเล จำกัด",
+  "totalShares": 1080000,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสงวน   พฤกษ์วัฒนากุล",
+      "shares": 202500,
+      "sharePercent": 18.75,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายปริวรรต   พฤกษ์วัฒนากุล",
+      "shares": 67500,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายณัฏฐ์ธนัน   พฤกษ์วัฒนากุล",
+      "shares": 67500,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.เปมิกา   พฤกษ์วัฒนากุล",
+      "shares": 67500,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายวิชัย   พฤกษ์วัฒนากุล",
+      "shares": 270000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "น.ส.พิมพ์ภัทรา   ฐานวรนนท์",
+      "shares": 90000,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายพลธวัฒน์   ฐานวรนนท์",
+      "shares": 90000,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายนิธิวิทย์   ฐานวรนนท์",
+      "shares": 90000,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายณัฐวิทย์   พฤกษ์วัฒนากุล",
+      "shares": 67500,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายณัฐวัติ   พฤกษ์วัฒนากุล",
+      "shares": 67500,
+      "sharePercent": 6.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:49:52.561597"
+}

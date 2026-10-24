@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105546034661",
+  "companyName": "เบบี้.เอส.เอ็น.อินเตอร์เนชั่นแนล จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายศุภชัย   ลิ้มเหมอนันต์",
+      "shares": 9997,
+      "sharePercent": 99.97,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.พรทิพย์   ลิ้มเหมอนันต์",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.อัญธนา   ลิ้มเหมอนันต์",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายชัญการณ์   ลิ้มเหมอนันต์",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:28.858241"
+}

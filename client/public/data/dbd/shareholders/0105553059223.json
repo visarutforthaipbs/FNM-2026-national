@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105553059223",
+  "companyName": "บางกอก โตโย อินดัสเตรียล จำกัด",
+  "totalShares": 300000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอนันต์   หวังพัฒนกุล",
+      "shares": 100000,
+      "sharePercent": 33.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางจิราวรรณ   หวังพัฒนกุล",
+      "shares": 150000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.สิรีธร   หวังพัฒนกุล",
+      "shares": 25000,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายธีรภัทร   หวังพัฒนกุล",
+      "shares": 25000,
+      "sharePercent": 8.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:05:46.118148"
+}

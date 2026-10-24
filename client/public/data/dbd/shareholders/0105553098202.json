@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105553098202",
+  "companyName": "เบเรนิซ รีไซคลิ่ง จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพิสิษฐ์   ประเสริฐศรี",
+      "shares": 5000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางธัญญรัตน์   อ้นถาวร",
+      "shares": 10000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวนภัสนันท์   ประเสริฐศรี",
+      "shares": 2500,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายณัฐดนัย   อินหว่าง",
+      "shares": 2500,
+      "sharePercent": 12.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:21:49.734824"
+}

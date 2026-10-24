@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105558121563",
+  "companyName": "ฮอตเชน เทคโนโลยี จำกัด",
+  "totalShares": 1250000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 90.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ฟิวเจอร์ เอไอ เทคโนโลยี โฮลดิ้ง",
+      "shares": 125000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.ฮ่องกง ฮอตเชน โฮลดิ้ง",
+      "shares": 1125000,
+      "sharePercent": 90.0,
+      "nationality": "ฮ่องกง",
+      "nationalityCode": "HK",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:13:45.358249"
+}

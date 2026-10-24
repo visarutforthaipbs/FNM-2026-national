@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105520015324",
+  "companyName": "สหฟาร์ม จำกัด",
+  "totalShares": 178900,
+  "shareValue": 10000.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวุฒิ   โชติเทวัญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายอัศวิน   โชติเทวัญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายคุณภัส   โชติเทวัญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "บริษัท โชติเทวัญ จำกัด",
+      "shares": 168557,
+      "sharePercent": 94.22,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 5,
+      "name": "บริษัท สหโพรเซสซิ่ง จำกัด",
+      "shares": 10340,
+      "sharePercent": 5.78,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:29:00.939332"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105540083678",
+  "companyName": "อัลฟ่า-เบต้า คอมเมอร์เชี่ยล จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.พรทิพย์   สินวัด",
+      "shares": 7500,
+      "sharePercent": 75.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.จันทิมา   นิลกาญจน์",
+      "shares": 2500,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:58:15.683625"
+}

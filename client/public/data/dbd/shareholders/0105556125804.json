@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556125804",
+  "companyName": "อินทรี อีโคไซเคิล จำกัด",
+  "totalShares": 4000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท ปูนซีเมนต์นครหลวง จำกัด (มหาชน)",
+      "shares": 3999997,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท คอนวูด จำกัด",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท สยามซิตี้ พาวเวอร์ จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:36:03.031783"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105539138847",
+  "companyName": "วานิช อิควิปเม้นท์ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางรัสรินทร์   โชติระพีวัฒน์",
+      "shares": 25000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธิติวัฒน์   โชติระพีวัฒน์",
+      "shares": 25000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:15.246656"
+}

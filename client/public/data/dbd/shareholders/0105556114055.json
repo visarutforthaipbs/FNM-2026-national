@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105556114055",
+  "companyName": "สยาม พาวเวอร์ จำกัด",
+  "totalShares": 55500000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "ทวี   จงควินิต",
+      "shares": 26428572,
+      "sharePercent": 47.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวีระพล   โชควิทยารัตน์",
+      "shares": 1321428,
+      "sharePercent": 2.38,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บมจ.ทีพีซี เพาเวอร์ โฮลดิ้ง",
+      "shares": 27750000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:35:47.590087"
+}

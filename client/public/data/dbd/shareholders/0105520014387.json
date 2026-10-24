@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105520014387",
+  "companyName": "แหลมทองผลิตภัณฑ์อาหาร จำกัด",
+  "totalShares": 615000,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.อรพินท์   คณาธนะวนิชย์",
+      "shares": 173602,
+      "sharePercent": 28.23,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวิชัย   คณาธนะวนิชย์",
+      "shares": 52613,
+      "sharePercent": 8.55,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายยงศักดิ์   คณาธนะวนิชย์",
+      "shares": 3,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.อัจฉรพรรณ   คณาธนะวนิชย์",
+      "shares": 57505,
+      "sharePercent": 9.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "บริษัท แหลมทองสหการ จำกัด",
+      "shares": 175000,
+      "sharePercent": 28.46,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 6,
+      "name": "นายวิศิษฐ   คณาธนะวนิชย์",
+      "shares": 8304,
+      "sharePercent": 1.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "น.ส.ภวิษย์พร   คณาธนะวนิชย์",
+      "shares": 45991,
+      "sharePercent": 7.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายณัชชัย   คณาธนะวนิชย์",
+      "shares": 45991,
+      "sharePercent": 7.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายศุภณัฐ   คณาธนะวนิชย์",
+      "shares": 45991,
+      "sharePercent": 7.48,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "น.ส.วศุมา   คณาธนะวนิชย์",
+      "shares": 10000,
+      "sharePercent": 1.63,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:28:46.841266"
+}

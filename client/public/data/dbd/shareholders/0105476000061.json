@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105476000061",
+  "companyName": "บุญรอดบริวเวอรี่ จำกัด",
+  "totalShares": 690,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเอ. อี.   นานา วากัฟ",
+      "shares": 2,
+      "sharePercent": 0.29,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายนะเพ็งพาแสง   กฤษณามระ",
+      "shares": 5,
+      "sharePercent": 0.72,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "ร.อ. ม.ร.ว.ธวัชจันทร์   ประวิตร",
+      "shares": 10,
+      "sharePercent": 1.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "ม.ร.ว.สุชาติจันทร์   ประวิตร",
+      "shares": 14,
+      "sharePercent": 2.03,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางฟาติมะห์ บี. บี.   อัลลู วากัฟ",
+      "shares": 2,
+      "sharePercent": 0.29,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "กระทรวงการคลัง",
+      "shares": 318,
+      "sharePercent": 46.09,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นพ.ยงยุทธ   ปัจจักขภัติ",
+      "shares": 5,
+      "sharePercent": 0.72,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางประนอม   เศรษฐจินดาพงษ์",
+      "shares": 8,
+      "sharePercent": 1.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "คุณหญิงชฎา   วัฒนศิริธรรม",
+      "shares": 2,
+      "sharePercent": 0.29,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายวุฒา   ภิรมย์ภักดี",
+      "shares": 324,
+      "sharePercent": 46.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:06.631846"
+}

@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105545053076",
+  "companyName": "ฟิวชั่น ดีเวลลอปเมนท์ จำกัด",
+  "totalShares": 110000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.อทิตา   กวีพันธ์",
+      "shares": 109000,
+      "sharePercent": 99.09,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางประไพ   กวีพันธ์",
+      "shares": 1000,
+      "sharePercent": 0.91,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:49:33.913810"
+}

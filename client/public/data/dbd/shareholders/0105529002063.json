@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105529002063",
+  "companyName": "อุตสาหกรรมน้ำตาลสุพรรณบุรี จำกัด",
+  "totalShares": 9000000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.น้ำตาลทิพย์สุโขทัย",
+      "shares": 6,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.น้ำตาลทิพย์กำแพงเพชร",
+      "shares": 6,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บจ.น้ำตาล คริสตอลลา",
+      "shares": 6749988,
+      "sharePercent": 75.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "บจ.คริสตอลลา",
+      "shares": 2250000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:27:48.133053"
+}

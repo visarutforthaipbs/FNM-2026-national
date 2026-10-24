@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105538148270",
+  "companyName": "ไทย-เยอร เอ็นจิเนียริ่ง แอนด์ คอนซัลติ้ง จำกัด",
+  "totalShares": 20000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.พรทิพย์   สินวัด",
+      "shares": 10000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสมพงษ์   สินวัด",
+      "shares": 5000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเผ่าพงษ์   สินวัด",
+      "shares": 5000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:57:41.861457"
+}

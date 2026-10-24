@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105550120151",
+  "companyName": "บี แอนด์ เจ ว่าน อี้ จำกัด",
+  "totalShares": 120000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางซุ่ย-ฮวา   หลิน",
+      "shares": 47000,
+      "sharePercent": 39.17,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางภัณฑิลา   ศศิเจริญชัย",
+      "shares": 12000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสุภาวรรณ   ตั้งเขตมงคลสุข",
+      "shares": 49200,
+      "sharePercent": 41.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเหลี้ยว รี่   ยู้",
+      "shares": 11800,
+      "sharePercent": 9.83,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:05:16.865600"
+}

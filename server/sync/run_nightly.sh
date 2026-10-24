@@ -47,8 +47,13 @@ cd "$REPO/server/sync" || exit 1
 ./venv/bin/python export_dashboard.py|| { echo "ABORT: export_dashboard.py failed"; exit 1; }
 # Zoning is a function of position, so a moved pin invalidates it — a factory
 # left showing the zone of where it used to be is worse than showing none.
-# This could not run here until dpt_geodatabase.db was copied to this host on
-# 2026-08-14; before that the nightly could only warn that it was skipping it.
+#
+# This reads the polygons from dpt.plan_polygon (PostGIS) and does the
+# point-in-polygon as an indexed spatial join, so it no longer needs the 398 MB
+# dpt_geodatabase.db on this host. The polygons themselves are NOT refreshed
+# here: town plans change on a scale of years, and re-fetching 71 province
+# outlines from DPT every night would be rude and pointless. Reload them by
+# hand when DPT publishes, with server/sync/load_dpt_polygons.py.
 ./venv/bin/python export_zoning.py   || { echo "WARN: export_zoning.py failed (zoning may be stale)"; }
 # Refreshes the /admin พิกัดผิดจังหวัด queue, which reads this file from disk on
 # this host per request. Without it the queue serves a stale report forever.
@@ -69,9 +74,14 @@ if [ "$after" -lt "$floor" ]; then
 fi
 
 cd "$REPO" || exit 1
+# An explicit whitelist, not `git add -A`: this runs unattended on a checkout
+# that carries local edits, and a blanket add would commit them. Anything a new
+# export writes has to be listed here or it is generated nightly and never
+# published — dpt_province_plans.json was exactly that for one commit.
 git add client/public/data/markers client/public/data/province-counts.json \
         client/public/data/dashboard_stats.json client/public/data/zoning \
-        client/public/data/zoning_summary.json server/data/province_mismatch_report.json
+        client/public/data/zoning_summary.json client/public/data/dpt_province_plans.json \
+        server/data/province_mismatch_report.json
 if git diff --cached --quiet; then
   echo "no data changes to publish"
 else

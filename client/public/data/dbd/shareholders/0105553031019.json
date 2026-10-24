@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553031019",
+  "companyName": "มหานคร เมททอลสแครป จำกัด",
+  "totalShares": 1000000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธนินท์รัฐ   ธนเศรษฐ์โตกุล",
+      "shares": 999980,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายอชิรวัตต์   ธนเศรษฐ์โตกุล",
+      "shares": 10,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวจินตนันท์   ดอนพลอยเพ็ชร์",
+      "shares": 10,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:14:04.616140"
+}

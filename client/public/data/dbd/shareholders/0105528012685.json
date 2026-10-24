@@ -1,0 +1,85 @@
+{
+  "registrationNo": "0105528012685",
+  "companyName": "บางกอกแอสเสย์ออฟฟิส จำกัด",
+  "totalShares": 225000,
+  "shareValue": 1000.0,
+  "holderCount": 8,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพิเชษฐ์   พะลานุกูล",
+      "shares": 37125,
+      "sharePercent": 16.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางพนิดา   สุวรรณดี",
+      "shares": 23625,
+      "sharePercent": 10.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสมิตา   พะลานุกูล",
+      "shares": 9000,
+      "sharePercent": 4.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางภัทริน   พะลานุกูล",
+      "shares": 4500,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางเพ็ญทิพย์   โปษยานนท์",
+      "shares": 4500,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "บจ.บิวตี้เจมส์ โฮลดิ้งส์",
+      "shares": 74250,
+      "sharePercent": 33.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 7,
+      "name": "นายสุรสิทธิ์   ศรีอรทัยกุล",
+      "shares": 49500,
+      "sharePercent": 22.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "บจ.บิวตี้เจมส์เอ็นเตอร์ไพรส์",
+      "shares": 22500,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:55:48.085603"
+}

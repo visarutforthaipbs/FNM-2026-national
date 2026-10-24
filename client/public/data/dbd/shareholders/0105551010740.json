@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105551010740",
+  "companyName": "มิราเคิล อินเตอร์เทรด จำกัด",
+  "totalShares": 10000000,
+  "shareValue": 10.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวิโรจน์   จิระพงษ์ตระกูล",
+      "shares": 2500000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวัชรนนท์   ฤกษ์ศิริรัตน์",
+      "shares": 2500000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสมศักดิ์   โลหะนาคะกุล",
+      "shares": 2500000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายชาญวิทย์   ผุดผ่องแผ้ว",
+      "shares": 2500000,
+      "sharePercent": 25.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:30:20.323669"
+}

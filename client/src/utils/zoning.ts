@@ -35,7 +35,7 @@ export interface ZoneDisplay {
 const FAMILY: Record<string, ZoneDisplay> = {
   industrial: {
     title: "ผังเมืองสีม่วง — อุตสาหกรรมและคลังสินค้า",
-    color: "#7C3AED",
+    color: "#4D004D",
     scheme: "purple",
     meaning: "พื้นที่ที่ผังเมืองกำหนดให้ใช้ประโยชน์เพื่ออุตสาหกรรมและคลังสินค้า",
   },
@@ -109,41 +109,29 @@ export function zoneDisplay(kind: string, label?: string, color?: string): ZoneD
 }
 
 /**
- * Why a factory has no zone.
- *
- * These provinces have no factory falling inside any DPT polygon we hold —
- * measured, not assumed (see zoning_summary.json). For them the honest reading
- * is that the area is planned under another instrument, not that the factory
- * sits outside every plan. Elsewhere a missing zone means only that this
- * particular point is not covered.
- */
-export const PROVINCES_WITHOUT_DPT_PLAN = new Set([
-  "ชลบุรี",
-  "นครนายก",
-  "นครพนม",
-  "บึงกาฬ",
-  "บุรีรัมย์",
-  "พัทลุง",
-  "ยโสธร",
-  "ระยอง",
-  "สุรินทร์",
-]);
-
-/**
  * Why a factory has no zone — stated as a limit of our data, not of the law.
  *
- * The dataset is 203 ผังเมืองรวมเมือง/ชุมชน (town and community plans) and no
- * province-wide plan at all. Those cover built-up areas, so a factory outside
- * one may genuinely sit outside any town plan — or may sit inside a
- * ผังเมืองรวมจังหวัด that this dataset does not contain. We cannot tell which
- * from here, so the wording must not imply the factory is unplanned.
+ * This used to carry a hardcoded list of nine provinces "DPT publishes no plan
+ * for" — ชลบุรี, ระยอง, นครนายก, นครพนม, บึงกาฬ, บุรีรัมย์, พัทลุง, ยโสธร,
+ * สุรินทร์ — and told their 8,366 factories that no plan covered them. That was
+ * never a fact about DPT. It was a fact about the one layer we had harvested:
+ * every one of those nine has a ผังเมืองรวมจังหวัด, and once the provincial
+ * tier was loaded `provinces_without_dpt_coverage` in zoning_summary.json came
+ * back empty for all 77. The list is gone rather than corrected, because the
+ * question it answered is now answered by the data.
+ *
+ * What remains is genuinely narrower. We now test two tiers — municipal
+ * ผังเมืองรวมเมือง/ชุมชน, which carry a land use, and provincial
+ * ผังเมืองรวมจังหวัด footprints, which carry only an extent — so reaching this
+ * message means neither contained the point. That dropped from 48,170
+ * factories (76.9%) to 8,515 (13.6%). It still must not be read as "unplanned":
+ * a plan may exist that DPT does not publish as a polygon, or does not publish
+ * to us at all.
  */
 export function noZoneReason(provinceTh: string | undefined): string {
-  const base =
-    "ชุดข้อมูลนี้มีเฉพาะผังเมืองรวมเมือง/ชุมชน 203 ผัง ซึ่งครอบคลุมเฉพาะบางพื้นที่ " +
-    "จึงไม่ทราบว่าจุดนี้อยู่นอกผังเมือง หรืออยู่ในผังที่ยังไม่มีในชุดข้อมูล";
-  if (provinceTh && PROVINCES_WITHOUT_DPT_PLAN.has(provinceTh)) {
-    return `ยังไม่มีแปลงผังเมืองของ DPT ในพื้นที่${provinceTh}ในชุดข้อมูลนี้ — ${base}`;
-  }
-  return `ไม่พบแปลงผังเมืองของ DPT ครอบคลุมจุดนี้ — ${base}`;
+  const where = provinceTh ? `ในพื้นที่${provinceTh}` : "ที่จุดนี้";
+  return (
+    `ไม่พบทั้งแปลงผังเมืองรวมเมือง/ชุมชน และขอบเขตผังเมืองรวมจังหวัดของ DPT ครอบคลุมจุดนี้ — ` +
+    `อาจอยู่นอกเขตผังเมืองที่ประกาศไว้ หรืออยู่ในผังที่ DPT ยังไม่ได้เผยแพร่เป็นข้อมูลเชิงพื้นที่${where}`
+  );
 }

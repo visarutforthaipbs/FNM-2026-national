@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105553086999",
+  "companyName": "เวลโกร พลาส จำกัด",
+  "totalShares": 300000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวิเลิศ   แซ่จั่น",
+      "shares": 240000,
+      "sharePercent": 80.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.ปรัชพร   แซ่จั่น",
+      "shares": 30000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางศิราณี   ฌานยิบ",
+      "shares": 30000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:41:26.080640"
+}

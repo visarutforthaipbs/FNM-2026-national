@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105561075216",
+  "companyName": "โรจนินทร์ โลหะกิจ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธวัชชัย   นาคสุทธิ์",
+      "shares": 3500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุดธิดา   นาคสุทธิ์",
+      "shares": 3500,
+      "sharePercent": 35.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ธนิษฐาน์   นาคสุทธิ์",
+      "shares": 3000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:31:07.422647"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105550053631",
+  "companyName": "โกลด์ ฟิลด์ รีไฟเนอรี จำกัด",
+  "totalShares": 500000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธราพงษ์   เถื่อนถ้ำแก้ว",
+      "shares": 498000,
+      "sharePercent": 99.6,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวิชัย   สกุลบงกช",
+      "shares": 1000,
+      "sharePercent": 0.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกฤษณ์   ผู้พัฒน์",
+      "shares": 1000,
+      "sharePercent": 0.2,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:39:36.623871"
+}

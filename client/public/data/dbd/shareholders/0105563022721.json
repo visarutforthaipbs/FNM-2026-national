@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105563022721",
+  "companyName": "เวสเทิร์น เพาเวอร์ (ไทยแลนด์) จำกัด",
+  "totalShares": 200,
+  "shareValue": 50000.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางเจิ้ง   เจ๋",
+      "shares": 68,
+      "sharePercent": 34.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางฟาง   ตง ไฉ๋",
+      "shares": 66,
+      "sharePercent": 33.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายหวัง   เสวียเกิน",
+      "shares": 66,
+      "sharePercent": 33.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:01:47.979514"
+}

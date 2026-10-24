@@ -1,0 +1,94 @@
+{
+  "registrationNo": "0105542085368",
+  "companyName": "บริษัท ฮาเวลส์ (ประเทศไทย) จำกัด",
+  "totalShares": 350000,
+  "shareValue": 100.0,
+  "holderCount": 9,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวภัทรวรินฑร์   พรชัยประสิทธิ์",
+      "shares": 305001,
+      "sharePercent": 87.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายศิริชัย   กาญจนพงษ์พร",
+      "shares": 3000,
+      "sharePercent": 0.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวศุภวรรณ   ไกรวัลโกศล",
+      "shares": 2500,
+      "sharePercent": 0.71,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวพรจรัส   สกุลวีระ",
+      "shares": 1500,
+      "sharePercent": 0.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางอุสิชา   วงศ์สุวรรณ",
+      "shares": 1200,
+      "sharePercent": 0.34,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางอุไร   ศิริวงศ์",
+      "shares": 750,
+      "sharePercent": 0.21,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายสืบ   ถังทอง",
+      "shares": 375,
+      "sharePercent": 0.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายขาว   ด้วงทิม",
+      "shares": 30000,
+      "sharePercent": 8.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางสาวหทัยวรกาญบ์   ศิริพิบูลย์ผล",
+      "shares": 5674,
+      "sharePercent": 1.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:42:43.523958"
+}

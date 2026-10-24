@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0715543000352",
+  "companyName": "บริษัท แวนด้า แฟคทอรี่ จำกัด",
+  "totalShares": 8000000,
+  "shareValue": 10.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเกรียงไกร   ทะไกรราช",
+      "shares": 5600000,
+      "sharePercent": 70.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวิจิตร   พูลทวี",
+      "shares": 2400000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:48:42.361419"
+}

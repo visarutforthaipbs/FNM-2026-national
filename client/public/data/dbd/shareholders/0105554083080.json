@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105554083080",
+  "companyName": "บีเอ็มที เอเชีย จำกัด",
+  "totalShares": 53000,
+  "shareValue": 1000.0,
+  "holderCount": 2,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บีเอ็มที เมอร์คิวรี เทคโนโลยี อินเตอร์เนชั่นแนล บี.วี.",
+      "shares": 52999,
+      "sharePercent": 100.0,
+      "nationality": "ดัตช์",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บีเอ็มที ยุโรป บี.วี.",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ดัตช์",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:07:19.808469"
+}

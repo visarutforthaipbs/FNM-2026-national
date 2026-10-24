@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105539055143",
+  "companyName": "ซางหยวนโลหะกิจ จำกัด",
+  "totalShares": 230000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.5,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายไค ชุน   หยาง",
+      "shares": 228850,
+      "sharePercent": 99.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.หยาง ซู   ติง",
+      "shares": 1150,
+      "sharePercent": 0.5,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:24:11.753023"
+}

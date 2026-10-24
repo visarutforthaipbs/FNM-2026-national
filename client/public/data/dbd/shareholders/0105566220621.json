@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105566220621",
+  "companyName": "กิจถาวร จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพัฒน์สรณ์   ฉัตรเจริญสุข",
+      "shares": 9999,
+      "sharePercent": 99.99,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.ชฎาพร   ฉัตรเจริญสุข",
+      "shares": 1,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:18:37.160213"
+}

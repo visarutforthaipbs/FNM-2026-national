@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105547112550",
+  "companyName": "ซี เอช เจ เมทเทิล จำกัด",
+  "totalShares": 300000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชุณห์   เลิศชัยประเสริฐ",
+      "shares": 242000,
+      "sharePercent": 80.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวกาญจนา   เลิศชัยประเสริฐ",
+      "shares": 58000,
+      "sharePercent": 19.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:42:20.305285"
+}

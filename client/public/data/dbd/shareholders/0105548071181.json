@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105548071181",
+  "companyName": "เสิ้นไทย เอ็นเทอไพรซ์ จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเซา   หลิว",
+      "shares": 72000,
+      "sharePercent": 48.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวพิมพ์พร   ธูปหอม",
+      "shares": 45000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวอริสรา   มาอยู่วัง",
+      "shares": 31500,
+      "sharePercent": 21.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางเกา (CAO)   เฟิ่ง (FENG)",
+      "shares": 1500,
+      "sharePercent": 1.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:03:10.926693"
+}

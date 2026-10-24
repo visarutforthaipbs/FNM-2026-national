@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105548160833",
+  "companyName": "พัฒนาสิ่งแวดล้อมและพลังงานไทย จำกัด",
+  "totalShares": 800000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัทนรา พลังงานสะอาด จำกัด",
+      "shares": 755554,
+      "sharePercent": 94.44,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายนพดล   คงศรีเจริญ",
+      "shares": 44445,
+      "sharePercent": 5.56,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายวิรัตน์   ทวีปิยมาภรณ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:40:39.507135"
+}

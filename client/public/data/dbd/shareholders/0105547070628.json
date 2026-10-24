@@ -1,0 +1,94 @@
+{
+  "registrationNo": "0105547070628",
+  "companyName": "สินทองไทย รับเบอร์ จำกัด",
+  "totalShares": 200000,
+  "shareValue": 1000.0,
+  "holderCount": 9,
+  "foreignPercent": 10.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวศิริรัตน์   อุษณกรกุล",
+      "shares": 30000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายคณินทร์   ศิริสุวัฒน์",
+      "shares": 30000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายยงค์   สินเจริญกุล",
+      "shares": 30000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเสรี   ศิริสุวัฒน์",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวมาลินี   ศิริสุวัฒน์",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายปรีดี   ลีลาเศรษฐวงศ์",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายYEN CHAO   WANG",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "สาธารณรัฐจีน(ไต้หวัน)",
+      "nationalityCode": "TW",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นางนิรมล   ศิริสุวัฒน์",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายสมยศ   สินเจริญกุล",
+      "shares": 10000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:40:24.826430"
+}

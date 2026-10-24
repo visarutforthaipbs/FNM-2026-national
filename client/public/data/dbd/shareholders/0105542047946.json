@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105542047946",
+  "companyName": "เอฟแอนด์เอ็น ยูไนเต็ด จำกัด",
+  "totalShares": 131000000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 97.86,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บมจ.ยูไนเต็ดฟูดส์",
+      "shares": 2800000,
+      "sharePercent": 2.14,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.เอฟแอนด์เอ็น เดรี่ อินเวสเม้นส์ พีทีอี ลิมิเต็ด",
+      "shares": 128199999,
+      "sharePercent": 97.86,
+      "nationality": "สิงคโปร์",
+      "nationalityCode": "SG",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นายอนิรุทธิ์   มหธร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:20.919283"
+}

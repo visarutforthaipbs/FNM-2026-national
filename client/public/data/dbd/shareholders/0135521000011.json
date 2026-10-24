@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0135521000011",
+  "companyName": "ไก่สดเซนทาโก จำกัด",
+  "totalShares": 2000000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 6.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.ผลิตภัณฑ์อาหารเซ็นทรัล",
+      "shares": 625000,
+      "sharePercent": 31.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บจ.เซ็นทาโกฟาร์ม",
+      "shares": 510000,
+      "sharePercent": 25.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บจ.สยามเซ็นทาโกฟาร์ม",
+      "shares": 145000,
+      "sharePercent": 7.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "บจ.สกายฟู้ด",
+      "shares": 600000,
+      "sharePercent": 30.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 5,
+      "name": "บจ.นิปปอน สตีล เทรดดิ้ง คอร์ปอเรชั่น (NIPPON STEEL TRADING CORPORATION)",
+      "shares": 115000,
+      "sharePercent": 5.75,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 6,
+      "name": "บจ.ซันวา (SANWA)",
+      "shares": 5000,
+      "sharePercent": 0.25,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:44:48.405866"
+}

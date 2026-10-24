@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105536073906",
+  "companyName": "ชัยนันท์-บางพลี พาร์คแลนด์ จำกัด",
+  "totalShares": 50000000,
+  "shareValue": 10.0,
+  "holderCount": 4,
+  "foreignPercent": 2.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "การเคหะแห่งชาติ",
+      "shares": 1000000,
+      "sharePercent": 2.0,
+      "nationality": "ประเทศอื่น",
+      "nationalityCode": "OT",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นางนภสร   ประนิช",
+      "shares": 1458333,
+      "sharePercent": 2.92,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธงชัย   เกษมสุวรรณ",
+      "shares": 44250000,
+      "sharePercent": 88.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเชิญชัย   นิยามานุสร",
+      "shares": 3291667,
+      "sharePercent": 6.58,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:35:55.603827"
+}

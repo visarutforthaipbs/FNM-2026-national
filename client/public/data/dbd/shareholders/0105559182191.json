@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105559182191",
+  "companyName": "แอบโซลู้ท เมททอลส์ (ประเทศไทย) จำกัด",
+  "totalShares": 5000,
+  "shareValue": 1000.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชาญชัย   เจียรวัฒนภักดี",
+      "shares": 1,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสมใจ   รัชตไพศาล",
+      "shares": 1,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวปาณิสรา   จิรโชติภวัค",
+      "shares": 1,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาววัทธิกร   จิรโชติภวัค",
+      "shares": 1,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายทศพร   แซ่จิว",
+      "shares": 1,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "บริษัท โจวหมิง โฮลดิ้ง จำกัด",
+      "shares": 4995,
+      "sharePercent": 99.9,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:14:32.085569"
+}

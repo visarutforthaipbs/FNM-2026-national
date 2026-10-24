@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105546127740",
+  "companyName": "น้ำตาลสุรินทร์ จำกัด",
+  "totalShares": 700000,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวริศ   เสถียรถิระกุล",
+      "shares": 80000,
+      "sharePercent": 11.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางดาว   เสถียรถิระกุล",
+      "shares": 80000,
+      "sharePercent": 11.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.ธธิชา   เสถียรถิระกุล",
+      "shares": 55000,
+      "sharePercent": 7.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "ด.ญ.พิมพ์มารดา   เสถียรถิระกุล",
+      "shares": 80000,
+      "sharePercent": 11.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "ด.ญ.พิมพ์ดาว   เสถียรถิระกุล",
+      "shares": 80000,
+      "sharePercent": 11.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายบวร   เสถียรถิระกุล",
+      "shares": 25000,
+      "sharePercent": 3.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายวุฒิ   เสถียรถิระกุล",
+      "shares": 105000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายพัฒน์   เสถียรถิระกุล",
+      "shares": 105000,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "น.ส.พิม   เสถียรถิระกุล",
+      "shares": 45000,
+      "sharePercent": 6.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "น.ส.ไทยาณี   เสถียรถิระกุล",
+      "shares": 45000,
+      "sharePercent": 6.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:28:18.905888"
+}

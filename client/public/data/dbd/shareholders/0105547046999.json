@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105547046999",
+  "companyName": "แท็ก เฮฟวี่ เมทัล จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพีรบูรณ์   กตัญญูไชยพงศ์",
+      "shares": 199500,
+      "sharePercent": 99.75,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางณัฐนภัทรสร   เอมโอช",
+      "shares": 500,
+      "sharePercent": 0.25,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:27:41.896137"
+}

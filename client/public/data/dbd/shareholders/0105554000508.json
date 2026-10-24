@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105554000508",
+  "companyName": "ภัคธีรเศรษฐ์ เปเปอร์ จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางธันยนันท์   ภัคธีรเศรษฐ์",
+      "shares": 9000,
+      "sharePercent": 90.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธนะวรรธน์   ภัคธีรเศรษฐ์",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายณัฐชัย   ภัคธีรเศรษฐ์",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:14:19.275869"
+}

@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105532065437",
+  "companyName": "ซี.พี.อุตสาหกรรมบรรจุภัณฑ์ จำกัด",
+  "totalShares": 29500000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายประเสริฐ   พุ่งกุมาร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายมิน   เธียรวร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บจ.ซี.พี.สหอุตสาหกรรม",
+      "shares": 29499998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:33:52.542252"
+}

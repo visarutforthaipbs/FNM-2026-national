@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105552032011",
+  "companyName": "สยามโพลีแซค จำกัด",
+  "totalShares": 100000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.เอจีอาร์ กรุ๊ป โฮลดิ้ง",
+      "shares": 42001,
+      "sharePercent": 42.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายกฤตภาส   กฤชสุวรรณวุฒิ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บจ.ทรัพย์เกษตรสยาม",
+      "shares": 57998,
+      "sharePercent": 58.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:40:57.017838"
+}

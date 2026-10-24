@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105540057561",
+  "companyName": "โรจนะ อินดัสเตรียล แมเนจเม้นท์ จำกัด",
+  "totalShares": 20000000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 10.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายดิเรก   วินิชบุตร",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บริษัท สวนอุตสาหกรรมโรจนะ จำกัด (มหาชน)",
+      "shares": 17999999,
+      "sharePercent": 90.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "นิปปอน สตีล เทรดดิ้ง คอร์ปอเรชั่น",
+      "shares": 2000000,
+      "sharePercent": 10.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:37:53.083641"
+}

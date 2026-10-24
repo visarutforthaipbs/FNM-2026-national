@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105489000600",
+  "companyName": "น้ำตาลเกษตรผล จำกัด",
+  "totalShares": 580780000,
+  "shareValue": 5.0,
+  "holderCount": 5,
+  "foreignPercent": 15.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท มิตรสยามอินเตอร์เนชั่นแนล จำกัด",
+      "shares": 1500000,
+      "sharePercent": 0.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท น้ำตาลนครเพชร จำกัด",
+      "shares": 1500000,
+      "sharePercent": 0.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "ธนาคารกรุงเทพ จำกัด (มหาชน)",
+      "shares": 1500000,
+      "sharePercent": 0.26,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "มิตซุย ดีเอ็ม ซูการ์ คอมปะนี ลิมิเต็ด",
+      "shares": 87117000,
+      "sharePercent": 15.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "บริษัท สาทรแคปปิตอล จำกัด",
+      "shares": 489163000,
+      "sharePercent": 84.23,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:28:35.051683"
+}

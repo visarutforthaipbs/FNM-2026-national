@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105539036092",
+  "companyName": "ฟาฟา จำกัด",
+  "totalShares": 360000,
+  "shareValue": 100.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางสาวสุนทรี   สัจจะวัชรพงศ์",
+      "shares": 40000,
+      "sharePercent": 11.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางอัญชลี   สัจจะวัชรพงศ์",
+      "shares": 18000,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวสุนทรินทร์   สัจจะวัชรพงศ์",
+      "shares": 81000,
+      "sharePercent": 22.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายจีระพันธ์   สัจจะวัชรพงศ์",
+      "shares": 60000,
+      "sharePercent": 16.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวสุนรวี   สัจจะวัชรพงศ์",
+      "shares": 81000,
+      "sharePercent": 22.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวสุนทรา   สัจจะวัชรพงศ์",
+      "shares": 40000,
+      "sharePercent": 11.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสุภาวิณี   ศรีทิพยไกวัล",
+      "shares": 40000,
+      "sharePercent": 11.11,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:49.524544"
+}

@@ -35,8 +35,8 @@ export async function fetchFactoryDetail(factoryId: string): Promise<Partial<Fac
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
-        console.warn("Missing Supabase credentials, cannot fetch detail");
+    if (!supabaseUrl || !supabaseKey || !/^[\x20-\x7E]+$/.test(supabaseKey)) {
+        console.warn("Missing or invalid Supabase credentials, cannot fetch detail");
         return null;
     }
 
@@ -230,14 +230,15 @@ export const useFactoriesApi = ({
             });
         }
         if (filters.showOnlyInRadius && userLocation) {
+            const limit = filters.radiusKm ?? RADIUS_KM;
             result = result.filter((f) => {
                 const [lng, lat] = f.geometry.coordinates;
-                return haversineKm(userLocation.lat, userLocation.lng, lat, lng) <= RADIUS_KM;
+                return haversineKm(userLocation.lat, userLocation.lng, lat, lng) <= limit;
             });
         }
 
         return result.length > MAX_RENDER ? result.slice(0, MAX_RENDER) : result;
-    }, [allFactories, filters.showHighRisk, filters.searchTerm, filters.showOnlyInRadius, filters.factoryTypes, userLocation]);
+    }, [allFactories, filters.showHighRisk, filters.searchTerm, filters.showOnlyInRadius, filters.radiusKm, filters.factoryTypes, userLocation]);
 
     const total = provinceCounts.reduce((sum, p) => sum + p.count, 0);
 

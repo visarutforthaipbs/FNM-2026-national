@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105526022187",
+  "companyName": "อาหารยอดคุณ จำกัด",
+  "totalShares": 410470,
+  "shareValue": 1000.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเพรียว   ปุษยไพบูลย์",
+      "shares": 512,
+      "sharePercent": 0.12,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวอรนุช   มหสรรค์",
+      "shares": 99000,
+      "sharePercent": 24.12,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางชนิดา   มหาดำรงค์กุล อรเอก",
+      "shares": 39600,
+      "sharePercent": 9.65,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางนพพร   โอ.โบล์แมน",
+      "shares": 8910,
+      "sharePercent": 2.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาววิมลรัตน์   ชัยสิริมั่นคง",
+      "shares": 39600,
+      "sharePercent": 9.65,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายประทีป   ปุษยไพบูลย์",
+      "shares": 50597,
+      "sharePercent": 12.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายประพันธ์   ปุษยไพบูลย์",
+      "shares": 38057,
+      "sharePercent": 9.27,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายประสิทธิ์   ปุษยไพบูลย์",
+      "shares": 50597,
+      "sharePercent": 12.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางสาวบุษณีย์   ปุษยไพบูลย์",
+      "shares": 50597,
+      "sharePercent": 12.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายเธียรชัย   ปิติพรวิวัฒน์",
+      "shares": 33000,
+      "sharePercent": 8.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:29:39.494596"
+}

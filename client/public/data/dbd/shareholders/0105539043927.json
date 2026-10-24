@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105539043927",
+  "companyName": "เดอะแพคเกจจิ้ง จำกัด",
+  "totalShares": 46000000,
+  "shareValue": 10.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายธารเกษม   วนิชจักร์วงศ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายศราวุฒิ   วนิชจักร์วงศ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายอเนก   พิเชษฐพงศา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายวัลลภ   พิชญ์พงศา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายพงศ์พัฒน์   วนิชจักร์วงศ์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "บริษัท แคปปิตัลซีเรียลส์ จำกัด",
+      "shares": 16000001,
+      "sharePercent": 34.78,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 7,
+      "name": "บริษัทซีอาร์ไอ อินเตอร์เนชั่นแนล จำกัด",
+      "shares": 29999994,
+      "sharePercent": 65.22,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:01.470689"
+}

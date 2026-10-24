@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105561083618",
+  "companyName": "ไฮ เอฟฟิซิเอ็นซี่ จำกัด",
+  "totalShares": 600000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเฮ้อ   เมินยี่",
+      "shares": 554800,
+      "sharePercent": 92.47,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายยู่เฟิง   หลิว",
+      "shares": 42600,
+      "sharePercent": 7.1,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายหลี่   เหยนเผิง",
+      "shares": 2600,
+      "sharePercent": 0.43,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:47:44.490476"
+}

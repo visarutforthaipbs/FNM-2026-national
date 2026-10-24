@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105566003469",
+  "companyName": "ไท่กั๋ว ลองเทอม ก๊าส เอ็นไวรอนเม้นทอล โพรเทคชั่น เทคโนโลยี จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 46.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหลิว   จือหงษ์",
+      "shares": 20000,
+      "sharePercent": 40.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเผิง   เฉาหลาน",
+      "shares": 3000,
+      "sharePercent": 6.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายหลี่ซิง   แซ่จาง",
+      "shares": 9000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาววิภาดา   จะซอ",
+      "shares": 9000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายชาติชาย   เทพมณี",
+      "shares": 9000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:48:38.474475"
+}

@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105530003787",
+  "companyName": "โรงงานแม่รวย จำกัด",
+  "totalShares": 100000,
+  "shareValue": 1000.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางจิรภรณ์   รวยเจริญทรัพย์",
+      "shares": 57000,
+      "sharePercent": 57.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายจุมภฏ   รวยเจริญทรัพย์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกฤษดา   รวยเจริญทรัพย์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายเทิดทูล   รวยเจริญทรัพย์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "น.ส.ภาพร   รวยเจริญทรัพย์",
+      "shares": 10000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "บริษัท เอ็ม.อาร์.ฟู๊ด จำกัด",
+      "shares": 3000,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:32:00.952328"
+}

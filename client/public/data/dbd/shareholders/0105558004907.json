@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105558004907",
+  "companyName": "เฟิรสท์ คอนเฟคชั่นเนอรี่ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 1000.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายอนุชิต   เดชคุณากร",
+      "shares": 18000,
+      "sharePercent": 36.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางจินดารัตน์   เดชคุณากร",
+      "shares": 5000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายจตุรงค์   เดชคุณากร",
+      "shares": 10000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายจตุเดช   เดชคุณากร",
+      "shares": 9000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาวอารยา   เดชคุณากร",
+      "shares": 8000,
+      "sharePercent": 16.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:16.390061"
+}

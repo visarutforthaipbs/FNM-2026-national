@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105547153001",
+  "companyName": "บี.ที. พัฒนา จำกัด",
+  "totalShares": 17000,
+  "shareValue": 1000.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.อุบลวรรณ   วิญญูนันทกุล",
+      "shares": 366,
+      "sharePercent": 2.15,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายพงศ์ปณต   รุ่งโรจน์นันทกุล",
+      "shares": 367,
+      "sharePercent": 2.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสุภาภรณ์   เตมียะประดิษฐ์",
+      "shares": 367,
+      "sharePercent": 2.16,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "บจ.บี.ที.เอนจิเนียริ่ง",
+      "shares": 15900,
+      "sharePercent": 93.53,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:28:37.830700"
+}

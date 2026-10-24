@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0255548000495",
+  "companyName": "304 อินดัสเตรียล ปาร์ค 7 จำกัด",
+  "totalShares": 150000000,
+  "shareValue": 10.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางวีชนี   ฆารเจริญ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายปิยะชัย   สงวนชีพ",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "บริษัท ไอทาวน์ โฮลดิ้ง จำกัด (มหาชน)",
+      "shares": 102249998,
+      "sharePercent": 68.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 4,
+      "name": "บริษัท สินสุขใจ จำกัด",
+      "shares": 47750000,
+      "sharePercent": 31.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:47:08.330266"
+}

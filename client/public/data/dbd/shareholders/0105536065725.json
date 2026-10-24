@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105536065725",
+  "companyName": "ไอ.ที.จี. (ประเทศไทย) จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวีรยุทธ   ชินธรรมรักษ์",
+      "shares": 22380,
+      "sharePercent": 44.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายวราวุธ   ชินธรรมรักษ์",
+      "shares": 22380,
+      "sharePercent": 44.76,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวสิรกร   ชินธรรมรักษ์",
+      "shares": 5215,
+      "sharePercent": 10.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวผุสดี   อภิชนกิจ",
+      "shares": 20,
+      "sharePercent": 0.04,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาววนิดา   พรบรรเจิดศักดิ์",
+      "shares": 5,
+      "sharePercent": 0.01,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:47:18.390436"
+}

@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105526032093",
+  "companyName": "ทองหล่อเอ็นเตอร์ไพร์ส จำกัด",
+  "totalShares": 200000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชลัช   พงศ์สิริพรชัย",
+      "shares": 136000,
+      "sharePercent": 68.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางพรทิพย์   โกศิน",
+      "shares": 24000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายณพสิทธิ์   พงศ์สิริพรชัย",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวสุพนิต   พงศ์สิริพรชัย",
+      "shares": 20000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:46.358895"
+}

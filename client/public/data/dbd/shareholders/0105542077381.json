@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105542077381",
+  "companyName": "คูซุ่นฮวด จำกัด",
+  "totalShares": 10000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางจุฑามาศ   กิ่งใบสมบูรณ์",
+      "shares": 5000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายทินชัย   กิ่งใบสมบูรณ์",
+      "shares": 4500,
+      "sharePercent": 45.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายกฤษธร   กิ่งใบสมบูรณ์",
+      "shares": 500,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:12:03.070355"
+}

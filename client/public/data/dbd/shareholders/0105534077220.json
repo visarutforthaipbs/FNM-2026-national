@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105534077220",
+  "companyName": "คันนาและเขตที่ จำกัด",
+  "totalShares": 950000,
+  "shareValue": 10.0,
+  "holderCount": 2,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายปิยะชัย   สงวนชีพ",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "FAXAI CORPORATION",
+      "shares": 949998,
+      "sharePercent": 100.0,
+      "nationality": "หมู่เกาะเวอร์จิน(อังกฤษ)",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:18:54.492376"
+}

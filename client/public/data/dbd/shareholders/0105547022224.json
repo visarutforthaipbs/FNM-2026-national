@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105547022224",
+  "companyName": "รุ่งอรุณทรัพย์ รีไซเคิล จำกัด",
+  "totalShares": 150000,
+  "shareValue": 10.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพรชัย   โชคอำนวยกิจ",
+      "shares": 15000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายบุญเลิศ   โชคอำนวยกิจ",
+      "shares": 25000,
+      "sharePercent": 16.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายนิยม   โชคอำนวยกิจ",
+      "shares": 20000,
+      "sharePercent": 13.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสิทธิ์ชัย   โชคอำนวยกิจ",
+      "shares": 22500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาววิลาสิณี   โชคอำนวยกิจ",
+      "shares": 22500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาววิราภรณ์   โชคอำนวยกิจ",
+      "shares": 22500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นางสาวเอื้อพร   โชคอำนวยกิจ",
+      "shares": 22500,
+      "sharePercent": 15.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:02:54.025400"
+}

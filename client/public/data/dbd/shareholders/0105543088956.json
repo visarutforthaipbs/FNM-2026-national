@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105543088956",
+  "companyName": "บริษัท บูโอโน่ (ประเทศไทย) จำกัด",
+  "totalShares": 1340015,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายเชษฐา   ศุภวราสุวัฒน์",
+      "shares": 89585,
+      "sharePercent": 6.69,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาวอัจฉรา   เจียมถาวร",
+      "shares": 1200430,
+      "sharePercent": 89.58,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางอุดมลักษณ์   เจียมถาวร",
+      "shares": 50000,
+      "sharePercent": 3.73,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:37.435699"
+}

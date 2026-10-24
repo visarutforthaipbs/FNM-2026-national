@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105557025862",
+  "companyName": "เอ็น15 เทคโนโลยี จำกัด",
+  "totalShares": 2380000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท สากล เอนเนอยี จำกัด (มหาชน)",
+      "shares": 2379998,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายชัชชัย   สุเมธโชติเมธา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางอารีย์   สุเมธโชติเมธา",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:54:00.572054"
+}

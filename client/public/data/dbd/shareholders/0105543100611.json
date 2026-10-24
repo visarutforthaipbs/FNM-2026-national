@@ -1,0 +1,49 @@
+{
+  "registrationNo": "0105543100611",
+  "companyName": "ปูนขาวและแร่ จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 4,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางบุญหลง   เครือนาค",
+      "shares": 29980,
+      "sharePercent": 59.96,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายฐานิสร์พงศ์   เครือนาค",
+      "shares": 20000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายพสุเชษฐ์   เครือนาค",
+      "shares": 10,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายปกรณ์   เครือนาค",
+      "shares": 10,
+      "sharePercent": 0.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:41:48.517038"
+}

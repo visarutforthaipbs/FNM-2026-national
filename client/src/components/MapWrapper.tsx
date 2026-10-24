@@ -21,13 +21,19 @@ import type {
   FilterState,
   UserLocation,
 } from "../types/factory";
-import { getHazardLevel, HAZARD_COLORS } from "../utils/hazard";
+import { getHazardLevel } from "../utils/hazard";
 import type { HazardLevel } from "../utils/hazard";
 import type { ProvinceCount } from "../hooks/useFactoriesApi";
 
 // Tile sources live in utils/tiles.ts — shared with LocationCorrectionModal so
 // the two maps can't drift apart.
-import { TILE_URLS, TILE_ATTRIBUTIONS } from "../utils/tiles";
+import {
+  TILE_URLS,
+  TILE_ATTRIBUTIONS,
+  TILE_LABELS_URLS,
+  TILE_MAX_NATIVE_ZOOM,
+  HAS_SPHERE_KEY,
+} from "../utils/tiles";
 
 interface MapWrapperProps {
   factories: FactoryGeoJSON | null;
@@ -77,16 +83,16 @@ if (typeof document !== "undefined" && !document.getElementById("factory-marker-
   document.head.appendChild(style);
 }
 
-const MARKER_STYLE: Record<HazardLevel, { color: string; detail: string; pulse: string }> = {
-  hazard: { color: HAZARD_COLORS.hazard, detail: "#B91C1C", pulse: "239, 68, 68" },
-  type3: { color: HAZARD_COLORS.type3, detail: "#B45309", pulse: "245, 158, 11" },
-  general: { color: HAZARD_COLORS.general, detail: "#087F5B", pulse: "16, 185, 129" },
+const MARKER_STYLE: Record<HazardLevel, { asset: string; pulse: string }> = {
+  hazard: { asset: "/assets/markers/red-factory.svg", pulse: "239, 68, 68" },
+  type3: { asset: "/assets/markers/yellow-factory.svg", pulse: "245, 158, 11" },
+  general: { asset: "/assets/markers/green-factory.svg", pulse: "16, 185, 129" },
 };
 
 const buildFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = false) => {
   const width = isSelected ? 38 : 30;
   const height = isSelected ? 46 : 38;
-  const { color, detail: detailColor, pulse: pulseColor } = MARKER_STYLE[level];
+  const { asset, pulse: pulseColor } = MARKER_STYLE[level];
 
   return L.divIcon({
     html: `
@@ -103,11 +109,14 @@ const buildFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = fa
             animation: factory-marker-pulse 1.5s infinite;
           "></div>
         ` : ''}
-        <svg width="${width}" height="${height}" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: relative; z-index: 2; filter: drop-shadow(0 3px 5px rgba(11,53,88,0.28));">
-          <path d="M16 1C7.7 1 1 7.5 1 15.6C1 25.7 16 39 16 39S31 25.7 31 15.6C31 7.5 24.3 1 16 1Z" fill="${color}" stroke="white" stroke-width="2"/>
-          <path d="M7.5 24.5V14L12.5 16.8V12.5L17.7 15.5V10.5L24 14.1V24.5H7.5Z" fill="white"/>
-          <path d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5" stroke="${detailColor}" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <img
+          src="${asset}"
+          width="${width}"
+          height="${height}"
+          alt=""
+          draggable="false"
+          style="position: relative; z-index: 2; display: block; filter: drop-shadow(0 3px 5px rgba(11,53,88,0.28));"
+        />
       </div>
     `,
     className: `custom-factory-marker ${isSelected ? 'selected' : ''} ${level}`,
@@ -141,51 +150,43 @@ const getFactoryIcon = (level: HazardLevel, isSelected: boolean, isApprox = fals
   ];
 
 const FactoryLegendMarker: React.FC<{ level: HazardLevel }> = ({ level }) => {
-  const { color, detail: detailColor } = MARKER_STYLE[level];
-
   return (
-    <svg
-      width="24"
-      height="30"
-      viewBox="0 0 32 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <Box
+      as="img"
+      src={MARKER_STYLE[level].asset}
+      alt=""
       aria-hidden="true"
+      w="24px"
+      h="30px"
+      objectFit="contain"
       style={{ flex: "0 0 auto", filter: "drop-shadow(0 2px 3px rgba(11,53,88,0.18))" }}
-    >
-      <path
-        d="M16 1C7.7 1 1 7.5 1 15.6C1 25.7 16 39 16 39S31 25.7 31 15.6C31 7.5 24.3 1 16 1Z"
-        fill={color}
-        stroke="white"
-        strokeWidth="2"
-      />
-      <path d="M7.5 24.5V14L12.5 16.8V12.5L17.7 15.5V10.5L24 14.1V24.5H7.5Z" fill="white" />
-      <path
-        d="M11 22V19.5M15.2 22V19.5M19.5 22V19.5"
-        stroke={detailColor}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    />
   );
 };
 
-const userLocationIcon = L.divIcon({
-  html: `
-    <div style="width: 40px; height: 48px; filter: drop-shadow(0 3px 6px rgba(11,53,88,0.3));">
-      <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="19" r="19" fill="#F05223" opacity="0.2"/>
-        <path d="M20 2C10.6 2 3 9.5 3 18.7C3 30.1 20 46 20 46S37 30.1 37 18.7C37 9.5 29.4 2 20 2Z" fill="#0B3558" stroke="white" stroke-width="2.5"/>
-        <path d="M11.5 19L20 12L28.5 19V28.2H22.5V22.2H17.5V28.2H11.5V19Z" fill="#F8FAFC"/>
-        <path d="M9.5 19L20 10.3L30.5 19" stroke="#F05223" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-  `,
+const userLocationIcon = L.icon({
+  iconUrl: "/assets/markers/home.svg",
   className: "custom-user-location-marker",
   iconSize: [40, 48],
   iconAnchor: [20, 46],
   popupAnchor: [0, -46],
 });
+
+type DptProvincialGeoJSON = GeoJSON.FeatureCollection & {
+  metadata?: {
+    province_th?: string;
+    feature_count?: number;
+    unknown_class_count?: number;
+  };
+};
+
+const escapeHtml = (value: unknown) =>
+  String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 // ── Choropleth color scale ──
 function getDensityColor(count: number): string {
@@ -284,15 +285,24 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
       React.useState<keyof typeof TILE_URLS>(getPreferredTile);
 
     // DPT Local Industrial Purple Zones layer state
-    const [showPurpleZones, setShowPurpleZones] = useState<boolean>(true);
-    // The full DPT land-use plan, drawn by DPT's own tile service. Our purple
-    // layer shows only the 553 industrial polygons we extracted; this shows
-    // every zone colour DPT publishes, so a reader can see what the factory
-    // actually sits on rather than take our word for it. Off by default —
-    // it covers the basemap.
-    const [showDptPlan, setShowDptPlan] = useState<boolean>(false);
+    // Keep the first phone viewport focused on the factory signal. Zoning stays
+    // one tap away in the layer sheet, while desktop keeps the established
+    // always-on planning context.
+    const [showPurpleZones, setShowPurpleZones] = useState<boolean>(() => !isMobile);
+    // Separate municipal/town-community plan layer from DPT's existing tile
+    // service. This is not the downloaded PLLU_PROV dataset below.
+    const [showTownPlan, setShowTownPlan] = useState<boolean>(false);
+    const [townPlanOpacity, setTownPlanOpacity] = useState<number>(0.55);
     const [dptPlanOpacity, setDptPlanOpacity] = useState<number>(0.55);
     const [purpleZonesGeo, setPurpleZonesGeo] = useState<GeoJSON.FeatureCollection | null>(null);
+
+    // Built offline from the downloaded PLLU_PROV archive. Only the selected
+    // province file is requested, and previously viewed provinces are cached.
+    const [showProvincePlans, setShowProvincePlans] = useState<boolean>(false);
+    const [provinceLanduseGeo, setProvinceLanduseGeo] = useState<DptProvincialGeoJSON | null>(null);
+    const [provinceLanduseStatus, setProvinceLanduseStatus] =
+      useState<"idle" | "loading" | "ready" | "missing" | "error">("idle");
+    const provinceLanduseCache = React.useRef(new Map<string, DptProvincialGeoJSON>());
 
     useEffect(() => {
       if (typeof window === 'undefined' || !window.matchMedia) return;
@@ -315,6 +325,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         .then((r) => r.json())
         .then(setPurpleZonesGeo)
         .catch((err) => console.error("Error loading DPT purple zones:", err));
+
     }, []);
 
     // Build counts lookup: English name → ProvinceCount
@@ -323,6 +334,48 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
       provinceCounts.forEach((pc) => m.set(pc.name_en, pc));
       return m;
     }, [provinceCounts]);
+
+    useEffect(() => {
+      if (!showProvincePlans || !isProvinceMode) {
+        setProvinceLanduseGeo(null);
+        setProvinceLanduseStatus("idle");
+        return;
+      }
+      const pc = provinceCounts.find((p) => p.name_th === filters.selectedProvince);
+      if (!pc) return;
+      const provinceSlug = pc.name_en.trim().toLowerCase().replace(/\s+/g, "-");
+      const cached = provinceLanduseCache.current.get(provinceSlug);
+      if (cached) {
+        setProvinceLanduseGeo(cached);
+        setProvinceLanduseStatus("ready");
+        return;
+      }
+
+      const controller = new AbortController();
+      setProvinceLanduseGeo(null);
+      setProvinceLanduseStatus("loading");
+      fetch(`/data/dpt-province-landuse/${provinceSlug}.json`, { signal: controller.signal })
+        .then((response) => {
+          if (response.status === 404) {
+            setProvinceLanduseStatus("missing");
+            return null;
+          }
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json() as Promise<DptProvincialGeoJSON>;
+        })
+        .then((data) => {
+          if (!data) return;
+          provinceLanduseCache.current.set(provinceSlug, data);
+          setProvinceLanduseGeo(data);
+          setProvinceLanduseStatus("ready");
+        })
+        .catch((error: Error) => {
+          if (error.name === "AbortError") return;
+          console.error("Error loading local DPT provincial land use:", error);
+          setProvinceLanduseStatus("error");
+        });
+      return () => controller.abort();
+    }, [showProvincePlans, isProvinceMode, provinceCounts, filters.selectedProvince]);
 
     // Selected province boundary GeoJSON (outline only, no fill)
     const selectedProvinceBoundary = useMemo(() => {
@@ -344,6 +397,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
     const handleBackToOverview = useCallback(() => {
       onProvinceSelect("");
       onFactorySelect(null);
+      setShowProvincePlans(false);
       setOverviewTrigger((t) => t + 1);
     }, [onProvinceSelect, onFactorySelect]);
 
@@ -448,6 +502,12 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               <option value="openstreet">แผนที่ถนน</option>
               <option value="dark">กลางคืน</option>
               <option value="satellite">ดาวเทียม</option>
+              {HAS_SPHERE_KEY && (
+                <>
+                  <option value="sphere_streets">GISTDA ถนนภาษาไทย</option>
+                  <option value="sphere_hybrid">GISTDA ดาวเทียมไทย</option>
+                </>
+              )}
             </Select>
 
             <Button
@@ -472,9 +532,9 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
 
             <Button
               size="sm"
-              variant={showDptPlan ? "solid" : "outline"}
-              colorScheme={showDptPlan ? "orange" : "gray"}
-              onClick={() => setShowDptPlan((prev) => !prev)}
+              variant={showTownPlan ? "solid" : "outline"}
+              colorScheme={showTownPlan ? "orange" : "gray"}
+              onClick={() => setShowTownPlan((prev) => !prev)}
               fontSize="xs"
               fontWeight="600"
               px={3}
@@ -486,12 +546,33 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                 </Icon>
               }
             >
-              ผังเมืองรวมทั้งหมด
+              ผังเมืองรวมเมือง/ชุมชน
             </Button>
 
-            {showDptPlan && (
+            {isProvinceMode && (
+              <Button
+                size="sm"
+                variant={showProvincePlans ? "solid" : "outline"}
+                colorScheme={showProvincePlans ? "blue" : "gray"}
+                onClick={() => setShowProvincePlans((prev) => !prev)}
+                fontSize="xs"
+                fontWeight="600"
+                px={3}
+                borderRadius="lg"
+                leftIcon={
+                  <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                    <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </Icon>
+                }
+              >
+                ผังเมืองรวมจังหวัด
+              </Button>
+            )}
+
+            {showProvincePlans && isProvinceMode && (
               <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
-                <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้ม</Text>
+                <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้มผังสี</Text>
                 <input
                   type="range"
                   min={20}
@@ -503,11 +584,26 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                 />
               </Flex>
             )}
+
+            {showTownPlan && (
+              <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
+                <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้มผังเมือง/ชุมชน</Text>
+                <input
+                  type="range"
+                  min={20}
+                  max={90}
+                  value={Math.round(townPlanOpacity * 100)}
+                  onChange={(e) => setTownPlanOpacity(Number(e.target.value) / 100)}
+                  style={{ width: 90 }}
+                  aria-label="ความเข้มของผังเมืองรวมเมืองและชุมชน"
+                />
+              </Flex>
+            )}
           </Flex>
         )}
 
         {showChrome && isMobile && (
-          <Box position="absolute" top="16" right="3" zIndex="1000">
+          <Box position="absolute" top="3" right="3" zIndex="1000">
             <Popover placement="bottom-end" isLazy closeOnBlur>
               <PopoverTrigger>
                 <Button
@@ -531,15 +627,17 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                w="248px"
+                w="min(280px, calc(100vw - 24px))"
+                maxH="calc(100dvh - 96px)"
                 borderRadius="xl"
                 boxShadow="xl"
                 border="1px solid"
                 borderColor="slate.100"
+                overflow="hidden"
                 _focusVisible={{ outline: "none" }}
               >
                 <PopoverArrow />
-                <PopoverBody p={3}>
+                <PopoverBody p={3} overflowY="auto" overscrollBehavior="contain">
                   <VStack spacing={2.5} align="stretch">
                     <Box>
                       <Text fontSize="xs" fontWeight="700" color="slate.500" mb={1}>
@@ -551,6 +649,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                           setSelectedTile(e.target.value as keyof typeof TILE_URLS)
                         }
                         size="sm"
+                        minH="44px"
                         variant="filled"
                         cursor="pointer"
                         fontWeight="medium"
@@ -559,17 +658,27 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                         <option value="openstreet">แผนที่ถนน</option>
                         <option value="dark">กลางคืน</option>
                         <option value="satellite">ดาวเทียม</option>
+                        {HAS_SPHERE_KEY && (
+                          <>
+                            <option value="sphere_streets">GISTDA ถนนภาษาไทย</option>
+                            <option value="sphere_hybrid">GISTDA ดาวเทียมไทย</option>
+                          </>
+                        )}
                       </Select>
                     </Box>
 
                     <Button
                       size="sm"
+                      minH="44px"
+                      w="full"
+                      justifyContent="flex-start"
                       variant={showPurpleZones ? "solid" : "outline"}
                       colorScheme={showPurpleZones ? "purple" : "gray"}
                       onClick={() => setShowPurpleZones((prev) => !prev)}
                       fontSize="xs"
                       fontWeight="600"
                       borderRadius="lg"
+                      aria-pressed={showPurpleZones}
                       leftIcon={
                         <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
                           <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
@@ -583,12 +692,16 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
 
                     <Button
                       size="sm"
-                      variant={showDptPlan ? "solid" : "outline"}
-                      colorScheme={showDptPlan ? "orange" : "gray"}
-                      onClick={() => setShowDptPlan((prev) => !prev)}
+                      minH="44px"
+                      w="full"
+                      justifyContent="flex-start"
+                      variant={showTownPlan ? "solid" : "outline"}
+                      colorScheme={showTownPlan ? "orange" : "gray"}
+                      onClick={() => setShowTownPlan((prev) => !prev)}
                       fontSize="xs"
                       fontWeight="600"
                       borderRadius="lg"
+                      aria-pressed={showTownPlan}
                       leftIcon={
                         <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
                           <path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z" />
@@ -596,23 +709,135 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                         </Icon>
                       }
                     >
-                      ผังเมืองรวมทั้งหมด
+                      ผังเมืองรวมเมือง/ชุมชน
                     </Button>
 
-                    {showDptPlan && (
-                      <Flex align="center" gap={2} bg="white" px={3} py={1.5} borderRadius="lg" boxShadow="sm">
-                        <Text fontSize="10px" color="slate.500" whiteSpace="nowrap">ความเข้ม</Text>
+                    {isProvinceMode && (
+                      <Button
+                        size="sm"
+                        minH="44px"
+                        w="full"
+                        justifyContent="flex-start"
+                        variant={showProvincePlans ? "solid" : "outline"}
+                        colorScheme={showProvincePlans ? "blue" : "gray"}
+                        onClick={() => setShowProvincePlans((prev) => !prev)}
+                        fontSize="xs"
+                        fontWeight="600"
+                        borderRadius="lg"
+                        aria-pressed={showProvincePlans}
+                        leftIcon={
+                          <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={3.5}>
+                            <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                          </Icon>
+                        }
+                      >
+                        ผังเมืองรวมจังหวัด
+                      </Button>
+                    )}
+
+                    {showProvincePlans && isProvinceMode && (
+                      <Flex direction="column" align="stretch" gap={1} bg="slate.50" px={3} py={2} borderRadius="lg">
+                        <Text fontSize="xs" color="slate.600">ความเข้มผังจังหวัด</Text>
                         <input
                           type="range"
                           min={20}
                           max={90}
                           value={Math.round(dptPlanOpacity * 100)}
                           onChange={(e) => setDptPlanOpacity(Number(e.target.value) / 100)}
-                          style={{ width: 90 }}
+                          style={{ width: "100%", minHeight: 28, accentColor: "#2563EB" }}
                           aria-label="ความเข้มของชั้นผังเมือง"
                         />
                       </Flex>
                     )}
+
+                    {showTownPlan && (
+                      <Flex direction="column" align="stretch" gap={1} bg="slate.50" px={3} py={2} borderRadius="lg">
+                        <Text fontSize="xs" color="slate.600">ความเข้มผังเมือง/ชุมชน</Text>
+                        <input
+                          type="range"
+                          min={20}
+                          max={90}
+                          value={Math.round(townPlanOpacity * 100)}
+                          onChange={(e) => setTownPlanOpacity(Number(e.target.value) / 100)}
+                          style={{ width: "100%", minHeight: 28, accentColor: "#DD6B20" }}
+                          aria-label="ความเข้มของผังเมืองรวมเมืองและชุมชน"
+                        />
+                      </Flex>
+                    )}
+
+                    {/* Mobile legends live with the controls they explain. Keeping
+                        them out of the map viewport preserves the geographic signal
+                        until the user explicitly asks for this detail. */}
+                    <Box borderTop="1px solid" borderColor="slate.100" pt={2.5}>
+                      <Text fontSize="xs" fontWeight="700" color="slate.500" mb={2}>
+                        คำอธิบายสัญลักษณ์
+                      </Text>
+
+                      {isProvinceMode ? (
+                        <VStack spacing={1.5} align="stretch">
+                          <Flex align="center" gap={2.5} minH="32px">
+                            <FactoryLegendMarker level="hazard" />
+                            <Text color="slate.600" fontSize="xs">อุตสาหกรรมเสี่ยงสูง</Text>
+                          </Flex>
+                          <Flex align="center" gap={2.5} minH="32px">
+                            <FactoryLegendMarker level="type3" />
+                            <Text color="slate.600" fontSize="xs">จำพวก 3 ทั่วไป</Text>
+                          </Flex>
+                          <Flex align="center" gap={2.5} minH="32px">
+                            <FactoryLegendMarker level="general" />
+                            <Text color="slate.600" fontSize="xs">จำพวก 1–2 / ขนาดเล็ก</Text>
+                          </Flex>
+                        </VStack>
+                      ) : (
+                        <Box bg="slate.50" borderRadius="lg" px={3} py={2.5}>
+                          <Flex gap={0} aria-label="สีเข้มขึ้นหมายถึงจังหวัดที่มีโรงงานหนาแน่นขึ้น">
+                            {["#E8F1F4", "#D5E5EA", "#B9D2DA", "#8FB9C9", "#5D91A8", "#2F6987", "#0B3558"].map((color, index) => (
+                              <Box
+                                key={color}
+                                flex="1"
+                                h="10px"
+                                bg={color}
+                                borderLeftRadius={index === 0 ? "2px" : 0}
+                                borderRightRadius={index === 6 ? "2px" : 0}
+                              />
+                            ))}
+                          </Flex>
+                          <Flex justify="space-between" mt={1}>
+                            <Text color="slate.500" fontSize="2xs">น้อยกว่า 10</Text>
+                            <Text color="slate.500" fontSize="2xs">3,000+</Text>
+                          </Flex>
+                          <Text color="slate.500" fontSize="2xs" mt={1.5}>
+                            แตะจังหวัดเพื่อดูโรงงาน
+                          </Text>
+                        </Box>
+                      )}
+
+                      {(showPurpleZones || showTownPlan || (showProvincePlans && isProvinceMode)) && (
+                        <VStack spacing={1.5} align="stretch" mt={2.5}>
+                          {showPurpleZones && (
+                            <Flex align="center" gap={2}>
+                              <Box w="12px" h="12px" borderRadius="2px" bg="#4D004D" flex="none" />
+                              <Text color="slate.600" fontSize="2xs">เขตอุตสาหกรรมและคลังสินค้า DPT</Text>
+                            </Flex>
+                          )}
+                          {showTownPlan && (
+                            <Flex align="center" gap={2}>
+                              <Box w="12px" h="12px" borderRadius="2px" bg="orange.300" flex="none" />
+                              <Text color="slate.600" fontSize="2xs">ผังเมืองรวมเมือง/ชุมชน</Text>
+                            </Flex>
+                          )}
+                          {showProvincePlans && isProvinceMode && (
+                            <Flex align="center" gap={2}>
+                              <Box w="12px" h="12px" borderRadius="2px" bg="green.400" flex="none" />
+                              <Text color="slate.600" fontSize="2xs">
+                                ผังเมืองรวมจังหวัด · {filters.selectedProvince}
+                              </Text>
+                            </Flex>
+                          )}
+                        </VStack>
+                      )}
+                    </Box>
                   </VStack>
                 </PopoverBody>
               </PopoverContent>
@@ -624,12 +849,15 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         {showChrome && isProvinceMode && (
           <Box
             position="absolute"
-            top={isMobile ? "16" : "4"}
-            left={isMobile ? "14" : "4"}
+            top={isMobile ? "3" : "4"}
+            left={isMobile ? "16" : "4"}
             zIndex="1000"
           >
             <Button
               size="sm"
+              minW={isMobile ? "44px" : undefined}
+              minH={isMobile ? "44px" : undefined}
+              px={isMobile ? 0 : undefined}
               bg="white"
               color="slate.700"
               boxShadow="lg"
@@ -638,13 +866,18 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               borderColor="slate.100"
               _hover={{ bg: "slate.50" }}
               onClick={handleBackToOverview}
-              leftIcon={
+              leftIcon={isMobile ? undefined :
                 <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={4}>
                   <path d="M19 12H5M12 19l-7-7 7-7" />
                 </Icon>
               }
+              aria-label={isMobile ? "กลับสู่ภาพรวมทั้งประเทศ" : undefined}
             >
-              ภาพรวมทั้งประเทศ
+              {isMobile ? (
+                <Icon viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" boxSize={5}>
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </Icon>
+              ) : "ภาพรวมทั้งประเทศ"}
             </Button>
           </Box>
         )}
@@ -680,7 +913,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* Legend (province detail mode) - SIGNAL 39 Layer 1 color key */}
-        {showChrome && isProvinceMode && (
+        {showChrome && !isMobile && isProvinceMode && (
           <Box
             position="absolute"
             bottom={4}
@@ -717,7 +950,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         )}
 
         {/* Legend (overview mode) */}
-        {showChrome && !isProvinceMode && (
+        {showChrome && !isMobile && !isProvinceMode && (
           <Box
             position="absolute"
             bottom={4}
@@ -775,13 +1008,81 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
           </Box>
         )}
 
-        {/* DPT Purple Industrial Zones Legend */}
-        {showChrome && showPurpleZones && (
+        {/* Overlay legends share one stack in the bottom-right corner. They
+            used to each claim a corner absolutely, so turning on a second
+            overlay dropped its legend on top of the first — and on the density
+            legend, which owns the bottom-left. Stacking them keeps any
+            combination of overlays legible without hand-tuned offsets. */}
+        {showChrome && !isMobile && (showPurpleZones || (showProvincePlans && isProvinceMode)) && (
+        <VStack
+          position="absolute"
+          bottom={isMobile ? "140px" : 4}
+          right={4}
+          zIndex="1000"
+          spacing={2}
+          align="stretch"
+        >
+        {showProvincePlans && isProvinceMode && (
           <Box
-            position="absolute"
-            bottom={isMobile ? "140px" : 4}
-            right={4}
-            zIndex="1000"
+            bg="white"
+            borderRadius="xl"
+            boxShadow="lg"
+            p={3}
+            border="1px solid"
+            borderColor="slate.200"
+            fontSize="xs"
+            maxW="270px"
+          >
+            <Flex align="center" gap={2} mb={2}>
+              <Icon viewBox="0 0 24 24" fill="none" stroke="#0B3558" strokeWidth="2" boxSize={4}>
+                <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </Icon>
+              <Text fontWeight="700" color="slate.800" fontSize="xs">
+                ผังเมืองรวมจังหวัด · {filters.selectedProvince}
+              </Text>
+            </Flex>
+            {provinceLanduseStatus === "loading" && (
+              <Text color="slate.500" fontSize="2xs">กำลังเปิดข้อมูลในเครื่อง…</Text>
+            )}
+            {provinceLanduseStatus === "missing" && (
+              <Text color="slate.600" fontSize="2xs" lineHeight="1.5">
+                ชุดข้อมูลที่ดาวน์โหลดไม่มีผังรายแปลงสำหรับจังหวัดนี้
+              </Text>
+            )}
+            {provinceLanduseStatus === "error" && (
+              <Text color="red.600" fontSize="2xs">เปิดไฟล์ข้อมูลในเครื่องไม่สำเร็จ</Text>
+            )}
+            {provinceLanduseStatus === "ready" && provinceLanduseGeo && (
+              <>
+                <Flex direction="column" gap={1.5} mb={2}>
+                  <Flex align="center" gap={2}>
+                    <Box w="12px" h="12px" borderRadius="2px" bg="#4D004D" flex="none" />
+                    <Text color="slate.700" fontSize="2xs">อุตสาหกรรมและคลังสินค้า</Text>
+                  </Flex>
+                  <Flex align="center" gap={2}>
+                    <Box w="12px" h="12px" borderRadius="2px" bg="#22C55E" flex="none" />
+                    <Text color="slate.700" fontSize="2xs">สีอื่นตามประเภทที่ DPT เผยแพร่</Text>
+                  </Flex>
+                  <Flex align="center" gap={2}>
+                    <Box w="12px" h="12px" borderRadius="2px" bg="#CBD5E1" flex="none" />
+                    <Text color="slate.700" fontSize="2xs">ไม่พบคำอธิบายสีในต้นทาง</Text>
+                  </Flex>
+                </Flex>
+                <Text color="slate.500" fontSize="2xs" lineHeight="1.5">
+                  {provinceLanduseGeo.metadata?.feature_count?.toLocaleString() ?? provinceLanduseGeo.features.length.toLocaleString()} พื้นที่
+                  {provinceLanduseGeo.metadata?.unknown_class_count
+                    ? ` · ไม่ทราบประเภท ${provinceLanduseGeo.metadata.unknown_class_count.toLocaleString()}`
+                    : ""} · เปิดจากไฟล์ที่เก็บในระบบ
+                </Text>
+              </>
+            )}
+          </Box>
+        )}
+
+        {/* DPT Purple Industrial Zones Legend */}
+        {showPurpleZones && (
+          <Box
             bg="white"
             borderRadius="xl"
             boxShadow="lg"
@@ -792,7 +1093,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
             maxW="240px"
           >
             <Flex align="center" gap={2} mb={1.5}>
-              <Icon viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" boxSize={4}>
+              <Icon viewBox="0 0 24 24" fill="none" stroke="#4D004D" strokeWidth="2" boxSize={4}>
                 <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z" />
               </Icon>
               <Text fontWeight="700" color="purple.900" fontSize="xs">
@@ -800,7 +1101,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               </Text>
             </Flex>
             <Flex align="center" gap={2} mb={1}>
-              <Box w="12px" h="12px" borderRadius="2px" bg="#7C3AED" flex="none" />
+              <Box w="12px" h="12px" borderRadius="2px" bg="#4D004D" flex="none" />
               <Text color="slate.700" fontSize="2xs" fontWeight="500">
                 เขตอุตสาหกรรมและคลังสินค้า
               </Text>
@@ -809,6 +1110,8 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               ข้อมูลทางการจาก GeoDatabase landuseplan.dpt.go.th
             </Text>
           </Box>
+        )}
+        </VStack>
         )}
 
         <MapContainer
@@ -819,23 +1122,64 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
         >
           {showChrome && <ZoomControl position="bottomright" />}
           <TileLayer
+            key={`${selectedTile}-base`}
             url={TILE_URLS[selectedTile]}
             attribution={TILE_ATTRIBUTIONS[selectedTile]}
+            maxNativeZoom={TILE_MAX_NATIVE_ZOOM[selectedTile]}
+            maxZoom={21}
           />
+          {TILE_LABELS_URLS[selectedTile] && (
+            <TileLayer
+              key={`${selectedTile}-labels`}
+              url={TILE_LABELS_URLS[selectedTile]!}
+              maxNativeZoom={TILE_MAX_NATIVE_ZOOM[selectedTile]}
+              maxZoom={21}
+              zIndex={205}
+            />
+          )}
 
-          {/* The official land-use plan, rendered by DPT itself.
-              Cached to zoom 10, so maxNativeZoom lets Leaflet upscale rather
-              than request tiles that do not exist. Where DPT publishes no plan
-              — Bangkok, the EEC provinces and thirteen others — nothing draws,
-              which is the honest depiction of a gap in the source. */}
-          {showDptPlan && (
+          {/* DPT town/community plans remain an independent GIS layer. The
+              local-only decision applies to PLLU_PROV, not this tile layer. */}
+          {showTownPlan && (
             <TileLayer
               url="https://onedpt.dpt.go.th/arcgis/rest/services/PLLU_ALL/PLLU_ALL/MapServer/tile/{z}/{y}/{x}"
               maxNativeZoom={10}
               maxZoom={18}
-              opacity={dptPlanOpacity}
-              zIndex={350}
-              attribution='ผังเมืองรวม &copy; กรมโยธาธิการและผังเมือง (DPT)'
+              opacity={townPlanOpacity}
+              zIndex={340}
+              attribution='ผังเมืองรวมเมือง/ชุมชน &copy; กรมโยธาธิการและผังเมือง (DPT)'
+            />
+          )}
+
+          {/* Provincial land use from the local archive. The effect above
+              requests one selected-province file only; there is no DPT call. */}
+          {showProvincePlans && provinceLanduseGeo && (
+            <GeoJSON
+              key={`dpt-province-landuse-${filters.selectedProvince}`}
+              data={provinceLanduseGeo}
+              style={(feature) => ({
+                color: feature?.properties?.c || "#CBD5E1",
+                weight: feature?.properties?.x ? 1.2 : 0.7,
+                opacity: 0.78,
+                fillColor: feature?.properties?.c || "#CBD5E1",
+                fillOpacity: dptPlanOpacity,
+                dashArray: feature?.properties?.h ? "4, 3" : undefined,
+              })}
+              onEachFeature={(feature, layer) => {
+                const props = feature.properties || {};
+                const block = props.b ? ` · แปลง ${escapeHtml(props.b)}` : "";
+                layer.bindTooltip(
+                  `<div style="font-family: 'IBM Plex Sans Thai', sans-serif; padding: 4px 6px; max-width: 270px;">
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                      <span style="width:10px;height:10px;border-radius:2px;background:${escapeHtml(props.c || '#CBD5E1')};flex:none;"></span>
+                      <strong style="color:#0B3558;font-size:13px;">${escapeHtml(props.l || 'ไม่ระบุประเภท')}</strong>
+                    </div>
+                    <div style="font-size:11px;color:#475569;">รหัส ${escapeHtml(props.u || '—')}${block}</div>
+                    <div style="font-size:10px;color:#64748B;margin-top:3px;">ผังเมืองรวมจังหวัด · ข้อมูล DPT ที่เก็บในระบบ</div>
+                  </div>`,
+                  { direction: "top", sticky: true }
+                );
+              }}
             />
           )}
 
@@ -845,10 +1189,10 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               key="dpt-purple-industrial-zones"
               data={purpleZonesGeo}
               style={(feature) => ({
-                color: feature?.properties?.color || "#7C3AED",
+                color: feature?.properties?.color || "#4D004D",
                 weight: 2,
                 opacity: 0.85,
-                fillColor: feature?.properties?.color || "#7C3AED",
+                fillColor: feature?.properties?.color || "#4D004D",
                 fillOpacity: 0.38,
                 dashArray: "5, 5",
               })}
@@ -857,7 +1201,7 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
                 layer.bindTooltip(
                   `<div style="font-family: 'IBM Plex Sans Thai', sans-serif; padding: 4px 6px; max-width: 250px;">
                     <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                      <span style="width: 10px; height: 10px; border-radius: 2px; background: ${props.color || '#7C3AED'}; flex: none;"></span>
+                      <span style="width: 10px; height: 10px; border-radius: 2px; background: ${props.color || '#4D004D'}; flex: none;"></span>
                       <strong style="color: #4C1D95; font-size: 13px;">${props.name || 'เขตผังเมืองรวม'}</strong>
                     </div>
                     <div style="font-size: 11px; color: #6B21A8; font-weight: 600; margin-bottom: 2px;">
@@ -992,12 +1336,13 @@ const MapWrapper: React.FC<MapWrapperProps> = React.memo(
               {filters.showOnlyInRadius && (
                 <Circle
                   center={[userLocation.lat, userLocation.lng]}
-                  radius={10000}
+                  radius={(filters.radiusKm ?? 10) * 1000}
                   pathOptions={{
-                    color: "#3b82f6",
-                    fillColor: "#3b82f6",
-                    fillOpacity: 0.1,
-                    weight: 1,
+                    color: "#F05223",
+                    fillColor: "#F05223",
+                    fillOpacity: 0.08,
+                    weight: 1.5,
+                    dashArray: "4 4",
                   }}
                 />
               )}

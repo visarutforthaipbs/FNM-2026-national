@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105538142620",
+  "companyName": "บางกอกเมลามิน มาร์เก็ตติ้ง แอนด์ โฮลดิ้ง จำกัด",
+  "totalShares": 25000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.รัชพรรณ   ยศธร",
+      "shares": 12250,
+      "sharePercent": 49.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางอรพินท์   เนตรน้อย",
+      "shares": 500,
+      "sharePercent": 2.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางพิมพ์วลัญช์   อาวะจินดา",
+      "shares": 12250,
+      "sharePercent": 49.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:35:14.071042"
+}

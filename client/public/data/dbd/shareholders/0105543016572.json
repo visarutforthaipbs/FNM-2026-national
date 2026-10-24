@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105543016572",
+  "companyName": "หง เหวิน จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายหลี   เฉิน เฉอ",
+      "shares": 73500,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสาววรินดา   บุญหนัก",
+      "shares": 61500,
+      "sharePercent": 41.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางสาวณัฏฐา   แซ่ลี้",
+      "shares": 15000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:34:46.311350"
+}

@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105534046642",
+  "companyName": "เหรียญไทยรุ่งเรืองพลาสติก จำกัด",
+  "totalShares": 540000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายกัสกร   วัฒนาประสาทกุล",
+      "shares": 178295,
+      "sharePercent": 33.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.พรทิพย์   วัฒนาประสาทกุล",
+      "shares": 176160,
+      "sharePercent": 32.62,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.สิริการย์   จิรเรืองวุฒิพล",
+      "shares": 18110,
+      "sharePercent": 3.35,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายปราโมทย์   ศิลป์วิทยารักษ์",
+      "shares": 17435,
+      "sharePercent": 3.23,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "บจ.ไทยวาพลาสติก",
+      "shares": 150000,
+      "sharePercent": 27.78,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:46:07.757509"
+}

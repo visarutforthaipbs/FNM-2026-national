@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105557114865",
+  "companyName": "ฟุตาบะ ไอเอส จำกัด",
+  "totalShares": 60000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เอฟจีไอ โฮลดิ้ง จำกัด",
+      "shares": 29400,
+      "sharePercent": 49.0,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท เจ-วิลล์ อินเตอร์เนชั่นแนล (ประเทศไทย) จำกัด",
+      "shares": 30600,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:12:33.552950"
+}

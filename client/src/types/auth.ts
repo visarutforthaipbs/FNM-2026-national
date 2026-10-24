@@ -1,5 +1,17 @@
-import type { User } from "@supabase/supabase-js";
 import type { ImpactType, ReportFrequency, DistanceBand } from "./report";
+
+export interface AuthUser {
+  /** Matches Firebase uid, maintains backward compatibility with user.id */
+  id: string;
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  user_metadata?: {
+    full_name?: string;
+    avatar_url?: string;
+  };
+}
 
 export interface UserProfile {
   id: string;
@@ -43,7 +55,7 @@ export interface UserIncidentReport {
 }
 
 export interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
   profile: UserProfile | null;
   isLoading: boolean;
   signInWithGoogle: () => Promise<{ error: Error | null }>;

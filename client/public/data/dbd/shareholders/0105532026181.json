@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105532026181",
+  "companyName": "เอส. พี. พลาสติก อินดัสตรี จำกัด",
+  "totalShares": 6000,
+  "shareValue": 10000.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายนิธิโรจน์   อัครธนกุลกิตติ์",
+      "shares": 3100,
+      "sharePercent": 51.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางจิรนิษฐ์   อัครธนกุลกิตติ์",
+      "shares": 2250,
+      "sharePercent": 37.5,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายรัฐโรจน์   อัครธนกุลกิตติ์",
+      "shares": 650,
+      "sharePercent": 10.83,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:10:14.341015"
+}

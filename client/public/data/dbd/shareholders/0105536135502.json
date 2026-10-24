@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105536135502",
+  "companyName": "เอเอ็มพี อินเตอร์เนชั่นแนล จำกัด",
+  "totalShares": 450000,
+  "shareValue": 10.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสมเกียรติ   บัณฑรเศรษฐ์",
+      "shares": 100000,
+      "sharePercent": 22.22,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "น.ส.วรรณวิมล   เศวตสมภพ",
+      "shares": 100000,
+      "sharePercent": 22.22,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "น.ส.อังคณา   บัณฑรเศรษฐ์",
+      "shares": 150000,
+      "sharePercent": 33.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.มณิศา   บัณฑรเศรษฐ์",
+      "shares": 60000,
+      "sharePercent": 13.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายพงศกร   บัณฑรเศรษฐ์",
+      "shares": 40000,
+      "sharePercent": 8.89,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:07.599679"
+}

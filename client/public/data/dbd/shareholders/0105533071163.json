@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105533071163",
+  "companyName": "เขตอุตสาหกรรมกบินทร์บุรี จำกัด",
+  "totalShares": 1666560,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายวุฒิกร   จีรังสุวรรณ",
+      "shares": 403200,
+      "sharePercent": 24.19,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางนิติยา   ตะวันกาญจนา",
+      "shares": 107520,
+      "sharePercent": 6.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายชัยรัตน์   รัตนศิริทรัพย์",
+      "shares": 107520,
+      "sharePercent": 6.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายพิมลโรจน์   นิมากร",
+      "shares": 43008,
+      "sharePercent": 2.58,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายธนิท   จิตวัฒนภักดี",
+      "shares": 71680,
+      "sharePercent": 4.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาววรภา   นิโครสหเกียรติ์",
+      "shares": 71680,
+      "sharePercent": 4.3,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายธิติ   พฤกษ์ชะอุ่ม",
+      "shares": 64512,
+      "sharePercent": 3.87,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายสุธรรม   จันทร์แจ่มจรัส",
+      "shares": 44800,
+      "sharePercent": 2.69,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นายสุทัศน์   อัศรัสกร",
+      "shares": 645120,
+      "sharePercent": 38.71,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายสุชาติ   เจนพณิช",
+      "shares": 107520,
+      "sharePercent": 6.45,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:53:19.508136"
+}

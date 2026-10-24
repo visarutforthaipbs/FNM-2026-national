@@ -1,0 +1,58 @@
+{
+  "registrationNo": "0105532102880",
+  "companyName": "โกลเด็น ไดมอนด์ จำกัด",
+  "totalShares": 700000,
+  "shareValue": 100.0,
+  "holderCount": 5,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายชาญเทพ   กิตสดายุรัช",
+      "shares": 200000,
+      "sharePercent": 28.57,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายภูริต   กิตสดายุรัช",
+      "shares": 10000,
+      "sharePercent": 1.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นางชฎาพร   กิตสดายุรัช",
+      "shares": 300000,
+      "sharePercent": 42.86,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นางสาวปนิตา   กิตสดายุรัช",
+      "shares": 180000,
+      "sharePercent": 25.71,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางยุพา   ศรีจอมคำ",
+      "shares": 10000,
+      "sharePercent": 1.43,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:43:53.450970"
+}

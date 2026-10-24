@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105561023127",
+  "companyName": "จงหนาน เมทัล (ไทยแลนด์) จำกัด",
+  "totalShares": 60000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 49.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บจ.เทค เมทัล (ไทยแลนด์)",
+      "shares": 30600,
+      "sharePercent": 51.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "นายเกิร์ท ออกุส แวน   สตีนเบอเกน",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "เบลเยียน",
+      "nationalityCode": "OT",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายเจ้า ซื่อ   เฉวียน",
+      "shares": 29399,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T00:40:00.932959"
+}

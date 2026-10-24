@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105560000832",
+  "companyName": "พี.พี.พี. รีไซเคิล จำกัด",
+  "totalShares": 22000,
+  "shareValue": 1000.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายพันธกานต์   ใหม่โสภา",
+      "shares": 20900,
+      "sharePercent": 95.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายพิชิต   จตุรภัทรพงศ์",
+      "shares": 1100,
+      "sharePercent": 5.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:37:06.790225"
+}

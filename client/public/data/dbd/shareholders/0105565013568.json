@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105565013568",
+  "companyName": "จูนยู อะลูมิเนียม จำกัด",
+  "totalShares": 50000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 100.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "น.ส.เชาหยิง จู   ( MS.CHAOYING ZHU )",
+      "shares": 25500,
+      "sharePercent": 51.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายเฉินจุน จู   ( MR.CHENJUN ZHU )",
+      "shares": 24500,
+      "sharePercent": 49.0,
+      "nationality": "จีน",
+      "nationalityCode": "CN",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T01:00:21.487098"
+}

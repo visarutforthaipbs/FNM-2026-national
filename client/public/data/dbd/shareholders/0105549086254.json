@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105549086254",
+  "companyName": "สยาม คาวาชิม่า จำกัด",
+  "totalShares": 4000,
+  "shareValue": 1000.0,
+  "holderCount": 3,
+  "foreignPercent": 49.98,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายยูยะ   โออิคาว่า",
+      "shares": 6,
+      "sharePercent": 0.15,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "บจ.ซังโค มิชิมะ",
+      "shares": 1993,
+      "sharePercent": 49.83,
+      "nationality": "ญี่ปุ่น",
+      "nationalityCode": "JP",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บจ.จี.อี.เทรดดิ้ง",
+      "shares": 2001,
+      "sharePercent": 50.02,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:38:45.177016"
+}

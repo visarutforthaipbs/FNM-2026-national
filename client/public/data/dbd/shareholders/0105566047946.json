@@ -1,0 +1,31 @@
+{
+  "registrationNo": "0105566047946",
+  "companyName": "มหานคร เปเปอร์ แอนด์ เมททอล จำกัด",
+  "totalShares": 150000,
+  "shareValue": 100.0,
+  "holderCount": 2,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางพลอยทิตยา   ธนเศรษฐ์โตกุล",
+      "shares": 500,
+      "sharePercent": 0.33,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายธนินท์รัฐ   ธนเศรษฐ์โตกุล",
+      "shares": 149500,
+      "sharePercent": 99.67,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:31:48.294028"
+}

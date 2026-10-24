@@ -1,0 +1,447 @@
+{
+ "source_collected_at": "2026-09-02 15:08:03",
+ "source_database": "server/data/dpt_provincial.db",
+ "source_rows": 32193,
+ "empty_geometries_skipped": 6,
+ "exact_duplicate_rows_removed": 939,
+ "conflicting_duplicate_groups": 75,
+ "features_written": 31248,
+ "unknown_class_features": 517,
+ "unmatched_objectids": [],
+ "province_assignment": "spatial representative points; CB_ID majority; blank CB_ID individually",
+ "duplicate_precedence": "highest numeric OBJECTID",
+ "provinces": {
+  "krabi": {
+   "name_th": "กระบี่",
+   "features": 776,
+   "unknown_classes": 109,
+   "bytes": 1680020
+  },
+  "kanchanaburi": {
+   "name_th": "กาญจนบุรี",
+   "features": 951,
+   "unknown_classes": 4,
+   "bytes": 3768825
+  },
+  "kalasin": {
+   "name_th": "กาฬสินธุ์",
+   "features": 86,
+   "unknown_classes": 0,
+   "bytes": 1699403
+  },
+  "kamphaeng-phet": {
+   "name_th": "กำแพงเพชร",
+   "features": 222,
+   "unknown_classes": 2,
+   "bytes": 432604
+  },
+  "khon-kaen": {
+   "name_th": "ขอนแก่น",
+   "features": 220,
+   "unknown_classes": 0,
+   "bytes": 1964223
+  },
+  "chanthaburi": {
+   "name_th": "จันทบุรี",
+   "features": 572,
+   "unknown_classes": 7,
+   "bytes": 1759770
+  },
+  "chai-nat": {
+   "name_th": "ชัยนาท",
+   "features": 262,
+   "unknown_classes": 0,
+   "bytes": 397773
+  },
+  "chaiyaphum": {
+   "name_th": "ชัยภูมิ",
+   "features": 528,
+   "unknown_classes": 0,
+   "bytes": 1991191
+  },
+  "chumphon": {
+   "name_th": "ชุมพร",
+   "features": 55,
+   "unknown_classes": 0,
+   "bytes": 729244
+  },
+  "trang": {
+   "name_th": "ตรัง",
+   "features": 325,
+   "unknown_classes": 0,
+   "bytes": 686249
+  },
+  "trat": {
+   "name_th": "ตราด",
+   "features": 246,
+   "unknown_classes": 0,
+   "bytes": 864503
+  },
+  "tak": {
+   "name_th": "ตาก",
+   "features": 166,
+   "unknown_classes": 0,
+   "bytes": 1015441
+  },
+  "nakhon-nayok": {
+   "name_th": "นครนายก",
+   "features": 241,
+   "unknown_classes": 2,
+   "bytes": 457075
+  },
+  "nakhon-pathom": {
+   "name_th": "นครปฐม",
+   "features": 2028,
+   "unknown_classes": 0,
+   "bytes": 825231
+  },
+  "nakhon-phanom": {
+   "name_th": "นครพนม",
+   "features": 260,
+   "unknown_classes": 0,
+   "bytes": 672459
+  },
+  "nakhon-ratchasima": {
+   "name_th": "นครราชสีมา",
+   "features": 120,
+   "unknown_classes": 0,
+   "bytes": 6764916
+  },
+  "nakhon-si-thammarat": {
+   "name_th": "นครศรีธรรมราช",
+   "features": 1428,
+   "unknown_classes": 5,
+   "bytes": 1798134
+  },
+  "nakhon-sawan": {
+   "name_th": "นครสวรรค์",
+   "features": 443,
+   "unknown_classes": 0,
+   "bytes": 1895489
+  },
+  "narathiwat": {
+   "name_th": "นราธิวาส",
+   "features": 286,
+   "unknown_classes": 17,
+   "bytes": 1103330
+  },
+  "nan": {
+   "name_th": "น่าน",
+   "features": 369,
+   "unknown_classes": 1,
+   "bytes": 1856769
+  },
+  "bueng-kan": {
+   "name_th": "บึงกาฬ",
+   "features": 380,
+   "unknown_classes": 0,
+   "bytes": 1015388
+  },
+  "buri-ram": {
+   "name_th": "บุรีรัมย์",
+   "features": 352,
+   "unknown_classes": 0,
+   "bytes": 1323360
+  },
+  "pathum-thani": {
+   "name_th": "ปทุมธานี",
+   "features": 468,
+   "unknown_classes": 0,
+   "bytes": 271037
+  },
+  "prachuap-khiri-khan": {
+   "name_th": "ประจวบคีรีขันธ์",
+   "features": 686,
+   "unknown_classes": 154,
+   "bytes": 1370642
+  },
+  "prachin-buri": {
+   "name_th": "ปราจีนบุรี",
+   "features": 332,
+   "unknown_classes": 0,
+   "bytes": 864032
+  },
+  "pattani": {
+   "name_th": "ปัตตานี",
+   "features": 250,
+   "unknown_classes": 0,
+   "bytes": 449202
+  },
+  "phra-nakhon-si-ayutthaya": {
+   "name_th": "พระนครศรีอยุธยา",
+   "features": 1225,
+   "unknown_classes": 0,
+   "bytes": 848087
+  },
+  "phayao": {
+   "name_th": "พะเยา",
+   "features": 260,
+   "unknown_classes": 0,
+   "bytes": 1022925
+  },
+  "phangnga": {
+   "name_th": "พังงา",
+   "features": 572,
+   "unknown_classes": 15,
+   "bytes": 1250190
+  },
+  "phatthalung": {
+   "name_th": "พัทลุง",
+   "features": 569,
+   "unknown_classes": 1,
+   "bytes": 1144484
+  },
+  "phichit": {
+   "name_th": "พิจิตร",
+   "features": 186,
+   "unknown_classes": 0,
+   "bytes": 444181
+  },
+  "phitsanulok": {
+   "name_th": "พิษณุโลก",
+   "features": 493,
+   "unknown_classes": 0,
+   "bytes": 1319428
+  },
+  "phuket": {
+   "name_th": "ภูเก็ต",
+   "features": 1062,
+   "unknown_classes": 2,
+   "bytes": 796766
+  },
+  "maha-sarakham": {
+   "name_th": "มหาสารคาม",
+   "features": 268,
+   "unknown_classes": 0,
+   "bytes": 769560
+  },
+  "mukdahan": {
+   "name_th": "มุกดาหาร",
+   "features": 275,
+   "unknown_classes": 0,
+   "bytes": 671534
+  },
+  "yala": {
+   "name_th": "ยะลา",
+   "features": 289,
+   "unknown_classes": 21,
+   "bytes": 819771
+  },
+  "yasothon": {
+   "name_th": "ยโสธร",
+   "features": 229,
+   "unknown_classes": 1,
+   "bytes": 897288
+  },
+  "ranong": {
+   "name_th": "ระนอง",
+   "features": 373,
+   "unknown_classes": 110,
+   "bytes": 837648
+  },
+  "ratchaburi": {
+   "name_th": "ราชบุรี",
+   "features": 445,
+   "unknown_classes": 0,
+   "bytes": 1002306
+  },
+  "roi-et": {
+   "name_th": "ร้อยเอ็ด",
+   "features": 575,
+   "unknown_classes": 0,
+   "bytes": 934889
+  },
+  "lop-buri": {
+   "name_th": "ลพบุรี",
+   "features": 328,
+   "unknown_classes": 0,
+   "bytes": 811632
+  },
+  "lampang": {
+   "name_th": "ลำปาง",
+   "features": 553,
+   "unknown_classes": 0,
+   "bytes": 2142695
+  },
+  "lamphun": {
+   "name_th": "ลำพูน",
+   "features": 469,
+   "unknown_classes": 0,
+   "bytes": 1533960
+  },
+  "si-sa-ket": {
+   "name_th": "ศรีสะเกษ",
+   "features": 346,
+   "unknown_classes": 0,
+   "bytes": 1238832
+  },
+  "sakon-nakhon": {
+   "name_th": "สกลนคร",
+   "features": 430,
+   "unknown_classes": 0,
+   "bytes": 2333495
+  },
+  "songkhla": {
+   "name_th": "สงขลา",
+   "features": 75,
+   "unknown_classes": 0,
+   "bytes": 648093
+  },
+  "satun": {
+   "name_th": "สตูล",
+   "features": 438,
+   "unknown_classes": 20,
+   "bytes": 926429
+  },
+  "samut-prakan": {
+   "name_th": "สมุทรปราการ",
+   "features": 1378,
+   "unknown_classes": 0,
+   "bytes": 1103357
+  },
+  "samut-songkhram": {
+   "name_th": "สมุทรสงคราม",
+   "features": 148,
+   "unknown_classes": 0,
+   "bytes": 172191
+  },
+  "samut-sakhon": {
+   "name_th": "สมุทรสาคร",
+   "features": 160,
+   "unknown_classes": 0,
+   "bytes": 226018
+  },
+  "saraburi": {
+   "name_th": "สระบุรี",
+   "features": 403,
+   "unknown_classes": 19,
+   "bytes": 632379
+  },
+  "sa-kaeo": {
+   "name_th": "สระแก้ว",
+   "features": 345,
+   "unknown_classes": 0,
+   "bytes": 1710854
+  },
+  "sing-buri": {
+   "name_th": "สิงห์บุรี",
+   "features": 240,
+   "unknown_classes": 0,
+   "bytes": 282092
+  },
+  "suphan-buri": {
+   "name_th": "สุพรรณบุรี",
+   "features": 452,
+   "unknown_classes": 0,
+   "bytes": 916066
+  },
+  "surat-thani": {
+   "name_th": "สุราษฎร์ธานี",
+   "features": 762,
+   "unknown_classes": 1,
+   "bytes": 2812852
+  },
+  "surin": {
+   "name_th": "สุรินทร์",
+   "features": 143,
+   "unknown_classes": 0,
+   "bytes": 990523
+  },
+  "sukhothai": {
+   "name_th": "สุโขทัย",
+   "features": 315,
+   "unknown_classes": 1,
+   "bytes": 994740
+  },
+  "nong-khai": {
+   "name_th": "หนองคาย",
+   "features": 193,
+   "unknown_classes": 12,
+   "bytes": 517136
+  },
+  "nong-bua-lam-phu": {
+   "name_th": "หนองบัวลำภู",
+   "features": 337,
+   "unknown_classes": 0,
+   "bytes": 1149001
+  },
+  "amnat-charoen": {
+   "name_th": "อำนาจเจริญ",
+   "features": 207,
+   "unknown_classes": 0,
+   "bytes": 503240
+  },
+  "udon-thani": {
+   "name_th": "อุดรธานี",
+   "features": 505,
+   "unknown_classes": 12,
+   "bytes": 1719413
+  },
+  "uttaradit": {
+   "name_th": "อุตรดิตถ์",
+   "features": 269,
+   "unknown_classes": 0,
+   "bytes": 1637965
+  },
+  "uthai-thani": {
+   "name_th": "อุทัยธานี",
+   "features": 309,
+   "unknown_classes": 0,
+   "bytes": 615978
+  },
+  "ubon-ratchathani": {
+   "name_th": "อุบลราชธานี",
+   "features": 239,
+   "unknown_classes": 0,
+   "bytes": 1030565
+  },
+  "ang-thong": {
+   "name_th": "อ่างทอง",
+   "features": 631,
+   "unknown_classes": 0,
+   "bytes": 574981
+  },
+  "chiang-rai": {
+   "name_th": "เชียงราย",
+   "features": 412,
+   "unknown_classes": 0,
+   "bytes": 1317200
+  },
+  "chiang-mai": {
+   "name_th": "เชียงใหม่",
+   "features": 55,
+   "unknown_classes": 0,
+   "bytes": 2535512
+  },
+  "phetchaburi": {
+   "name_th": "เพชรบุรี",
+   "features": 509,
+   "unknown_classes": 0,
+   "bytes": 1096183
+  },
+  "phetchabun": {
+   "name_th": "เพชรบูรณ์",
+   "features": 567,
+   "unknown_classes": 0,
+   "bytes": 1431311
+  },
+  "loei": {
+   "name_th": "เลย",
+   "features": 404,
+   "unknown_classes": 1,
+   "bytes": 1512639
+  },
+  "phrae": {
+   "name_th": "แพร่",
+   "features": 257,
+   "unknown_classes": 0,
+   "bytes": 958576
+  },
+  "mae-hong-son": {
+   "name_th": "แม่ฮ่องสอน",
+   "features": 496,
+   "unknown_classes": 0,
+   "bytes": 1813600
+  }
+ }
+}

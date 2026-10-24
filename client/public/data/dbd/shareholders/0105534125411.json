@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105534125411",
+  "companyName": "ยงคู่ฟ้า จำกัด",
+  "totalShares": 5000,
+  "shareValue": 100.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นาง ดาราวัลย์   เตียทะสินธ์",
+      "shares": 1000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุวพิศ   ยงศิลปชัย",
+      "shares": 3000,
+      "sharePercent": 60.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธานี   ยงศิลปชัย",
+      "shares": 1000,
+      "sharePercent": 20.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:33:00.787188"
+}

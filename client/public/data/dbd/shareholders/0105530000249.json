@@ -1,0 +1,76 @@
+{
+  "registrationNo": "0105530000249",
+  "companyName": "บางกอกอินเตอร์ฟูด จำกัด",
+  "totalShares": 100000,
+  "shareValue": 1000.0,
+  "holderCount": 7,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นางวิไล   ชินธรรมมิตร์",
+      "shares": 170,
+      "sharePercent": 0.17,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นายสมชาติ   ชินธรรมมิตร์",
+      "shares": 16609,
+      "sharePercent": 16.61,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายสรวิศ   ชินธรรมมิตร์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายสมเกียรติ   ชินธรรมมิตร์",
+      "shares": 16610,
+      "sharePercent": 16.61,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายสมภพ   ชินธรรมมิตร์",
+      "shares": 16609,
+      "sharePercent": 16.61,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นายชุติกร   ชินธรรมมิตร์",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "บจก.อุตสาหกรรมแป้งไทย",
+      "shares": 50000,
+      "sharePercent": 50.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-02T23:30:03.074779"
+}

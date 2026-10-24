@@ -1,0 +1,103 @@
+{
+  "registrationNo": "0105532112702",
+  "companyName": "ตะวันออกบรรจุภัณฑ์ จำกัด",
+  "totalShares": 500000,
+  "shareValue": 100.0,
+  "holderCount": 10,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายคุณชัย   นาทีทอง",
+      "shares": 90000,
+      "sharePercent": 18.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางสุนี   นาทีทอง",
+      "shares": 85000,
+      "sharePercent": 17.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายมงคล   นาทีทอง",
+      "shares": 15000,
+      "sharePercent": 3.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "นายปฐมินทร์   นาทีทอง",
+      "shares": 40000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นางสาววรรษพร   นาทีทอง",
+      "shares": 40000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "นางสาวอมรรัตน์   นาทีทอง",
+      "shares": 40000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 7,
+      "name": "นายรัชชพล   นาทีทอง",
+      "shares": 40000,
+      "sharePercent": 8.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 8,
+      "name": "นายปกรณ์   เติมศรีเจริญพร",
+      "shares": 50000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 9,
+      "name": "นางสาวพบสุข   เติมศรีเจริญพร",
+      "shares": 50000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 10,
+      "name": "นายประสงค์   เติมศรีเจริญพร",
+      "shares": 50000,
+      "sharePercent": 10.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:45:40.492297"
+}

@@ -1,0 +1,67 @@
+{
+  "registrationNo": "0105547078190",
+  "companyName": "ที.ที.พี.แฟคตอรี่ จำกัด",
+  "totalShares": 100000,
+  "shareValue": 100.0,
+  "holderCount": 6,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "นายสันทัด   เชาวนปรีชา",
+      "shares": 12000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 2,
+      "name": "นางพรทิพย์   เชาวนปรีชา",
+      "shares": 12000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 3,
+      "name": "นายธนา   เชาวนปรีชา",
+      "shares": 12000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 4,
+      "name": "น.ส.ทิพย์ลดา   เชาวนปรีชา",
+      "shares": 12000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 5,
+      "name": "นายสุรพันธ์   เชาวนปรีชา",
+      "shares": 12000,
+      "sharePercent": 12.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": false
+    },
+    {
+      "order": 6,
+      "name": "บจ.ทิพย์ธนาพันธ์",
+      "shares": 40000,
+      "sharePercent": 40.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:40:14.652501"
+}

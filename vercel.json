@@ -16,6 +16,9 @@
       "dest": "/404"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/[^.]*$",
       "dest": "client/index.html"
     },

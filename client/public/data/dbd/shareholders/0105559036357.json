@@ -1,0 +1,40 @@
+{
+  "registrationNo": "0105559036357",
+  "companyName": "บีเจซี เมก้า มาร์เก็ต จำกัด",
+  "totalShares": 7310000,
+  "shareValue": 10.0,
+  "holderCount": 3,
+  "foreignPercent": 0.0,
+  "hasOffshore": false,
+  "offshoreEntities": [],
+  "holders": [
+    {
+      "order": 1,
+      "name": "บริษัท เรืองทรัพย์ 168 จำกัด",
+      "shares": 1,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 2,
+      "name": "บริษัท บิ๊กซี แอสเซทส์ จำกัด",
+      "shares": 2,
+      "sharePercent": 0.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    },
+    {
+      "order": 3,
+      "name": "บริษัท บีเจซี คอฟฟี่ โฮลดิ้งส์ จำกัด",
+      "shares": 7309997,
+      "sharePercent": 100.0,
+      "nationality": "ไทย",
+      "nationalityCode": "TH",
+      "isCorporate": true
+    }
+  ],
+  "fetchedAt": "2026-09-03T10:36:33.248322"
+}
