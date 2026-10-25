@@ -32,4 +32,14 @@ echo "--- loading matches into Postgres ---"
 
 echo "--- fetching directors, shareholders, financials ---"
 "$PY" dbd_detail.py
-echo "=== chain done $(date -Is) (detail rc=$?) ==="
+detail_rc=$?
+
+echo "--- mirroring DBD archive to NAS ---"
+if DBD_ARCHIVE_ROOT="$DBD_ARCHIVE_ROOT" "$REPO/server/collector/mirror_dbd_archive_to_nas.sh"; then
+    echo "DBD archive mirrored to NAS"
+else
+    echo "WARNING: DBD NAS mirror failed; the local archive remains intact"
+fi
+
+echo "=== chain done $(date -Is) (detail rc=$detail_rc) ==="
+exit "$detail_rc"
